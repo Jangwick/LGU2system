@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/LLRMSystem/auth/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 require_once __DIR__ . '/../../core/config/database.php';
@@ -21,23 +21,23 @@ $tagModel = new DocumentTag($db);
 $documentId = $_GET['id'] ?? null;
 
 if (!$documentId) {
-    header('Location: /LLRMSystem/modules/document-management/views/index.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirect(DOCUMENTS_INDEX_URL);
 }
 
 $document = $documentModel->getById($documentId);
 
 if (!$document) {
-    header('Location: /LLRMSystem/modules/document-management/views/index.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirect(DOCUMENTS_INDEX_URL);
 }
 
 // Check if viewer can access this document (approved/archived/rejected)
 $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
 if ($userRole === 'viewer' && !in_array($document['status'], ['approved', 'archived', 'rejected'])) {
+    require_once __DIR__ . '/../../core/config/config.php';
     $_SESSION['error_message'] = 'Access denied. Viewers can only view approved, archived, and rejected documents.';
-    header('Location: /LLRMSystem/modules/document-management/views/index.php');
-    exit;
+    redirect(DOCUMENTS_INDEX_URL);
 }
 
 $versions = $versionModel->getByDocumentId($documentId);
@@ -48,8 +48,8 @@ $tags = $tagModel->getByDocumentId($documentId);
 $pageTitle = $document['title'];
 $currentPage = 'documents';
 $breadcrumbs = [
-    ['label' => 'Dashboard', 'url' => '/LLRMSystem/LLRMSystem/dashboard.php'],
-    ['label' => 'Documents', 'url' => '/LLRMSystem/modules/document-management/views/index.php'],
+    ['label' => 'Dashboard', 'url' => DASHBOARD_INDEX_URL],
+    ['label' => 'Documents', 'url' => DOCUMENTS_INDEX_URL],
     ['label' => $document['reference_number']]
 ];
 
@@ -116,7 +116,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </p>
                 </div>
                 <div class="flex gap-3">
-                    <a href="/LLRMSystem/modules/document-management/api/download.php?id=<?= $document['id'] ?>" 
+                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>" 
                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                         <i class="bi bi-download mr-2"></i>Download
                     </a>
@@ -126,7 +126,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $canEdit = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
                     if ($canEdit): 
                     ?>
-                    <a href="/LLRMSystem/modules/document-management/views/edit.php?id=<?= $document['id'] ?>" 
+                    <a href="<?php echo DOCUMENTS_URL; ?>/views/edit.php?id=<?= $document['id'] ?>" 
                        class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
                         <i class="bi bi-pencil mr-2"></i>Edit
                     </a>
@@ -246,7 +246,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <?php else: ?>
                     <div class="space-y-3">
                         <?php foreach ($links as $link): ?>
-                        <a href="/LLRMSystem/modules/document-management/views/view.php?id=<?= $link['linked_document_id'] ?>" 
+                        <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?= $link['linked_document_id'] ?>" 
                            class="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
@@ -262,7 +262,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php endforeach; ?>
                         
                         <?php foreach ($incomingLinks as $link): ?>
-                        <a href="/LLRMSystem/modules/document-management/views/view.php?id=<?= $link['document_id'] ?>" 
+                        <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?= $link['document_id'] ?>" 
                            class="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
@@ -313,12 +313,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <script>
 function downloadVersion(versionId) {
-    window.location.href = `/LLRMSystem/modules/document-management/api/download-version.php?id=${versionId}`;
+    window.location.href = App.apiUrl('documents', `download-version.php?id=${versionId}`);
 }
 
 function revertVersion(documentId, versionNumber) {
     if (confirm(`Are you sure you want to revert to version ${versionNumber}? This will create a new version with the content from version ${versionNumber}.`)) {
-        fetch('/LLRMSystem/modules/document-management/api/revert-version.php', {
+        fetch(App.apiUrl('documents', 'revert-version.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ document_id: documentId, version_number: versionNumber })
@@ -351,7 +351,7 @@ function viewHistory() {
 
 function deleteDocument(id) {
     if (confirm('Are you sure you want to delete this document? It will be moved to trash.')) {
-        fetch('/LLRMSystem/modules/document-management/api/delete.php', {
+        fetch(App.apiUrl('documents', 'delete.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
@@ -359,7 +359,7 @@ function deleteDocument(id) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = '/LLRMSystem/modules/document-management/views/index.php';
+                window.location.href = App.config.urls.documents + '/views/index.php';
             } else {
                 alert('Error: ' + data.error);
             }

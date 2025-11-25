@@ -98,7 +98,7 @@ async function refreshDashboard() {
         if (dateRange.start) params.append('start_date', dateRange.start);
         if (dateRange.end) params.append('end_date', dateRange.end);
         
-        const response = await fetch(`/LLRMSystem/modules/reports-analytics/controllers/ReportController.php?action=refresh&${params.toString()}`);
+        const response = await fetch(App.url(`modules/reports-analytics/controllers/ReportController.php?action=refresh&${params.toString()}`));
         const data = await response.json();
         
         if (data.success) {
@@ -186,7 +186,7 @@ function exportReport(reportType) {
     if (dateRange.start) params.append('start_date', dateRange.start);
     if (dateRange.end) params.append('end_date', dateRange.end);
     
-    window.location.href = `/LLRMSystem/modules/reports-analytics/views/index.php?${params.toString()}`;
+    window.location.href = App.config.urls.reports + `/views/index.php?${params.toString()}`;
 }
 
 /**
@@ -258,7 +258,7 @@ async function generateCustomReport() {
             end_date: dateTo || ''
         });
         
-        const response = await fetch(`/LLRMSystem/modules/reports-analytics/api/generate-report.php?${params.toString()}`);
+        const response = await fetch(App.apiUrl('reports', `generate-report.php?${params.toString()}`));
         const data = await response.json();
         
         if (data.success) {
@@ -414,7 +414,7 @@ async function scheduleReport() {
     if (!reportType || !frequency) return;
     
     try {
-        const response = await fetch('/LLRMSystem/modules/reports-analytics/api/schedule-report.php', {
+        const response = await fetch(App.apiUrl('reports', 'schedule-report.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ report_type: reportType, frequency })

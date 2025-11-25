@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/modules/authentication/views/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 require_once __DIR__ . '/../../core/config/database.php';
@@ -22,8 +22,8 @@ $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
-    header('Location: /LLRMSystem/modules/authentication/views/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 // Get recent activity
@@ -202,7 +202,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <i class="bi bi-clock-history mr-2 text-blue-600"></i>
                                 Recent Activity
                             </h2>
-                            <a href="/LLRMSystem/modules/audit/views/index.php" class="text-sm text-blue-600 hover:text-blue-700">
+                            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="text-sm text-blue-600 hover:text-blue-700">
                                 View All
                             </a>
                         </div>
@@ -286,13 +286,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             Quick Links
                         </h2>
                         <div class="space-y-2">
-                            <a href="/LLRMSystem/modules/user-management/views/settings.php" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
+                            <a href="<?php echo USERS_URL; ?>/views/settings.php" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
                                 <i class="bi bi-gear mr-2 text-gray-600"></i>Account Settings
                             </a>
-                            <a href="/LLRMSystem/modules/document-management/views/index.php" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
+                            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
                                 <i class="bi bi-file-earmark-text mr-2 text-gray-600"></i>My Documents
                             </a>
-                            <a href="/LLRMSystem/modules/help/views/index.php" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
+                            <a href="<?php echo HELP_URL; ?>/views/index.php" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
                                 <i class="bi bi-question-circle mr-2 text-gray-600"></i>Help Center
                             </a>
                         </div>
@@ -412,7 +412,7 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
     const formData = new FormData(this);
     
     try {
-        const response = await fetch('/LLRMSystem/modules/user-management/api/update-profile.php', {
+        const response = await fetch(App.apiUrl('users', 'update-profile.php'), {
             method: 'POST',
             body: formData
         });
@@ -440,7 +440,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
     }
     
     try {
-        const response = await fetch('/LLRMSystem/modules/user-management/api/change-password.php', {
+        const response = await fetch(App.apiUrl('users', 'change-password.php'), {
             method: 'POST',
             body: formData
         });

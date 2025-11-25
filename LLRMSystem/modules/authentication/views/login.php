@@ -1,9 +1,10 @@
+<?php require_once __DIR__ . '/../../core/config/config.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Legislative Records Management System</title>
+    <title>Login - <?php echo APP_NAME; ?></title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -54,7 +55,7 @@
             </div>
             
             <!-- Login Form -->
-            <form id="login-form" action="../controllers/LoginController.php" method="POST" class="space-y-5">
+            <form id="login-form" action="<?php echo AUTH_URL; ?>/controllers/LoginController.php" method="POST" class="space-y-5">
                 <!-- Email Field -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
@@ -99,7 +100,7 @@
                                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
                         <span class="ml-2 text-sm text-gray-700">Remember me</span>
                     </label>
-                    <a href="forgot-password.php" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                    <a href="<?php echo AUTH_URL; ?>/views/forgot-password.php" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
                         Forgot password?
                     </a>
                 </div>
@@ -139,7 +140,7 @@
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Don't have an account? 
-                    <a href="register.php" class="text-blue-600 hover:text-blue-700 font-semibold">Create Account</a>
+                    <a href="<?php echo REGISTER_URL; ?>" class="text-blue-600 hover:text-blue-700 font-semibold">Create Account</a>
                 </p>
             </div>
         </div>
@@ -148,16 +149,16 @@
         <div class="mt-8 text-center text-sm text-gray-600">
             <p>&copy; <?php echo date('Y'); ?> LGU Legislative Office. All rights reserved.</p>
             <div class="mt-2 space-x-4">
-                <a href="/modules/help/views/privacy.php" class="hover:text-blue-600">Privacy Policy</a>
+                <a href="<?php echo url('modules/help/views/privacy.php'); ?>" class="hover:text-blue-600">Privacy Policy</a>
                 <span>•</span>
-                <a href="/modules/help/views/terms.php" class="hover:text-blue-600">Terms of Service</a>
+                <a href="<?php echo url('modules/help/views/terms.php'); ?>" class="hover:text-blue-600">Terms of Service</a>
                 <span>•</span>
-                <a href="/modules/help/views/contact.php" class="hover:text-blue-600">Help</a>
+                <a href="<?php echo url('modules/help/views/contact.php'); ?>" class="hover:text-blue-600">Help</a>
             </div>
         </div>
     </div>
     
-    <script src="/LLRMSystem/public/assets/js/auth.js"></script>
+    <script src="<?php echo asset('js/auth.js'); ?>"></script>
     <script>
         // Toggle password visibility
         document.getElementById('toggle-password')?.addEventListener('click', function() {

@@ -492,6 +492,6 @@ document.getElementById('exportModal')?.addEventListener('click', function(e) {
 });
 </script>
 
-<script src="/LLRMSystem/public/assets/js/reports.js"></script>
+<script src="<?php echo asset('js/reports.js'); ?>"></script>
 
 <?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>

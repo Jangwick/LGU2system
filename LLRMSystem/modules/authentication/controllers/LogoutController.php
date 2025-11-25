@@ -7,8 +7,6 @@ session_start();
 
 // Include configuration
 require_once __DIR__ . '/../../core/config/config.php';
-
-// Include database configuration
 require_once __DIR__ . '/../../core/config/database.php';
 
 // Check if user is logged in
@@ -51,5 +49,5 @@ session_unset();
 session_destroy();
 
 // Redirect to login page
-header('Location: /LLRMSystem/modules/authentication/views/login.php?logout=success');
+header('Location: ' . LOGIN_URL . '?logout=success');
 exit;

@@ -100,18 +100,18 @@
                             <p class="text-xs text-gray-500 mt-1"><?php echo htmlspecialchars($_SESSION['user_department'] ?? 'Legislative Office'); ?></p>
                         </div>
                         <div class="py-2">
-                            <a href="/LLRMSystem/modules/user-management/views/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="<?php echo USERS_URL; ?>/views/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="bi bi-person mr-2"></i>My Profile
                             </a>
-                            <a href="/LLRMSystem/modules/user-management/views/settings.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="<?php echo USERS_URL; ?>/views/settings.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="bi bi-gear mr-2"></i>Settings
                             </a>
-                            <a href="/LLRMSystem/modules/help/views/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="<?php echo HELP_URL; ?>/views/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="bi bi-question-circle mr-2"></i>Help & Support
                             </a>
                         </div>
                         <div class="border-t border-gray-200 py-2">
-                            <a href="/LLRMSystem/modules/authentication/controllers/LogoutController.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <a href="<?php echo LOGOUT_URL; ?>" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                                 <i class="bi bi-box-arrow-right mr-2"></i>Logout
                             </a>
                         </div>

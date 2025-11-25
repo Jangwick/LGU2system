@@ -44,7 +44,7 @@ if (loginForm) {
         
         try {
             // Make API call
-            const response = await fetch('/LLRMSystem/modules/authentication/controllers/LoginController.php', {
+            const response = await fetch(App.config.endpoints.login, {
                 method: 'POST',
                 body: formData
             });
@@ -65,7 +65,7 @@ if (loginForm) {
             if (result.success) {
                 showAlert('Login successful! Redirecting...', 'success');
                 setTimeout(() => {
-                    window.location.href = result.redirect || '/LLRMSystem/modules/dashboard/views/index.php';
+                    window.location.href = result.redirect || App.config.urls.dashboard + '/views/index.php';
                 }, 1000);
             } else {
                 showAlert(result.message || 'Invalid credentials', 'error');
@@ -117,7 +117,7 @@ if (registerForm) {
         registerBtnText.innerHTML = '<i class="bi bi-hourglass-split mr-2"></i>Creating account...';
         
         try {
-            const response = await fetch('/LLRMSystem/modules/authentication/controllers/RegisterController.php', {
+            const response = await fetch(App.config.endpoints.register, {
                 method: 'POST',
                 body: formData
             });
@@ -127,7 +127,7 @@ if (registerForm) {
             if (result.success) {
                 showAlert('Account created successfully! Redirecting to login...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/LLRMSystem/modules/authentication/views/login.php';
+                    window.location.href = App.config.urls.auth + '/views/login.php';
                 }, 2000);
             } else {
                 showAlert(result.message || 'Registration failed', 'error');
@@ -158,7 +158,7 @@ if (forgotPasswordForm) {
         submitBtnText.innerHTML = '<i class="bi bi-hourglass-split mr-2"></i>Sending...';
         
         try {
-            const response = await fetch('/LLRMSystem/modules/authentication/controllers/ForgotPasswordController.php', {
+            const response = await fetch(App.url('modules/authentication/controllers/ForgotPasswordController.php'), {
                 method: 'POST',
                 body: formData
             });

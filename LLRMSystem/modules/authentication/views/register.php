@@ -1,9 +1,10 @@
+<?php require_once __DIR__ . '/../../core/config/config.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Legislative Records Management System</title>
+    <title>Register - <?php echo APP_NAME; ?></title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -28,7 +29,7 @@
             <div id="alert-container" class="mb-4"></div>
             
             <!-- Registration Form -->
-            <form id="register-form" action="/modules/authentication/controllers/RegisterController.php" method="POST" class="space-y-5">
+            <form id="register-form" action="<?php echo AUTH_URL; ?>/controllers/RegisterController.php" method="POST" class="space-y-5">
                 <!-- Personal Information -->
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -198,13 +199,13 @@
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Already have an account? 
-                    <a href="login.php" class="text-blue-600 hover:text-blue-700 font-semibold">Sign In</a>
+                    <a href="<?php echo LOGIN_URL; ?>" class="text-blue-600 hover:text-blue-700 font-semibold">Sign In</a>
                 </p>
             </div>
         </div>
     </div>
     
-    <script src="/LLRMSystem/public/assets/js/auth.js"></script>
+    <script src="<?php echo asset('js/auth.js'); ?>"></script>
     <script>
         // Password visibility toggles
         document.getElementById('toggle-password')?.addEventListener('click', function() {

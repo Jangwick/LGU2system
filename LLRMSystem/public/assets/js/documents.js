@@ -212,7 +212,7 @@ class DocumentManager {
         }
         
         try {
-            const response = await fetch('/LLRMSystem/modules/document-management/api/delete.php', {
+            const response = await fetch(App.apiUrl('documents', 'delete.php'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: documentId })
@@ -233,13 +233,13 @@ class DocumentManager {
     }
     
     viewDocument(documentId) {
-        window.location.href = `/LLRMSystem/modules/document-management/views/view.php?id=${documentId}`;
+        window.location.href = App.config.urls.documents + `/views/view.php?id=${documentId}`;
     }
     
     async downloadDocument(documentId) {
         try {
             showNotification('Preparing download...', 'info');
-            window.location.href = `/LLRMSystem/modules/document-management/api/download.php?id=${documentId}`;
+            window.location.href = App.apiUrl('documents', `download.php?id=${documentId}`);
         } catch (error) {
             console.error('Download error:', error);
             showNotification('Failed to download document', 'error');
@@ -257,7 +257,7 @@ class DocumentManager {
         }
         
         try {
-            const response = await fetch('/LLRMSystem/modules/document-management/api/bulk-delete.php', {
+            const response = await fetch(App.apiUrl('documents', 'bulk-delete.php'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ document_ids: Array.from(this.selectedDocuments) })
@@ -289,7 +289,7 @@ class DocumentManager {
         Array.from(this.selectedDocuments).forEach((id, index) => {
             setTimeout(() => {
                 const link = document.createElement('a');
-                link.href = `/LLRMSystem/modules/document-management/api/download.php?id=${id}`;
+                link.href = App.apiUrl('documents', `download.php?id=${id}`);
                 link.download = '';
                 document.body.appendChild(link);
                 link.click();

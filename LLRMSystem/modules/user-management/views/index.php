@@ -371,7 +371,7 @@ function closeModal() {
 }
 
 function editUser(id) {
-    fetch(`/LLRMSystem/modules/user-management/api/get-user.php?id=${id}`)
+    fetch(App.apiUrl('users', `get-user.php?id=${id}`))
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -407,7 +407,7 @@ function saveUser(event) {
     }
     
     const id = document.getElementById('userId').value;
-    const url = id ? '/LLRMSystem/modules/user-management/api/update-user.php' : '/LLRMSystem/modules/user-management/api/create-user.php';
+    const url = id ? App.apiUrl('users', 'update-user.php') : App.apiUrl('users', 'create-user.php');
     
     fetch(url, {
         method: 'POST',
@@ -429,7 +429,7 @@ function saveUser(event) {
 
 function deleteUser(id, name) {
     if (confirm(`Are you sure you want to delete user "${name}"?`)) {
-        fetch('/LLRMSystem/modules/user-management/api/delete-user.php', {
+        fetch(App.apiUrl('users', 'delete-user.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

@@ -2,7 +2,7 @@
 <aside id="sidebar" class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300">
     <!-- Logo Section -->
     <div class="p-6 border-b border-blue-700">
-        <a href="/LLRMSystem/modules/dashboard/views/index.php" class="flex items-center space-x-3 hover:opacity-80 transition">
+        <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition">
             <div class="bg-white rounded-lg p-2">
                 <i class="bi bi-file-earmark-text text-blue-800 text-2xl"></i>
             </div>
@@ -17,7 +17,7 @@
     <nav class="flex-1 overflow-y-auto py-4">
         <div class="px-4 space-y-1">
             <!-- Dashboard -->
-            <a href="/LLRMSystem/modules/dashboard/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'dashboard' ? 'active' : ''; ?>">
+            <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="nav-item <?php echo ($currentPage ?? '') === 'dashboard' ? 'active' : ''; ?>">
                 <i class="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
             </a>
@@ -27,7 +27,7 @@
                 <p class="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">Documents</p>
             </div>
             
-            <a href="/LLRMSystem/modules/document-management/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'documents' ? 'active' : ''; ?>">
+            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="nav-item <?php echo ($currentPage ?? '') === 'documents' ? 'active' : ''; ?>">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>All Documents</span>
             </a>
@@ -37,13 +37,13 @@
             $canUpload = in_array($userRole, ['staff', 'officer', 'administrator', 'admin']);
             if ($canUpload): 
             ?>
-            <a href="/LLRMSystem/modules/document-management/views/create.php" class="nav-item <?php echo ($currentPage ?? '') === 'documents-create' ? 'active' : ''; ?>">
+            <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="nav-item <?php echo ($currentPage ?? '') === 'documents-create' ? 'active' : ''; ?>">
                 <i class="bi bi-file-earmark-plus"></i>
                 <span>Upload Document</span>
             </a>
             <?php endif; ?>
             
-            <a href="/LLRMSystem/modules/search/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'search' ? 'active' : ''; ?>">
+            <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'search' ? 'active' : ''; ?>">
                 <i class="bi bi-search"></i>
                 <span>Advanced Search</span>
             </a>
@@ -57,7 +57,7 @@
                 <p class="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">Analytics</p>
             </div>
             
-            <a href="/LLRMSystem/modules/reports-analytics/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'reports' ? 'active' : ''; ?>">
+            <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'reports' ? 'active' : ''; ?>">
                 <i class="bi bi-graph-up"></i>
                 <span>Reports & Analytics</span>
             </a>
@@ -72,12 +72,12 @@
                 <p class="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">Administration</p>
             </div>
             
-            <a href="/LLRMSystem/modules/user-management/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'users' ? 'active' : ''; ?>">
+            <a href="<?php echo USERS_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'users' ? 'active' : ''; ?>">
                 <i class="bi bi-person-gear"></i>
                 <span>User Management</span>
             </a>
             
-            <a href="/LLRMSystem/modules/audit/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'audit' ? 'active' : ''; ?>">
+            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'audit' ? 'active' : ''; ?>">
                 <i class="bi bi-shield-check"></i>
                 <span>Audit Logs</span>
             </a>

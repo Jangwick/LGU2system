@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/LLRMSystem/auth/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 // Load controller
@@ -14,7 +14,7 @@ $data = $controller->index();
 $pageTitle = 'Document Management';
 $currentPage = 'documents';
 $breadcrumbs = [
-    ['label' => 'Dashboard', 'url' => '/LLRMSystem/LLRMSystem/dashboard.php'],
+    ['label' => 'Dashboard', 'url' => DASHBOARD_INDEX_URL],
     ['label' => 'Documents']
 ];
 
@@ -286,7 +286,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </button>
                                         
                                         <!-- Download button - All roles can download -->
-                                        <a href="/LLRMSystem/modules/document-management/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 hover:text-green-700 mr-3" title="Download">
+                                        <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 hover:text-green-700 mr-3" title="Download">
                                             <i class="bi bi-download"></i>
                                         </a>
                                         
@@ -390,7 +390,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 
-<script src="/LLRMSystem/public/assets/js/documents.js"></script>
+<script src="<?php echo asset('js/documents.js'); ?>"></script>
 <script>
 function viewDocument(id) {
     window.location.href = 'view.php?id=' + id;
@@ -402,7 +402,7 @@ function editDocument(id) {
 
 function deleteDocument(id) {
     if (confirm('Are you sure you want to delete this document?')) {
-        fetch('/LLRMSystem/modules/document-management/api/delete.php', {
+        fetch(App.apiUrl('documents', 'delete.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -474,7 +474,7 @@ function exportSelectedFiles() {
     document.getElementById('export-menu').classList.add('hidden');
     
     // Create export URL with selected IDs
-    const url = `/LLRMSystem/modules/document-management/api/export.php?export_type=files&ids=${selectedIds.join(',')}`;
+    const url = App.apiUrl('documents', `export.php?export_type=files&ids=${selectedIds.join(',')}`);
     window.location.href = url;
 }
 
@@ -489,7 +489,7 @@ function exportAllFiles() {
     // Get current filters from URL or form
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set('export_type', 'files');
-    const url = `/LLRMSystem/modules/document-management/api/export.php?${searchParams.toString()}`;
+    const url = App.apiUrl('documents', `export.php?${searchParams.toString()}`);
     window.location.href = url;
 }
 
@@ -501,7 +501,7 @@ function exportList(format) {
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set('export_type', 'list');
     searchParams.set('format', format);
-    const url = `/LLRMSystem/modules/document-management/api/export.php?${searchParams.toString()}`;
+    const url = App.apiUrl('documents', `export.php?${searchParams.toString()}`);
     window.location.href = url;
 }
 

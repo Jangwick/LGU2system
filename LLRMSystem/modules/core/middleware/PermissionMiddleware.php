@@ -238,7 +238,7 @@ class PermissionMiddleware {
             <body>
                 <h1>403 - Access Denied</h1>
                 <p>' . htmlspecialchars($message) . '</p>
-                <a href="/LLRMSystem/LLRMSystem/dashboard.php">Go to Dashboard</a>
+                <a href="' . DASHBOARD_INDEX_URL . '">Go to Dashboard</a>
             </body>
             </html>';
         }
@@ -282,7 +282,8 @@ class PermissionMiddleware {
                     'code' => 'UNAUTHORIZED'
                 ]);
             } else {
-                header('Location: /LLRMSystem/LLRMSystem/auth/login.php');
+                require_once __DIR__ . '/../config/config.php';
+                redirectToLogin();
             }
             exit;
         }

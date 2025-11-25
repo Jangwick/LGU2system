@@ -2,23 +2,23 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/LLRMSystem/auth/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 // Check if user has permission to upload documents (not viewer)
 $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
 if ($userRole === 'viewer') {
+    require_once __DIR__ . '/../../core/config/config.php';
     $_SESSION['error_message'] = 'Access denied. Viewers cannot upload documents.';
-    header('Location: /LLRMSystem/modules/document-management/views/index.php');
-    exit;
+    redirect(DOCUMENTS_INDEX_URL);
 }
 
 $pageTitle = 'Upload Document';
 $currentPage = 'documents-create';
 $breadcrumbs = [
-    ['label' => 'Dashboard', 'url' => '/LLRMSystem/LLRMSystem/dashboard.php'],
-    ['label' => 'Documents', 'url' => '/LLRMSystem/modules/document-management/views/index.php'],
+    ['label' => 'Dashboard', 'url' => DASHBOARD_INDEX_URL],
+    ['label' => 'Documents', 'url' => DOCUMENTS_INDEX_URL],
     ['label' => 'Upload']
 ];
 
@@ -39,7 +39,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Upload Form -->
-            <form id="upload-form" action="/LLRMSystem/modules/document-management/api/upload.php" method="POST" enctype="multipart/form-data">
+            <form id="upload-form" action="<?php echo DOCUMENTS_URL; ?>/api/upload.php" method="POST" enctype="multipart/form-data">
                 <!-- File Upload Section -->
                 <div class="bg-white rounded-xl shadow-md p-6 mb-6">
                     <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
@@ -390,7 +390,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         submitBtn.innerHTML = '<i class="bi bi-hourglass-split mr-2"></i>Uploading...';
         
         try {
-            const response = await fetch('/LLRMSystem/modules/document-management/api/upload.php', {
+            const response = await fetch(App.apiUrl('documents', 'upload.php'), {
                 method: 'POST',
                 body: formData
             });
@@ -399,7 +399,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             if (result.success) {
                 alert('Document uploaded successfully!');
-                window.location.href = '/LLRMSystem/modules/document-management/views/index.php';
+                window.location.href = App.config.urls.documents + '/views/index.php';
             } else {
                 alert('Error: ' + (result.error || 'Upload failed'));
                 submitBtn.disabled = false;

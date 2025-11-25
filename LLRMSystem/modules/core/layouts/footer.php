@@ -44,7 +44,7 @@
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
     
     <!-- Global JavaScript -->
-    <script src="/LLRMSystem/public/assets/js/main.js"></script>
+    <script src="<?php echo asset('js/main.js'); ?>"></script>
     
     <!-- Page-specific JavaScript -->
     <?php if (isset($pageScript)): ?>

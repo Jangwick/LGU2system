@@ -13,24 +13,25 @@ class DashboardService {
      * Get dashboard widgets configuration
      */
     public function getWidgetsConfig() {
+        require_once __DIR__ . '/../../core/config/config.php';
         return [
             'total_documents' => [
                 'title' => 'Total Documents',
                 'icon' => 'bi-file-earmark-text',
                 'color' => 'blue',
-                'link' => '/LLRMSystem/modules/document-management/views/index.php'
+                'link' => DOCUMENTS_INDEX_URL
             ],
             'pending_review' => [
                 'title' => 'Pending Review',
-                'icon' => 'bi-hourglass-split',
+                'icon' => 'bi-clock-history',
                 'color' => 'yellow',
-                'link' => '/LLRMSystem/modules/document-management/views/index.php?status=pending'
+                'link' => DOCUMENTS_URL . '/views/index.php?status=pending'
             ],
             'approved_today' => [
                 'title' => 'Approved Today',
                 'icon' => 'bi-check-circle',
                 'color' => 'green',
-                'link' => '/LLRMSystem/modules/document-management/views/index.php?status=approved'
+                'link' => DOCUMENTS_URL . '/views/index.php?status=approved'
             ],
             'storage_used' => [
                 'title' => 'Storage Used',

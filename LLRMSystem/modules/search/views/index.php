@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/LLRMSystem/auth/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 // Load controller
@@ -14,7 +14,7 @@ $data = $controller->index();
 $pageTitle = 'Advanced Search';
 $currentPage = 'search';
 $breadcrumbs = [
-    ['label' => 'Dashboard', 'url' => '/LLRMSystem/LLRMSystem/dashboard.php'],
+    ['label' => 'Dashboard', 'url' => DASHBOARD_INDEX_URL],
     ['label' => 'Search']
 ];
 

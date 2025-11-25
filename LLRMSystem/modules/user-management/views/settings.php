@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/modules/authentication/views/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 require_once __DIR__ . '/../../core/config/database.php';
@@ -174,7 +174,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </h2>
                     
                     <div class="space-y-3">
-                        <button onclick="window.location.href='/LLRMSystem/modules/user-management/views/profile.php'" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
+                        <button onclick="window.location.href='<?php echo USERS_URL; ?>/views/profile.php'" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="font-medium text-gray-800">Change Password</p>
@@ -253,7 +253,7 @@ document.getElementById('generalSettingsForm').addEventListener('submit', async 
     const formData = new FormData(this);
     
     try {
-        const response = await fetch('/LLRMSystem/modules/user-management/api/update-settings.php', {
+        const response = await fetch(App.apiUrl('users', 'update-settings.php'), {
             method: 'POST',
             body: formData
         });
@@ -281,7 +281,7 @@ document.getElementById('notificationSettingsForm').addEventListener('submit', a
     });
     
     try {
-        const response = await fetch('/LLRMSystem/modules/user-management/api/update-settings.php', {
+        const response = await fetch(App.apiUrl('users', 'update-settings.php'), {
             method: 'POST',
             body: formData
         });
@@ -299,7 +299,7 @@ document.getElementById('notificationSettingsForm').addEventListener('submit', a
 
 function confirmDataExport() {
     if (confirm('Export all your account data? This may take a few moments.')) {
-        window.location.href = '/LLRMSystem/modules/user-management/api/export-data.php';
+        window.location.href = App.apiUrl('users', 'export-data.php');
     }
 }
 

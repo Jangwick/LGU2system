@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/LLRMSystem/auth/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 require_once __DIR__ . '/../../core/config/database.php';
@@ -17,15 +17,15 @@ $tagModel = new DocumentTag($db);
 $documentId = $_GET['id'] ?? null;
 
 if (!$documentId) {
-    header('Location: /LLRMSystem/modules/document-management/views/index.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirect(DOCUMENTS_INDEX_URL);
 }
 
 $document = $documentModel->getById($documentId);
 
 if (!$document) {
-    header('Location: /LLRMSystem/modules/document-management/views/index.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirect(DOCUMENTS_INDEX_URL);
 }
 
 // Check permissions
@@ -33,16 +33,16 @@ $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
 
 // Viewers cannot edit any documents
 if ($userRole === 'viewer') {
+    require_once __DIR__ . '/../../core/config/config.php';
     $_SESSION['error_message'] = 'Access denied. Viewers cannot edit documents.';
-    header('Location: /LLRMSystem/modules/document-management/views/view.php?id=' . $documentId);
-    exit;
+    redirect(DOCUMENTS_URL . '/views/view.php?id=' . $documentId);
 }
 
 // Staff can only edit their own documents
 if ($userRole === 'staff' && $document['uploaded_by'] != $_SESSION['user_id']) {
+    require_once __DIR__ . '/../../core/config/config.php';
     $_SESSION['error_message'] = 'Access denied. You can only edit your own documents.';
-    header('Location: /LLRMSystem/modules/document-management/views/view.php?id=' . $documentId);
-    exit;
+    redirect(DOCUMENTS_URL . '/views/view.php?id=' . $documentId);
 }
 
 $documentTags = $tagModel->getByDocumentId($documentId);
@@ -51,9 +51,9 @@ $allTags = $tagModel->getAll();
 $pageTitle = 'Edit Document';
 $currentPage = 'documents';
 $breadcrumbs = [
-    ['label' => 'Dashboard', 'url' => '/LLRMSystem/LLRMSystem/dashboard.php'],
-    ['label' => 'Documents', 'url' => '/LLRMSystem/modules/document-management/views/index.php'],
-    ['label' => $document['reference_number'], 'url' => '/LLRMSystem/modules/document-management/views/view.php?id=' . $documentId],
+    ['label' => 'Dashboard', 'url' => DASHBOARD_INDEX_URL],
+    ['label' => 'Documents', 'url' => DOCUMENTS_INDEX_URL],
+    ['label' => $document['reference_number'], 'url' => DOCUMENTS_URL . '/views/view.php?id=' . $documentId],
     ['label' => 'Edit']
 ];
 
@@ -204,7 +204,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- Actions -->
                 <div class="flex justify-end gap-4">
-                    <a href="/LLRMSystem/modules/document-management/views/view.php?id=<?= $document['id'] ?>"
+                    <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?= $document['id'] ?>"
                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
                         Cancel
                     </a>
@@ -235,7 +235,7 @@ document.getElementById('tagSelect').addEventListener('change', function() {
 });
 
 function assignTag(tagId) {
-    fetch('/LLRMSystem/modules/document-management/api/assign-tag.php', {
+    fetch(App.apiUrl('documents', 'assign-tag.php'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ document_id: <?= $document['id'] ?>, tag_id: tagId })
@@ -251,7 +251,7 @@ function assignTag(tagId) {
 }
 
 function removeTag(tagId) {
-    fetch('/LLRMSystem/modules/document-management/api/remove-tag.php', {
+    fetch(App.apiUrl('documents', 'remove-tag.php'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ document_id: <?= $document['id'] ?>, tag_id: tagId })
@@ -273,7 +273,7 @@ function createTag() {
         return;
     }
 
-    fetch('/LLRMSystem/modules/document-management/api/create-tag.php', {
+    fetch(App.apiUrl('documents', 'create-tag.php'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: tagName, document_id: <?= $document['id'] ?> })
@@ -295,8 +295,8 @@ document.getElementById('editDocumentForm').addEventListener('submit', function(
     const hasFile = document.getElementById('replacementFile').files.length > 0;
     
     const url = hasFile 
-        ? '/LLRMSystem/modules/document-management/api/update-with-file.php'
-        : '/LLRMSystem/modules/document-management/api/update.php';
+        ? App.apiUrl('documents', 'update-with-file.php')
+        : App.apiUrl('documents', 'update.php');
     
     fetch(url, {
         method: 'POST',
@@ -306,7 +306,7 @@ document.getElementById('editDocumentForm').addEventListener('submit', function(
     .then(data => {
         if (data.success) {
             alert('Document updated successfully');
-            window.location.href = '/LLRMSystem/modules/document-management/views/view.php?id=' + <?= $document['id'] ?>;
+            window.location.href = App.config.urls.documents + '/views/view.php?id=' + <?= $document['id'] ?>;
         } else {
             alert('Error: ' + data.error);
         }

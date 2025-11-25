@@ -2,7 +2,7 @@
 /**
  * Root index file - Redirects to login page
  */
+require_once __DIR__ . '/modules/core/config/config.php';
 
 // Redirect to login page
-header('Location: /LLRMSystem/modules/authentication/views/login.php');
-exit;
+redirectToLogin();

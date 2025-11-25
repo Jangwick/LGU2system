@@ -1,10 +1,11 @@
+<?php require_once __DIR__ . '/../config/config.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?php echo $pageTitle ?? 'Legislative Records Management System'; ?></title>
+    <title><?php echo $pageTitle ?? APP_NAME; ?></title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -16,7 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/LLRMSystem/public/assets/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<?php echo asset('images/favicon.ico'); ?>">
     
     <!-- Prevent dark mode flicker - must run before page renders -->
     <script>
@@ -27,10 +28,13 @@
     </script>
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/LLRMSystem/public/assets/css/custom.css">
+    <link rel="stylesheet" href="<?php echo asset('css/custom.css'); ?>">
+    
+    <!-- Application Configuration -->
+    <script src="<?php echo asset('js/config.js'); ?>"></script>
     
     <!-- Notification System -->
-    <script src="/LLRMSystem/public/assets/js/notifications.js" defer></script>
+    <script src="<?php echo asset('js/notifications.js'); ?>" defer></script>
     
     <style type="text/tailwindcss">
         @layer components {

@@ -3,8 +3,8 @@ session_start();
 
 // Check authentication
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /LLRMSystem/modules/authentication/views/login.php');
-    exit;
+    require_once __DIR__ . '/../../core/config/config.php';
+    redirectToLogin();
 }
 
 // Load dashboard controller
@@ -53,12 +53,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <a href="/LLRMSystem/modules/document-management/views/create.php" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition shadow-md flex items-center">
+                    <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition shadow-md flex items-center">
                         <i class="bi bi-upload mr-2"></i>
                         Upload Document
                     </a>
                     <?php endif; ?>
-                    <a href="/LLRMSystem/modules/search/views/index.php" class="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition flex items-center">
+                    <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition flex items-center">
                         <i class="bi bi-search mr-2"></i>
                         Search
                     </a>
@@ -169,7 +169,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Recent Documents</h2>
-                    <a href="/LLRMSystem/modules/document-management/views/index.php" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
                         View All <i class="bi bi-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -225,11 +225,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <?php echo date('M d, Y', strtotime($doc['created_at'])); ?>
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap text-sm">
-                                            <a href="/LLRMSystem/modules/document-management/views/view.php?id=<?php echo $doc['id']; ?>" 
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?php echo $doc['id']; ?>" 
                                                class="text-blue-600 hover:text-blue-700 mr-2" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="/LLRMSystem/modules/document-management/api/download.php?id=<?php echo $doc['id']; ?>" 
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" 
                                                class="text-gray-600 hover:text-gray-700" title="Download">
                                                 <i class="bi bi-download"></i>
                                             </a>
@@ -249,28 +249,28 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
                     <div class="space-y-2">
                         <?php if (!in_array($userRole, ['viewer'])): ?>
-                        <a href="/LLRMSystem/modules/document-management/views/create.php" class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition">
+                        <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition">
                             <div class="bg-blue-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-upload text-blue-600"></i>
                             </div>
                             <span class="text-sm font-medium text-gray-700">Upload New Document</span>
                         </a>
                         <?php endif; ?>
-                        <a href="/LLRMSystem/modules/search/views/index.php" class="flex items-center p-3 hover:bg-green-50 rounded-lg transition">
+                        <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="flex items-center p-3 hover:bg-green-50 rounded-lg transition">
                             <div class="bg-green-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-search text-green-600"></i>
                             </div>
                             <span class="text-sm font-medium text-gray-700">Advanced Search</span>
                         </a>
                         <?php if (in_array($userRole, ['administrator', 'admin', 'officer'])): ?>
-                        <a href="/LLRMSystem/modules/reports-analytics/views/index.php" class="flex items-center p-3 hover:bg-purple-50 rounded-lg transition">
+                        <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="flex items-center p-3 hover:bg-purple-50 rounded-lg transition">
                             <div class="bg-purple-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-graph-up text-purple-600"></i>
                             </div>
                             <span class="text-sm font-medium text-gray-700">Generate Report</span>
                         </a>
                         <?php endif; ?>
-                        <a href="/LLRMSystem/modules/document-management/views/index.php" class="flex items-center p-3 hover:bg-orange-50 rounded-lg transition">
+                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="flex items-center p-3 hover:bg-orange-50 rounded-lg transition">
                             <div class="bg-orange-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-folder text-orange-600"></i>
                             </div>
