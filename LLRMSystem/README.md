@@ -134,7 +134,7 @@ http://localhost/LLRMSystem/modules/authentication/views/login.php
 
 Default credentials:
 - Email: admin@lgu.gov.ph
-- Password: Admin@123
+- Password: admin123
 
 ## 📂 Folder Structure
 
