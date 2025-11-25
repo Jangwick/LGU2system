@@ -1,0 +1,208 @@
+<!-- Top Navbar -->
+<nav class="bg-white shadow-md border-b border-gray-200 sticky top-0 z-40">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
+                <i class="bi bi-list text-2xl"></i>
+            </button>
+            
+            <!-- Page Title & Breadcrumb -->
+            <div class="flex-1 flex items-center">
+                <div class="ml-4">
+                    <h2 class="text-xl font-bold text-gray-800"><?php echo $pageTitle ?? 'Dashboard'; ?></h2>
+                    <?php if (isset($breadcrumbs)): ?>
+                    <nav class="flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
+                        <?php foreach ($breadcrumbs as $index => $crumb): ?>
+                            <?php if ($index > 0): ?>
+                                <i class="bi bi-chevron-right mx-2 text-xs"></i>
+                            <?php endif; ?>
+                            <?php if (isset($crumb['url'])): ?>
+                                <a href="<?php echo htmlspecialchars($crumb['url']); ?>" class="hover:text-blue-600">
+                                    <?php echo htmlspecialchars($crumb['label']); ?>
+                                </a>
+                            <?php else: ?>
+                                <span class="text-gray-800 font-medium"><?php echo htmlspecialchars($crumb['label']); ?></span>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </nav>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <!-- Right Side Actions -->
+            <div class="flex items-center space-x-4">
+                <!-- Search Bar -->
+                <div class="hidden lg:block">
+                    <div class="relative">
+                        <input type="text" 
+                               id="quick-search" 
+                               placeholder="Quick search documents..." 
+                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Dark/Light Mode Toggle -->
+                <button id="theme-toggle" class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
+                    <i class="bi bi-moon-fill text-xl dark-mode-icon"></i>
+                    <i class="bi bi-sun-fill text-xl light-mode-icon hidden"></i>
+                </button>
+                
+                <!-- Notifications -->
+                <div class="relative">
+                    <button id="notifications-btn" class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    
+                    <!-- Notifications Dropdown -->
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50" style="background-color: white;">
+                        <div class="p-4 border-b border-gray-200">
+                            <h3 class="text-sm font-semibold text-gray-800">Notifications</h3>
+                        </div>
+                        <div class="max-h-96 overflow-y-auto">
+                            <div class="p-4 hover:bg-gray-50 border-b border-gray-100 cursor-pointer">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-blue-100 rounded-full p-2">
+                                        <i class="bi bi-file-earmark-text text-blue-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-800">New ordinance document uploaded</p>
+                                        <p class="text-xs text-gray-500 mt-1">5 minutes ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3 border-t border-gray-200">
+                            <a href="/modules/notifications/views/index.php" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View all notifications</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Profile Dropdown -->
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg transition">
+                        <div class="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <p class="text-sm font-medium text-gray-800"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest User'); ?></p>
+                            <p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Guest'); ?></p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-600 text-xs"></i>
+                    </button>
+                    
+                    <!-- Profile Dropdown -->
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50" style="background-color: white;">
+                        <div class="p-4 border-b border-gray-200">
+                            <p class="text-sm font-medium text-gray-800"><?php echo htmlspecialchars($_SESSION['user_email'] ?? 'guest@lgu.gov'); ?></p>
+                            <p class="text-xs text-gray-500 mt-1"><?php echo htmlspecialchars($_SESSION['user_department'] ?? 'Legislative Office'); ?></p>
+                        </div>
+                        <div class="py-2">
+                            <a href="/LLRMSystem/modules/user-management/views/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="bi bi-person mr-2"></i>My Profile
+                            </a>
+                            <a href="/LLRMSystem/modules/user-management/views/settings.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="bi bi-gear mr-2"></i>Settings
+                            </a>
+                            <a href="/LLRMSystem/modules/help/views/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="bi bi-question-circle mr-2"></i>Help & Support
+                            </a>
+                        </div>
+                        <div class="border-t border-gray-200 py-2">
+                            <a href="/LLRMSystem/modules/authentication/controllers/LogoutController.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="bi bi-box-arrow-right mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Notifications dropdown toggle
+    const notificationsBtn = document.getElementById('notifications-btn');
+    const notificationsDropdown = document.getElementById('notifications-dropdown');
+    const profileBtn = document.getElementById('profile-btn');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    
+    if (notificationsBtn && notificationsDropdown) {
+        notificationsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationsDropdown.classList.toggle('hidden');
+            if (profileDropdown) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Profile dropdown toggle
+    if (profileBtn && profileDropdown) {
+        profileBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+            if (notificationsDropdown) {
+                notificationsDropdown.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (notificationsDropdown && !notificationsBtn.contains(e.target)) {
+            notificationsDropdown.classList.add('hidden');
+        }
+        if (profileDropdown && !profileBtn.contains(e.target)) {
+            profileDropdown.classList.add('hidden');
+        }
+    });
+    
+    // Prevent dropdown from closing when clicking inside it
+    if (notificationsDropdown) {
+        notificationsDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+    
+    if (profileDropdown) {
+        profileDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+    
+    // Dark/Light Mode Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+    const darkModeIcon = document.querySelector('.dark-mode-icon');
+    const lightModeIcon = document.querySelector('.light-mode-icon');
+    
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    if (currentTheme === 'dark') {
+        htmlElement.classList.add('dark');
+        if (darkModeIcon) darkModeIcon.classList.add('hidden');
+        if (lightModeIcon) lightModeIcon.classList.remove('hidden');
+    }
+    
+    // Toggle theme
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            htmlElement.classList.toggle('dark');
+            
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                if (darkModeIcon) darkModeIcon.classList.add('hidden');
+                if (lightModeIcon) lightModeIcon.classList.remove('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                if (darkModeIcon) darkModeIcon.classList.remove('hidden');
+                if (lightModeIcon) lightModeIcon.classList.add('hidden');
+            }
+        });
+    }
+});
+</script>

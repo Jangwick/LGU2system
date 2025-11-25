@@ -1,0 +1,83 @@
+<?php
+session_start();
+header('Content-Type: application/json');
+
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+    exit;
+}
+
+require_once __DIR__ . '/../../core/config/database.php';
+
+try {
+    $db = getDatabase();
+    
+    $full_name = $_POST['full_name'] ?? '';
+    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $department = $_POST['department'] ?? '';
+    $position = $_POST['position'] ?? '';
+    
+    // Validate required fields
+    if (empty($full_name) || empty($username) || empty($email)) {
+        echo json_encode(['success' => false, 'message' => 'Required fields are missing']);
+        exit;
+    }
+    
+    // Check if email is already taken by another user
+    $checkStmt = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+    $checkStmt->execute([$email, $_SESSION['user_id']]);
+    if ($checkStmt->fetch()) {
+        echo json_encode(['success' => false, 'message' => 'Email already in use']);
+        exit;
+    }
+    
+    // Check if username is already taken by another user
+    $checkStmt = $db->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
+    $checkStmt->execute([$username, $_SESSION['user_id']]);
+    if ($checkStmt->fetch()) {
+        echo json_encode(['success' => false, 'message' => 'Username already in use']);
+        exit;
+    }
+    
+    // Update user profile
+    $stmt = $db->prepare("
+        UPDATE users 
+        SET full_name = ?, 
+            username = ?, 
+            email = ?, 
+            phone = ?, 
+            department = ?, 
+            position = ?,
+            updated_at = NOW()
+        WHERE id = ?
+    ");
+    
+    $stmt->execute([
+        $full_name,
+        $username,
+        $email,
+        $phone,
+        $department,
+        $position,
+        $_SESSION['user_id']
+    ]);
+    
+    // Update session variables
+    $_SESSION['user_name'] = $full_name;
+    $_SESSION['user_email'] = $email;
+    $_SESSION['user_department'] = $department;
+    
+    // Log activity
+    $logStmt = $db->prepare("
+        INSERT INTO activity_logs (user_id, action, description, created_at) 
+        VALUES (?, 'update', 'Updated profile information', NOW())
+    ");
+    $logStmt->execute([$_SESSION['user_id']]);
+    
+    echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
+    
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Error updating profile: ' . $e->getMessage()]);
+}

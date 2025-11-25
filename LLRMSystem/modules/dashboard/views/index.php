@@ -1,0 +1,447 @@
+<?php
+session_start();
+
+// Check authentication
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /LLRMSystem/modules/authentication/views/login.php');
+    exit;
+}
+
+// Load dashboard controller
+require_once __DIR__ . '/../controllers/DashboardController.php';
+$dashboardController = new DashboardController();
+
+// Get dashboard data
+$stats = $dashboardController->getStatistics();
+$uploadTrend = $dashboardController->getUploadTrend();
+$documentTypes = $dashboardController->getDocumentTypesDistribution();
+$recentDocuments = $dashboardController->getRecentDocuments(5);
+$systemStatus = $dashboardController->getSystemStatus();
+
+$pageTitle = 'Dashboard';
+$currentPage = 'dashboard';
+$breadcrumbs = [
+    ['label' => 'Dashboard']
+];
+
+include_once __DIR__ . '/../../core/layouts/header.php';
+?>
+
+<!-- Sidebar -->
+<?php include_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
+
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top Navbar -->
+    <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
+    
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">
+                        Welcome back, <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?>! 👋
+                    </h1>
+                    <p class="text-blue-100">
+                        Here's what's happening with your legislative records today.
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <?php 
+                    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                    if (!in_array($userRole, ['viewer'])): 
+                    ?>
+                    <a href="/LLRMSystem/modules/document-management/views/create.php" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition shadow-md flex items-center">
+                        <i class="bi bi-upload mr-2"></i>
+                        Upload Document
+                    </a>
+                    <?php endif; ?>
+                    <a href="/LLRMSystem/modules/search/views/index.php" class="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition flex items-center">
+                        <i class="bi bi-search mr-2"></i>
+                        Search
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <!-- Total Documents -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Total Documents</p>
+                        <h3 class="text-3xl font-bold text-gray-800"><?php echo number_format($stats['total_documents']); ?></h3>
+                        <p class="<?php echo $stats['growth_percentage'] >= 0 ? 'text-green-600' : 'text-red-600'; ?> text-sm mt-2">
+                            <i class="bi bi-arrow-<?php echo $stats['growth_percentage'] >= 0 ? 'up' : 'down'; ?>"></i> 
+                            <?php echo abs($stats['growth_percentage']); ?>% from last month
+                        </p>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-4">
+                        <i class="bi bi-file-earmark-text text-blue-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pending Review -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Pending Review</p>
+                        <h3 class="text-3xl font-bold text-gray-800"><?php echo number_format($stats['pending_documents']); ?></h3>
+                        <p class="text-yellow-600 text-sm mt-2">
+                            <i class="bi bi-clock"></i> <?php echo $stats['urgent_pending']; ?> urgent
+                        </p>
+                    </div>
+                    <div class="bg-yellow-100 rounded-full p-4">
+                        <i class="bi bi-hourglass-split text-yellow-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Approved Today -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Approved Today</p>
+                        <h3 class="text-3xl font-bold text-gray-800"><?php echo number_format($stats['approved_today']); ?></h3>
+                        <p class="text-green-600 text-sm mt-2">
+                            <i class="bi bi-check-circle"></i> <?php echo $stats['approved_today'] > 0 ? 'On track' : 'No approvals yet'; ?>
+                        </p>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-4">
+                        <i class="bi bi-check-circle text-green-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Storage Used -->
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Storage Used</p>
+                        <h3 class="text-3xl font-bold text-gray-800"><?php echo $stats['storage_used_gb']; ?> GB</h3>
+                        <p class="text-gray-600 text-sm mt-2">
+                            <i class="bi bi-hdd"></i> <?php echo $stats['storage_percentage']; ?>% of <?php echo $stats['storage_total_gb']; ?> GB
+                        </p>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-4">
+                        <i class="bi bi-hdd-stack text-purple-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Document Uploads Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-800">Document Uploads (Last 7 Days)</h2>
+                    <button onclick="location.reload()" class="text-gray-500 hover:text-gray-700 text-sm" title="Refresh">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+                <div style="height: 300px; position: relative;">
+                    <canvas id="uploadsChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Document Types Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-800">Document Types Distribution</h2>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                </div>
+                <div style="height: 300px; position: relative;">
+                    <canvas id="documentTypesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity & Quick Links -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent Documents -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-800">Recent Documents</h2>
+                    <a href="/LLRMSystem/modules/document-management/views/index.php" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                        View All <i class="bi bi-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Document</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php if (empty($recentDocuments)): ?>
+                                <tr>
+                                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                                        <i class="bi bi-inbox text-4xl mb-2"></i>
+                                        <p>No documents found</p>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($recentDocuments as $doc): ?>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="bg-blue-100 rounded p-2 mr-3">
+                                                    <i class="bi bi-file-pdf text-blue-600"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-medium text-gray-900">
+                                                        <?php echo htmlspecialchars($doc['title']); ?>
+                                                    </p>
+                                                    <p class="text-xs text-gray-500">
+                                                        <?php echo htmlspecialchars($doc['reference_number']); ?>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span class="badge <?php echo $dashboardController->getTypeBadgeClass($doc['document_type']); ?>">
+                                                <?php echo htmlspecialchars($dashboardController->formatDocumentType($doc['document_type'])); ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span class="badge <?php echo $dashboardController->getStatusBadgeClass($doc['status']); ?>">
+                                                <?php echo ucfirst($doc['status']); ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                            <?php echo date('M d, Y', strtotime($doc['created_at'])); ?>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                            <a href="/LLRMSystem/modules/document-management/views/view.php?id=<?php echo $doc['id']; ?>" 
+                                               class="text-blue-600 hover:text-blue-700 mr-2" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="/LLRMSystem/modules/document-management/api/download.php?id=<?php echo $doc['id']; ?>" 
+                                               class="text-gray-600 hover:text-gray-700" title="Download">
+                                                <i class="bi bi-download"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Quick Links & Activity -->
+            <div class="space-y-6">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+                    <div class="space-y-2">
+                        <?php if (!in_array($userRole, ['viewer'])): ?>
+                        <a href="/LLRMSystem/modules/document-management/views/create.php" class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition">
+                            <div class="bg-blue-100 rounded-lg p-2 mr-3">
+                                <i class="bi bi-upload text-blue-600"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Upload New Document</span>
+                        </a>
+                        <?php endif; ?>
+                        <a href="/LLRMSystem/modules/search/views/index.php" class="flex items-center p-3 hover:bg-green-50 rounded-lg transition">
+                            <div class="bg-green-100 rounded-lg p-2 mr-3">
+                                <i class="bi bi-search text-green-600"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Advanced Search</span>
+                        </a>
+                        <?php if (in_array($userRole, ['administrator', 'admin', 'officer'])): ?>
+                        <a href="/LLRMSystem/modules/reports-analytics/views/index.php" class="flex items-center p-3 hover:bg-purple-50 rounded-lg transition">
+                            <div class="bg-purple-100 rounded-lg p-2 mr-3">
+                                <i class="bi bi-graph-up text-purple-600"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Generate Report</span>
+                        </a>
+                        <?php endif; ?>
+                        <a href="/LLRMSystem/modules/document-management/views/index.php" class="flex items-center p-3 hover:bg-orange-50 rounded-lg transition">
+                            <div class="bg-orange-100 rounded-lg p-2 mr-3">
+                                <i class="bi bi-folder text-orange-600"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Browse Documents</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- System Status -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">System Status</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">API Integration</span>
+                            <span class="badge badge-<?php echo $systemStatus['api']['class']; ?>">
+                                <i class="bi bi-<?php echo $systemStatus['api']['status'] === 'online' ? 'check-circle' : 'x-circle'; ?> mr-1"></i>
+                                <?php echo ucfirst($systemStatus['api']['status']); ?>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Database</span>
+                            <span class="badge badge-<?php echo $systemStatus['database']['class']; ?>">
+                                <i class="bi bi-<?php echo $systemStatus['database']['status'] === 'healthy' ? 'check-circle' : 'exclamation-circle'; ?> mr-1"></i>
+                                <?php echo ucfirst($systemStatus['database']['status']); ?>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Storage</span>
+                            <span class="badge badge-<?php echo $systemStatus['storage']['class']; ?>">
+                                <i class="bi bi-<?php echo $systemStatus['storage']['class'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?> mr-1"></i>
+                                <?php echo $systemStatus['storage']['status']; ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+
+<script>
+// Wait for DOM and Chart.js to load
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded');
+        return;
+    }
+
+    // Document Uploads Line Chart
+    const uploadsCanvas = document.getElementById('uploadsChart');
+    if (uploadsCanvas) {
+        const uploadsCtx = uploadsCanvas.getContext('2d');
+        new Chart(uploadsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Documents Uploaded',
+                    data: <?php echo json_encode($uploadTrend); ?>,
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Uploaded: ' + context.parsed.y + ' documents';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Document Types Doughnut Chart
+    const typesCanvas = document.getElementById('documentTypesChart');
+    if (typesCanvas) {
+        const typesCtx = typesCanvas.getContext('2d');
+        const typeLabels = <?php echo json_encode(array_map(function($type) use ($dashboardController) { 
+            return $dashboardController->formatDocumentType($type['document_type']); 
+        }, $documentTypes)); ?>;
+        const typeCounts = <?php echo json_encode(array_column($documentTypes, 'count')); ?>;
+        
+        new Chart(typesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: typeLabels,
+                datasets: [{
+                    data: typeCounts,
+                    backgroundColor: [
+                        'rgb(59, 130, 246)',   // Blue
+                        'rgb(16, 185, 129)',   // Green
+                        'rgb(245, 158, 11)',   // Yellow
+                        'rgb(139, 92, 246)',   // Purple
+                        'rgb(239, 68, 68)',    // Red
+                        'rgb(236, 72, 153)',   // Pink
+                        'rgb(249, 115, 22)',   // Orange
+                        'rgb(107, 114, 128)',  // Gray
+                        'rgb(20, 184, 166)',   // Teal
+                        'rgb(99, 102, 241)'    // Indigo
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12
+                            },
+                            generateLabels: function(chart) {
+                                const data = chart.data;
+                                if (data.labels.length && data.datasets.length) {
+                                    return data.labels.map((label, i) => {
+                                        const value = data.datasets[0].data[i];
+                                        return {
+                                            text: label + ' (' + value + ')',
+                                            fillStyle: data.datasets[0].backgroundColor[i],
+                                            hidden: false,
+                                            index: i
+                                        };
+                                    });
+                                }
+                                return [];
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
