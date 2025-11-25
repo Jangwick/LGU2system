@@ -205,6 +205,8 @@
         </div>
     </div>
     
+    <!-- Application Configuration -->
+    <script src="<?php echo asset('js/config.js'); ?>"></script>
     <script src="<?php echo asset('js/auth.js'); ?>"></script>
     <script>
         // Password visibility toggles
