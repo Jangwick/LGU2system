@@ -19,7 +19,6 @@ access_log
 # Environment files
 .env
 .env.local
-config.php
 
 # Uploaded files
 uploads/
