@@ -133,20 +133,26 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Documents by Type -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Documents by Type</h3>
-                <canvas id="documentsByTypeChart"></canvas>
+                <div class="relative" style="height: 280px;">
+                    <canvas id="documentsByTypeChart"></canvas>
+                </div>
             </div>
 
             <!-- Documents by Status -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Documents by Status</h3>
-                <canvas id="documentsByStatusChart"></canvas>
+                <div class="relative" style="height: 280px;">
+                    <canvas id="documentsByStatusChart"></canvas>
+                </div>
             </div>
         </div>
 
         <!-- Timeline Chart -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Document Upload Timeline (Last 12 Months)</h3>
-            <canvas id="timelineChart"></canvas>
+            <div class="relative" style="height: 300px;">
+                <canvas id="timelineChart"></canvas>
+            </div>
         </div>
 
         <!-- Charts Row 2 -->
@@ -154,13 +160,17 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Activity by Action -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Activity by Action (30 Days)</h3>
-                <canvas id="activityChart"></canvas>
+                <div class="relative" style="height: 280px;">
+                    <canvas id="activityChart"></canvas>
+                </div>
             </div>
 
             <!-- Documents by Department -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Documents by Department</h3>
-                <canvas id="departmentChart"></canvas>
+                <div class="relative" style="height: 280px;">
+                    <canvas id="departmentChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -360,10 +370,27 @@ new Chart(document.getElementById('documentsByTypeChart'), {
     },
     options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
-                position: 'bottom'
+                position: 'bottom',
+                labels: {
+                    padding: 15,
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return label + ': ' + value + ' (' + percentage + '%)';
+                    }
+                }
             }
         }
     }
@@ -381,10 +408,27 @@ new Chart(document.getElementById('documentsByStatusChart'), {
     },
     options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
-                position: 'bottom'
+                position: 'bottom',
+                labels: {
+                    padding: 15,
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return label + ': ' + value + ' (' + percentage + '%)';
+                    }
+                }
             }
         }
     }
@@ -401,21 +445,41 @@ new Chart(document.getElementById('timelineChart'), {
             borderColor: chartColors.blue,
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
             tension: 0.4,
-            fill: true
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 3,
+            pointHoverRadius: 5
         }]
     },
     options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: true,
-                position: 'top'
+                position: 'top',
+                labels: {
+                    font: {
+                        size: 12
+                    }
+                }
             }
         },
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            x: {
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
             }
         }
     }
@@ -429,12 +493,14 @@ new Chart(document.getElementById('activityChart'), {
         datasets: [{
             label: 'Activities',
             data: <?php echo json_encode(array_column($activityByAction, 'count')); ?>,
-            backgroundColor: chartColors.indigo
+            backgroundColor: chartColors.indigo,
+            borderRadius: 6,
+            borderWidth: 0
         }]
     },
     options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: false
@@ -442,7 +508,19 @@ new Chart(document.getElementById('activityChart'), {
         },
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            x: {
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
             }
         }
     }
@@ -450,19 +528,21 @@ new Chart(document.getElementById('activityChart'), {
 
 // Documents by Department Chart
 new Chart(document.getElementById('departmentChart'), {
-    type: 'horizontalBar',
+    type: 'bar',
     data: {
         labels: <?php echo json_encode(array_column($documentsByDepartment, 'department')); ?>,
         datasets: [{
             label: 'Documents',
             data: <?php echo json_encode(array_column($documentsByDepartment, 'count')); ?>,
-            backgroundColor: chartColors.green
+            backgroundColor: chartColors.green,
+            borderRadius: 6,
+            borderWidth: 0
         }]
     },
     options: {
         indexAxis: 'y',
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: false
@@ -470,7 +550,19 @@ new Chart(document.getElementById('departmentChart'), {
         },
         scales: {
             x: {
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            y: {
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
             }
         }
     }
