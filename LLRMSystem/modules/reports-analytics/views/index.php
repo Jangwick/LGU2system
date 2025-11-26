@@ -358,8 +358,23 @@ const chartColors = {
     orange: 'rgb(249, 115, 22)'
 };
 
+// Function to check if dark mode is active
+function isDarkMode() {
+    return document.documentElement.classList.contains('dark');
+}
+
+// Function to get label color based on theme
+function getLabelColor() {
+    return isDarkMode() ? '#ffffff' : '#374151';
+}
+
+// Function to get grid color based on theme
+function getGridColor() {
+    return isDarkMode() ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+}
+
 // Documents by Type Chart
-new Chart(document.getElementById('documentsByTypeChart'), {
+const docTypeChart = new Chart(document.getElementById('documentsByTypeChart'), {
     type: 'doughnut',
     data: {
         labels: <?php echo json_encode(array_column($documentsByType, 'document_type')); ?>,
@@ -378,7 +393,8 @@ new Chart(document.getElementById('documentsByTypeChart'), {
                     padding: 15,
                     font: {
                         size: 12
-                    }
+                    },
+                    color: getLabelColor()
                 }
             },
             tooltip: {
@@ -397,7 +413,7 @@ new Chart(document.getElementById('documentsByTypeChart'), {
 });
 
 // Documents by Status Chart
-new Chart(document.getElementById('documentsByStatusChart'), {
+const docStatusChart = new Chart(document.getElementById('documentsByStatusChart'), {
     type: 'pie',
     data: {
         labels: <?php echo json_encode(array_column($documentsByStatus, 'status')); ?>,
@@ -416,7 +432,8 @@ new Chart(document.getElementById('documentsByStatusChart'), {
                     padding: 15,
                     font: {
                         size: 12
-                    }
+                    },
+                    color: getLabelColor()
                 }
             },
             tooltip: {
@@ -435,7 +452,7 @@ new Chart(document.getElementById('documentsByStatusChart'), {
 });
 
 // Timeline Chart
-new Chart(document.getElementById('timelineChart'), {
+const timelineChart = new Chart(document.getElementById('timelineChart'), {
     type: 'line',
     data: {
         labels: <?php echo json_encode(array_column($timeline, 'month')); ?>,
@@ -461,7 +478,8 @@ new Chart(document.getElementById('timelineChart'), {
                 labels: {
                     font: {
                         size: 12
-                    }
+                    },
+                    color: getLabelColor()
                 }
             }
         },
@@ -471,14 +489,22 @@ new Chart(document.getElementById('timelineChart'), {
                 ticks: {
                     font: {
                         size: 11
-                    }
+                    },
+                    color: getLabelColor()
+                },
+                grid: {
+                    color: getGridColor()
                 }
             },
             x: {
                 ticks: {
                     font: {
                         size: 11
-                    }
+                    },
+                    color: getLabelColor()
+                },
+                grid: {
+                    color: getGridColor()
                 }
             }
         }
@@ -486,7 +512,7 @@ new Chart(document.getElementById('timelineChart'), {
 });
 
 // Activity by Action Chart
-new Chart(document.getElementById('activityChart'), {
+const activityChart = new Chart(document.getElementById('activityChart'), {
     type: 'bar',
     data: {
         labels: <?php echo json_encode(array_column($activityByAction, 'action')); ?>,
@@ -512,14 +538,22 @@ new Chart(document.getElementById('activityChart'), {
                 ticks: {
                     font: {
                         size: 11
-                    }
+                    },
+                    color: getLabelColor()
+                },
+                grid: {
+                    color: getGridColor()
                 }
             },
             x: {
                 ticks: {
                     font: {
                         size: 11
-                    }
+                    },
+                    color: getLabelColor()
+                },
+                grid: {
+                    color: getGridColor()
                 }
             }
         }
@@ -527,7 +561,7 @@ new Chart(document.getElementById('activityChart'), {
 });
 
 // Documents by Department Chart
-new Chart(document.getElementById('departmentChart'), {
+const departmentChart = new Chart(document.getElementById('departmentChart'), {
     type: 'bar',
     data: {
         labels: <?php echo json_encode(array_column($documentsByDepartment, 'department')); ?>,
@@ -554,18 +588,56 @@ new Chart(document.getElementById('departmentChart'), {
                 ticks: {
                     font: {
                         size: 11
-                    }
+                    },
+                    color: getLabelColor()
+                },
+                grid: {
+                    color: getGridColor()
                 }
             },
             y: {
                 ticks: {
                     font: {
                         size: 11
-                    }
+                    },
+                    color: getLabelColor()
+                },
+                grid: {
+                    color: getGridColor()
                 }
             }
         }
     }
+});
+
+// Listen for theme changes and update all charts
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'class') {
+            const newLabelColor = getLabelColor();
+            const newGridColor = getGridColor();
+            
+            // Update all chart labels and grids
+            [docTypeChart, docStatusChart].forEach(chart => {
+                chart.options.plugins.legend.labels.color = newLabelColor;
+                chart.update();
+            });
+            
+            [timelineChart, activityChart, departmentChart].forEach(chart => {
+                chart.options.plugins.legend.labels.color = newLabelColor;
+                chart.options.scales.x.ticks.color = newLabelColor;
+                chart.options.scales.y.ticks.color = newLabelColor;
+                chart.options.scales.x.grid.color = newGridColor;
+                chart.options.scales.y.grid.color = newGridColor;
+                chart.update();
+            });
+        }
+    });
+});
+
+observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
 });
 
 function showExportModal() {

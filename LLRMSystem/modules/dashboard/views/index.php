@@ -314,6 +314,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 
 <script>
+// Function to check if dark mode is active
+function isDarkMode() {
+    return document.documentElement.classList.contains('dark');
+}
+
+// Function to get label color based on theme
+function getLabelColor() {
+    return isDarkMode() ? '#ffffff' : '#374151';
+}
+
+// Function to get grid color based on theme
+function getGridColor() {
+    return isDarkMode() ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+}
+
 // Wait for DOM and Chart.js to load
 document.addEventListener('DOMContentLoaded', function() {
     // Check if Chart.js is loaded
@@ -324,9 +339,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Document Uploads Line Chart
     const uploadsCanvas = document.getElementById('uploadsChart');
+    let uploadsChart;
     if (uploadsCanvas) {
         const uploadsCtx = uploadsCanvas.getContext('2d');
-        new Chart(uploadsCtx, {
+        uploadsChart = new Chart(uploadsCtx, {
             type: 'line',
             data: {
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -360,7 +376,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         beginAtZero: true,
                         ticks: {
                             stepSize: 1,
-                            precision: 0
+                            precision: 0,
+                            color: getLabelColor()
+                        },
+                        grid: {
+                            color: getGridColor()
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: getLabelColor()
+                        },
+                        grid: {
+                            color: getGridColor()
                         }
                     }
                 }
@@ -370,6 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Document Types Doughnut Chart
     const typesCanvas = document.getElementById('documentTypesChart');
+    let typesChart;
     if (typesCanvas) {
         const typesCtx = typesCanvas.getContext('2d');
         const typeLabels = <?php echo json_encode(array_map(function($type) use ($dashboardController) { 
@@ -377,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, $documentTypes)); ?>;
         const typeCounts = <?php echo json_encode(array_column($documentTypes, 'count')); ?>;
         
-        new Chart(typesCtx, {
+        typesChart = new Chart(typesCtx, {
             type: 'doughnut',
             data: {
                 labels: typeLabels,
@@ -411,6 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             font: {
                                 size: 12
                             },
+                            color: getLabelColor(),
                             generateLabels: function(chart) {
                                 const data = chart.data;
                                 if (data.labels.length && data.datasets.length) {
@@ -443,5 +473,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Listen for theme changes and update all charts
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                const newLabelColor = getLabelColor();
+                const newGridColor = getGridColor();
+                
+                // Update uploads chart
+                if (uploadsChart) {
+                    uploadsChart.options.scales.x.ticks.color = newLabelColor;
+                    uploadsChart.options.scales.y.ticks.color = newLabelColor;
+                    uploadsChart.options.scales.x.grid.color = newGridColor;
+                    uploadsChart.options.scales.y.grid.color = newGridColor;
+                    uploadsChart.update();
+                }
+                
+                // Update types chart
+                if (typesChart) {
+                    typesChart.options.plugins.legend.labels.color = newLabelColor;
+                    typesChart.update();
+                }
+            }
+        });
+    });
+
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
 });
 </script>
