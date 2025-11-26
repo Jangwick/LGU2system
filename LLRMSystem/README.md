@@ -46,11 +46,12 @@ The Legislative Records Management System (LRMS) is the **central document repos
 
 ### For Administrators:
 - 👥 **User Management** - Manage users, roles, and permissions
-- 🔐 **Access Control** - Fine-grained permission system
-- 📝 **Activity Logs** - Monitor all system activities
+- 🔐 **Access Control** - Fine-grained permission system with role hierarchy
+- 📝 **Activity Logs** - Monitor all system activities with advanced filtering
 - 🔌 **API Management** - Manage API keys for integrations
-- 💾 **Storage Management** - Monitor storage usage
+- 💾 **Storage Management** - Monitor storage usage and quotas
 - ⚙️ **System Settings** - Configure system parameters
+- 📊 **Audit Trail** - Complete audit logging with IP tracking and detailed reports
 
 ### For Developers:
 - 🔗 **RESTful API** - Well-documented API endpoints
@@ -191,17 +192,18 @@ LLRMSystem/
 
 ### Frontend:
 - **HTML5** - Semantic markup
-- **Tailwind CSS 4** - Utility-first CSS framework
-- **JavaScript ES6+** - Modern vanilla JavaScript
-- **Chart.js** - Data visualization
+- **Tailwind CSS 4** - Utility-first CSS framework with dark mode support
+- **JavaScript ES6+** - Modern vanilla JavaScript with enhanced animations
+- **Chart.js** - Data visualization with theme-aware charts
 - **Bootstrap Icons** - Icon library
+- **Custom Animations** - Smooth transitions and interactive effects
 
 ### Backend:
-- **PHP 8.x** - Server-side language
+- **PHP 8.x** - Server-side language with modern features
 - **MySQL** - Relational database
-- **PDO** - Database abstraction layer
-- **MVC Architecture** - Design pattern
-- **RESTful API** - API design
+- **PDO** - Database abstraction layer with prepared statements
+- **MVC Architecture** - Clean separation of concerns
+- **RESTful API** - Well-documented API design
 
 ### Security:
 - **Password Hashing** - bcrypt
@@ -268,6 +270,30 @@ LLRMSystem/
 - Activity logs
 - Access logs
 - System monitoring
+
+#### 17. **Help & Support** (`modules/help/`)
+- FAQ section
+- User guides
+- Contact support
+- System documentation
+
+## 🎨 User Interface Features
+
+### Design System:
+- **Responsive Design** - Works on all device sizes
+- **Dark Mode** - System-wide dark theme with smooth transitions
+- **Accessibility** - WCAG 2.1 compliant
+- **Interactive Charts** - Real-time data visualization
+- **Smooth Animations** - Enhanced user experience with fluid transitions
+- **Toast Notifications** - Non-intrusive feedback messages
+- **Loading States** - Skeleton loaders and progress indicators
+
+### Theme Toggle:
+The system includes a comprehensive dark mode that:
+- Automatically adapts all UI components
+- Preserves user preference across sessions
+- Updates charts and graphs dynamically
+- Ensures proper contrast and readability
 
 ## 🔌 API Integration
 
@@ -342,38 +368,52 @@ DELETE /modules/integration-ordinances/api/ordinances.php?ordinance_id=123
    - PDO prepared statements
    - Parameterized queries
    - Input validation
+   - Type casting and sanitization
 
 2. **XSS Protection**
    - `htmlspecialchars()` on all outputs
    - Content Security Policy headers
    - Input sanitization
+   - Output encoding
 
 3. **CSRF Protection**
    - CSRF tokens on all forms
    - Token validation
    - SameSite cookies
+   - Double-submit cookie pattern
 
 4. **Authentication**
    - Password hashing (bcrypt)
-   - Session management
-   - Session timeout
+   - Secure session management
+   - Session timeout (30 minutes)
    - Remember me tokens
+   - Account lockout after failed attempts
 
 5. **Authorization**
    - Role-based access control (RBAC)
-   - Permission checks
+   - Hierarchical permissions
    - Resource ownership validation
+   - API-level permission checks
 
 6. **File Upload Security**
-   - File type validation
-   - File size limits
+   - File type validation (whitelist)
+   - File size limits (50MB max)
    - Virus scanning (recommended)
-   - Secure file storage
+   - Secure file storage outside web root
+   - Randomized filenames
 
 7. **API Security**
    - API key authentication
+   - Request validation
    - Rate limiting (recommended)
    - HTTPS only (production)
+   - CORS configuration
+
+8. **Data Protection**
+   - Encrypted sensitive data
+   - Secure password reset flow
+   - Audit logging for compliance
+   - Regular security updates
 
 ## 📖 Usage Guide
 
@@ -446,9 +486,34 @@ php vendor/bin/phpunit --coverage-html coverage/
 
 ## 📞 Support
 
-- **Documentation**: See `/docs` folder
-- **Issues**: GitHub Issues
+- **Documentation**: See `docus/` folder for detailed guides
+- **Issues**: GitHub Issues for bug reports
 - **Email**: support@lgu.gov.ph
+- **Help Center**: Built-in help module with FAQ
+
+## 🔄 Recent Updates (November 2025)
+
+### Version 1.0.0
+- ✅ Complete dark mode implementation
+- ✅ Enhanced UI animations and transitions
+- ✅ Improved chart visualizations with theme support
+- ✅ User profile management features
+- ✅ Advanced audit logging system
+- ✅ Bug fixes for PHP 8.x compatibility
+- ✅ Security enhancements and vulnerability patches
+- ✅ Performance optimizations
+- ✅ Responsive design improvements
+
+## 🚀 Future Enhancements
+
+- [ ] Email notifications system
+- [ ] Advanced workflow automation
+- [ ] Mobile application (iOS/Android)
+- [ ] Integration with e-signature platforms
+- [ ] AI-powered document classification
+- [ ] Multi-language support
+- [ ] Advanced analytics dashboard
+- [ ] Blockchain integration for document verification
 
 ## 📄 License
 
@@ -457,3 +522,5 @@ Copyright © 2025 LGU Legislative Office. All rights reserved.
 ---
 
 **Built with ❤️ for better legislative document management**
+
+For detailed technical documentation, see the `docus/` folder.
