@@ -443,12 +443,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             color: getLabelColor(),
                             generateLabels: function(chart) {
                                 const data = chart.data;
+                                const currentColor = getLabelColor();
                                 if (data.labels.length && data.datasets.length) {
                                     return data.labels.map((label, i) => {
                                         const value = data.datasets[0].data[i];
                                         return {
                                             text: label + ' (' + value + ')',
                                             fillStyle: data.datasets[0].backgroundColor[i],
+                                            fontColor: currentColor,
                                             hidden: false,
                                             index: i
                                         };
