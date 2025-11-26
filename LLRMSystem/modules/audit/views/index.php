@@ -112,7 +112,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <?php foreach ($data['actions'] as $action): ?>
                             <option value="<?php echo $action; ?>" 
                                     <?php echo $data['filters']['action'] == $action ? 'selected' : ''; ?>>
-                                <?php echo ucfirst($action); ?>
+                                <?php echo ucfirst($action ?? ''); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -124,7 +124,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <?php foreach ($data['tables'] as $table): ?>
                             <option value="<?php echo $table; ?>" 
                                     <?php echo $data['filters']['table_name'] == $table ? 'selected' : ''; ?>>
-                                <?php echo str_replace('_', ' ', ucfirst($table)); ?>
+                                <?php echo str_replace('_', ' ', ucfirst($table ?? '')); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -226,11 +226,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         };
                                         ?>
                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $actionClass; ?>">
-                                            <?php echo ucfirst($log['action']); ?>
+                                            <?php echo ucfirst($log['action'] ?? ''); ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        <?php echo str_replace('_', ' ', ucfirst($log['table_name'])); ?>
+                                        <?php echo str_replace('_', ' ', ucfirst($log['table_name'] ?? '')); ?>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900">
                                         <?php echo htmlspecialchars($log['description']); ?>
