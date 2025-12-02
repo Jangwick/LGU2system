@@ -4,30 +4,6 @@ require_once __DIR__ . '/../controllers/ReportController.php';
 
 $controller = new ReportController();
 
-// Handle export requests
-if (isset($_GET['export'])) {
-    $reportType = $_GET['export'];
-    $startDate = $_GET['start_date'] ?? null;
-    $endDate = $_GET['end_date'] ?? null;
-    
-    switch ($reportType) {
-        case 'user_activity':
-            $data = $controller->getUserActivityReport($startDate, $endDate);
-            break;
-        case 'document_access':
-            $data = $controller->getDocumentAccessReport($startDate, $endDate);
-            break;
-        case 'top_uploaders':
-            $data = $controller->getTopUploaders(50);
-            break;
-        default:
-            $data = [];
-    }
-    
-    $controller->exportToCSV($reportType, $data);
-    exit;
-}
-
 // Get all dashboard data
 $stats = $controller->getDashboardStats();
 $documentsByType = $controller->getDocumentsByType();
@@ -312,14 +288,25 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </button>
         </div>
         
-        <form method="GET">
+        <form method="GET" action="<?php echo REPORTS_URL; ?>/api/export.php">
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
-                <select name="export" class="input-field" required>
+                <select name="report_type" class="input-field" required>
                     <option value="">Select Report...</option>
                     <option value="user_activity">User Activity Report</option>
                     <option value="document_access">Document Access Report</option>
                     <option value="top_uploaders">Top Uploaders Report</option>
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Export Format</label>
+                <select name="format" class="input-field" required>
+                    <option value="">Select Format...</option>
+                    <option value="pdf">PDF Document</option>
+                    <option value="excel">Excel Spreadsheet (.xlsx)</option>
+                    <option value="word">Word Document (.docx)</option>
+                    <option value="csv">CSV File</option>
                 </select>
             </div>
             
@@ -338,7 +325,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     Cancel
                 </button>
                 <button type="submit" class="btn-primary">
-                    <i class="bi bi-download mr-2"></i> Export CSV
+                    <i class="bi bi-download mr-2"></i> Export Report
                 </button>
             </div>
         </form>
