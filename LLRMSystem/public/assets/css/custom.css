@@ -359,6 +359,16 @@
     background-color: #991b1b !important;
 }
 
+/* Dark Mode - Status Badges */
+.dark .bg-green-100 {
+    background-color: #166534 !important;
+}
+
+.dark .text-green-800,
+.dark .text-green-600 {
+    color: #4ade80 !important;
+}
+
 .dark .bg-gray-50,
 .dark .bg-gray-100 {
     background-color: #1a1a1a !important;
