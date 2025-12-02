@@ -52,11 +52,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Page Header -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Reports & Analytics</h1>
-                    <p class="text-gray-600">Comprehensive insights and statistical analysis</p>
+                    <h1 class="text-2xl font-bold mb-2">Reports & Analytics</h1>
+                    <p class="text-red-100">Comprehensive insights and statistical analysis</p>
                 </div>
                 <div class="flex gap-3">
                     <button onclick="showExportModal()" class="btn-success flex items-center">

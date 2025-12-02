@@ -26,14 +26,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Page Header -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Audit Logs</h1>
-                    <p class="text-gray-600">System activity and security audit trail</p>
+                    <h1 class="text-2xl font-bold mb-2">Audit Logs</h1>
+                    <p class="text-red-100">System activity and security audit trail</p>
                 </div>
                 <a href="?export=csv&<?php echo http_build_query($data['filters']); ?>" 
-                   class="btn-success flex items-center">
+                   class="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition shadow-md flex items-center">
                     <i class="bi bi-download mr-2"></i> Export CSV
                 </a>
             </div>

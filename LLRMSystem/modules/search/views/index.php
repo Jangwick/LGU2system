@@ -53,9 +53,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Search Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
             <h1 class="text-3xl font-bold mb-3">Advanced Document Search</h1>
-            <p class="text-blue-100">Search through thousands of legislative documents with powerful filters</p>
+            <p class="text-red-100">Search through thousands of legislative documents with powerful filters</p>
         </div>
         
         <!-- Main Search Box -->

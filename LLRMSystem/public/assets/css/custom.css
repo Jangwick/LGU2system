@@ -281,7 +281,7 @@
 
 .dark aside .bg-red-600,
 .dark .sidebar .bg-red-600 {
-    background-color: #991b1b !important;
+    background-color: #dc2626 !important;
 }
 
 /* Dark Mode - Cards & Containers */
@@ -432,15 +432,15 @@
 /* Dark Mode - Gradient Backgrounds */
 .dark .gradient-blue,
 .dark .bg-gradient-to-r {
-    background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%) !important;
+    background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
 }
 
 .dark .bg-red-600 {
-    background-color: #991b1b !important;
+    background-color: #dc2626 !important;
 }
 
 .dark .bg-red-500 {
-    background-color: #dc2626 !important;
+    background-color: #ef4444 !important;
 }
 
 /* Dark Mode - Icons */
@@ -454,10 +454,6 @@
 
 .dark .text-yellow-600 {
     color: #fbbf24 !important;
-}
-
-.dark .text-red-600 {
-    color: #f87171 !important;
 }
 
 /* Dark Mode Transition */

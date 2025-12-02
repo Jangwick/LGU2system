@@ -18,13 +18,13 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Page Header -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">User Management</h1>
-                    <p class="text-gray-600">Manage system users and permissions</p>
+                    <h1 class="text-2xl font-bold mb-2">User Management</h1>
+                    <p class="text-red-100">Manage system users and permissions</p>
                 </div>
-                <button onclick="openCreateModal()" class="btn-primary flex items-center">
+                <button onclick="openCreateModal()" class="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition shadow-md flex items-center">
                     <i class="bi bi-person-plus mr-2"></i> Add New User
                 </button>
             </div>
