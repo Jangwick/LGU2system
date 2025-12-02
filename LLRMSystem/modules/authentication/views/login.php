@@ -12,12 +12,14 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
-<body class="bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-red-50 via-white to-red-50 min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
         <!-- Logo Section -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center mb-4">
-                <img src="/LLRMSystem/public/assets/images/logo.png" alt="City Government of Valenzuela" class="w-40 h-40 object-contain drop-shadow-lg">
+                <div class="bg-white rounded-full shadow-xl flex items-center justify-center overflow-hidden" style="width: 160px; height: 160px;">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" style="width: 120%; height: 120%;" class="object-cover">
+                </div>
             </div>
             <h1 class="text-3xl font-bold text-gray-800">LRMS</h1>
             <p class="text-gray-600 mt-2">Legislative Records Management System</p>
@@ -68,7 +70,7 @@
                            name="email" 
                            required
                            placeholder="your.email@lgu.gov.ph"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
                     <span class="text-red-500 text-xs hidden" id="email-error"></span>
                 </div>
                 
@@ -83,7 +85,7 @@
                                name="password" 
                                required
                                placeholder="Enter your password"
-                               class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                               class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
                         <button type="button" 
                                 id="toggle-password" 
                                 class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
@@ -99,10 +101,10 @@
                         <input type="checkbox" 
                                name="remember" 
                                id="remember"
-                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+                               class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-2 focus:ring-red-500">
                         <span class="ml-2 text-sm text-gray-700">Remember me</span>
                     </label>
-                    <a href="<?php echo AUTH_URL; ?>/views/forgot-password.php" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                    <a href="<?php echo AUTH_URL; ?>/views/forgot-password.php" class="text-sm text-red-600 hover:text-red-700 font-medium">
                         Forgot password?
                     </a>
                 </div>
@@ -110,7 +112,7 @@
                 <!-- Submit Button -->
                 <button type="submit" 
                         id="login-btn"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200 ease-in-out shadow-md hover:shadow-lg flex items-center justify-center">
+                        class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-200 ease-in-out shadow-md hover:shadow-lg flex items-center justify-center">
                     <span id="login-btn-text">Sign In</span>
                     <i class="bi bi-arrow-right ml-2"></i>
                 </button>
@@ -142,7 +144,7 @@
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Don't have an account? 
-                    <a href="<?php echo REGISTER_URL; ?>" class="text-blue-600 hover:text-blue-700 font-semibold">Create Account</a>
+                    <a href="<?php echo REGISTER_URL; ?>" class="text-red-600 hover:text-red-700 font-semibold">Create Account</a>
                 </p>
             </div>
         </div>
