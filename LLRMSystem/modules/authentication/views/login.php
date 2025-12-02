@@ -16,11 +16,13 @@
     <div class="w-full max-w-md">
         <!-- Logo Section -->
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
-                <i class="bi bi-file-earmark-text text-white text-3xl"></i>
+            <div class="inline-flex items-center justify-center mb-4">
+                <img src="/LLRMSystem/public/assets/images/logo.png" alt="City Government of Valenzuela" class="w-40 h-40 object-contain drop-shadow-lg">
             </div>
             <h1 class="text-3xl font-bold text-gray-800">LRMS</h1>
             <p class="text-gray-600 mt-2">Legislative Records Management System</p>
+            <p class="text-sm text-red-600 font-semibold mt-1">City Government of Valenzuela</p>
+            <p class="text-xs text-gray-500">Metropolitan Manila</p>
         </div>
         
         <!-- Login Card -->

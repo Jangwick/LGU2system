@@ -3,12 +3,12 @@
     <!-- Logo Section -->
     <div class="p-6 border-b border-red-700">
         <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition">
-            <div class="bg-white rounded-lg p-2">
-                <i class="bi bi-file-earmark-text text-red-800 text-2xl"></i>
+            <div class="bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden" style="width: 70px; height: 70px;">
+                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" style="width: 120%; height: 120%;" class="object-cover">
             </div>
             <div>
                 <h1 class="text-lg font-bold">LRMS</h1>
-                <p class="text-xs text-red-200">Legislative Records</p>
+                <p class="text-xs text-red-200">City of Valenzuela</p>
             </div>
         </a>
     </div>

@@ -7,6 +7,11 @@
                 <i class="bi bi-list text-2xl"></i>
             </button>
             
+            <!-- Logo (Mobile) -->
+            <div class="md:hidden flex items-center">
+                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-12 h-12 object-contain mr-2">
+            </div>
+            
             <!-- Page Title & Breadcrumb -->
             <div class="flex-1 flex items-center">
                 <div class="ml-4">

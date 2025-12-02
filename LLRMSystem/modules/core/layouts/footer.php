@@ -4,8 +4,11 @@
     <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="text-sm text-gray-600">
-                    &copy; <?php echo date('Y'); ?> Legislative Records Management System. All rights reserved.
+                <div class="flex items-center space-x-3">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-10 h-10 object-contain">
+                    <div class="text-sm text-gray-600">
+                        &copy; <?php echo date('Y'); ?> City Government of Valenzuela - LRMS. All rights reserved.
+                    </div>
                 </div>
                 <div class="flex items-center space-x-6 mt-2 md:mt-0">
                     <a href="/modules/help/views/privacy.php" class="text-sm text-gray-600 hover:text-red-600">Privacy Policy</a>
@@ -25,8 +28,8 @@
         <div class="p-6 border-b border-red-700">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-white rounded-lg p-2">
-                        <i class="bi bi-file-earmark-text text-red-800 text-2xl"></i>
+                    <div class="bg-white rounded-full p-1.5 shadow-md">
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-14 h-14 object-contain">
                     </div>
                     <div>
                         <h1 class="text-lg font-bold">LRMS</h1>
