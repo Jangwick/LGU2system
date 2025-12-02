@@ -8,9 +8,9 @@
                     &copy; <?php echo date('Y'); ?> Legislative Records Management System. All rights reserved.
                 </div>
                 <div class="flex items-center space-x-6 mt-2 md:mt-0">
-                    <a href="/modules/help/views/privacy.php" class="text-sm text-gray-600 hover:text-blue-600">Privacy Policy</a>
-                    <a href="/modules/help/views/terms.php" class="text-sm text-gray-600 hover:text-blue-600">Terms of Service</a>
-                    <a href="/modules/help/views/contact.php" class="text-sm text-gray-600 hover:text-blue-600">Contact Support</a>
+                    <a href="/modules/help/views/privacy.php" class="text-sm text-gray-600 hover:text-red-600">Privacy Policy</a>
+                    <a href="/modules/help/views/terms.php" class="text-sm text-gray-600 hover:text-red-600">Terms of Service</a>
+                    <a href="/modules/help/views/contact.php" class="text-sm text-gray-600 hover:text-red-600">Contact Support</a>
                 </div>
             </div>
         </div>
@@ -20,17 +20,17 @@
     <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
     
     <!-- Mobile Sidebar -->
-    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white z-50 transition-transform duration-300 ease-in-out overflow-y-auto">
+    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-64 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-transform duration-300 ease-in-out overflow-y-auto">
         <!-- Mobile sidebar content (same as desktop sidebar) -->
-        <div class="p-6 border-b border-blue-700">
+        <div class="p-6 border-b border-red-700">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="bg-white rounded-lg p-2">
-                        <i class="bi bi-file-earmark-text text-blue-800 text-2xl"></i>
+                        <i class="bi bi-file-earmark-text text-red-800 text-2xl"></i>
                     </div>
                     <div>
                         <h1 class="text-lg font-bold">LRMS</h1>
-                        <p class="text-xs text-blue-200">Legislative Records</p>
+                        <p class="text-xs text-red-200">Legislative Records</p>
                     </div>
                 </div>
                 <button id="close-mobile-sidebar" class="text-white">
@@ -88,7 +88,7 @@
                 success: 'bg-green-500',
                 error: 'bg-red-500',
                 warning: 'bg-yellow-500',
-                info: 'bg-blue-500'
+                info: 'bg-red-500'
             };
             const icons = {
                 success: 'bi-check-circle-fill',

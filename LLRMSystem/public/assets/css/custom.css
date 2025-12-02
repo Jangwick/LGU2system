@@ -275,13 +275,13 @@
 
 .dark aside a.active,
 .dark .sidebar a.active {
-    background-color: #2563eb !important;
+    background-color: #dc2626 !important;
     color: #ffffff !important;
 }
 
-.dark aside .bg-blue-600,
-.dark .sidebar .bg-blue-600 {
-    background-color: #1e40af !important;
+.dark aside .bg-red-600,
+.dark .sidebar .bg-red-600 {
+    background-color: #991b1b !important;
 }
 
 /* Dark Mode - Cards & Containers */
@@ -381,7 +381,7 @@
 }
 
 /* Dark Mode - Buttons */
-.dark button:not(.bg-blue-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600) {
+.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600) {
     background-color: #404040 !important;
     color: #e5e5e5 !important;
 }
@@ -409,8 +409,8 @@
     background-color: #1a4d2e !important;
 }
 
-.dark .bg-blue-100 {
-    background-color: #1a3a52 !important;
+.dark .bg-red-100 {
+    background-color: #4d1a1a !important;
 }
 
 .dark .bg-yellow-100 {
@@ -435,17 +435,17 @@
     background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%) !important;
 }
 
-.dark .bg-blue-600 {
-    background-color: #1e40af !important;
+.dark .bg-red-600 {
+    background-color: #991b1b !important;
 }
 
-.dark .bg-blue-500 {
-    background-color: #2563eb !important;
+.dark .bg-red-500 {
+    background-color: #dc2626 !important;
 }
 
 /* Dark Mode - Icons */
-.dark .text-blue-600 {
-    color: #60a5fa !important;
+.dark .text-red-600 {
+    color: #f87171 !important;
 }
 
 .dark .text-green-600 {

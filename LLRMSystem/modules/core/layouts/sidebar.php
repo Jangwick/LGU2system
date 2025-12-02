@@ -1,14 +1,14 @@
 <!-- Sidebar -->
-<aside id="sidebar" class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300">
+<aside id="sidebar" class="w-64 bg-gradient-to-b from-red-800 to-red-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300">
     <!-- Logo Section -->
-    <div class="p-6 border-b border-blue-700">
+    <div class="p-6 border-b border-red-700">
         <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition">
             <div class="bg-white rounded-lg p-2">
-                <i class="bi bi-file-earmark-text text-blue-800 text-2xl"></i>
+                <i class="bi bi-file-earmark-text text-red-800 text-2xl"></i>
             </div>
             <div>
                 <h1 class="text-lg font-bold">LRMS</h1>
-                <p class="text-xs text-blue-200">Legislative Records</p>
+                <p class="text-xs text-red-200">Legislative Records</p>
             </div>
         </a>
     </div>
@@ -24,7 +24,7 @@
             
             <!-- Documents Section -->
             <div class="pt-4 pb-2">
-                <p class="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">Documents</p>
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Documents</p>
             </div>
             
             <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="nav-item <?php echo ($currentPage ?? '') === 'documents' ? 'active' : ''; ?>">
@@ -54,7 +54,7 @@
             if ($canViewReports): 
             ?>
             <div class="pt-4 pb-2">
-                <p class="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">Analytics</p>
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Analytics</p>
             </div>
             
             <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'reports' ? 'active' : ''; ?>">
@@ -69,7 +69,7 @@
             if ($isAdmin): 
             ?>
             <div class="pt-4 pb-2">
-                <p class="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">Administration</p>
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Administration</p>
             </div>
             
             <a href="<?php echo USERS_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'users' ? 'active' : ''; ?>">
@@ -89,7 +89,7 @@
             if ($canAccessIntegration): 
             ?>
             <div class="pt-4 pb-2">
-                <p class="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">Integration</p>
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Integration</p>
             </div>
             
             <div class="dropdown-section">
@@ -151,14 +151,14 @@
     </nav>
     
     <!-- User Profile Section -->
-    <div class="p-4 border-t border-blue-700">
+    <div class="p-4 border-t border-red-700">
         <div class="flex items-center space-x-3">
-            <div class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center">
+            <div class="bg-red-600 rounded-full w-10 h-10 flex items-center justify-center">
                 <i class="bi bi-person-fill text-xl"></i>
             </div>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium truncate"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest User'); ?></p>
-                <p class="text-xs text-blue-300 truncate"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Guest'); ?></p>
+                <p class="text-xs text-red-300 truncate"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Guest'); ?></p>
             </div>
         </div>
     </div>
@@ -177,12 +177,12 @@
     }
     
     .nav-item:hover {
-        background-color: rgba(59, 130, 246, 0.3);
+        background-color: rgba(220, 38, 38, 0.3);
         color: white;
     }
     
     .nav-item.active {
-        background-color: rgba(59, 130, 246, 0.5);
+        background-color: rgba(220, 38, 38, 0.5);
         color: white;
         font-weight: 600;
     }

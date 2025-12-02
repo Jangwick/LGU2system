@@ -38,13 +38,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Welcome Banner -->
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
             <div class="flex items-center justify-between flex-wrap gap-4">
                 <div>
                     <h1 class="text-3xl font-bold mb-2">
                         Welcome back, <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?>! 👋
                     </h1>
-                    <p class="text-blue-100">
+                    <p class="text-red-100">
                         Here's what's happening with your legislative records today.
                     </p>
                 </div>
@@ -53,12 +53,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition shadow-md flex items-center">
+                    <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition shadow-md flex items-center">
                         <i class="bi bi-upload mr-2"></i>
                         Upload Document
                     </a>
                     <?php endif; ?>
-                    <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition flex items-center">
+                    <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="bg-red-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-800 transition flex items-center">
                         <i class="bi bi-search mr-2"></i>
                         Search
                     </a>
@@ -79,8 +79,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php echo abs($stats['growth_percentage']); ?>% from last month
                         </p>
                     </div>
-                    <div class="bg-blue-100 rounded-full p-4">
-                        <i class="bi bi-file-earmark-text text-blue-600 text-2xl"></i>
+                    <div class="bg-red-100 rounded-full p-4">
+                        <i class="bi bi-file-earmark-text text-red-600 text-2xl"></i>
                     </div>
                 </div>
             </div>
@@ -169,7 +169,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Recent Documents</h2>
-                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-red-600 hover:text-red-700 text-sm font-medium">
                         View All <i class="bi bi-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -198,8 +198,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="bg-blue-100 rounded p-2 mr-3">
-                                                    <i class="bi bi-file-pdf text-blue-600"></i>
+                                                <div class="bg-red-100 rounded p-2 mr-3">
+                                                    <i class="bi bi-file-pdf text-red-600"></i>
                                                 </div>
                                                 <div>
                                                     <p class="text-sm font-medium text-gray-900">
@@ -226,7 +226,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap text-sm">
                                             <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?php echo $doc['id']; ?>" 
-                                               class="text-blue-600 hover:text-blue-700 mr-2" title="View">
+                                               class="text-red-600 hover:text-red-700 mr-2" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                             <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" 
@@ -249,9 +249,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
                     <div class="space-y-2">
                         <?php if (!in_array($userRole, ['viewer'])): ?>
-                        <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition">
-                            <div class="bg-blue-100 rounded-lg p-2 mr-3">
-                                <i class="bi bi-upload text-blue-600"></i>
+                        <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="flex items-center p-3 hover:bg-red-50 rounded-lg transition">
+                            <div class="bg-red-100 rounded-lg p-2 mr-3">
+                                <i class="bi bi-upload text-red-600"></i>
                             </div>
                             <span class="text-sm font-medium text-gray-700">Upload New Document</span>
                         </a>

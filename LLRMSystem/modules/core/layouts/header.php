@@ -39,7 +39,7 @@
     <style type="text/tailwindcss">
         @layer components {
             .btn-primary {
-                @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md hover:shadow-lg;
+                @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md hover:shadow-lg;
             }
             
             .btn-secondary {
@@ -59,11 +59,11 @@
             }
             
             .btn-outline {
-                @apply border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out;
+                @apply border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out;
             }
             
             .input-field {
-                @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+                @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent;
             }
             
             .card {
@@ -75,7 +75,7 @@
             }
             
             .badge-primary {
-                @apply bg-blue-100 text-blue-800;
+                @apply bg-red-100 text-red-800;
             }
             
             .badge-success {
@@ -158,7 +158,7 @@
             
             /* Loading spinner */
             .spinner {
-                @apply inline-block w-6 h-6 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin;
+                @apply inline-block w-6 h-6 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin;
             }
         }
     </style>
@@ -167,7 +167,7 @@
     <!-- Page Loading Overlay -->
     <div id="page-loader" class="fixed inset-0 bg-white z-50 flex items-center justify-center hidden">
         <div class="text-center">
-            <div class="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <div class="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
             <p class="text-gray-600 font-semibold">Loading...</p>
         </div>
     </div>
