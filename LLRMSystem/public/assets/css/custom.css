@@ -258,24 +258,34 @@
 
 /* Dark Mode - Sidebar */
 .dark aside,
-.dark .sidebar {
-    background-color: #1a1a1a !important;
-    border-color: #2d2d2d !important;
+.dark .sidebar,
+.dark aside#sidebar {
+    background: linear-gradient(180deg, #7f1d1d 0%, #450a0a 100%) !important;
+    border-color: #450a0a !important;
+}
+
+.dark aside nav,
+.dark .sidebar nav {
+    background-color: transparent !important;
 }
 
 .dark aside a,
-.dark .sidebar a {
+.dark .sidebar a,
+.dark aside button,
+.dark .sidebar button {
     color: #e5e5e5 !important;
 }
 
 .dark aside a:hover,
-.dark .sidebar a:hover {
-    background-color: #2d2d2d !important;
+.dark .sidebar a:hover,
+.dark aside button:hover,
+.dark .sidebar button:hover {
+    background-color: rgba(220, 38, 38, 0.3) !important;
 }
 
 .dark aside a.active,
 .dark .sidebar a.active {
-    background-color: #dc2626 !important;
+    background-color: rgba(220, 38, 38, 0.5) !important;
     color: #ffffff !important;
 }
 
@@ -284,9 +294,59 @@
     background-color: #dc2626 !important;
 }
 
+/* Dark Mode - Sidebar Section Headers */
+.dark aside .text-red-300,
+.dark .sidebar .text-red-300 {
+    color: #fca5a5 !important;
+}
+
+/* Dark Mode - Sidebar Dropdown */
+.dark aside .dropdown-content,
+.dark .sidebar .dropdown-content {
+    background-color: rgba(127, 29, 29, 0.5) !important;
+}
+
+.dark aside#sidebar .dropdown-section button.nav-item,
+.dark .sidebar .dropdown-section button.nav-item,
+.dark aside button.nav-item,
+.dark .sidebar button.nav-item {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.dark aside#sidebar .dropdown-section button.nav-item:hover,
+.dark .sidebar .dropdown-section button.nav-item:hover,
+.dark aside button.nav-item:hover,
+.dark .sidebar button.nav-item:hover {
+    background-color: rgba(220, 38, 38, 0.3) !important;
+}
+
+.dark aside .nav-item-sub:hover,
+.dark .sidebar .nav-item-sub:hover {
+    background-color: rgba(220, 38, 38, 0.4) !important;
+}
+
 /* Dark Mode - Cards & Containers */
 .dark .bg-white {
     background-color: #2d2d2d !important;
+}
+
+/* Dark Mode - Danger Zone Exception */
+.dark .danger-zone.bg-white {
+    background-color: #2d2d2d !important;
+    border-color: #7f1d1d !important;
+}
+
+.dark .danger-zone-item {
+    background-color: rgba(127, 29, 29, 0.2) !important;
+}
+
+.dark .danger-zone-item p {
+    color: #e5e5e5 !important;
+}
+
+.dark .danger-zone-item p.text-sm {
+    color: #b3b3b3 !important;
 }
 
 .dark .bg-gray-50,

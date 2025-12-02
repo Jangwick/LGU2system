@@ -174,6 +174,8 @@
         transition: all 0.2s;
         text-decoration: none;
         font-size: 0.875rem;
+        background-color: transparent;
+        border: none;
     }
     
     .nav-item:hover {

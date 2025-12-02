@@ -49,14 +49,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
         <div class="max-w-6xl mx-auto">
             <!-- Profile Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+            <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <!-- Avatar -->
                     <div class="relative">
-                        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-blue-600 text-5xl font-bold shadow-lg">
+                        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-red-600 text-5xl font-bold shadow-lg">
                             <?php echo strtoupper(substr($user['full_name'] ?? $user['email'], 0, 2)); ?>
                         </div>
-                        <button onclick="document.getElementById('avatar-upload').click()" class="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 rounded-full p-3 shadow-lg transition">
+                        <button onclick="document.getElementById('avatar-upload').click()" class="absolute bottom-0 right-0 bg-red-500 hover:bg-red-600 rounded-full p-3 shadow-lg transition">
                             <i class="bi bi-camera text-white"></i>
                         </button>
                         <input type="file" id="avatar-upload" class="hidden" accept="image/*">
@@ -65,13 +65,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- User Info -->
                     <div class="flex-1 text-center md:text-left">
                         <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($user['full_name'] ?? 'N/A'); ?></h1>
-                        <p class="text-blue-100 text-lg mb-2"><?php echo htmlspecialchars($user['email']); ?></p>
+                        <p class="text-red-100 text-lg mb-2"><?php echo htmlspecialchars($user['email']); ?></p>
                         <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                            <span class="px-3 py-1 bg-blue-500 rounded-full text-sm font-medium">
+                            <span class="px-3 py-1 bg-red-500 rounded-full text-sm font-medium">
                                 <i class="bi bi-person-badge mr-1"></i>
                                 <?php echo ucfirst($user['role'] ?? 'User'); ?>
                             </span>
-                            <span class="px-3 py-1 bg-blue-500 rounded-full text-sm font-medium">
+                            <span class="px-3 py-1 bg-red-500 rounded-full text-sm font-medium">
                                 <i class="bi bi-building mr-1"></i>
                                 <?php echo htmlspecialchars($user['department'] ?? 'N/A'); ?>
                             </span>
@@ -85,7 +85,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     
                     <!-- Quick Actions -->
                     <div class="flex gap-3">
-                        <button onclick="openEditModal()" class="btn-outline border-white text-white hover:bg-white hover:text-blue-600">
+                        <button onclick="openEditModal()" class="btn-outline border-white text-white hover:bg-white hover:text-red-600">
                             <i class="bi bi-pencil mr-2"></i>Edit Profile
                         </button>
                     </div>
@@ -97,7 +97,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <i class="bi bi-file-earmark-text-fill text-blue-600 text-4xl"></i>
+                            <i class="bi bi-file-earmark-text-fill text-red-600 text-4xl"></i>
                         </div>
                         <div class="ml-4">
                             <div class="text-sm text-gray-600">Documents</div>
@@ -164,7 +164,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- Personal Information -->
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="bi bi-person-circle mr-2 text-blue-600"></i>
+                            <i class="bi bi-person-circle mr-2 text-red-600"></i>
                             Personal Information
                         </h2>
                         <div class="grid md:grid-cols-2 gap-6">
@@ -199,10 +199,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-lg font-bold text-gray-800 flex items-center">
-                                <i class="bi bi-clock-history mr-2 text-blue-600"></i>
+                                <i class="bi bi-clock-history mr-2 text-red-600"></i>
                                 Recent Activity
-                            </h2>
-                            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="text-sm text-blue-600 hover:text-blue-700">
+                            </h3>
+                            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="text-sm text-red-600 hover:text-red-700">
                                 View All
                             </a>
                         </div>
@@ -216,7 +216,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <?php
                                             $iconClass = match($activity['action']) {
                                                 'create' => 'bi-plus-circle text-green-600',
-                                                'update' => 'bi-pencil-square text-blue-600',
+                                                'update' => 'bi-pencil-square text-red-600',
                                                 'delete' => 'bi-trash text-red-600',
                                                 'login' => 'bi-box-arrow-in-right text-indigo-600',
                                                 'view' => 'bi-eye text-gray-600',
@@ -243,7 +243,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- Account Security -->
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="bi bi-shield-check mr-2 text-blue-600"></i>
+                            <i class="bi bi-shield-check mr-2 text-red-600"></i>
                             Account Security
                         </h2>
                         <div class="space-y-3">
@@ -282,17 +282,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- Quick Links -->
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="bi bi-link-45deg mr-2 text-blue-600"></i>
+                            <i class="bi bi-link-45deg mr-2 text-red-600"></i>
                             Quick Links
                         </h2>
                         <div class="space-y-2">
-                            <a href="<?php echo USERS_URL; ?>/views/settings.php" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
+                            <a href="<?php echo USERS_URL; ?>/views/settings.php" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition text-sm">
                                 <i class="bi bi-gear mr-2 text-gray-600"></i>Account Settings
                             </a>
-                            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
+                            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition text-sm">
                                 <i class="bi bi-file-earmark-text mr-2 text-gray-600"></i>My Documents
                             </a>
-                            <a href="<?php echo HELP_URL; ?>/views/index.php" class="block px-4 py-2 hover:bg-blue-50 rounded-lg transition text-sm">
+                            <a href="<?php echo HELP_URL; ?>/views/index.php" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition text-sm">
                                 <i class="bi bi-question-circle mr-2 text-gray-600"></i>Help Center
                             </a>
                         </div>

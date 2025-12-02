@@ -19,11 +19,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
         <div class="max-w-6xl mx-auto">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+            <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
                 <div class="text-center">
                     <i class="bi bi-headset text-6xl mb-4"></i>
                     <h1 class="text-3xl font-bold mb-2">Help & Support Center</h1>
-                    <p class="text-blue-100 text-lg">We're here to help you navigate the LRMS system</p>
+                    <p class="text-red-100 text-lg">We're here to help you navigate the LRMS system</p>
                 </div>
             </div>
             
@@ -47,12 +47,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition cursor-pointer">
                     <div class="text-center">
-                        <div class="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                            <i class="bi bi-book text-blue-600 text-3xl"></i>
+                        <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="bi bi-book text-red-600 text-3xl"></i>
                         </div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2">User Guide</h3>
                         <p class="text-sm text-gray-600 mb-4">Step-by-step instructions for using LRMS</p>
-                        <button onclick="showUserGuide()" class="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                        <button onclick="showUserGuide()" class="text-red-600 hover:text-red-700 font-medium text-sm">
                             Learn More <i class="bi bi-arrow-right ml-1"></i>
                         </button>
                     </div>
@@ -91,7 +91,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl shadow-md p-6 mb-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="bi bi-question-circle mr-2 text-blue-600"></i>
+                            <i class="bi bi-question-circle mr-2 text-red-600"></i>
                             Frequently Asked Questions
                         </h2>
                         
@@ -200,30 +200,30 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- Helpful Resources -->
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="bi bi-journal-text mr-2 text-blue-600"></i>
+                            <i class="bi bi-journal-text mr-2 text-red-600"></i>
                             Helpful Resources
                         </h2>
                         
                         <div class="grid md:grid-cols-2 gap-4">
-                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition">
+                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition">
                                 <i class="bi bi-file-pdf text-red-600 text-2xl mb-2"></i>
                                 <h3 class="font-medium text-gray-800 mb-1">User Manual (PDF)</h3>
                                 <p class="text-sm text-gray-600">Complete system documentation</p>
                             </a>
                             
-                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition">
-                                <i class="bi bi-laptop text-blue-600 text-2xl mb-2"></i>
+                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition">
+                                <i class="bi bi-laptop text-red-600 text-2xl mb-2"></i>
                                 <h3 class="font-medium text-gray-800 mb-1">Quick Start Guide</h3>
                                 <p class="text-sm text-gray-600">Get started in 5 minutes</p>
                             </a>
                             
-                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition">
+                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition">
                                 <i class="bi bi-keyboard text-purple-600 text-2xl mb-2"></i>
                                 <h3 class="font-medium text-gray-800 mb-1">Keyboard Shortcuts</h3>
                                 <p class="text-sm text-gray-600">Work faster with shortcuts</p>
                             </a>
                             
-                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition">
+                            <a href="#" class="p-4 border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition">
                                 <i class="bi bi-shield-check text-green-600 text-2xl mb-2"></i>
                                 <h3 class="font-medium text-gray-800 mb-1">Security Best Practices</h3>
                                 <p class="text-sm text-gray-600">Keep your account secure</p>
@@ -237,26 +237,26 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- Contact Information -->
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="bi bi-telephone mr-2 text-blue-600"></i>
+                            <i class="bi bi-telephone mr-2 text-red-600"></i>
                             Contact Information
                         </h2>
                         
                         <div class="space-y-3">
                             <div class="flex items-start gap-3">
-                                <i class="bi bi-envelope text-blue-600 text-xl mt-1"></i>
+                                <i class="bi bi-envelope text-red-600 text-xl mt-1"></i>
                                 <div>
                                     <p class="text-sm font-medium text-gray-800">Email Support</p>
-                                    <a href="mailto:support@lgu.gov.ph" class="text-sm text-blue-600 hover:text-blue-700">
+                                    <a href="mailto:support@lgu.gov.ph" class="text-sm text-red-600 hover:text-red-700">
                                         support@lgu.gov.ph
                                     </a>
                                 </div>
                             </div>
                             
                             <div class="flex items-start gap-3">
-                                <i class="bi bi-telephone text-blue-600 text-xl mt-1"></i>
+                                <i class="bi bi-telephone text-red-600 text-xl mt-1"></i>
                                 <div>
                                     <p class="text-sm font-medium text-gray-800">Phone Support</p>
-                                    <a href="tel:+6328888888" class="text-sm text-blue-600 hover:text-blue-700">
+                                    <a href="tel:+6328888888" class="text-sm text-red-600 hover:text-red-700">
                                         (02) 8888-8888
                                     </a>
                                 </div>
@@ -313,10 +313,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Submit Feedback -->
-                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md p-6 text-white">
+                    <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-md p-6 text-white">
                         <h2 class="text-lg font-bold mb-2">Have Feedback?</h2>
-                        <p class="text-sm text-blue-100 mb-4">Help us improve LRMS by sharing your thoughts</p>
-                        <button onclick="openFeedbackModal()" class="w-full bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-50 transition">
+                        <p class="text-sm text-red-100 mb-4">Help us improve LRMS by sharing your thoughts</p>
+                        <button onclick="openFeedbackModal()" class="w-full bg-white text-red-600 font-semibold py-2 px-4 rounded-lg hover:bg-red-50 transition">
                             <i class="bi bi-chat-square-text mr-2"></i>Submit Feedback
                         </button>
                     </div>

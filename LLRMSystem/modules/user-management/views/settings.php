@@ -217,14 +217,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- Danger Zone -->
-                <div class="bg-white rounded-xl shadow-md border-2 border-red-200 p-6">
+                <div class="danger-zone bg-white rounded-xl shadow-md border-2 border-red-200 p-6">
                     <h2 class="text-lg font-bold text-red-600 mb-4 flex items-center">
                         <i class="bi bi-exclamation-triangle mr-2"></i>
                         Danger Zone
                     </h2>
                     
                     <div class="space-y-3">
-                        <div class="p-4 bg-red-50 rounded-lg">
+                        <div class="danger-zone-item p-4 bg-red-50 rounded-lg">
                             <p class="font-medium text-gray-800 mb-2">Deactivate Account</p>
                             <p class="text-sm text-gray-600 mb-3">Temporarily disable your account. You can reactivate it anytime.</p>
                             <button onclick="confirmDeactivate()" class="btn-warning text-sm">
@@ -232,7 +232,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </button>
                         </div>
                         
-                        <div class="p-4 bg-red-50 rounded-lg">
+                        <div class="danger-zone-item p-4 bg-red-50 rounded-lg">
                             <p class="font-medium text-gray-800 mb-2">Delete Account</p>
                             <p class="text-sm text-gray-600 mb-3">Permanently delete your account and all associated data. This action cannot be undone.</p>
                             <button onclick="confirmDelete()" class="btn-danger text-sm">
