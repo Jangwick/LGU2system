@@ -1,4 +1,18 @@
 <!-- Top Navbar -->
+<?php
+// Fetch user profile picture for navbar
+if (isset($_SESSION['user_id'])) {
+    try {
+        $navDb = getDatabase();
+        $navStmt = $navDb->prepare("SELECT profile_picture FROM users WHERE id = ?");
+        $navStmt->execute([$_SESSION['user_id']]);
+        $navUserData = $navStmt->fetch(PDO::FETCH_ASSOC);
+        $navProfilePicture = $navUserData['profile_picture'] ?? null;
+    } catch (PDOException $e) {
+        $navProfilePicture = null;
+    }
+}
+?>
 <nav class="bg-white shadow-md border-b border-gray-200 sticky top-0 z-40">
     <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -88,9 +102,15 @@
                 <!-- User Profile Dropdown -->
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg transition">
-                        <div class="bg-red-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
-                            <i class="bi bi-person-fill"></i>
-                        </div>
+                        <?php if (!empty($navProfilePicture)): ?>
+                            <img src="<?php echo BASE_URL; ?>/storage/profiles/<?php echo htmlspecialchars($navProfilePicture); ?>" 
+                                 alt="Profile" 
+                                 class="w-8 h-8 rounded-full object-cover border-2 border-red-600">
+                        <?php else: ?>
+                            <div class="bg-red-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                        <?php endif; ?>
                         <div class="hidden md:block text-left">
                             <p class="text-sm font-medium text-gray-800"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest User'); ?></p>
                             <p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Guest'); ?></p>

@@ -53,13 +53,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <!-- Avatar -->
                     <div class="relative">
-                        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-red-600 text-5xl font-bold shadow-lg">
-                            <?php echo strtoupper(substr($user['full_name'] ?? $user['email'], 0, 2)); ?>
-                        </div>
-                        <button onclick="document.getElementById('avatar-upload').click()" class="absolute bottom-0 right-0 bg-red-500 hover:bg-red-600 rounded-full p-3 shadow-lg transition">
+                        <?php if (!empty($user['profile_picture'])): ?>
+                            <img id="profile-avatar" src="<?php echo BASE_URL; ?>/storage/profiles/<?php echo htmlspecialchars($user['profile_picture']); ?>" 
+                                 alt="Profile Picture" 
+                                 class="w-32 h-32 bg-white rounded-full object-cover shadow-lg border-4 border-white">
+                        <?php else: ?>
+                            <div id="profile-avatar" class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-red-600 text-5xl font-bold shadow-lg">
+                                <?php echo strtoupper(substr($user['full_name'] ?? $user['email'], 0, 2)); ?>
+                            </div>
+                        <?php endif; ?>
+                        <button onclick="document.getElementById('avatar-upload').click()" 
+                                class="absolute bottom-0 right-0 bg-red-500 hover:bg-red-600 rounded-full p-3 shadow-lg transition-all transform hover:scale-110 active:scale-95"
+                                title="Upload profile picture">
                             <i class="bi bi-camera text-white"></i>
                         </button>
-                        <input type="file" id="avatar-upload" class="hidden" accept="image/*">
+                        <input type="file" id="avatar-upload" class="hidden" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" onchange="uploadProfilePicture(this)">
                     </div>
                     
                     <!-- User Info -->
@@ -457,6 +465,94 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
         alert('An error occurred. Please try again.');
     }
 });
+
+// Profile Picture Upload Handler
+async function uploadProfilePicture(input) {
+    if (!input.files || !input.files[0]) {
+        return;
+    }
+    
+    const file = input.files[0];
+    
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('File is too large. Maximum size is 5MB.');
+        input.value = '';
+        return;
+    }
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Invalid file type. Please upload a JPG, PNG, GIF, or WEBP image.');
+        input.value = '';
+        return;
+    }
+    
+    // Show loading state
+    const avatar = document.getElementById('profile-avatar');
+    const originalContent = avatar.outerHTML;
+    avatar.outerHTML = '<div id="profile-avatar" class="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center shadow-lg"><div class="spinner"></div></div>';
+    
+    const formData = new FormData();
+    formData.append('profile_picture', file);
+    
+    try {
+        const response = await fetch(App.apiUrl('users', 'upload-profile-picture.php'), {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            // Update avatar with new image
+            const newAvatar = document.getElementById('profile-avatar');
+            newAvatar.outerHTML = `<img id="profile-avatar" src="${result.image_url}?t=${Date.now()}" alt="Profile Picture" class="w-32 h-32 bg-white rounded-full object-cover shadow-lg border-4 border-white">`;
+            
+            // Show success message
+            showNotification('Profile picture updated successfully!', 'success');
+        } else {
+            // Restore original avatar
+            document.getElementById('profile-avatar').outerHTML = originalContent;
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        // Restore original avatar
+        document.getElementById('profile-avatar').outerHTML = originalContent;
+        alert('An error occurred while uploading. Please try again.');
+    } finally {
+        input.value = ''; // Reset file input
+    }
+}
+
+// Show notification helper
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg animate-slide-in-right ${
+        type === 'success' ? 'bg-green-600' : 
+        type === 'error' ? 'bg-red-600' : 
+        'bg-blue-600'
+    } text-white`;
+    notification.innerHTML = `
+        <div class="flex items-center gap-3">
+            <i class="bi bi-${
+                type === 'success' ? 'check-circle' : 
+                type === 'error' ? 'x-circle' : 
+                'info-circle'
+            } text-xl"></i>
+            <p class="font-medium">${message}</p>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('animate-fade-out');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
 </script>
 
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
