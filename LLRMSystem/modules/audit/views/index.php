@@ -233,13 +233,13 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo str_replace('_', ' ', ucfirst($log['table_name'] ?? '')); ?>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900">
-                                        <?php echo htmlspecialchars($log['description']); ?>
+                                        <?php echo htmlspecialchars($log['description'] ?? ''); ?>
                                         <?php if ($log['record_id']): ?>
                                             <span class="text-gray-500">(ID: <?php echo $log['record_id']; ?>)</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
-                                        <?php echo htmlspecialchars($log['ip_address']); ?>
+                                        <?php echo htmlspecialchars($log['ip_address'] ?? ''); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

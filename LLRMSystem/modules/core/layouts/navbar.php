@@ -1,5 +1,8 @@
 <!-- Top Navbar -->
 <?php
+// Include database connection
+require_once __DIR__ . '/../../core/config/database.php';
+
 // Fetch user profile picture for navbar
 if (isset($_SESSION['user_id'])) {
     try {
