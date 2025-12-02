@@ -42,31 +42,31 @@
     <style type="text/tailwindcss">
         @layer components {
             .btn-primary {
-                @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md hover:shadow-lg;
+                @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0;
             }
             
             .btn-secondary {
-                @apply bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out;
+                @apply bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0;
             }
             
             .btn-success {
-                @apply bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out;
+                @apply bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0;
             }
             
             .btn-danger {
-                @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out;
+                @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0;
             }
             
             .btn-warning {
-                @apply bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out;
+                @apply bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0;
             }
             
             .btn-outline {
-                @apply border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out;
+                @apply border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0;
             }
             
             .input-field {
-                @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent;
+                @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200;
             }
             
             .card {
@@ -162,6 +162,106 @@
             /* Loading spinner */
             .spinner {
                 @apply inline-block w-6 h-6 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin;
+            }
+            
+            /* Custom Tailwind Animations */
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes fade-in-up {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes slide-in-left {
+                from {
+                    opacity: 0;
+                    transform: translateX(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            
+            @keyframes slide-in-right {
+                from {
+                    opacity: 0;
+                    transform: translateX(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            
+            @keyframes bounce-in {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.3);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.05);
+                }
+                70% {
+                    transform: scale(0.9);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            
+            .animate-fade-in {
+                animation: fade-in 0.6s ease-out;
+            }
+            
+            .animate-fade-in-up {
+                animation: fade-in-up 0.6s ease-out;
+            }
+            
+            .animate-slide-in-left {
+                animation: slide-in-left 0.6s ease-out;
+            }
+            
+            .animate-slide-in-right {
+                animation: slide-in-right 0.6s ease-out;
+            }
+            
+            .animate-bounce-in {
+                animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            }
+            
+            /* Animation delays for staggered effects */
+            .animation-delay-100 { animation-delay: 100ms; }
+            .animation-delay-200 { animation-delay: 200ms; }
+            .animation-delay-300 { animation-delay: 300ms; }
+            .animation-delay-400 { animation-delay: 400ms; }
+            .animation-delay-500 { animation-delay: 500ms; }
+            .animation-delay-600 { animation-delay: 600ms; }
+            .animation-delay-700 { animation-delay: 700ms; }
+            .animation-delay-800 { animation-delay: 800ms; }
+            .animation-delay-900 { animation-delay: 900ms; }
+            
+            /* Smooth transitions for all interactive elements */
+            * {
+                @apply transition-colors duration-200;
+            }
+            
+            button, a, input, select, textarea {
+                @apply transition-all duration-200;
             }
         }
     </style>

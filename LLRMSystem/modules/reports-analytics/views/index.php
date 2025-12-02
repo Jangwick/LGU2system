@@ -28,18 +28,18 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Page Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold mb-2">Reports & Analytics</h1>
-                    <p class="text-red-100">Comprehensive insights and statistical analysis</p>
+                <div class="transform transition-all duration-300">
+                    <h1 class="text-2xl font-bold mb-2 animate-slide-in-left">Reports & Analytics</h1>
+                    <p class="text-red-100 animate-slide-in-left animation-delay-100">Comprehensive insights and statistical analysis</p>
                 </div>
-                <div class="flex gap-3">
-                    <button onclick="showExportModal()" class="btn-success flex items-center">
-                        <i class="bi bi-download mr-2"></i> Export Reports
+                <div class="flex gap-3 animate-slide-in-right">
+                    <button onclick="showExportModal()" class="btn-success flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
+                        <i class="bi bi-download mr-2 transition-transform group-hover:animate-bounce"></i> Export Reports
                     </button>
-                    <button onclick="window.print()" class="btn-outline flex items-center">
-                        <i class="bi bi-printer mr-2"></i> Print
+                    <button onclick="window.print()" class="bg-white text-red-600 hover:bg-red-50 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95">
+                        <i class="bi bi-printer mr-2 transition-transform"></i> Print
                     </button>
                 </div>
             </div>
@@ -47,47 +47,47 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Key Metrics -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-100 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-file-earmark-text-fill text-blue-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">Total Documents</div>
-                        <div class="text-2xl font-bold text-gray-900"><?php echo number_format($stats['total_documents']); ?></div>
+                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-blue-600">Total Documents</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['total_documents']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-200 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-check-circle-fill text-green-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">Approved</div>
-                        <div class="text-2xl font-bold text-gray-900"><?php echo number_format($stats['approved_documents']); ?></div>
+                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-green-600">Approved</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['approved_documents']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-300 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-people-fill text-indigo-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">Active Users</div>
-                        <div class="text-2xl font-bold text-gray-900"><?php echo number_format($stats['active_users']); ?></div>
+                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-indigo-600">Active Users</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['active_users']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-400 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-hdd-fill text-amber-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">Storage Used</div>
-                        <div class="text-2xl font-bold text-gray-900">
+                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-amber-600">Storage Used</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110">
                             <?php 
                             $storage = $stats['total_storage'];
                             if ($storage >= 1073741824) {
@@ -107,16 +107,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Charts Row 1 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Documents by Type -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Documents by Type</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-500 group">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Type</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="documentsByTypeChart"></canvas>
                 </div>
             </div>
 
             <!-- Documents by Status -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Documents by Status</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-600 group">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Status</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="documentsByStatusChart"></canvas>
                 </div>
@@ -124,8 +124,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Timeline Chart -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Document Upload Timeline (Last 12 Months)</h3>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-700 group">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Document Upload Timeline (Last 12 Months)</h3>
             <div class="relative" style="height: 300px;">
                 <canvas id="timelineChart"></canvas>
             </div>
@@ -134,16 +134,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Charts Row 2 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Activity by Action -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Activity by Action (30 Days)</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-800 group">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Activity by Action (30 Days)</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="activityChart"></canvas>
                 </div>
             </div>
 
             <!-- Documents by Department -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Documents by Department</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-900 group">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Department</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="departmentChart"></canvas>
                 </div>

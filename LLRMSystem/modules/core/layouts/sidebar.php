@@ -1,12 +1,12 @@
 <!-- Sidebar -->
-<aside id="sidebar" class="w-64 bg-gradient-to-b from-red-800 to-red-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300">
+<aside id="sidebar" class="w-64 bg-gradient-to-b from-red-800 to-red-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300 animate-slide-in-left">
     <!-- Logo Section -->
-    <div class="p-6 border-b border-red-700">
-        <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition">
-            <div class="bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden" style="width: 70px; height: 70px;">
+    <div class="p-6 border-b border-red-700 animate-fade-in">
+        <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition-all duration-300 transform hover:scale-105 group">
+            <div class="bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" style="width: 70px; height: 70px;">
                 <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" style="width: 120%; height: 120%;" class="object-cover">
             </div>
-            <div>
+            <div class="transform transition-all duration-300 group-hover:translate-x-1">
                 <h1 class="text-lg font-bold">LRMS</h1>
                 <p class="text-xs text-red-200">City of Valenzuela</p>
             </div>
@@ -165,16 +165,44 @@
         padding: 0.75rem 1rem;
         color: #e0e7ff;
         border-radius: 0.5rem;
-        transition: all 0.2s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
         font-size: 0.875rem;
         background-color: transparent;
         border: none;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .nav-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: white;
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .nav-item:hover::before {
+        transform: scaleY(1);
     }
     
     .nav-item:hover {
-        background-color: rgba(220, 38, 38, 0.3);
+        background-color: rgba(220, 38, 38, 0.4);
         color: white;
+        transform: translateX(4px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-item i {
+        transition: transform 0.3s ease;
+    }
+    
+    .nav-item:hover i {
+        transform: scale(1.15) rotate(5deg);
     }
     
     .nav-item.active {

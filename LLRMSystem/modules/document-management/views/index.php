@@ -68,29 +68,29 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
+                <div class="animate-slide-in-left">
                     <h1 class="text-2xl font-bold text-gray-800 mb-2">Document Management</h1>
                     <p class="text-gray-600">Manage all legislative documents in one place</p>
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 animate-slide-in-right">
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button onclick="openUploadModal()" class="btn-primary flex items-center">
+                    <button onclick="openUploadModal()" class="btn-primary flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
                         <i class="bi bi-plus-circle mr-2"></i>
                         Upload Document
                     </button>
                     <?php endif; ?>
                     <div class="relative" id="export-dropdown">
-                        <button onclick="toggleExportMenu()" class="btn-outline flex items-center">
+                        <button onclick="toggleExportMenu()" class="btn-outline flex items-center transform hover:scale-105 transition-all duration-200 active:scale-95">
                             <i class="bi bi-download mr-2"></i>
                             Export
-                            <i class="bi bi-chevron-down ml-2"></i>
+                            <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>
                         </button>
-                        <div id="export-menu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                        <div id="export-menu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 animate-fade-in-up">
                             <div class="py-1">
                                 <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Export List</div>
                                 <button onclick="exportList('csv')" 
@@ -123,23 +123,23 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Filters Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Search Documents</label>
-                    <div class="relative">
+                    <div class="relative group">
                         <input type="text" 
                                placeholder="Search by title, reference, or keywords..." 
-                               class="input-field pl-10">
-                        <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                               class="input-field pl-10 focus:ring-2 focus:ring-red-500 transition-all duration-200">
+                        <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 transition-all group-focus-within:text-red-600 group-focus-within:scale-110"></i>
                     </div>
                 </div>
                 
                 <!-- Document Type Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Document Type</label>
-                    <select class="input-field">
+                    <select class="input-field focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:border-red-300">
                         <option value="">All Types</option>
                         <option value="ordinance">Ordinance</option>
                         <option value="resolution">Resolution</option>
