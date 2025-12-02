@@ -83,7 +83,7 @@
                 <!-- User Profile Dropdown -->
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg transition">
-                        <div class="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
+                        <div class="bg-red-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
                             <i class="bi bi-person-fill"></i>
                         </div>
                         <div class="hidden md:block text-left">
