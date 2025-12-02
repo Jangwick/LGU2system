@@ -79,10 +79,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <a href="create.php" class="btn-primary flex items-center">
+                    <button onclick="openUploadModal()" class="btn-primary flex items-center">
                         <i class="bi bi-plus-circle mr-2"></i>
                         Upload Document
-                    </a>
+                    </button>
                     <?php endif; ?>
                     <div class="relative" id="export-dropdown">
                         <button onclick="toggleExportMenu()" class="btn-outline flex items-center">
@@ -530,5 +530,330 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize count
     const totalDocs = checkboxes.length;
     document.getElementById('total-docs').textContent = totalDocs;
+});
+
+// Upload Modal Functions
+function openUploadModal() {
+    document.getElementById('upload-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeUploadModal() {
+    document.getElementById('upload-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    // Reset form
+    document.getElementById('upload-form-modal').reset();
+    document.getElementById('file-preview-modal').classList.add('hidden');
+    document.getElementById('drop-zone-modal').classList.remove('hidden');
+}
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeUploadModal();
+    }
+});
+</script>
+
+<!-- Upload Document Modal -->
+<div id="upload-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+            <h2 class="text-2xl font-bold text-gray-800">Upload New Document</h2>
+            <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="bi bi-x-lg text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form id="upload-form-modal" class="p-6">
+            <!-- File Upload Section -->
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="bi bi-cloud-upload mr-2 text-red-600"></i>
+                    Document File
+                </h3>
+                
+                <!-- Drag & Drop Area -->
+                <div id="drop-zone-modal" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-red-500 transition cursor-pointer">
+                    <i class="bi bi-cloud-arrow-up text-6xl text-gray-400 mb-4"></i>
+                    <p class="text-lg font-medium text-gray-700 mb-2">Drag and drop your file here</p>
+                    <p class="text-sm text-gray-500 mb-4">or click to browse</p>
+                    <input type="file" id="file-input-modal" name="document_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="hidden" required>
+                    <button type="button" onclick="document.getElementById('file-input-modal').click()" class="btn-primary">
+                        <i class="bi bi-folder2-open mr-2"></i>
+                        Browse Files
+                    </button>
+                    <p class="text-xs text-gray-500 mt-4">
+                        Supported formats: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX (Max 50MB)
+                    </p>
+                </div>
+                
+                <!-- File Preview -->
+                <div id="file-preview-modal" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="bi bi-file-earmark text-red-600 text-2xl mr-3"></i>
+                            <div>
+                                <p id="file-name-modal" class="text-sm font-medium text-gray-800"></p>
+                                <p id="file-size-modal" class="text-xs text-gray-600"></p>
+                            </div>
+                        </div>
+                        <button type="button" id="remove-file-modal" class="text-red-600 hover:text-red-700">
+                            <i class="bi bi-x-circle text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Information -->
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="bi bi-info-circle mr-2 text-red-600"></i>
+                    Document Information
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Document Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Document Type <span class="text-red-500">*</span>
+                        </label>
+                        <select name="document_type" required class="input-field">
+                            <option value="">Select Type</option>
+                            <option value="ordinance">Ordinance</option>
+                            <option value="resolution">Resolution</option>
+                            <option value="session">Session Minutes</option>
+                            <option value="agenda">Agenda</option>
+                            <option value="committee">Committee Report</option>
+                            <option value="hearing">Public Hearing</option>
+                            <option value="consultation">Public Consultation</option>
+                            <option value="research">Research Document</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Reference Number -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Reference Number <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="reference_number" required placeholder="e.g., ORD-2025-042" class="input-field">
+                    </div>
+                    
+                    <!-- Document Title -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Document Title <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="title" required placeholder="Enter document title" class="input-field">
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Description
+                        </label>
+                        <textarea name="description" rows="3" placeholder="Brief description of the document" class="input-field"></textarea>
+                    </div>
+                    
+                    <!-- Document Date -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Document Date <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="document_date" id="document-date-modal" required class="input-field">
+                    </div>
+                    
+                    <!-- Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Status <span class="text-red-500">*</span>
+                        </label>
+                        <select name="status" required class="input-field">
+                            <option value="draft">Draft</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="approved">Approved</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Category
+                        </label>
+                        <select name="category" class="input-field">
+                            <option value="">Select Category</option>
+                            <option value="legislative">Legislative</option>
+                            <option value="administrative">Administrative</option>
+                            <option value="financial">Financial</option>
+                            <option value="legal">Legal</option>
+                            <option value="public-service">Public Service</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Priority -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Priority
+                        </label>
+                        <select name="priority" class="input-field">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Tags -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Tags (comma-separated)
+                        </label>
+                        <input type="text" name="tags" placeholder="e.g., budget, taxation, public works" class="input-field">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                <button type="button" onclick="closeUploadModal()" class="btn-secondary">
+                    <i class="bi bi-x-circle mr-2"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn-primary">
+                    <i class="bi bi-cloud-upload mr-2"></i>
+                    Upload Document
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Modal File Upload Handling
+const dropZoneModal = document.getElementById('drop-zone-modal');
+const fileInputModal = document.getElementById('file-input-modal');
+const filePreviewModal = document.getElementById('file-preview-modal');
+const fileNameModal = document.getElementById('file-name-modal');
+const fileSizeModal = document.getElementById('file-size-modal');
+const removeFileModal = document.getElementById('remove-file-modal');
+
+// Click to upload
+dropZoneModal.addEventListener('click', (e) => {
+    if (e.target !== fileInputModal) {
+        fileInputModal.click();
+    }
+});
+
+// Prevent default drag behaviors
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZoneModal.addEventListener(eventName, preventDefaultsModal, false);
+});
+
+function preventDefaultsModal(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+// Highlight drop zone when dragging over it
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZoneModal.addEventListener(eventName, () => {
+        dropZoneModal.classList.add('border-red-500', 'bg-red-50');
+    });
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZoneModal.addEventListener(eventName, () => {
+        dropZoneModal.classList.remove('border-red-500', 'bg-red-50');
+    });
+});
+
+// Handle dropped files
+dropZoneModal.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    if (files.length) {
+        fileInputModal.files = files;
+        displayFileModal(files[0]);
+    }
+});
+
+// Handle file selection
+fileInputModal.addEventListener('change', (e) => {
+    if (e.target.files.length) {
+        displayFileModal(e.target.files[0]);
+    }
+});
+
+// Display selected file
+function displayFileModal(file) {
+    fileNameModal.textContent = file.name;
+    fileSizeModal.textContent = formatFileSizeModal(file.size);
+    filePreviewModal.classList.remove('hidden');
+    dropZoneModal.classList.add('hidden');
+}
+
+// Remove file
+removeFileModal.addEventListener('click', () => {
+    fileInputModal.value = '';
+    filePreviewModal.classList.add('hidden');
+    dropZoneModal.classList.remove('hidden');
+});
+
+// Format file size
+function formatFileSizeModal(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Set default date to today
+document.getElementById('document-date-modal').valueAsDate = new Date();
+
+// Handle form submission
+document.getElementById('upload-form-modal').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Validate file is selected
+    if (!fileInputModal.files.length) {
+        alert('Please select a file to upload');
+        return;
+    }
+    
+    // Create FormData
+    const formData = new FormData(e.target);
+    
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split mr-2 animate-spin"></i>Uploading...';
+    
+    try {
+        const response = await fetch('<?php echo DOCUMENTS_URL; ?>/api/upload.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Document uploaded successfully!');
+            closeUploadModal();
+            location.reload(); // Reload to show new document
+        } else {
+            alert('Error: ' + (result.error || 'Upload failed'));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    } catch (error) {
+        alert('Network error: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    }
 });
 </script>

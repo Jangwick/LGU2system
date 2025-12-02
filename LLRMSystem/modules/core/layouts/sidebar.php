@@ -15,6 +15,10 @@
     
     <!-- Navigation Menu -->
     <nav class="flex-1 overflow-y-auto py-4">
+        <?php 
+        // Get user role for permission checks
+        $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+        ?>
         <div class="px-4 space-y-1">
             <!-- Dashboard -->
             <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="nav-item <?php echo ($currentPage ?? '') === 'dashboard' ? 'active' : ''; ?>">
@@ -32,16 +36,6 @@
                 <span>All Documents</span>
             </a>
             
-            <?php 
-            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-            $canUpload = in_array($userRole, ['staff', 'officer', 'administrator', 'admin']);
-            if ($canUpload): 
-            ?>
-            <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="nav-item <?php echo ($currentPage ?? '') === 'documents-create' ? 'active' : ''; ?>">
-                <i class="bi bi-file-earmark-plus"></i>
-                <span>Upload Document</span>
-            </a>
-            <?php endif; ?>
             
             <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'search' ? 'active' : ''; ?>">
                 <i class="bi bi-search"></i>
