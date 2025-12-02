@@ -165,7 +165,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Advanced Filters Toggle -->
             <div class="mt-4 pt-4 border-t border-gray-200">
-                <button class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                <button class="text-red-600 hover:text-red-700 text-sm font-medium flex items-center">
                     <i class="bi bi-funnel mr-2"></i>
                     Advanced Filters
                     <i class="bi bi-chevron-down ml-2"></i>
@@ -179,7 +179,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <label class="flex items-center">
-                        <input type="checkbox" id="select-all-top" class="w-4 h-4 text-blue-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
+                        <input type="checkbox" id="select-all-top" class="w-4 h-4 text-red-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
                         <span class="ml-2 text-sm text-gray-700">Select All</span>
                     </label>
                     <span class="text-sm text-gray-600" id="selected-count">
@@ -203,7 +203,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left">
-                                <input type="checkbox" id="select-all-header" class="w-4 h-4 text-blue-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
+                                <input type="checkbox" id="select-all-header" class="w-4 h-4 text-red-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
@@ -364,7 +364,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         
                         <?php for ($i = max(1, $data['pagination']['current_page'] - 2); $i <= min($data['pagination']['total_pages'], $data['pagination']['current_page'] + 2); $i++): ?>
                             <?php if ($i == $data['pagination']['current_page']): ?>
-                                <button class="px-3 py-1.5 text-sm text-white bg-blue-600 rounded-lg"><?php echo $i; ?></button>
+                                <button class="px-3 py-1.5 text-sm text-white bg-red-600 rounded-lg"><?php echo $i; ?></button>
                             <?php else: ?>
                                 <a href="?page=<?php echo $i; ?><?php echo http_build_query(array_diff_key($_GET, ['page' => ''])); ?>" 
                                    class="px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"><?php echo $i; ?></a>
@@ -451,7 +451,7 @@ function updateSelectedCount() {
     const countElement = document.getElementById('selected-count');
     
     if (selected > 0) {
-        countElement.innerHTML = `<span class="font-semibold text-blue-600">${selected} selected</span> of ${total} documents`;
+        countElement.innerHTML = `<span class="font-semibold text-red-600">${selected} selected</span> of ${total} documents`;
     } else {
         countElement.innerHTML = `${total} documents found`;
     }

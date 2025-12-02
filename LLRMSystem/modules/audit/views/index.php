@@ -44,7 +44,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <i class="bi bi-database-fill text-blue-600 text-4xl"></i>
+                        <i class="bi bi-database-fill text-red-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
                         <div class="text-sm text-gray-600">Total Logs</div>
@@ -143,7 +143,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 <div class="flex items-end">
                     <button type="submit" 
-                            class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                            class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
                         <i class="bi bi-funnel mr-1"></i> Filter
                     </button>
                 </div>

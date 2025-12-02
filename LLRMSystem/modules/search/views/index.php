@@ -216,7 +216,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
                         <div class="flex items-center gap-3">
                             <label class="text-sm text-gray-600">Sort by:</label>
-                            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
                                 <option>Most Relevant</option>
                                 <option>Newest First</option>
                                 <option>Oldest First</option>
@@ -225,7 +225,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </select>
                             
                             <div class="flex border border-gray-300 rounded-lg overflow-hidden">
-                                <button class="px-3 py-2 bg-blue-600 text-white">
+                                <button class="px-3 py-2 bg-red-600 text-white">
                                     <i class="bi bi-list-ul"></i>
                                 </button>
                                 <button class="px-3 py-2 hover:bg-gray-100">
