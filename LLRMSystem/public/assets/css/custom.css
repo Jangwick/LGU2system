@@ -33,16 +33,24 @@
     }
 }
 
+/* Set initial hidden state BEFORE animation starts */
+.animate-fade-in,
+.animate-slide-in {
+    opacity: 0;
+}
+
 .animate-fade-in {
-    animation: fade-in 0.3s ease-in-out;
+    transform: translateY(-10px);
+    animation: fade-in 0.3s ease-in-out forwards;
 }
 
 .animate-fade-out {
-    animation: fade-out 0.3s ease-in-out;
+    animation: fade-out 0.3s ease-in-out forwards;
 }
 
 .animate-slide-in {
-    animation: slide-in 0.3s ease-in-out;
+    transform: translateX(100%);
+    animation: slide-in 0.3s ease-in-out forwards;
 }
 
 /* Custom Scrollbar */

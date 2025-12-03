@@ -102,32 +102,32 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Approved Today -->
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-300 group cursor-pointer">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 text-sm font-medium mb-1">Approved Today</p>
-                        <h3 class="text-3xl font-bold text-gray-800"><?php echo number_format($stats['approved_today']); ?></h3>
+                        <p class="text-gray-500 text-sm font-medium mb-1 transition-colors group-hover:text-green-600">Approved Today</p>
+                        <h3 class="text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['approved_today']); ?></h3>
                         <p class="text-green-600 text-sm mt-2">
                             <i class="bi bi-check-circle"></i> <?php echo $stats['approved_today'] > 0 ? 'On track' : 'No approvals yet'; ?>
                         </p>
                     </div>
-                    <div class="bg-green-100 rounded-full p-4">
+                    <div class="bg-green-100 rounded-full p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
                         <i class="bi bi-check-circle text-green-600 text-2xl"></i>
                     </div>
                 </div>
             </div>
             
             <!-- Storage Used -->
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-400 group cursor-pointer">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 text-sm font-medium mb-1">Storage Used</p>
-                        <h3 class="text-3xl font-bold text-gray-800"><?php echo $stats['storage_used_gb']; ?> GB</h3>
+                        <p class="text-gray-500 text-sm font-medium mb-1 transition-colors group-hover:text-purple-600">Storage Used</p>
+                        <h3 class="text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo $stats['storage_used_gb']; ?> GB</h3>
                         <p class="text-gray-600 text-sm mt-2">
                             <i class="bi bi-hdd"></i> <?php echo $stats['storage_percentage']; ?>% of <?php echo $stats['storage_total_gb']; ?> GB
                         </p>
                     </div>
-                    <div class="bg-purple-100 rounded-full p-4">
+                    <div class="bg-purple-100 rounded-full p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
                         <i class="bi bi-hdd-stack text-purple-600 text-2xl"></i>
                     </div>
                 </div>
@@ -137,7 +137,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Charts Row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Document Uploads Chart -->
-            <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Document Uploads (Last 7 Days)</h2>
                     <button onclick="location.reload()" class="text-gray-500 hover:text-gray-700 text-sm" title="Refresh">
@@ -150,7 +150,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Document Types Chart -->
-            <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Document Types Distribution</h2>
                     <button class="text-gray-500 hover:text-gray-700">
@@ -166,7 +166,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Recent Activity & Quick Links -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Recent Documents -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-700">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Recent Documents</h2>
                     <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-red-600 hover:text-red-700 text-sm font-medium">
@@ -245,7 +245,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Quick Links & Activity -->
             <div class="space-y-6">
                 <!-- Quick Actions -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-800">
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
                     <div class="space-y-2">
                         <?php if (!in_array($userRole, ['viewer'])): ?>
@@ -280,7 +280,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- System Status -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-900">
                     <h2 class="text-lg font-bold text-gray-800 mb-4">System Status</h2>
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">

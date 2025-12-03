@@ -460,11 +460,13 @@ style.textContent = `
     }
     
     .animate-slide-in {
-        animation: slide-in 0.3s ease-out;
+        opacity: 0;
+        transform: translateX(100%);
+        animation: slide-in 0.3s ease-out forwards;
     }
     
     .animate-slide-out {
-        animation: slide-out 0.3s ease-in;
+        animation: slide-out 0.3s ease-in forwards;
     }
 `;
 document.head.appendChild(style);
