@@ -215,7 +215,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Table -->
-            <div class="drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
+            <!-- Desktop Table View -->
+            <div class="hidden md:block drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -266,12 +267,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php else: ?>
                             <?php foreach ($data['documents'] as $doc): ?>
-                                <!-- Desktop: Table Row -->
-                                <tr class="hover:bg-gray-50 hidden md:table-row" data-document-id="<?php echo $doc['id']; ?>">
-                                    <td class="px-4 md:px-6 py-2 md:py-4">
+                                <!-- Table Row -->
+                                <tr class="hover:bg-gray-50" data-document-id="<?php echo $doc['id']; ?>">
+                                    <td class="px-4 md:px-6 py-4 w-12">
                                         <input type="checkbox" class="document-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded" value="<?php echo $doc['id']; ?>">
                                     </td>
-                                    <td class="px-4 md:px-6 py-2 md:py-4">
+                                    <td class="px-4 md:px-6 py-4">
                                         <div class="flex items-center">
                                             <div class="<?php echo getFileIconClass($doc['file_type']); ?> rounded-lg p-2 mr-3 flex-shrink-0">
                                                 <i class="<?php echo getFileIcon($doc['file_type']); ?> text-xl"></i>
@@ -282,22 +283,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden lg:table-cell whitespace-nowrap">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
                                         <span class="badge badge-primary"><?php echo ucfirst($doc['document_type']); ?></span>
                                     </td>
-                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden xl:table-cell whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                         <?php echo htmlspecialchars($doc['reference_number']); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-2 md:py-4 whitespace-nowrap">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
                                         <?php echo getStatusBadge($doc['status']); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden lg:table-cell whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                         <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden xl:table-cell whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-2 md:py-4 text-right text-sm font-medium">
+                                    <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
                                             <button class="text-blue-600 hover:text-blue-700" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-eye"></i>
@@ -328,10 +329,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
                 
-                <!-- Mobile Card View -->
-                <div class="md:hidden divide-y divide-gray-200">
-                    <?php if (!empty($data['documents'])): ?>
+            <!-- Mobile Card View -->
+            <div class="md:hidden divide-y divide-gray-200">
+                <?php if (!empty($data['documents'])): ?>
                         <?php foreach ($data['documents'] as $doc): ?>
                             <div class="p-4 hover:bg-gray-50" data-document-id="<?php echo $doc['id']; ?>">
                                 <!-- Document Info Row -->
@@ -387,7 +389,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-            </div>
             
             <!-- Pagination -->
             <?php if (isset($data['pagination']) && $data['pagination']['total_pages'] > 1): ?>
