@@ -898,6 +898,36 @@ main::-webkit-scrollbar-thumb:active {
     background-color: #404040 !important;
 }
 
+/* Dark Mode - Pagination */
+.dark .pagination a,
+.dark nav ul li a {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+    color: #e5e5e5 !important;
+}
+
+.dark .pagination a:hover,
+.dark nav ul li a:hover {
+    background-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+.dark .pagination a.active,
+.dark nav ul li a.bg-red-600 {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+/* Dark Mode - Pagination Container */
+.dark .bg-gray-50 {
+    background-color: #2d2d2d !important;
+}
+
+.dark .border-gray-200 {
+    border-color: #404040 !important;
+}
+
 .dark .text-gray-300 {
     color: #d1d5db !important;
 }

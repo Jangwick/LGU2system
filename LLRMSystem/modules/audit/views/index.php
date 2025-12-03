@@ -171,16 +171,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Results -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-900">
-                        <i class="bi bi-list-ul mr-2 text-red-600"></i>Activity Logs 
-                        <span class="ml-2 px-3 py-1 bg-red-100 text-red-700 text-sm rounded-full animate-pulse"><?php echo number_format($data['total']); ?> records</span>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center flex-wrap gap-2">
+                        <i class="bi bi-list-ul text-red-600"></i>
+                        <span>Activity Logs</span>
+                        <span class="px-3 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 text-sm rounded-full"><?php echo number_format($data['total']); ?> records</span>
                     </h2>
-                    <div class="text-sm text-gray-600">
-                        Showing <?php echo (($data['page'] - 1) * $data['perPage']) + 1; ?> 
-                        to <?php echo min($data['page'] * $data['perPage'], $data['total']); ?>
+                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                        Showing <?php echo (($data['page'] - 1) * $data['perPage']) + 1; ?> to <?php echo min($data['page'] * $data['perPage'], $data['total']); ?>
                     </div>
                 </div>
             </div>
@@ -275,32 +275,37 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Pagination -->
             <?php if ($data['totalPages'] > 1): ?>
-                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 animate-fade-in-up animation-delay-800">
-                    <nav class="flex justify-center">
-                        <ul class="flex items-center space-x-2">
-                            <li>
-                                <a href="?page=<?php echo $data['page'] - 1; ?>&<?php echo http_build_query($data['filters']); ?>" 
-                                   class="<?php echo $data['page'] <= 1 ? 'pointer-events-none opacity-50' : 'hover:bg-red-100 hover:text-red-700 hover:border-red-300'; ?> px-3 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 transition-all duration-200 transform hover:scale-105">
-                                    <i class="bi bi-chevron-left mr-1"></i>Previous
-                                </a>
-                            </li>
-                            
-                            <?php for ($i = max(1, $data['page'] - 2); $i <= min($data['totalPages'], $data['page'] + 2); $i++): ?>
+                <div class="px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                    <nav class="flex flex-col items-center gap-3">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            Page <?php echo $data['page']; ?> of <?php echo $data['totalPages']; ?>
+                        </div>
+                        <div class="w-full overflow-x-auto">
+                            <ul class="flex items-center justify-center space-x-1 sm:space-x-2 min-w-max px-2">
                                 <li>
-                                    <a href="?page=<?php echo $i; ?>&<?php echo http_build_query($data['filters']); ?>" 
-                                       class="<?php echo $i == $data['page'] ? 'bg-red-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-red-100 hover:text-red-700 hover:border-red-300'; ?> px-4 py-2 rounded-lg border border-gray-300 transition-all duration-200 transform hover:scale-105">
-                                        <?php echo $i; ?>
+                                    <a href="?page=<?php echo $data['page'] - 1; ?>&<?php echo http_build_query($data['filters']); ?>" 
+                                       class="<?php echo $data['page'] <= 1 ? 'pointer-events-none opacity-50' : 'hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-700 dark:hover:text-red-300'; ?> px-2 sm:px-3 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 transition-all duration-200 flex items-center text-sm">
+                                        <i class="bi bi-chevron-left"></i><span class="hidden sm:inline ml-1">Previous</span>
                                     </a>
                                 </li>
-                            <?php endfor; ?>
-                            
-                            <li>
-                                <a href="?page=<?php echo $data['page'] + 1; ?>&<?php echo http_build_query($data['filters']); ?>" 
-                                   class="<?php echo $data['page'] >= $data['totalPages'] ? 'pointer-events-none opacity-50' : 'hover:bg-red-100 hover:text-red-700 hover:border-red-300'; ?> px-3 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 transition-all duration-200 transform hover:scale-105">
-                                    Next<i class="bi bi-chevron-right ml-1"></i>
-                                </a>
-                            </li>
-                        </ul>
+                                
+                                <?php for ($i = max(1, $data['page'] - 2); $i <= min($data['totalPages'], $data['page'] + 2); $i++): ?>
+                                    <li>
+                                        <a href="?page=<?php echo $i; ?>&<?php echo http_build_query($data['filters']); ?>" 
+                                           class="<?php echo $i == $data['page'] ? 'bg-red-600 text-white border-red-600 shadow-md' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-700 dark:hover:text-red-300 border-gray-300 dark:border-gray-600'; ?> px-3 sm:px-4 py-2 rounded-lg border transition-all duration-200 text-sm">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+                                
+                                <li>
+                                    <a href="?page=<?php echo $data['page'] + 1; ?>&<?php echo http_build_query($data['filters']); ?>" 
+                                       class="<?php echo $data['page'] >= $data['totalPages'] ? 'pointer-events-none opacity-50' : 'hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-700 dark:hover:text-red-300'; ?> px-2 sm:px-3 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 transition-all duration-200 flex items-center text-sm">
+                                        <span class="hidden sm:inline mr-1">Next</span><i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </nav>
                 </div>
             <?php endif; ?>
