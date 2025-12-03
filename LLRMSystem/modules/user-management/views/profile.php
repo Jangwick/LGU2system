@@ -214,11 +214,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 View All
                             </a>
                         </div>
-                        <div class="space-y-3">
+                        <div class="space-y-3 max-h-80 overflow-y-auto">
                             <?php if (empty($recentActivities)): ?>
                                 <p class="text-gray-500 text-center py-4">No recent activity</p>
                             <?php else: ?>
                                 <?php foreach ($recentActivities as $activity): ?>
+                                    <?php
+                                    // Clean up description - remove JSON details if present
+                                    $description = $activity['description'];
+                                    if (strpos($description, ' | Details:') !== false) {
+                                        $description = explode(' | Details:', $description)[0];
+                                    }
+                                    if (strpos($description, ' | Changes:') !== false) {
+                                        $description = explode(' | Changes:', $description)[0];
+                                    }
+                                    ?>
                                     <div class="flex items-start gap-3 p-3 hover:bg-red-50 rounded-lg transition-all duration-200 group cursor-pointer">
                                         <div class="flex-shrink-0 mt-1 transform group-hover:scale-110 transition-transform duration-200">
                                             <?php
@@ -227,14 +237,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 'update' => 'bi-pencil-square text-blue-600',
                                                 'delete' => 'bi-trash text-red-600',
                                                 'login' => 'bi-box-arrow-in-right text-indigo-600',
+                                                'logout' => 'bi-box-arrow-right text-gray-600',
                                                 'view' => 'bi-eye text-gray-600',
+                                                'export' => 'bi-download text-purple-600',
+                                                'document_export' => 'bi-file-earmark-arrow-down text-purple-600',
                                                 default => 'bi-circle text-gray-400'
                                             };
                                             ?>
                                             <i class="bi <?php echo $iconClass; ?>"></i>
                                         </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm text-gray-800 group-hover:text-red-700 transition-colors"><?php echo htmlspecialchars($activity['description']); ?></p>
+                                        <div class="flex-1 min-w-0 overflow-hidden">
+                                            <p class="text-sm text-gray-800 group-hover:text-red-700 transition-colors truncate" title="<?php echo htmlspecialchars($description); ?>">
+                                                <?php echo htmlspecialchars($description); ?>
+                                            </p>
                                             <p class="text-xs text-gray-500 mt-1">
                                                 <?php echo date('M d, Y h:i A', strtotime($activity['created_at'])); ?>
                                             </p>

@@ -245,8 +245,18 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                             <?php echo ucfirst($log['action'] ?? ''); ?>
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate group-hover:text-red-700 transition-colors" title="<?php echo htmlspecialchars($log['description'] ?? ''); ?>">
-                                        <?php echo htmlspecialchars($log['description'] ?? ''); ?>
+                                    <?php
+                                    // Clean up description - remove JSON details if present
+                                    $cleanDescription = $log['description'] ?? '';
+                                    if (strpos($cleanDescription, ' | Details:') !== false) {
+                                        $cleanDescription = explode(' | Details:', $cleanDescription)[0];
+                                    }
+                                    if (strpos($cleanDescription, ' | Changes:') !== false) {
+                                        $cleanDescription = explode(' | Changes:', $cleanDescription)[0];
+                                    }
+                                    ?>
+                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs group-hover:text-red-700 transition-colors" title="<?php echo htmlspecialchars($cleanDescription); ?>">
+                                        <span class="block truncate"><?php echo htmlspecialchars($cleanDescription); ?></span>
                                         <?php if ($log['record_id']): ?>
                                             <span class="text-gray-400 text-xs ml-1">(ID: <?php echo $log['record_id']; ?>)</span>
                                         <?php endif; ?>
