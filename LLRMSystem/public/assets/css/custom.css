@@ -1000,6 +1000,33 @@ nav ul li a.bg-red-600 {
     color: #d1d5db !important;
 }
 
+/* Back to Top Button */
+#back-to-top {
+    z-index: 9999;
+}
+
+#back-to-top.translate-y-0 {
+    transform: translateY(0) !important;
+}
+
+#back-to-top.translate-y-20 {
+    transform: translateY(5rem) !important;
+}
+
+/* Mobile adjustments for back to top button */
+@media (max-width: 768px) {
+    #back-to-top {
+        bottom: 1rem;
+        right: 1rem;
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+    
+    #back-to-top i {
+        font-size: 1rem;
+    }
+}
+
 /* Dark Mode - Gradient Backgrounds */
 .dark .gradient-blue,
 .dark .bg-gradient-to-r {
