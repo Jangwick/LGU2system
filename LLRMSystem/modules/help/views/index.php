@@ -274,7 +274,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- System Status -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 animate-fade-in-up animation-delay-800 hover:shadow-xl transition-all duration-300">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <i class="bi bi-activity mr-2 text-blue-600"></i>
                             System Status
@@ -313,7 +313,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Submit Feedback -->
-                    <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-md p-6 text-white">
+                    <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-md p-6 text-white animate-fade-in-up animation-delay-900 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         <h2 class="text-lg font-bold mb-2">Have Feedback?</h2>
                         <p class="text-sm text-red-100 mb-4">Help us improve LRMS by sharing your thoughts</p>
                         <button onclick="openFeedbackModal()" class="w-full bg-white text-red-600 font-semibold py-2 px-4 rounded-lg hover:bg-red-50 transition">

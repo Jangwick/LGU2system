@@ -170,7 +170,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Profile Information -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Personal Information -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <i class="bi bi-person-circle mr-2 text-red-600"></i>
                             Personal Information
@@ -204,13 +204,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Recent Activity -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-700">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-lg font-bold text-gray-800 flex items-center">
                                 <i class="bi bi-clock-history mr-2 text-red-600"></i>
                                 Recent Activity
                             </h3>
-                            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="text-sm text-red-600 hover:text-red-700">
+                            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="text-sm text-red-600 hover:text-red-700 hover:underline transition-all">
                                 View All
                             </a>
                         </div>
@@ -219,12 +219,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <p class="text-gray-500 text-center py-4">No recent activity</p>
                             <?php else: ?>
                                 <?php foreach ($recentActivities as $activity): ?>
-                                    <div class="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition">
-                                        <div class="flex-shrink-0 mt-1">
+                                    <div class="flex items-start gap-3 p-3 hover:bg-red-50 rounded-lg transition-all duration-200 group cursor-pointer">
+                                        <div class="flex-shrink-0 mt-1 transform group-hover:scale-110 transition-transform duration-200">
                                             <?php
                                             $iconClass = match($activity['action']) {
                                                 'create' => 'bi-plus-circle text-green-600',
-                                                'update' => 'bi-pencil-square text-red-600',
+                                                'update' => 'bi-pencil-square text-blue-600',
                                                 'delete' => 'bi-trash text-red-600',
                                                 'login' => 'bi-box-arrow-in-right text-indigo-600',
                                                 'view' => 'bi-eye text-gray-600',
@@ -234,7 +234,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <i class="bi <?php echo $iconClass; ?>"></i>
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <p class="text-sm text-gray-800"><?php echo htmlspecialchars($activity['description']); ?></p>
+                                            <p class="text-sm text-gray-800 group-hover:text-red-700 transition-colors"><?php echo htmlspecialchars($activity['description']); ?></p>
                                             <p class="text-xs text-gray-500 mt-1">
                                                 <?php echo date('M d, Y h:i A', strtotime($activity['created_at'])); ?>
                                             </p>
@@ -249,59 +249,62 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Sidebar -->
                 <div class="space-y-6">
                     <!-- Account Security -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <i class="bi bi-shield-check mr-2 text-red-600"></i>
                             Account Security
                         </h2>
                         <div class="space-y-3">
-                            <button onclick="openPasswordModal()" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
+                            <button onclick="openPasswordModal()" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-red-50 rounded-lg transition-all duration-200 transform hover:scale-[1.02] group">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="text-sm font-medium text-gray-800">Change Password</p>
+                                        <p class="text-sm font-medium text-gray-800 group-hover:text-red-700 transition-colors">Change Password</p>
                                         <p class="text-xs text-gray-500">Update your password</p>
                                     </div>
-                                    <i class="bi bi-chevron-right text-gray-400"></i>
+                                    <i class="bi bi-chevron-right text-gray-400 group-hover:text-red-600 group-hover:translate-x-1 transition-all"></i>
                                 </div>
                             </button>
                             
-                            <button class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
+                            <button class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-red-50 rounded-lg transition-all duration-200 transform hover:scale-[1.02] group">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="text-sm font-medium text-gray-800">Two-Factor Auth</p>
+                                        <p class="text-sm font-medium text-gray-800 group-hover:text-red-700 transition-colors">Two-Factor Auth</p>
                                         <p class="text-xs text-gray-500">Not enabled</p>
                                     </div>
-                                    <i class="bi bi-chevron-right text-gray-400"></i>
+                                    <i class="bi bi-chevron-right text-gray-400 group-hover:text-red-600 group-hover:translate-x-1 transition-all"></i>
                                 </div>
                             </button>
                             
-                            <button class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
+                            <button class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-red-50 rounded-lg transition-all duration-200 transform hover:scale-[1.02] group">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="text-sm font-medium text-gray-800">Login History</p>
+                                        <p class="text-sm font-medium text-gray-800 group-hover:text-red-700 transition-colors">Login History</p>
                                         <p class="text-xs text-gray-500">View recent logins</p>
                                     </div>
-                                    <i class="bi bi-chevron-right text-gray-400"></i>
+                                    <i class="bi bi-chevron-right text-gray-400 group-hover:text-red-600 group-hover:translate-x-1 transition-all"></i>
                                 </div>
                             </button>
                         </div>
                     </div>
                     
                     <!-- Quick Links -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-700">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <i class="bi bi-link-45deg mr-2 text-red-600"></i>
                             Quick Links
                         </h2>
                         <div class="space-y-2">
-                            <a href="<?php echo USERS_URL; ?>/views/settings.php" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition text-sm">
-                                <i class="bi bi-gear mr-2 text-gray-600"></i>Account Settings
+                            <a href="<?php echo USERS_URL; ?>/views/settings.php" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition-all duration-200 text-sm group transform hover:translate-x-1">
+                                <i class="bi bi-gear mr-2 text-gray-600 group-hover:text-red-600 transition-colors"></i>
+                                <span class="group-hover:text-red-700 transition-colors">Account Settings</span>
                             </a>
-                            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition text-sm">
-                                <i class="bi bi-file-earmark-text mr-2 text-gray-600"></i>My Documents
+                            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition-all duration-200 text-sm group transform hover:translate-x-1">
+                                <i class="bi bi-file-earmark-text mr-2 text-gray-600 group-hover:text-red-600 transition-colors"></i>
+                                <span class="group-hover:text-red-700 transition-colors">My Documents</span>
                             </a>
-                            <a href="<?php echo HELP_URL; ?>/views/index.php" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition text-sm">
-                                <i class="bi bi-question-circle mr-2 text-gray-600"></i>Help Center
+                            <a href="<?php echo HELP_URL; ?>/views/index.php" class="block px-4 py-2 hover:bg-red-50 rounded-lg transition-all duration-200 text-sm group transform hover:translate-x-1">
+                                <i class="bi bi-question-circle mr-2 text-gray-600 group-hover:text-red-600 transition-colors"></i>
+                                <span class="group-hover:text-red-700 transition-colors">Help Center</span>
                             </a>
                         </div>
                     </div>

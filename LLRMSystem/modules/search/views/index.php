@@ -280,7 +280,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Result Item 2 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition animate-fade-in" style="animation-delay: 0.1s">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-fade-in-up animation-delay-500">
                         <div class="flex items-start gap-4">
                             <div class="bg-blue-100 rounded-lg p-3">
                                 <i class="bi bi-file-word text-blue-600 text-2xl"></i>
@@ -324,21 +324,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- Pagination -->
-                <div class="mt-6 bg-white rounded-xl shadow-md p-6">
+                <div class="mt-6 bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
                     <div class="flex items-center justify-between">
                         <div class="text-sm text-gray-600">
                             Showing 1-10 of 1,248 results
                         </div>
                         <div class="flex gap-2">
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50" disabled>
+                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-200" disabled>
                                 Previous
                             </button>
-                            <button class="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg">1</button>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">2</button>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">3</button>
+                            <button class="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200">1</button>
+                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">2</button>
+                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">3</button>
                             <span class="px-2">...</span>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">125</button>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">125</button>
+                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">
                                 Next
                             </button>
                         </div>
