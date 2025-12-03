@@ -30,7 +30,7 @@ class AuditController {
         ];
         
         $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-        $perPage = 50;
+        $perPage = 20;
         $offset = ($page - 1) * $perPage;
         
         // Build query
