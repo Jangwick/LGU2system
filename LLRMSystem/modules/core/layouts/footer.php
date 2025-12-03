@@ -1,17 +1,33 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 md:py-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0">
-                <div class="flex items-center space-x-2 md:space-x-3">
-                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-8 h-8 md:w-10 md:h-10 object-contain">
-                    <div class="text-xs md:text-sm text-gray-600 text-center md:text-left">
-                        &copy; <?php echo date('Y'); ?> <span class="hidden sm:inline">City Government of Valenzuela - </span>LRMS<span class="hidden md:inline">. All rights reserved.</span>
+            <!-- Desktop Layout -->
+            <div class="hidden md:flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-10 h-10 object-contain">
+                    <div class="text-sm text-gray-600">
+                        &copy; <?php echo date('Y'); ?> City Government of Valenzuela - LRMS. All rights reserved.
                     </div>
                 </div>
-                <div class="flex items-center space-x-3 md:space-x-6">
-                    <a href="/modules/help/views/privacy.php" class="text-xs md:text-sm text-gray-600 hover:text-red-600">Privacy</a>
-                    <a href="/modules/help/views/terms.php" class="text-xs md:text-sm text-gray-600 hover:text-red-600">Terms</a>
-                    <a href="/modules/help/views/contact.php" class="text-xs md:text-sm text-gray-600 hover:text-red-600">Support</a>
+                <div class="flex items-center space-x-6">
+                    <a href="/modules/help/views/privacy.php" class="text-sm text-gray-600 hover:text-red-600">Privacy</a>
+                    <a href="/modules/help/views/terms.php" class="text-sm text-gray-600 hover:text-red-600">Terms</a>
+                    <a href="/modules/help/views/contact.php" class="text-sm text-gray-600 hover:text-red-600">Support</a>
+                </div>
+            </div>
+            
+            <!-- Mobile Layout -->
+            <div class="md:hidden text-center">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px;">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" style="width: 24px; height: 24px; object-fit: contain;">
+                    <span class="text-xs text-gray-600">&copy; <?php echo date('Y'); ?> LRMS</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <a href="/modules/help/views/privacy.php" class="text-xs text-gray-500 hover:text-red-600">Privacy</a>
+                    <span class="text-gray-300">•</span>
+                    <a href="/modules/help/views/terms.php" class="text-xs text-gray-500 hover:text-red-600">Terms</a>
+                    <span class="text-gray-300">•</span>
+                    <a href="/modules/help/views/contact.php" class="text-xs text-gray-500 hover:text-red-600">Support</a>
                 </div>
             </div>
         </div>
