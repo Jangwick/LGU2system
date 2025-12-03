@@ -8,9 +8,11 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/Document.php';
+require_once __DIR__ . '/../../core/utils/Logger.php';
 
 $db = getDatabase();
 $documentModel = new Document($db);
+$logger = new Logger($db);
 
 // Get export type (using 'export_type' to avoid conflict with document type filter)
 $exportType = $_GET['export_type'] ?? 'list'; // 'list' or 'files'
@@ -45,6 +47,33 @@ if (!empty($documentIds)) {
     // Export all filtered documents
     $documents = $documentModel->getAll($filters);
 }
+
+// Log export activity
+$exportDetails = [
+    'export_type' => $exportType,
+    'format' => $format,
+    'document_count' => count($documents),
+    'filters' => $filters
+];
+
+// Get document titles for specific exports
+if (!empty($documentIds)) {
+    $exportedTitles = array_map(function($doc) {
+        return $doc['title'] ?? $doc['reference_number'] ?? 'Unknown';
+    }, $documents);
+    $exportDetails['exported_documents'] = implode(', ', array_slice($exportedTitles, 0, 5));
+    if (count($exportedTitles) > 5) {
+        $exportDetails['exported_documents'] .= '... and ' . (count($exportedTitles) - 5) . ' more';
+    }
+}
+
+$logger->logActivity(
+    Logger::ACTION_DOCUMENT_EXPORT,
+    'documents',
+    null,
+    "Exported " . count($documents) . " document(s) as " . strtoupper($format) . ($exportType === 'files' ? ' (ZIP files)' : ' (list)'),
+    $exportDetails
+);
 
 // Check export type
 if ($exportType === 'files') {

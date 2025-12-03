@@ -1,14 +1,17 @@
 <?php
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/middleware/PermissionMiddleware.php';
+require_once __DIR__ . '/../../core/utils/Logger.php';
 
 class UserController {
     private $db;
     private $permissions;
+    private $logger;
     
     public function __construct() {
         $this->db = getDatabase();
         $this->permissions = new PermissionMiddleware($this->db);
+        $this->logger = new Logger($this->db);
         
         // Require administrator access
         $this->permissions->requireLogin();
@@ -138,7 +141,19 @@ class UserController {
         ]);
         
         if ($result) {
-            return ['success' => true, 'id' => $this->db->lastInsertId()];
+            $newUserId = $this->db->lastInsertId();
+            
+            // Log user creation activity
+            $this->logger->logActivity(Logger::ACTION_USER_CREATE, 'users', $newUserId, 
+                "Created new user: {$data['name']} ({$data['email']}) with role: {$data['role']}", [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'role' => $data['role'],
+                'department' => $data['department'] ?? null,
+                'status' => $data['status'] ?? 'active'
+            ]);
+            
+            return ['success' => true, 'id' => $newUserId];
         }
         
         return ['success' => false, 'error' => 'Failed to create user'];
@@ -154,9 +169,20 @@ class UserController {
             return ['success' => false, 'error' => 'User not found'];
         }
         
+        // Store old values for audit trail
+        $oldValues = [
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'full_name' => $user['full_name'] ?? '',
+            'role' => $user['role'],
+            'department' => $user['department'] ?? '',
+            'status' => $user['status']
+        ];
+        
         // Build update query
         $fields = [];
         $params = [':id' => $id];
+        $newValues = [];
         
         if (isset($data['name'])) {
             $fields[] = "name = :name";
@@ -192,11 +218,21 @@ class UserController {
         if (isset($data['status'])) {
             $fields[] = "status = :status";
             $params[':status'] = $data['status'];
+            $newValues['status'] = $data['status'];
         }
         
         if (isset($data['password']) && !empty($data['password'])) {
             $fields[] = "password = :password";
             $params[':password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            $newValues['password'] = '[CHANGED]';
+            $oldValues['password'] = '[HIDDEN]';
+        }
+        
+        // Track changes for logging
+        foreach (['name', 'email', 'full_name', 'role', 'department'] as $field) {
+            if (isset($data[$field])) {
+                $newValues[$field] = $data[$field];
+            }
         }
         
         if (empty($fields)) {
@@ -209,6 +245,28 @@ class UserController {
         $stmt = $this->db->prepare($query);
         
         if ($stmt->execute($params)) {
+            // Determine if this is a role change (special logging)
+            $action = Logger::ACTION_USER_UPDATE;
+            $description = "Updated user: {$user['name']} ({$user['email']})";
+            
+            if (isset($data['role']) && $data['role'] !== $user['role']) {
+                $action = Logger::ACTION_ROLE_CHANGE;
+                $description = "Changed role for {$user['name']} from {$user['role']} to {$data['role']}";
+            }
+            
+            if (isset($data['status']) && $data['status'] !== $user['status']) {
+                if ($data['status'] === 'active') {
+                    $action = Logger::ACTION_USER_ACTIVATE;
+                    $description = "Activated user account: {$user['name']}";
+                } else if ($data['status'] === 'inactive') {
+                    $action = Logger::ACTION_USER_DEACTIVATE;
+                    $description = "Deactivated user account: {$user['name']}";
+                }
+            }
+            
+            // Log the update with old and new values
+            $this->logger->logActivity($action, 'users', $id, $description, $newValues, $oldValues);
+            
             return ['success' => true];
         }
         
@@ -224,9 +282,24 @@ class UserController {
             return ['success' => false, 'error' => 'You cannot delete your own account'];
         }
         
+        // Get user info before deletion for logging
+        $user = $this->show($id);
+        if (!$user) {
+            return ['success' => false, 'error' => 'User not found'];
+        }
+        
         $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
         
         if ($stmt->execute([':id' => $id])) {
+            // Log the deletion with user details
+            $this->logger->logActivity(Logger::ACTION_USER_DELETE, 'users', $id, 
+                "Deleted user: {$user['name']} ({$user['email']})", null, [
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'role' => $user['role'],
+                'department' => $user['department'] ?? ''
+            ]);
+            
             return ['success' => true];
         }
         

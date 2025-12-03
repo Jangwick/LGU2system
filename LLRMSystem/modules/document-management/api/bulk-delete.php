@@ -53,14 +53,13 @@ try {
         }
     }
     
-    // Log bulk delete action
-    $logger->log(
-        'document_bulk_delete',
-        'document',
-        null,
-        $_SESSION['user_id'],
-        "Bulk deleted {$deleted} document(s)"
-    );
+    // Log bulk delete action with enhanced logging
+    $logger->logActivity(Logger::ACTION_DOCUMENT_DELETE, 'documents', null,
+        "Bulk deleted {$deleted} document(s)", [
+            'deleted_count' => $deleted,
+            'document_ids' => $documentIds,
+            'errors_count' => count($errors)
+        ]);
     
     echo json_encode([
         'success' => true,

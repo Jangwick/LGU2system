@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once __DIR__ . '/../controllers/ReportController.php';
+require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/utils/Logger.php';
 
 // Check if user is logged in and has permission
 if (!isset($_SESSION['user_id'])) {
@@ -14,6 +16,10 @@ if (!in_array($userRole, ['officer', 'administrator', 'admin'])) {
 }
 
 $controller = new ReportController();
+
+// Initialize logger
+$db = getDatabase();
+$logger = new Logger($db);
 
 // Get parameters
 $reportType = $_GET['report_type'] ?? '';
@@ -43,6 +49,16 @@ switch ($reportType) {
 if (empty($data)) {
     die('No data available for the selected report and date range.');
 }
+
+// Log report export activity
+$logger->logActivity(Logger::ACTION_REPORT_EXPORT, 'reports', null,
+    "Exported $reportTitle in $format format", [
+        'report_type' => $reportType,
+        'format' => $format,
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+        'record_count' => count($data)
+    ]);
 
 // Export based on format
 switch ($format) {

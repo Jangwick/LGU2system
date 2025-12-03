@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/utils/Logger.php';
 
 header('Content-Type: application/json');
 
@@ -56,6 +57,7 @@ if (!move_uploaded_file($file['tmp_name'], $filepath)) {
 // Update database
 try {
     $db = getDatabase();
+    $logger = new Logger($db);
     
     // Get old profile picture
     $stmt = $db->prepare("SELECT profile_picture FROM users WHERE id = ?");
@@ -71,17 +73,15 @@ try {
     $stmt = $db->prepare("UPDATE users SET profile_picture = ? WHERE id = ?");
     $stmt->execute([$filename, $userId]);
     
-    // Log activity
-    $logStmt = $db->prepare("
-        INSERT INTO activity_logs (user_id, action, description, ip_address, user_agent) 
-        VALUES (?, 'update', ?, ?, ?)
-    ");
-    $logStmt->execute([
-        $userId,
-        'Updated profile picture',
-        $_SERVER['REMOTE_ADDR'] ?? 'Unknown',
-        $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'
-    ]);
+    // Log activity with enhanced logger
+    $logger->logActivity(Logger::ACTION_PROFILE_UPDATE, 'users', $userId,
+        "User updated their profile picture", [
+            'new_picture' => $filename,
+            'file_size' => $file['size'],
+            'file_type' => $fileType
+        ], [
+            'old_picture' => $oldPicture
+        ]);
     
     // Return success with image URL
     $imageUrl = BASE_URL . '/storage/profiles/' . $filename;

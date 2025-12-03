@@ -9,9 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/DocumentTag.php';
+require_once __DIR__ . '/../../core/utils/Logger.php';
 
 $db = getDatabase();
 $tagModel = new DocumentTag($db);
+$logger = new Logger($db);
 
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -27,6 +29,13 @@ try {
     $result = $tagModel->assignToDocument($tagId, $documentId);
     
     if ($result) {
+        // Log tag assignment
+        $logger->logActivity(Logger::ACTION_TAG_ASSIGN, 'document_tags', $documentId,
+            "Tag assigned to document", [
+                'tag_id' => $tagId,
+                'document_id' => $documentId
+            ]);
+        
         echo json_encode([
             'success' => true,
             'message' => 'Tag assigned successfully'

@@ -17,6 +17,9 @@ require_once __DIR__ . '/../../core/config/config.php';
 // Include database configuration
 require_once __DIR__ . '/../../core/config/database.php';
 
+// Include Logger
+require_once __DIR__ . '/../../core/utils/Logger.php';
+
 // Clear any output buffer
 ob_end_clean();
 
@@ -38,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Get database connection
         $conn = getDatabase();
+        $logger = new Logger($conn);
         
         // Prepare statement to prevent SQL injection
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND status = 'active' LIMIT 1");
@@ -65,16 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute([$token, $user['id']]);
                 }
                 
-                // Log activity
-                $stmt = $conn->prepare("
-                    INSERT INTO activity_logs (user_id, action, description, ip_address) 
-                    VALUES (?, ?, ?, ?)
-                ");
-                $stmt->execute([
-                    $user['id'],
-                    'login',
-                    'User logged in successfully',
-                    $_SERVER['REMOTE_ADDR'] ?? 'Unknown'
+                // Log successful login with enhanced logger
+                $logger->logSession($user['id'], Logger::ACTION_LOGIN, [
+                    'email' => $user['email'],
+                    'role' => $user['role'],
+                    'remember_me' => $remember,
+                    'login_method' => 'password'
                 ]);
                 
                 // Return success response
@@ -85,7 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 exit;
             } else {
-                // Invalid password
+                // Invalid password - log failed attempt
+                $logger->logSession($user['id'], Logger::ACTION_LOGIN_FAILED, [
+                    'email' => $email,
+                    'reason' => 'invalid_password'
+                ], Logger::SEVERITY_WARNING);
+                
                 echo json_encode([
                     'success' => false,
                     'message' => 'Invalid password. Please try again.'
@@ -93,7 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            // User not found or inactive
+            // User not found or inactive - log failed attempt
+            $logger->logSession(null, Logger::ACTION_LOGIN_FAILED, [
+                'email' => $email,
+                'reason' => 'user_not_found_or_inactive'
+            ], Logger::SEVERITY_WARNING);
+            
             echo json_encode([
                 'success' => false,
                 'message' => 'Email address not found or account is inactive.'

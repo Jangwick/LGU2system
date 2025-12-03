@@ -8,9 +8,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/utils/Logger.php';
 
 try {
     $db = getDatabase();
+    $logger = new Logger($db);
     
     $current_password = $_POST['current_password'] ?? '';
     $new_password = $_POST['new_password'] ?? '';
@@ -46,6 +48,10 @@ try {
     
     // Verify current password
     if (!password_verify($current_password, $user['password'])) {
+        // Log failed password change attempt
+        $logger->logActivity(Logger::ACTION_PASSWORD_CHANGE, 'users', $_SESSION['user_id'],
+            "Failed password change attempt - incorrect current password", null, null, Logger::SEVERITY_WARNING);
+        
         echo json_encode(['success' => false, 'message' => 'Current password is incorrect']);
         exit;
     }
@@ -62,12 +68,9 @@ try {
     ");
     $updateStmt->execute([$hashed_password, $_SESSION['user_id']]);
     
-    // Log activity
-    $logStmt = $db->prepare("
-        INSERT INTO activity_logs (user_id, action, description, created_at) 
-        VALUES (?, 'update', 'Changed account password', NOW())
-    ");
-    $logStmt->execute([$_SESSION['user_id']]);
+    // Log successful password change
+    $logger->logActivity(Logger::ACTION_PASSWORD_CHANGE, 'users', $_SESSION['user_id'],
+        "User successfully changed their password");
     
     echo json_encode(['success' => true, 'message' => 'Password changed successfully']);
     

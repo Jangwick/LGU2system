@@ -86,8 +86,12 @@ class DocumentService {
             // Create document record
             $documentId = $this->documentModel->create($documentData);
             
-            // Log activity
-            $this->logger->log('document_created', $documentId, "Document '{$data['title']}' created");
+            // Log activity with detailed info
+            $this->logger->logDocumentActivity($documentId, Logger::ACTION_DOCUMENT_UPLOAD, $data['title'], [
+                'reference_number' => $data['reference_number'],
+                'document_type' => $data['document_type'],
+                'file_size' => $fileData['size']
+            ]);
             
             return [
                 'success' => true,
@@ -116,11 +120,20 @@ class DocumentService {
             throw new Exception("Document not found");
         }
         
+        // Store old values for audit trail
+        $oldValues = [
+            'title' => $document['title'],
+            'description' => $document['description'] ?? '',
+            'status' => $document['status'] ?? ''
+        ];
+        
         // Update document
         $success = $this->documentModel->update($id, $data);
         
         if ($success) {
-            $this->logger->log('document_updated', $id, "Document updated");
+            $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_UPDATE, $document['title'], [
+                'changes' => array_intersect_key($data, $oldValues)
+            ], $oldValues);
         }
         
         return [
@@ -146,7 +159,10 @@ class DocumentService {
         $success = $this->documentModel->delete($id);
         
         if ($success) {
-            $this->logger->log('document_deleted', $id, "Document '{$document['title']}' deleted");
+            $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_DELETE, $document['title'], [
+                'document_type' => $document['document_type'] ?? 'unknown',
+                'reference_number' => $document['reference_number'] ?? ''
+            ]);
         }
         
         return [
@@ -165,7 +181,11 @@ class DocumentService {
             throw new Exception("Document not found");
         }
         
-        // Log download
+        // Log download with enhanced logging
+        $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_DOWNLOAD, $document['title'], [
+            'file_name' => $document['file_name'],
+            'file_type' => $document['file_type']
+        ]);
         $this->logger->logAccess($id, $_SESSION['user_id'], 'download');
         
         return [

@@ -39,12 +39,12 @@ class SearchController {
         
         // Log search if user is logged in
         if (isset($_SESSION['user_id']) && !empty($query)) {
-            $this->logger->log(
-                $_SESSION['user_id'],
-                'search_performed',
-                null,
-                "Search query: {$query}"
-            );
+            $this->logger->logActivity(Logger::ACTION_SEARCH, 'search', null,
+                "Search query: {$query}", [
+                    'query' => $query,
+                    'results_count' => $total,
+                    'filters' => $filters
+                ]);
         }
         
         return [
@@ -72,6 +72,16 @@ class SearchController {
         ];
         
         $csv = $this->searchService->exportToCSV($query, $filters);
+        
+        // Log search export
+        if (isset($_SESSION['user_id'])) {
+            $this->logger->logActivity(Logger::ACTION_REPORT_EXPORT, 'search', null,
+                "Exported search results for: {$query}", [
+                    'query' => $query,
+                    'filters' => $filters,
+                    'format' => 'csv'
+                ]);
+        }
         
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="search_results_' . date('Y-m-d') . '.csv"');

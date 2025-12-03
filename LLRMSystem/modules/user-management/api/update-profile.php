@@ -8,9 +8,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/utils/Logger.php';
 
 try {
     $db = getDatabase();
+    $logger = new Logger($db);
     
     $full_name = $_POST['full_name'] ?? '';
     $username = $_POST['username'] ?? '';
@@ -18,6 +20,11 @@ try {
     $phone = $_POST['phone'] ?? '';
     $department = $_POST['department'] ?? '';
     $position = $_POST['position'] ?? '';
+    
+    // Get current profile for comparison
+    $currentStmt = $db->prepare("SELECT full_name, username, email, phone, department, position FROM users WHERE id = ?");
+    $currentStmt->execute([$_SESSION['user_id']]);
+    $currentProfile = $currentStmt->fetch(PDO::FETCH_ASSOC);
     
     // Validate required fields
     if (empty($full_name) || empty($username) || empty($email)) {
@@ -69,12 +76,18 @@ try {
     $_SESSION['user_email'] = $email;
     $_SESSION['user_department'] = $department;
     
-    // Log activity
-    $logStmt = $db->prepare("
-        INSERT INTO activity_logs (user_id, action, description, created_at) 
-        VALUES (?, 'update', 'Updated profile information', NOW())
-    ");
-    $logStmt->execute([$_SESSION['user_id']]);
+    // Log activity with detailed changes
+    $newValues = [
+        'full_name' => $full_name,
+        'username' => $username,
+        'email' => $email,
+        'phone' => $phone,
+        'department' => $department,
+        'position' => $position
+    ];
+    
+    $logger->logActivity(Logger::ACTION_PROFILE_UPDATE, 'users', $_SESSION['user_id'],
+        "User updated their profile", $newValues, $currentProfile);
     
     echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
     
