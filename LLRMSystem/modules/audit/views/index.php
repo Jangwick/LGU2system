@@ -171,12 +171,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Results -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600" style="border: 1px solid #e5e7eb;">
+            <div class="px-6 py-4 bg-white dark:bg-gray-800" style="border-bottom: 1px solid #e5e7eb;">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center flex-wrap gap-2">
+                    <h2 class="text-lg font-semibold flex items-center flex-wrap gap-2" style="color: #111827;">
                         <i class="bi bi-list-ul text-red-600"></i>
-                        <span>Activity Logs</span>
+                        <span class="dark:text-white" style="color: inherit;">Activity Logs</span>
                         <span class="px-3 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 text-sm rounded-full"><?php echo number_format($data['total']); ?> records</span>
                     </h2>
                     <div class="text-sm text-gray-600 dark:text-gray-400">
@@ -186,7 +186,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date/Time</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
@@ -275,7 +275,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Pagination -->
             <?php if ($data['totalPages'] > 1): ?>
-                <div class="px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                <div class="px-4 sm:px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
                     <nav class="flex flex-col items-center gap-3">
                         <div class="text-sm text-gray-600 dark:text-gray-400">
                             Page <?php echo $data['page']; ?> of <?php echo $data['totalPages']; ?>

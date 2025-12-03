@@ -767,6 +767,15 @@ main::-webkit-scrollbar-thumb:active {
     background-color: #1a1a1a !important;
 }
 
+/* Light Mode - Borders */
+.border-gray-100 {
+    border-color: #f3f4f6 !important;
+}
+
+.border-gray-200 {
+    border-color: #e5e7eb !important;
+}
+
 .dark .border-gray-200,
 .dark .border-gray-100 {
     border-color: #404040 !important;
@@ -777,6 +786,15 @@ main::-webkit-scrollbar-thumb:active {
 .dark .shadow-lg,
 .dark .shadow-xl {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Light Mode - Text Colors */
+.text-gray-900 {
+    color: #111827 !important;
+}
+
+.text-gray-800 {
+    color: #1f2937 !important;
 }
 
 /* Dark Mode - Text Colors */
@@ -818,6 +836,36 @@ main::-webkit-scrollbar-thumb:active {
     border-color: #404040 !important;
 }
 
+/* Light Mode - Pagination Container */
+.bg-white {
+    background-color: #ffffff !important;
+}
+
+:root {
+    --pagination-bg: #ffffff;
+}
+
+.dark {
+    --pagination-bg: #1f2937;
+}
+
+/* Light Mode - Tables */
+table {
+    background-color: #ffffff !important;
+}
+
+table thead {
+    background-color: #f9fafb !important;
+}
+
+table tbody tr {
+    background-color: #ffffff !important;
+}
+
+table tbody tr:hover {
+    background-color: #fef2f2 !important;
+}
+
 /* Dark Mode - Tables */
 .dark table {
     background-color: #2d2d2d !important;
@@ -825,6 +873,10 @@ main::-webkit-scrollbar-thumb:active {
 
 .dark table thead {
     background-color: #404040 !important;
+}
+
+.dark table tbody tr {
+    background-color: #2d2d2d !important;
 }
 
 .dark table tbody tr:hover {
@@ -898,21 +950,37 @@ main::-webkit-scrollbar-thumb:active {
     background-color: #404040 !important;
 }
 
+/* Light Mode - Pagination Buttons */
+nav ul li a {
+    background-color: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+}
+
+nav ul li a:hover {
+    background-color: #fee2e2 !important;
+    border-color: #fca5a5 !important;
+    color: #dc2626 !important;
+}
+
+nav ul li a.bg-red-600 {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+
 /* Dark Mode - Pagination */
-.dark .pagination a,
 .dark nav ul li a {
     background-color: #404040 !important;
     border-color: #555555 !important;
     color: #e5e5e5 !important;
 }
 
-.dark .pagination a:hover,
 .dark nav ul li a:hover {
     background-color: #555555 !important;
     color: #ffffff !important;
 }
 
-.dark .pagination a.active,
 .dark nav ul li a.bg-red-600 {
     background-color: #dc2626 !important;
     border-color: #dc2626 !important;
