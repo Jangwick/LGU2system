@@ -34,14 +34,14 @@
     </footer>
     
     <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden opacity-0 pointer-events-none transition-all duration-300 ease-out"></div>
     
     <!-- Mobile Sidebar -->
-    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-72 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-all duration-300 ease-out overflow-y-auto flex flex-col shadow-2xl">
+    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-72 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden flex flex-col shadow-2xl">
         <!-- Mobile sidebar header -->
-        <div class="p-4 border-b border-red-700/50">
+        <div class="p-4 border-b border-red-700/50 sidebar-header">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 sidebar-logo">
                     <div class="bg-white rounded-full p-1.5 shadow-lg">
                         <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-9 h-9 object-contain">
                     </div>
@@ -50,7 +50,7 @@
                         <p class="text-xs text-red-200">Legislative Records</p>
                     </div>
                 </div>
-                <button id="close-mobile-sidebar" class="text-white/80 p-2 hover:bg-red-700/50 hover:text-white rounded-lg transition-all duration-200">
+                <button id="close-mobile-sidebar" class="text-white/80 p-2 hover:bg-red-700/50 hover:text-white rounded-lg transition-all duration-200 hover:rotate-90">
                     <i class="bi bi-x-lg text-xl"></i>
                 </button>
             </div>
@@ -169,13 +169,37 @@
         const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
         
         function openMobileSidebar() {
-            // Show overlay with fade
+            // Show overlay with fade and blur
             sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
             sidebarOverlay.classList.add('opacity-100', 'pointer-events-auto');
             
             // Slide in sidebar
             mobileSidebar.classList.remove('-translate-x-full');
             mobileSidebar.classList.add('translate-x-0');
+            
+            // Animate menu items with stagger effect
+            const menuItems = mobileSidebar.querySelectorAll('nav a, nav > div');
+            menuItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.3s ease-out';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 50 + (index * 30));
+            });
+            
+            // Animate header
+            const header = mobileSidebar.querySelector('.sidebar-header');
+            if (header) {
+                header.style.opacity = '0';
+                header.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    header.style.transition = 'all 0.3s ease-out';
+                    header.style.opacity = '1';
+                    header.style.transform = 'translateY(0)';
+                }, 100);
+            }
             
             // Prevent body scroll
             document.body.style.overflow = 'hidden';
