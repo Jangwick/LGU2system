@@ -217,27 +217,27 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Table -->
             <div class="drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50 hidden md:table-header-group">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 md:px-6 py-3 text-left">
+                            <th class="px-4 md:px-6 py-3 text-left w-12">
                                 <input type="checkbox" id="select-all-header" class="w-4 h-4 text-red-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
                             </th>
                             <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Type
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden xl:table-cell">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Reference
                             </th>
                             <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Date
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden xl:table-cell">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Size
                             </th>
                             <th class="px-4 md:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -266,8 +266,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php else: ?>
                             <?php foreach ($data['documents'] as $doc): ?>
-                                <!-- Desktop: Table Row | Mobile: Card -->
-                                <tr class="hover:bg-gray-50 md:table-row hidden md:table-row-group" data-document-id="<?php echo $doc['id']; ?>">
+                                <!-- Desktop: Table Row -->
+                                <tr class="hover:bg-gray-50 hidden md:table-row" data-document-id="<?php echo $doc['id']; ?>">
                                     <td class="px-4 md:px-6 py-2 md:py-4">
                                         <input type="checkbox" class="document-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded" value="<?php echo $doc['id']; ?>">
                                     </td>
