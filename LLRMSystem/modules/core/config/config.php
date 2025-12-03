@@ -86,6 +86,7 @@ define('REPORTS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'reports-analytics')
 define('SEARCH_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'search');
 define('AUDIT_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'audit');
 define('HELP_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'help');
+define('NOTIFICATIONS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'notifications');
 
 // URL paths (for use in HTML/JavaScript)
 define('ASSETS_URL', BASE_URL . '/public/assets');
@@ -102,6 +103,7 @@ define('REPORTS_URL', BASE_URL . '/modules/reports-analytics');
 define('SEARCH_URL', BASE_URL . '/modules/search');
 define('AUDIT_URL', BASE_URL . '/modules/audit');
 define('HELP_URL', BASE_URL . '/modules/help');
+define('NOTIFICATIONS_URL', BASE_URL . '/modules/notifications');
 
 // Common page URLs
 define('LOGIN_URL', AUTH_URL . '/views/login.php');

@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <aside id="sidebar" class="sidebar-expanded w-64 bg-gradient-to-b from-red-800 to-red-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300 ease-in-out animate-slide-in-left min-h-full">
     <!-- Logo Section -->
-    <div class="p-6 border-b border-red-700 animate-fade-in sidebar-logo">
+    <div class="p-6 mb-2 border-b border-red-700 animate-fade-in sidebar-logo">
         <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition-all duration-300 transform hover:scale-105 group">
             <div class="bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" style="width: 70px; height: 70px;">
                 <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" style="width: 120%; height: 120%;" class="object-cover">
@@ -14,7 +14,7 @@
     </div>
     
     <!-- Navigation Menu -->
-    <nav class="flex-1 overflow-y-auto py-4">
+    <nav class="flex-1 overflow-y-auto py-2">
         <?php 
         // Get user role for permission checks
         $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));

@@ -385,6 +385,214 @@
                 }
             });
         })();
+        
+        // =====================
+        // Notification System
+        // =====================
+        (function() {
+            const notificationBtn = document.getElementById('notifications-btn');
+            const notificationDropdown = document.getElementById('notifications-dropdown');
+            const notificationBadge = document.getElementById('notification-badge');
+            const notificationsList = document.getElementById('notifications-list');
+            const notificationCountText = document.getElementById('notification-count-text');
+            const markAllReadBtn = document.getElementById('mark-all-read-btn');
+            
+            if (!notificationBtn || !notificationDropdown) return;
+            
+            // Get notification API URL using PHP BASE_URL
+            const NOTIFICATION_API_URL = '<?php echo BASE_URL; ?>/modules/notifications/api/notifications.php';
+            
+            // Fetch notifications
+            async function fetchNotifications() {
+                try {
+                    const response = await fetch(NOTIFICATION_API_URL + '?action=list&limit=10', {
+                        credentials: 'same-origin'
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        updateNotificationBadge(data.unread_count);
+                        renderNotifications(data.notifications);
+                    } else {
+                        console.log('Notification fetch:', data.message);
+                    }
+                } catch (error) {
+                    console.error('Error fetching notifications:', error);
+                }
+            }
+            
+            // Update badge count
+            function updateNotificationBadge(count) {
+                if (count > 0) {
+                    notificationBadge.textContent = count > 99 ? '99+' : count;
+                    notificationBadge.classList.remove('hidden');
+                    notificationBadge.classList.add('flex');
+                } else {
+                    notificationBadge.classList.add('hidden');
+                    notificationBadge.classList.remove('flex');
+                }
+                
+                if (notificationCountText) {
+                    notificationCountText.textContent = count + ' unread';
+                }
+            }
+            
+            // Render notifications
+            function renderNotifications(notifications) {
+                if (!notifications || notifications.length === 0) {
+                    notificationsList.innerHTML = `
+                        <div class="p-8 text-center text-gray-500">
+                            <i class="bi bi-bell-slash text-3xl mb-2"></i>
+                            <p class="text-sm">No notifications</p>
+                        </div>`;
+                    return;
+                }
+                
+                notificationsList.innerHTML = notifications.map(n => `
+                    <div class="p-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer notification-item ${n.is_read ? 'opacity-60' : ''}" 
+                         data-id="${n.id}" onclick="markNotificationRead(${n.id})">
+                        <div class="flex items-start space-x-3">
+                            <div class="${getNotificationIconBg(n.type)} rounded-full p-2 flex-shrink-0">
+                                <i class="bi ${getNotificationIcon(n.type)} ${getNotificationIconColor(n.type)}"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm font-medium text-gray-800 truncate">${escapeHtml(n.title)}</p>
+                                    ${n.priority === 'urgent' || n.priority === 'high' ? 
+                                        `<span class="ml-2 px-1.5 py-0.5 text-xs rounded ${n.priority === 'urgent' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}">${n.priority}</span>` : ''}
+                                </div>
+                                <p class="text-xs text-gray-600 mt-0.5 line-clamp-2">${escapeHtml(n.message)}</p>
+                                <div class="flex items-center mt-1 text-xs text-gray-400">
+                                    <span>${timeAgo(n.created_at)}</span>
+                                    ${n.source_module ? `<span class="mx-1">•</span><span>${escapeHtml(n.source_module)}</span>` : ''}
+                                </div>
+                            </div>
+                            ${!n.is_read ? '<div class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>' : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Get icon based on notification type
+            function getNotificationIcon(type) {
+                const icons = {
+                    'file': 'bi-file-earmark',
+                    'message': 'bi-chat-dots',
+                    'alert': 'bi-exclamation-triangle',
+                    'integration': 'bi-plug',
+                    'system': 'bi-gear'
+                };
+                return icons[type] || 'bi-bell';
+            }
+            
+            function getNotificationIconBg(type) {
+                const bgs = {
+                    'file': 'bg-blue-100',
+                    'message': 'bg-green-100',
+                    'alert': 'bg-yellow-100',
+                    'integration': 'bg-purple-100',
+                    'system': 'bg-gray-100'
+                };
+                return bgs[type] || 'bg-gray-100';
+            }
+            
+            function getNotificationIconColor(type) {
+                const colors = {
+                    'file': 'text-blue-600',
+                    'message': 'text-green-600',
+                    'alert': 'text-yellow-600',
+                    'integration': 'text-purple-600',
+                    'system': 'text-gray-600'
+                };
+                return colors[type] || 'text-gray-600';
+            }
+            
+            // Time ago function
+            function timeAgo(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+                
+                if (seconds < 60) return 'Just now';
+                if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+                if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+                if (seconds < 604800) return Math.floor(seconds / 86400) + 'd ago';
+                return date.toLocaleDateString();
+            }
+            
+            // Escape HTML
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text || '';
+                return div.innerHTML;
+            }
+            
+            // Mark notification as read
+            window.markNotificationRead = async function(id) {
+                try {
+                    await fetch(NOTIFICATION_API_URL + '?action=read', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ notification_id: id })
+                    });
+                    fetchNotifications();
+                } catch (error) {
+                    console.error('Error marking notification as read:', error);
+                }
+            };
+            
+            // Mark all as read
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                        await fetch(NOTIFICATION_API_URL + '?action=read_all', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'same-origin'
+                        });
+                        fetchNotifications();
+                    } catch (error) {
+                        console.error('Error marking all as read:', error);
+                    }
+                });
+            }
+            
+            // Toggle dropdown
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('hidden');
+                
+                // Close profile dropdown if open
+                const profileDropdown = document.getElementById('profile-dropdown');
+                if (profileDropdown) {
+                    profileDropdown.classList.add('hidden');
+                }
+                
+                if (!notificationDropdown.classList.contains('hidden')) {
+                    fetchNotifications();
+                }
+            });
+            
+            // Prevent dropdown from closing when clicking inside
+            notificationDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                const container = document.getElementById('notifications-container');
+                if (container && !container.contains(e.target)) {
+                    notificationDropdown.classList.add('hidden');
+                }
+            });
+            
+            // Initial fetch and periodic refresh
+            fetchNotifications();
+            setInterval(fetchNotifications, 60000); // Refresh every minute
+        })();
     </script>
     </div> <!-- Close flex container from header -->
 </body>

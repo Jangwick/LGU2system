@@ -77,32 +77,28 @@ if (isset($_SESSION['user_id'])) {
                 </button>
                 
                 <!-- Notifications -->
-                <div class="relative">
+                <div class="relative" id="notifications-container">
                     <button id="notifications-btn" class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
                         <i class="bi bi-bell text-xl"></i>
-                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span id="notification-badge" class="hidden absolute top-0 right-0 min-w-[18px] h-[18px] bg-red-500 rounded-full text-white text-xs font-bold flex items-center justify-center px-1">0</span>
                     </button>
                     
                     <!-- Notifications Dropdown -->
-                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50" style="background-color: white;">
-                        <div class="p-4 border-b border-gray-200">
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50" style="background-color: white;">
+                        <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                             <h3 class="text-sm font-semibold text-gray-800">Notifications</h3>
+                            <button id="mark-all-read-btn" class="text-xs text-blue-600 hover:text-blue-700 font-medium">Mark all as read</button>
                         </div>
-                        <div class="max-h-96 overflow-y-auto">
-                            <div class="p-4 hover:bg-gray-50 border-b border-gray-100 cursor-pointer">
-                                <div class="flex items-start space-x-3">
-                                    <div class="bg-blue-100 rounded-full p-2">
-                                        <i class="bi bi-file-earmark-text text-blue-600"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm text-gray-800">New ordinance document uploaded</p>
-                                        <p class="text-xs text-gray-500 mt-1">5 minutes ago</p>
-                                    </div>
-                                </div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto">
+                            <!-- Notifications will be loaded dynamically -->
+                            <div class="p-8 text-center text-gray-500">
+                                <i class="bi bi-bell-slash text-3xl mb-2"></i>
+                                <p class="text-sm">No notifications</p>
                             </div>
                         </div>
-                        <div class="p-3 border-t border-gray-200">
-                            <a href="/modules/notifications/views/index.php" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View all notifications</a>
+                        <div class="p-3 border-t border-gray-200 flex items-center justify-between">
+                            <a href="<?php echo BASE_URL; ?>/modules/notifications/views/index.php" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View all notifications</a>
+                            <span id="notification-count-text" class="text-xs text-gray-500">0 unread</span>
                         </div>
                     </div>
                 </div>
@@ -157,21 +153,11 @@ if (isset($_SESSION['user_id'])) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Notifications dropdown toggle
+    // Profile dropdown toggle only - notifications handled in footer.php
     const notificationsBtn = document.getElementById('notifications-btn');
     const notificationsDropdown = document.getElementById('notifications-dropdown');
     const profileBtn = document.getElementById('profile-btn');
     const profileDropdown = document.getElementById('profile-dropdown');
-    
-    if (notificationsBtn && notificationsDropdown) {
-        notificationsBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            notificationsDropdown.classList.toggle('hidden');
-            if (profileDropdown) {
-                profileDropdown.classList.add('hidden');
-            }
-        });
-    }
     
     // Profile dropdown toggle
     if (profileBtn && profileDropdown) {
@@ -184,22 +170,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Close dropdowns when clicking outside
+    // Close profile dropdown when clicking outside
     document.addEventListener('click', function(e) {
-        if (notificationsDropdown && !notificationsBtn.contains(e.target)) {
-            notificationsDropdown.classList.add('hidden');
-        }
-        if (profileDropdown && !profileBtn.contains(e.target)) {
+        if (profileDropdown && profileBtn && !profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
             profileDropdown.classList.add('hidden');
         }
     });
-    
-    // Prevent dropdown from closing when clicking inside it
-    if (notificationsDropdown) {
-        notificationsDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    }
     
     if (profileDropdown) {
         profileDropdown.addEventListener('click', function(e) {
