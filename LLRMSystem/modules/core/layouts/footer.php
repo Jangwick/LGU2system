@@ -34,51 +34,51 @@
     </footer>
     
     <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 md:hidden opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
     
     <!-- Mobile Sidebar -->
-    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-64 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-transform duration-300 ease-in-out overflow-y-auto flex flex-col">
+    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-72 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-all duration-300 ease-out overflow-y-auto flex flex-col shadow-2xl">
         <!-- Mobile sidebar header -->
-        <div class="p-4 border-b border-red-700">
+        <div class="p-4 border-b border-red-700/50">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-white rounded-full p-1 shadow-md">
-                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-10 h-10 object-contain">
+                    <div class="bg-white rounded-full p-1.5 shadow-lg">
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-9 h-9 object-contain">
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold">LRMS</h1>
+                        <h1 class="text-lg font-bold tracking-tight">LRMS</h1>
                         <p class="text-xs text-red-200">Legislative Records</p>
                     </div>
                 </div>
-                <button id="close-mobile-sidebar" class="text-white p-2 hover:bg-red-700 rounded-lg">
+                <button id="close-mobile-sidebar" class="text-white/80 p-2 hover:bg-red-700/50 hover:text-white rounded-lg transition-all duration-200">
                     <i class="bi bi-x-lg text-xl"></i>
                 </button>
             </div>
         </div>
         
         <!-- Mobile Navigation Menu -->
-        <nav class="flex-1 py-4 px-3">
+        <nav class="flex-1 py-4 px-3 overflow-y-auto">
             <?php 
             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
             ?>
             
             <!-- Dashboard -->
-            <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'dashboard' ? 'bg-red-700' : ''; ?>">
+            <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'dashboard' ? 'bg-red-700' : ''; ?>">
                 <i class="bi bi-speedometer2 mr-3 text-lg"></i>
                 <span>Dashboard</span>
             </a>
             
             <!-- Documents Section -->
             <div class="mt-4 mb-2 px-4">
-                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Documents</p>
+                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Documents</p>
             </div>
             
-            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'documents' ? 'bg-red-700' : ''; ?>">
+            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'documents' ? 'bg-red-700' : ''; ?>">
                 <i class="bi bi-file-earmark-text mr-3 text-lg"></i>
                 <span>All Documents</span>
             </a>
             
-            <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'search' ? 'bg-red-700' : ''; ?>">
+            <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'search' ? 'bg-red-700' : ''; ?>">
                 <i class="bi bi-search mr-3 text-lg"></i>
                 <span>Advanced Search</span>
             </a>
@@ -86,10 +86,10 @@
             <!-- Reports & Analytics - Officer and Admin only -->
             <?php if (in_array($userRole, ['officer', 'administrator', 'admin'])): ?>
             <div class="mt-4 mb-2 px-4">
-                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Analytics</p>
+                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Analytics</p>
             </div>
             
-            <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'reports' ? 'bg-red-700' : ''; ?>">
+            <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'reports' ? 'bg-red-700' : ''; ?>">
                 <i class="bi bi-graph-up mr-3 text-lg"></i>
                 <span>Reports & Analytics</span>
             </a>
@@ -98,15 +98,15 @@
             <!-- Administration - Admin only -->
             <?php if (in_array($userRole, ['administrator', 'admin'])): ?>
             <div class="mt-4 mb-2 px-4">
-                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Administration</p>
+                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Administration</p>
             </div>
             
-            <a href="<?php echo USERS_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'users' ? 'bg-red-700' : ''; ?>">
+            <a href="<?php echo USERS_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'users' ? 'bg-red-700' : ''; ?>">
                 <i class="bi bi-people mr-3 text-lg"></i>
                 <span>User Management</span>
             </a>
             
-            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'audit' ? 'bg-red-700' : ''; ?>">
+            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'audit' ? 'bg-red-700' : ''; ?>">
                 <i class="bi bi-shield-check mr-3 text-lg"></i>
                 <span>Audit Log</span>
             </a>
@@ -114,10 +114,10 @@
             
             <!-- Help -->
             <div class="mt-4 mb-2 px-4">
-                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Support</p>
+                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Support</p>
             </div>
             
-            <a href="<?php echo HELP_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'help' ? 'bg-red-700' : ''; ?>">
+            <a href="<?php echo HELP_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'help' ? 'bg-red-700' : ''; ?>">
                 <i class="bi bi-question-circle mr-3 text-lg"></i>
                 <span>Help & Support</span>
             </a>
@@ -162,25 +162,48 @@
     <?php endif; ?>
     
     <script>
-        // Mobile menu toggle
+        // Mobile menu toggle with animations
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileSidebar = document.getElementById('mobile-sidebar');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
         const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
         
         function openMobileSidebar() {
+            // Show overlay with fade
+            sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            sidebarOverlay.classList.add('opacity-100', 'pointer-events-auto');
+            
+            // Slide in sidebar
             mobileSidebar.classList.remove('-translate-x-full');
-            sidebarOverlay.classList.remove('hidden');
+            mobileSidebar.classList.add('translate-x-0');
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
         }
         
         function closeMobileSidebarFn() {
+            // Hide overlay with fade
+            sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+            sidebarOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+            
+            // Slide out sidebar
             mobileSidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
+            mobileSidebar.classList.remove('translate-x-0');
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
         }
         
         mobileMenuBtn?.addEventListener('click', openMobileSidebar);
         closeMobileSidebar?.addEventListener('click', closeMobileSidebarFn);
         sidebarOverlay?.addEventListener('click', closeMobileSidebarFn);
+        
+        // Close sidebar on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !mobileSidebar.classList.contains('-translate-x-full')) {
+                closeMobileSidebarFn();
+            }
+        });
         
         // Loading state utilities
         window.showPageLoader = function() {
