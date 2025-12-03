@@ -174,9 +174,15 @@
         (function() {
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const sidebar = document.getElementById('sidebar');
+            const mainContent = sidebar?.nextElementSibling;
             
             if (!sidebarToggle || !sidebar) {
                 return;
+            }
+            
+            // Add transition class to main content for smooth animation
+            if (mainContent) {
+                mainContent.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
             }
             
             // Check for saved sidebar state
@@ -184,6 +190,7 @@
             if (sidebarState === 'true') {
                 sidebar.classList.remove('sidebar-expanded', 'w-64');
                 sidebar.classList.add('sidebar-collapsed');
+                sidebarToggle.classList.add('sidebar-hidden');
             }
             
             // Toggle sidebar on button click
@@ -193,15 +200,31 @@
                 
                 const isExpanded = sidebar.classList.contains('sidebar-expanded');
                 
+                // Add a subtle scale animation to the button
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
                 if (isExpanded) {
-                    // Collapse sidebar
+                    // Collapse sidebar with animation
                     sidebar.classList.remove('sidebar-expanded', 'w-64');
                     sidebar.classList.add('sidebar-collapsed');
+                    this.classList.add('sidebar-hidden');
                     localStorage.setItem('sidebarCollapsed', 'true');
+                    
+                    // Animate main content expansion
+                    if (mainContent) {
+                        mainContent.style.transform = 'scale(1.005)';
+                        setTimeout(() => {
+                            mainContent.style.transform = '';
+                        }, 400);
+                    }
                 } else {
-                    // Expand sidebar
+                    // Expand sidebar with animation
                     sidebar.classList.remove('sidebar-collapsed');
                     sidebar.classList.add('sidebar-expanded', 'w-64');
+                    this.classList.remove('sidebar-hidden');
                     localStorage.setItem('sidebarCollapsed', 'false');
                 }
             });
