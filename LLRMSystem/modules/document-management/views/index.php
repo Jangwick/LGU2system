@@ -68,13 +68,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in overflow-visible">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="animate-slide-in-left">
                     <h1 class="text-2xl font-bold text-gray-800 mb-2">Document Management</h1>
                     <p class="text-gray-600">Manage all legislative documents in one place</p>
                 </div>
-                <div class="flex gap-3 animate-slide-in-right">
+                <div class="flex gap-3 animate-slide-in-right relative">
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
@@ -90,32 +90,30 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             Export
                             <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>
                         </button>
-                        <div id="export-menu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 animate-fade-in-up">
-                            <div class="py-1">
-                                <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Export List</div>
-                                <button onclick="exportList('csv')" 
-                                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <i class="bi bi-filetype-csv mr-2 text-green-600"></i>
-                                    Export List as CSV
-                                </button>
-                                <button onclick="exportList('excel')" 
-                                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <i class="bi bi-file-earmark-excel mr-2 text-green-600"></i>
-                                    Export List as Excel
-                                </button>
-                                <hr class="my-1">
-                                <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Export Files</div>
-                                <button onclick="exportSelectedFiles()" 
-                                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <i class="bi bi-file-earmark-zip mr-2 text-blue-600"></i>
-                                    Export Selected Files (ZIP)
-                                </button>
-                                <button onclick="exportAllFiles()" 
-                                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <i class="bi bi-archive mr-2 text-purple-600"></i>
-                                    Export All Files (ZIP)
-                                </button>
-                            </div>
+                        <div id="export-menu" class="hidden bg-white rounded-lg shadow-2xl border border-gray-200" style="position: fixed; width: 224px; z-index: 99999;">
+                            <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide bg-gray-50 border-b">Export List</div>
+                            <button onclick="exportList('csv')" 
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
+                                <i class="bi bi-filetype-csv mr-3 text-green-600 text-lg"></i>
+                                Export as CSV
+                            </button>
+                            <button onclick="exportList('excel')" 
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
+                                <i class="bi bi-file-earmark-excel mr-3 text-green-600 text-lg"></i>
+                                Export as Excel
+                            </button>
+                            <div class="border-t border-gray-200"></div>
+                            <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide bg-gray-50 border-b">Export Files</div>
+                            <button onclick="exportSelectedFiles()" 
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
+                                <i class="bi bi-file-earmark-zip mr-3 text-blue-600 text-lg"></i>
+                                Selected Files (ZIP)
+                            </button>
+                            <button onclick="exportAllFiles()" 
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
+                                <i class="bi bi-archive mr-3 text-purple-600 text-lg"></i>
+                                All Files (ZIP)
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -555,6 +553,18 @@ function exportList(format) {
 
 function toggleExportMenu() {
     const menu = document.getElementById('export-menu');
+    const button = document.querySelector('#export-dropdown button');
+    const rect = button.getBoundingClientRect();
+    
+    // Move menu to body if not already there (to escape overflow:hidden containers)
+    if (menu.parentElement.id === 'export-dropdown') {
+        document.body.appendChild(menu);
+    }
+    
+    // Position the fixed dropdown below the button, aligned to the right
+    menu.style.top = (rect.bottom + 8) + 'px';
+    menu.style.left = (rect.right - 224) + 'px'; // 224 is the menu width
+    
     menu.classList.toggle('hidden');
 }
 
@@ -563,7 +573,7 @@ document.addEventListener('click', function(event) {
     const dropdown = document.getElementById('export-dropdown');
     const menu = document.getElementById('export-menu');
     
-    if (dropdown && !dropdown.contains(event.target)) {
+    if (dropdown && menu && !dropdown.contains(event.target) && !menu.contains(event.target)) {
         menu.classList.add('hidden');
     }
 });
