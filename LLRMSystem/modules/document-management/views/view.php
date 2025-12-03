@@ -98,27 +98,27 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
-            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
+            <div class="flex flex-col gap-4">
                 <div class="flex-1 animate-slide-in-left">
-                    <div class="flex items-center gap-3 mb-2">
-                        <h1 class="text-2xl font-bold text-gray-800"><?= htmlspecialchars($document['title']) ?></h1>
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold <?= getStatusBadge($document['status']) ?>">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+                        <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800"><?= htmlspecialchars($document['title']) ?></h1>
+                        <span class="px-2 sm:px-3 py-1 rounded-full text-xs font-semibold <?= getStatusBadge($document['status']) ?>">
                             <?= ucfirst($document['status']) ?>
                         </span>
                     </div>
-                    <p class="text-gray-600 mb-1">Reference: <span class="font-mono font-semibold"><?= $document['reference_number'] ?></span></p>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm sm:text-base text-gray-600 mb-1">Reference: <span class="font-mono font-semibold"><?= $document['reference_number'] ?></span></p>
+                    <p class="text-xs sm:text-sm text-gray-500">
                         Type: <?= ucfirst(str_replace('_', ' ', $document['document_type'])) ?> • 
                         Date: <?= date('F d, Y', strtotime($document['document_date'])) ?>
                     </p>
                 </div>
-                <div class="flex gap-3">
+                <div class="flex flex-wrap gap-2 sm:gap-3">
                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>" 
-                       class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                        <i class="bi bi-download mr-2"></i>Download
+                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center text-sm sm:text-base">
+                        <i class="bi bi-download mr-1 sm:mr-2"></i><span class="hidden xs:inline">Download</span><span class="xs:hidden">DL</span>
                     </a>
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
@@ -127,22 +127,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     if ($canEdit): 
                     ?>
                     <a href="<?php echo DOCUMENTS_URL; ?>/views/edit.php?id=<?= $document['id'] ?>" 
-                       class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
-                        <i class="bi bi-pencil mr-2"></i>Edit
+                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-center text-sm sm:text-base">
+                        <i class="bi bi-pencil mr-1 sm:mr-2"></i><span class="hidden xs:inline">Edit</span>
                     </a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             <!-- Main Content -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-4 md:space-y-6">
                 <!-- Document Details -->
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Document Information</h2>
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Document Information</h2>
                     
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label class="text-sm font-medium text-gray-500">File Name</label>
                             <p class="text-gray-800"><?= htmlspecialchars($document['file_name']) ?></p>
@@ -199,17 +199,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <?php else: ?>
                     <div class="space-y-3">
                         <?php foreach ($versions as $version): ?>
-                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <span class="text-blue-600 font-bold">v<?= $version['version_number'] ?></span>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border border-gray-200 rounded-lg hover:bg-gray-50 gap-3">
+                            <div class="flex items-center gap-3 sm:gap-4">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span class="text-blue-600 font-bold text-sm sm:text-base">v<?= $version['version_number'] ?></span>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-800"><?= htmlspecialchars($version['file_name']) ?></p>
-                                    <p class="text-sm text-gray-500">
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-medium text-gray-800 text-sm sm:text-base truncate"><?= htmlspecialchars($version['file_name']) ?></p>
+                                    <p class="text-xs sm:text-sm text-gray-500">
                                         <?= formatFileSize($version['file_size']) ?> • 
-                                        <?= date('M d, Y g:i A', strtotime($version['created_at'])) ?> • 
-                                        by <?= htmlspecialchars($version['created_by_name']) ?>
+                                        <?= date('M d, Y', strtotime($version['created_at'])) ?>
+                                        <span class="hidden sm:inline">• by <?= htmlspecialchars($version['created_by_name']) ?></span>
                                     </p>
                                     <?php if ($version['change_description']): ?>
                                     <p class="text-sm text-gray-600 mt-1"><?= htmlspecialchars($version['change_description']) ?></p>
@@ -236,10 +236,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Sidebar -->
-            <div class="space-y-6">
+            <div class="space-y-4 md:space-y-6">
                 <!-- Related Documents -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Related Documents</h2>
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Related Documents</h2>
                     
                     <?php if (empty($links) && empty($incomingLinks)): ?>
                     <p class="text-gray-500 text-center py-4 text-sm">No related documents</p>
@@ -281,26 +281,26 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Quick Actions</h2>
                     
-                    <div class="space-y-2">
-                        <button onclick="shareDocument()" class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 rounded-lg transition">
-                            <i class="bi bi-share mr-2 text-gray-600"></i>Share Document
+                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-2">
+                        <button onclick="shareDocument()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 rounded-lg transition flex items-center">
+                            <i class="bi bi-share mr-2 text-gray-600"></i><span class="hidden xs:inline">Share </span>Document
                         </button>
-                        <button onclick="printDocument()" class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 rounded-lg transition">
+                        <button onclick="printDocument()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 rounded-lg transition flex items-center">
                             <i class="bi bi-printer mr-2 text-gray-600"></i>Print
                         </button>
-                        <button onclick="viewHistory()" class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 rounded-lg transition">
-                            <i class="bi bi-clock-history mr-2 text-gray-600"></i>Activity History
+                        <button onclick="viewHistory()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 rounded-lg transition flex items-center">
+                            <i class="bi bi-clock-history mr-2 text-gray-600"></i><span class="hidden xs:inline">Activity </span>History
                         </button>
                         <?php 
                         $canDelete = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
                         if ($canDelete): 
                         ?>
-                        <hr class="my-2">
+                        <hr class="my-2 col-span-2 sm:col-span-1">
                         <button onclick="deleteDocument(<?= $document['id'] ?>)" 
-                                class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 rounded-lg transition">
+                                class="col-span-2 sm:col-span-1 px-3 sm:px-4 py-2 text-left text-xs sm:text-sm text-red-600 hover:bg-red-50 rounded-lg transition flex items-center">
                             <i class="bi bi-trash mr-2"></i>Delete Document
                         </button>
                         <?php endif; ?>

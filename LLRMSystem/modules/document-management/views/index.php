@@ -215,7 +215,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Table -->
-            <div class="overflow-x-auto">
+            <div class="drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50 hidden md:table-header-group">
                         <tr>

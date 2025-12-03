@@ -30,28 +30,28 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
-            <div class="mb-6 animate-fade-in">
-                <h1 class="text-2xl font-bold text-gray-800 mb-2">Upload New Document</h1>
-                <p class="text-gray-600">Add a new legislative document to the repository</p>
+            <div class="mb-4 md:mb-6 animate-fade-in">
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">Upload New Document</h1>
+                <p class="text-sm sm:text-base text-gray-600">Add a new legislative document to the repository</p>
             </div>
             
             <!-- Upload Form -->
             <form id="upload-form" action="<?php echo DOCUMENTS_URL; ?>/api/upload.php" method="POST" enctype="multipart/form-data">
                 <!-- File Upload Section -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center">
                         <i class="bi bi-cloud-upload mr-2 text-blue-600"></i>
                         Document File
                     </h2>
                     
                     <!-- Drag & Drop Area -->
-                    <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition cursor-pointer">
-                        <i class="bi bi-cloud-arrow-up text-6xl text-gray-400 mb-4"></i>
-                        <p class="text-lg font-medium text-gray-700 mb-2">Drag and drop your file here</p>
-                        <p class="text-sm text-gray-500 mb-4">or click to browse</p>
+                    <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 md:p-8 text-center hover:border-blue-500 transition cursor-pointer">
+                        <i class="bi bi-cloud-arrow-up text-4xl sm:text-5xl md:text-6xl text-gray-400 mb-3 sm:mb-4"></i>
+                        <p class="text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">Drag and drop your file here</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">or click to browse</p>
                         <input type="file" id="file-input" name="document_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="hidden" required>
                         <button type="button" onclick="document.getElementById('file-input').click()" class="btn-primary">
                             <i class="bi bi-folder2-open mr-2"></i>
@@ -80,13 +80,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- Document Information -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center">
                         <i class="bi bi-info-circle mr-2 text-blue-600"></i>
                         Document Information
                     </h2>
                     
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         <!-- Document Type -->
                         <div>
                             <label for="document-type" class="block text-sm font-medium text-gray-700 mb-2">
@@ -266,18 +266,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- Action Buttons -->
-                <div class="flex items-center justify-between gap-4">
-                    <a href="index.php" class="btn-secondary">
-                        <i class="bi bi-x-circle mr-2"></i>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+                    <a href="index.php" class="btn-secondary text-center order-3 sm:order-1">
+                        <i class="bi bi-x-circle mr-1 sm:mr-2"></i>
                         Cancel
                     </a>
-                    <div class="flex gap-3">
-                        <button type="submit" name="action" value="draft" class="btn-outline">
-                            <i class="bi bi-save mr-2"></i>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 order-1 sm:order-2">
+                        <button type="submit" name="action" value="draft" class="btn-outline text-sm sm:text-base">
+                            <i class="bi bi-save mr-1 sm:mr-2"></i>
                             Save as Draft
                         </button>
-                        <button type="submit" name="action" value="upload" class="btn-primary">
-                            <i class="bi bi-cloud-upload mr-2"></i>
+                        <button type="submit" name="action" value="upload" class="btn-primary text-sm sm:text-base">
+                            <i class="bi bi-cloud-upload mr-1 sm:mr-2"></i>
                             Upload Document
                         </button>
                     </div>

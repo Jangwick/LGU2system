@@ -1,6 +1,249 @@
 /* Custom CSS Styles */
 /* Additional styles that complement Tailwind CSS */
 
+/* ========================================
+   Custom Scrollbars - Draggable & Styled
+   ======================================== */
+
+/* Base scrollbar styles for all scrollable areas */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    cursor: grab;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+    cursor: grabbing;
+}
+
+::-webkit-scrollbar-corner {
+    background: #f1f5f9;
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+/* Thin scrollbar for sidebar filters */
+.filter-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+    border-radius: 3px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #b91c1c 0%, #991b1b 100%);
+}
+
+/* Main content area scrollbar */
+main::-webkit-scrollbar {
+    width: 10px;
+}
+
+main::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-left: 1px solid #e2e8f0;
+}
+
+main::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+    border-radius: 5px;
+    border: 2px solid #f8fafc;
+    cursor: grab;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+}
+
+main::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+    cursor: grabbing;
+}
+
+/* Table container scrollbar */
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
+    border-radius: 4px;
+    cursor: grab;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #94a3b8 0%, #64748b 100%);
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:active,
+.overflow-y-auto::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(90deg, #64748b 0%, #475569 100%);
+    cursor: grabbing;
+}
+
+/* Modal/Dialog scrollbar */
+.modal-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+/* ========================================
+   Drag-to-Scroll Containers
+   ======================================== */
+
+.drag-scroll {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.drag-scroll:active,
+.drag-scroll.dragging {
+    cursor: grabbing;
+}
+
+.drag-scroll.dragging * {
+    pointer-events: none;
+}
+
+/* Enhanced scrollbar for drag-scroll containers */
+.drag-scroll::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+}
+
+.drag-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 6px;
+    margin: 4px;
+}
+
+.drag-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+    border-radius: 6px;
+    border: 2px solid #f1f5f9;
+    cursor: grab;
+}
+
+.drag-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+}
+
+.drag-scroll::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #475569 0%, #334155 100%);
+    cursor: grabbing;
+}
+
+/* ========================================
+   Filter Checkbox Labels
+   ======================================== */
+
+/* Filter Checkbox Labels - Proper alignment */
+.filter-checkbox-label {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.375rem 0.5rem;
+    margin: 0 -0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s;
+}
+
+.filter-checkbox-label:hover {
+    background-color: #f9fafb;
+}
+
+.filter-checkbox-label input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.filter-checkbox-label .filter-label {
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.filter-checkbox-label .filter-count {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* File type filter with icon */
+.filter-checkbox-label-icon {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.375rem 0.5rem;
+    margin: 0 -0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s;
+}
+
+.filter-checkbox-label-icon:hover {
+    background-color: #f9fafb;
+}
+
 /* Animations */
 @keyframes fade-in {
     from {

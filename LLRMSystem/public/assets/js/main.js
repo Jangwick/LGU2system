@@ -290,6 +290,135 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.classList.add('hidden');
         });
     }
+
+    // Initialize drag-to-scroll for all .drag-scroll elements
+    initDragScroll();
 });
+
+/**
+ * Drag-to-Scroll Functionality
+ * Allows users to click and drag to scroll content horizontally and vertically
+ */
+function initDragScroll() {
+    const dragScrollContainers = document.querySelectorAll('.drag-scroll');
+    
+    dragScrollContainers.forEach(container => {
+        let isDown = false;
+        let startX;
+        let startY;
+        let scrollLeft;
+        let scrollTop;
+        let velX = 0;
+        let velY = 0;
+        let momentumID;
+
+        container.addEventListener('mousedown', (e) => {
+            // Don't initiate drag on buttons, links, inputs
+            if (e.target.closest('button, a, input, select, textarea')) {
+                return;
+            }
+            
+            isDown = true;
+            container.classList.add('dragging');
+            startX = e.pageX - container.offsetLeft;
+            startY = e.pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+            cancelMomentum();
+        });
+
+        container.addEventListener('mouseleave', () => {
+            if (isDown) {
+                isDown = false;
+                container.classList.remove('dragging');
+                startMomentum();
+            }
+        });
+
+        container.addEventListener('mouseup', () => {
+            if (isDown) {
+                isDown = false;
+                container.classList.remove('dragging');
+                startMomentum();
+            }
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+            const walkX = (x - startX) * 1.5; // Scroll speed multiplier
+            const walkY = (y - startY) * 1.5;
+            
+            velX = container.scrollLeft - (scrollLeft - walkX);
+            velY = container.scrollTop - (scrollTop - walkY);
+            
+            container.scrollLeft = scrollLeft - walkX;
+            container.scrollTop = scrollTop - walkY;
+        });
+
+        // Touch support for mobile
+        container.addEventListener('touchstart', (e) => {
+            if (e.target.closest('button, a, input, select, textarea')) {
+                return;
+            }
+            
+            isDown = true;
+            container.classList.add('dragging');
+            startX = e.touches[0].pageX - container.offsetLeft;
+            startY = e.touches[0].pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+            cancelMomentum();
+        }, { passive: true });
+
+        container.addEventListener('touchend', () => {
+            isDown = false;
+            container.classList.remove('dragging');
+            startMomentum();
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            if (!isDown) return;
+            
+            const x = e.touches[0].pageX - container.offsetLeft;
+            const y = e.touches[0].pageY - container.offsetTop;
+            const walkX = (x - startX) * 1.5;
+            const walkY = (y - startY) * 1.5;
+            
+            velX = container.scrollLeft - (scrollLeft - walkX);
+            velY = container.scrollTop - (scrollTop - walkY);
+            
+            container.scrollLeft = scrollLeft - walkX;
+            container.scrollTop = scrollTop - walkY;
+        }, { passive: true });
+
+        // Momentum scrolling
+        function startMomentum() {
+            cancelMomentum();
+            momentumID = requestAnimationFrame(momentumLoop);
+        }
+
+        function cancelMomentum() {
+            cancelAnimationFrame(momentumID);
+        }
+
+        function momentumLoop() {
+            container.scrollLeft += velX;
+            container.scrollTop += velY;
+            velX *= 0.95; // Friction
+            velY *= 0.95;
+            
+            if (Math.abs(velX) > 0.5 || Math.abs(velY) > 0.5) {
+                momentumID = requestAnimationFrame(momentumLoop);
+            }
+        }
+    });
+}
+
+// Re-initialize drag scroll when new content is loaded (for AJAX)
+window.initDragScroll = initDragScroll;
 
 console.log('LRMS Main JS Loaded');

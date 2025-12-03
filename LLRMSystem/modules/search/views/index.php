@@ -51,156 +51,159 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
         <!-- Search Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
-            <h1 class="text-3xl font-bold mb-3 animate-slide-in-left">Advanced Document Search</h1>
-            <p class="text-red-100 animate-slide-in-left animation-delay-100">Search through thousands of legislative documents with powerful filters</p>
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8 mb-4 md:mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 animate-slide-in-left">Advanced Document Search</h1>
+            <p class="text-sm sm:text-base text-red-100 animate-slide-in-left animation-delay-100">Search through thousands of legislative documents with powerful filters</p>
         </div>
         
         <!-- Main Search Box -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
-            <div class="flex gap-3">
+        <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
+            <div class="flex flex-col sm:flex-row gap-3">
                 <div class="flex-1 relative">
                     <input type="text" 
                            id="main-search" 
-                           placeholder="Search documents by title, reference number, keywords, content..."
-                           class="w-full pl-12 pr-4 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="bi bi-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
+                           placeholder="Search documents..."
+                           class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="bi bi-search absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl"></i>
                 </div>
-                <button class="btn-primary px-8 text-lg">
+                <button class="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg">
                     <i class="bi bi-search mr-2"></i>
                     Search
                 </button>
             </div>
             
             <!-- Quick Filters -->
-            <div class="flex flex-wrap gap-2 mt-4">
-                <span class="text-sm text-gray-600 mr-2">Quick filters:</span>
-                <button class="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200">
+            <div class="flex flex-wrap items-center gap-2 mt-3 sm:mt-4">
+                <span class="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">Quick filters:</span>
+                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors">
                     <i class="bi bi-clock mr-1"></i>This Month
                 </button>
-                <button class="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full hover:bg-green-200">
+                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors">
                     <i class="bi bi-check-circle mr-1"></i>Approved
                 </button>
-                <button class="px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200">
+                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200 transition-colors">
                     <i class="bi bi-journal-text mr-1"></i>Ordinances
                 </button>
-                <button class="px-3 py-1 text-sm bg-yellow-100 text-yellow-700 rounded-full hover:bg-yellow-200">
+                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-yellow-100 text-yellow-700 rounded-full hover:bg-yellow-200 transition-colors">
                     <i class="bi bi-star mr-1"></i>High Priority
                 </button>
             </div>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
             <!-- Advanced Filters Sidebar -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 sticky top-6 max-h-[calc(100vh-8rem)] overflow-y-auto filter-scroll hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center">
                         <i class="bi bi-funnel mr-2 text-blue-600"></i>
                         Filters
                     </h2>
                     
                     <!-- Document Type -->
-                    <div class="mb-6">
+                    <div class="mb-5">
                         <h3 class="text-sm font-semibold text-gray-700 mb-3">Document Type</h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Ordinances</span>
-                                <span class="ml-auto text-xs text-gray-500">450</span>
+                        <div class="space-y-1">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Ordinances</span>
+                                <span class="filter-count">450</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Sessions</span>
-                                <span class="ml-auto text-xs text-gray-500">280</span>
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Sessions</span>
+                                <span class="filter-count">280</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Agendas</span>
-                                <span class="ml-auto text-xs text-gray-500">185</span>
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Agendas</span>
+                                <span class="filter-count">185</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Committees</span>
-                                <span class="ml-auto text-xs text-gray-500">120</span>
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Committees</span>
+                                <span class="filter-count">120</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Other</span>
-                                <span class="ml-auto text-xs text-gray-500">213</span>
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Other</span>
+                                <span class="filter-count">213</span>
                             </label>
                         </div>
                     </div>
                     
                     <!-- Status -->
-                    <div class="mb-6 pb-6 border-b border-gray-200">
+                    <div class="mb-5 pb-5 border-b border-gray-200">
                         <h3 class="text-sm font-semibold text-gray-700 mb-3">Status</h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Draft</span>
-                                <span class="ml-auto text-xs text-gray-500">45</span>
+                        <div class="space-y-1">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Draft</span>
+                                <span class="filter-count">45</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Pending</span>
-                                <span class="ml-auto text-xs text-gray-500">23</span>
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Pending</span>
+                                <span class="filter-count">23</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Approved</span>
-                                <span class="ml-auto text-xs text-gray-500">892</span>
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Approved</span>
+                                <span class="filter-count">892</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Archived</span>
-                                <span class="ml-auto text-xs text-gray-500">288</span>
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <span class="filter-label">Archived</span>
+                                <span class="filter-count">288</span>
                             </label>
                         </div>
                     </div>
                     
                     <!-- Date Range -->
-                    <div class="mb-6 pb-6 border-b border-gray-200">
+                    <div class="mb-5 pb-5 border-b border-gray-200">
                         <h3 class="text-sm font-semibold text-gray-700 mb-3">Date Range</h3>
                         <div class="space-y-3">
                             <div>
-                                <label class="text-xs text-gray-600">From</label>
-                                <input type="date" class="input-field text-sm py-2">
+                                <label class="text-xs text-gray-600 mb-1 block">From</label>
+                                <input type="date" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             </div>
                             <div>
-                                <label class="text-xs text-gray-600">To</label>
-                                <input type="date" class="input-field text-sm py-2">
+                                <label class="text-xs text-gray-600 mb-1 block">To</label>
+                                <input type="date" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             </div>
                         </div>
                     </div>
                     
                     <!-- File Type -->
-                    <div class="mb-6">
+                    <div class="mb-5">
                         <h3 class="text-sm font-semibold text-gray-700 mb-3">File Type</h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">PDF</span>
+                        <div class="space-y-1">
+                            <label class="filter-checkbox-label-icon">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <i class="bi bi-file-earmark-pdf text-red-500"></i>
+                                <span class="filter-label">PDF</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Word</span>
+                            <label class="filter-checkbox-label-icon">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <i class="bi bi-file-earmark-word text-blue-500"></i>
+                                <span class="filter-label">Word</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
-                                <span class="ml-2 text-sm text-gray-700">Excel</span>
+                            <label class="filter-checkbox-label-icon">
+                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
+                                <i class="bi bi-file-earmark-excel text-green-500"></i>
+                                <span class="filter-label">Excel</span>
                             </label>
                         </div>
                     </div>
                     
                     <!-- Action Buttons -->
-                    <div class="flex gap-2">
-                        <button class="flex-1 btn-primary text-sm py-2">
-                            Apply Filters
+                    <div class="space-y-2">
+                        <button class="w-full btn-primary text-sm py-2.5">
+                            <i class="bi bi-check2 mr-1"></i>Apply Filters
                         </button>
-                        <button class="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg">
-                            <i class="bi bi-arrow-counterclockwise"></i>
+                        <button class="w-full px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="bi bi-arrow-counterclockwise mr-1"></i>Reset Filters
                         </button>
                     </div>
                 </div>
@@ -209,14 +212,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Search Results -->
             <div class="lg:col-span-3">
                 <!-- Results Header -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-300">
-                    <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                         <div>
-                            <p class="text-gray-600">Found <span class="font-bold text-gray-800">1,248 documents</span></p>
+                            <p class="text-sm sm:text-base text-gray-600">Found <span class="font-bold text-gray-800">1,248 documents</span></p>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <label class="text-sm text-gray-600">Sort by:</label>
-                            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <label class="text-xs sm:text-sm text-gray-600 whitespace-nowrap">Sort by:</label>
+                            <select class="flex-1 sm:flex-none px-2 sm:px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
                                 <option>Most Relevant</option>
                                 <option>Newest First</option>
                                 <option>Oldest First</option>

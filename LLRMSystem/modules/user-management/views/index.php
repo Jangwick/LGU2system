@@ -163,7 +163,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto drag-scroll" id="users-table-scroll">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>

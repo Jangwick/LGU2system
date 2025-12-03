@@ -65,30 +65,30 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
-            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-                <h1 class="text-2xl font-bold text-gray-800 mb-2">Edit Document</h1>
-                <p class="text-gray-600">Update document information and metadata</p>
+            <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6">
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">Edit Document</h1>
+                <p class="text-sm sm:text-base text-gray-600">Update document information and metadata</p>
             </div>
 
             <form id="editDocumentForm" class="space-y-6">
                 <input type="hidden" name="document_id" value="<?= $document['id'] ?>">
                 
                 <!-- Basic Information -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Basic Information</h2>
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Basic Information</h2>
                     
-                    <div class="space-y-4">
+                    <div class="space-y-3 sm:space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Title *</label>
                             <input type="text" name="title" value="<?= htmlspecialchars($document['title']) ?>"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   class="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                                    required>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Document Type *</label>
                                 <select name="document_type"
@@ -139,23 +139,23 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
 
                 <!-- Tags -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Tags</h2>
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Tags</h2>
                     
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Tags</label>
-                        <div class="flex flex-wrap gap-2 mb-4">
+                    <div class="mb-3 sm:mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Select Tags</label>
+                        <div class="flex flex-wrap gap-2 mb-3 sm:mb-4">
                             <?php foreach ($documentTags as $tag): ?>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm flex items-center gap-2">
+                            <span class="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm flex items-center gap-1 sm:gap-2">
                                 <?= htmlspecialchars($tag['name']) ?>
-                                <button type="button" onclick="removeTag(<?= $tag['id'] ?>)" class="text-blue-600 hover:text-blue-800">
+                                <button type="button" onclick="removeTag(<?= $tag['id'] ?>)" class="text-blue-600 hover:text-blue-800 p-0.5">
                                     <i class="bi bi-x"></i>
                                 </button>
                             </span>
                             <?php endforeach; ?>
                         </div>
                         
-                        <select id="tagSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        <select id="tagSelect" class="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base">
                             <option value="">-- Select a tag --</option>
                             <?php foreach ($allTags as $tag): ?>
                             <option value="<?= $tag['id'] ?>"><?= htmlspecialchars($tag['name']) ?></option>
@@ -164,20 +164,20 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Or create new tag</label>
-                        <div class="flex gap-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Or create new tag</label>
+                        <div class="flex flex-col sm:flex-row gap-2">
                             <input type="text" id="newTagInput" placeholder="Enter tag name..."
-                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                                   class="flex-1 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base">
                             <button type="button" onclick="createTag()" 
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                Add Tag
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base whitespace-nowrap">
+                                <i class="bi bi-plus-circle mr-1 sm:hidden"></i>Add Tag
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Replace File -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6">
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Replace File (Optional)</h2>
                     
                     <div class="mb-4">
@@ -203,14 +203,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
 
                 <!-- Actions -->
-                <div class="flex justify-end gap-4">
+                <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4">
                     <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?= $document['id'] ?>"
-                       class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                       class="px-4 sm:px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-center text-sm sm:text-base">
                         Cancel
                     </a>
                     <button type="submit"
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        <i class="bi bi-check-lg mr-2"></i>Save Changes
+                            class="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base">
+                        <i class="bi bi-check-lg mr-1 sm:mr-2"></i>Save Changes
                     </button>
                 </div>
             </form>
