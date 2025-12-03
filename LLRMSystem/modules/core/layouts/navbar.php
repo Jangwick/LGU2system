@@ -31,13 +31,13 @@ if (isset($_SESSION['user_id'])) {
             
             <!-- Logo (Mobile) -->
             <div class="md:hidden flex items-center">
-                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-12 h-12 object-contain mr-2">
+                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-10 h-10 object-contain">
             </div>
             
             <!-- Page Title & Breadcrumb -->
-            <div class="flex-1 flex items-center min-w-0">
-                <div class="ml-2 md:ml-4 min-w-0">
-                    <h2 class="text-sm md:text-xl font-bold text-gray-800 truncate"><?php echo $pageTitle ?? 'Dashboard'; ?></h2>
+            <div class="flex-1 flex items-center justify-center md:justify-start min-w-0">
+                <div class="ml-0 md:ml-4 min-w-0">
+                    <h2 class="text-base md:text-xl font-bold text-gray-800"><?php echo $pageTitle ?? 'Dashboard'; ?></h2>
                     <?php if (isset($breadcrumbs)): ?>
                     <nav class="hidden md:flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
                         <?php foreach ($breadcrumbs as $index => $crumb): ?>

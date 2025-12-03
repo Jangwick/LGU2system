@@ -244,6 +244,47 @@ main::-webkit-scrollbar-thumb:active {
     background-color: #f9fafb;
 }
 
+/* Dark Mode - Filter Checkbox Labels */
+.dark .filter-checkbox-label .filter-label {
+    color: #e5e5e5 !important;
+}
+
+.dark .filter-checkbox-label .filter-count {
+    color: #a3a3a3 !important;
+}
+
+.dark .filter-checkbox-label:hover {
+    background-color: #3d3d3d !important;
+}
+
+.dark .filter-checkbox-label-icon .filter-label {
+    color: #e5e5e5 !important;
+}
+
+.dark .filter-checkbox-label-icon:hover {
+    background-color: #3d3d3d !important;
+}
+
+/* Dark Mode - Filter Section Headers */
+.dark .text-gray-700 {
+    color: #d4d4d4 !important;
+}
+
+.dark .text-gray-600 {
+    color: #a3a3a3 !important;
+}
+
+/* Dark Mode - Date Input Fields */
+.dark input[type="date"] {
+    background-color: #3d3d3d !important;
+    border-color: #525252 !important;
+    color: #e5e5e5 !important;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
 /* Animations */
 @keyframes fade-in {
     from {
