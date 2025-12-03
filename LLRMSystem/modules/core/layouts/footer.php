@@ -37,7 +37,7 @@
     <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
     
     <!-- Mobile Sidebar -->
-    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-64 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-transform duration-300 ease-in-out overflow-y-auto">
+    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-64 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-transform duration-300 ease-in-out overflow-y-auto flex flex-col">
         <!-- Mobile sidebar header -->
         <div class="p-4 border-b border-red-700">
             <div class="flex items-center justify-between">
@@ -123,23 +123,28 @@
             </a>
         </nav>
         
-        <!-- Mobile User Profile Section -->
-        <div class="p-4 border-t border-red-700 mt-auto">
-            <div class="flex items-center space-x-3 mb-3">
-                <div class="w-10 h-10 rounded-full bg-red-700 flex items-center justify-center">
-                    <i class="bi bi-person text-white text-lg"></i>
+        <!-- Mobile User Profile Section - Fixed at Bottom -->
+        <div class="p-3 mt-auto border-t border-red-700/40">
+            <!-- User Info -->
+            <div class="flex items-center space-x-2.5 mb-2.5">
+                <div class="w-9 h-9 rounded-full bg-red-700 flex items-center justify-center">
+                    <i class="bi bi-person-fill text-white text-sm"></i>
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-white truncate"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest'); ?></p>
-                    <p class="text-xs text-red-200 truncate"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Viewer'); ?></p>
+                    <p class="text-xs text-red-300 truncate"><?php echo ucfirst(htmlspecialchars($_SESSION['user_role'] ?? 'Viewer')); ?></p>
                 </div>
             </div>
+            
+            <!-- Action Buttons - Side by Side -->
             <div class="flex gap-2">
-                <a href="<?php echo USERS_URL; ?>/views/profile.php" class="flex-1 text-center py-2 text-xs bg-red-700 hover:bg-red-600 rounded-lg transition-colors">
-                    <i class="bi bi-person mr-1"></i>Profile
+                <a href="<?php echo USERS_URL; ?>/views/profile.php" class="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium bg-red-700 hover:bg-red-600 text-white rounded-lg transition-colors">
+                    <i class="bi bi-person-gear"></i>
+                    <span>Profile</span>
                 </a>
-                <a href="<?php echo LOGOUT_URL; ?>" class="flex-1 text-center py-2 text-xs bg-red-950 hover:bg-red-900 rounded-lg transition-colors">
-                    <i class="bi bi-box-arrow-right mr-1"></i>Logout
+                <a href="<?php echo LOGOUT_URL; ?>" class="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium bg-red-950 hover:bg-red-900 text-red-200 rounded-lg transition-colors">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
                 </a>
             </div>
         </div>
