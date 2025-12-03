@@ -19,6 +19,11 @@ if (isset($_SESSION['user_id'])) {
 <nav class="bg-white shadow-md border-b border-gray-200 sticky top-0 z-40">
     <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
+            <!-- Sidebar Toggle Button (Desktop) -->
+            <button id="sidebar-toggle" class="hidden md:flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-red-600 focus:outline-none transition-all duration-200" title="Toggle Sidebar">
+                <i class="bi bi-layout-sidebar-inset text-xl"></i>
+            </button>
+            
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
                 <i class="bi bi-list text-2xl"></i>

@@ -244,4 +244,52 @@ function resetSessionTimeout() {
 // Initialize session timeout
 resetSessionTimeout();
 
+// ========================================
+// Sidebar Tooltip Functionality (for collapsed state)
+// ========================================
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+
+    // Add data-tooltip attributes to nav items for collapsed state
+    function addTooltipsToNavItems() {
+        if (sidebar) {
+            const navItems = sidebar.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                const span = item.querySelector('span');
+                if (span && !item.getAttribute('data-tooltip')) {
+                    item.setAttribute('data-tooltip', span.textContent.trim());
+                }
+            });
+        }
+    }
+    addTooltipsToNavItems();
+
+    // Mobile sidebar functionality
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileSidebar = document.getElementById('mobile-sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
+
+    if (mobileMenuBtn && mobileSidebar) {
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileSidebar.classList.remove('-translate-x-full');
+            sidebarOverlay?.classList.remove('hidden');
+        });
+    }
+
+    if (closeMobileSidebar && mobileSidebar) {
+        closeMobileSidebar.addEventListener('click', function() {
+            mobileSidebar.classList.add('-translate-x-full');
+            sidebarOverlay?.classList.add('hidden');
+        });
+    }
+
+    if (sidebarOverlay && mobileSidebar) {
+        sidebarOverlay.addEventListener('click', function() {
+            mobileSidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        });
+    }
+});
+
 console.log('LRMS Main JS Loaded');

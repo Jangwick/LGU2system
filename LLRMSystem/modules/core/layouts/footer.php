@@ -167,6 +167,45 @@
         window.addEventListener('load', () => {
             hidePageLoader();
         });
+        
+        // ========================================
+        // Desktop Sidebar Toggle Functionality
+        // ========================================
+        (function() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (!sidebarToggle || !sidebar) {
+                return;
+            }
+            
+            // Check for saved sidebar state
+            const sidebarState = localStorage.getItem('sidebarCollapsed');
+            if (sidebarState === 'true') {
+                sidebar.classList.remove('sidebar-expanded', 'w-64');
+                sidebar.classList.add('sidebar-collapsed');
+            }
+            
+            // Toggle sidebar on button click
+            sidebarToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const isExpanded = sidebar.classList.contains('sidebar-expanded');
+                
+                if (isExpanded) {
+                    // Collapse sidebar
+                    sidebar.classList.remove('sidebar-expanded', 'w-64');
+                    sidebar.classList.add('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', 'true');
+                } else {
+                    // Expand sidebar
+                    sidebar.classList.remove('sidebar-collapsed');
+                    sidebar.classList.add('sidebar-expanded', 'w-64');
+                    localStorage.setItem('sidebarCollapsed', 'false');
+                }
+            });
+        })();
     </script>
     </div> <!-- Close flex container from header -->
 </body>

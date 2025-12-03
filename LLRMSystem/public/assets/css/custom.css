@@ -650,3 +650,104 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* ========================================
+   Sidebar Toggle Styles
+   ======================================== */
+
+/* Sidebar Expanded State (default) */
+#sidebar.sidebar-expanded {
+    width: 16rem; /* w-64 */
+}
+
+#sidebar.sidebar-expanded .sidebar-text {
+    opacity: 1;
+    width: auto;
+    visibility: visible;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+#sidebar.sidebar-expanded .sidebar-logo {
+    padding: 1.5rem;
+}
+
+#sidebar.sidebar-expanded .nav-item {
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+}
+
+#sidebar.sidebar-expanded .nav-item i {
+    margin-right: 0.75rem;
+}
+
+/* Sidebar Collapsed State - Completely Hidden */
+#sidebar.sidebar-collapsed {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+#sidebar.sidebar-collapsed .sidebar-text {
+    opacity: 0 !important;
+    width: 0 !important;
+    visibility: hidden !important;
+    overflow: hidden !important;
+    position: absolute !important;
+}
+
+#sidebar.sidebar-collapsed .sidebar-logo {
+    padding: 0;
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .sidebar-logo > a {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .sidebar-logo > a > div:last-child {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item i {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item span {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .dropdown-section {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item-sub {
+    display: none;
+}
+
+/* User profile section in collapsed state */
+#sidebar.sidebar-collapsed > .p-4:last-child {
+    display: none;
+}
+
+/* Toggle button animation */
+#sidebar-toggle i {
+    transition: transform 0.3s ease;
+}
+
+#sidebar-toggle.rotated i {
+    transform: rotate(180deg);
+}
+
+/* Main content expands to full width when sidebar is collapsed */
+#sidebar.sidebar-collapsed + .flex-1,
+#sidebar.sidebar-collapsed ~ .flex-1 {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
