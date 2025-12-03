@@ -804,3 +804,568 @@
 .flex-1 {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ========================================
+   RESPONSIVE DESIGN STYLES
+   ======================================== */
+
+/* ---------- XS Breakpoint Utility Classes (480px+) ---------- */
+@media (min-width: 480px) {
+    .xs\:inline { display: inline !important; }
+    .xs\:block { display: block !important; }
+    .xs\:flex { display: flex !important; }
+    .xs\:hidden { display: none !important; }
+    .xs\:text-sm { font-size: 0.875rem !important; }
+    .xs\:text-base { font-size: 1rem !important; }
+    .xs\:gap-2 { gap: 0.5rem !important; }
+    .xs\:gap-3 { gap: 0.75rem !important; }
+    .xs\:gap-4 { gap: 1rem !important; }
+    .xs\:px-3 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+    .xs\:px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
+}
+
+/* ---------- Mobile First Base Styles ---------- */
+
+/* Extra Small Devices (phones, less than 576px) */
+@media (max-width: 575.98px) {
+    /* Typography */
+    h1, .text-3xl { font-size: 1.5rem !important; }
+    h2, .text-2xl { font-size: 1.25rem !important; }
+    h3, .text-xl { font-size: 1.1rem !important; }
+    
+    /* Padding adjustments */
+    main { padding: 0.75rem !important; }
+    .p-6 { padding: 1rem !important; }
+    .p-8 { padding: 1.25rem !important; }
+    .px-6 { padding-left: 1rem !important; padding-right: 1rem !important; }
+    .py-6 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+    
+    /* Cards */
+    .rounded-xl { border-radius: 0.75rem !important; }
+    .rounded-2xl { border-radius: 1rem !important; }
+    
+    /* Buttons */
+    .btn-primary, .btn-outline, button {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+    }
+    
+    /* Forms */
+    input, select, textarea {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    /* Tables - Card View on Mobile */
+    .mobile-card-view thead {
+        display: none;
+    }
+    
+    .mobile-card-view tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-card-view tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0 !important;
+        border: none !important;
+    }
+    
+    .mobile-card-view tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #6b7280;
+        margin-right: 1rem;
+    }
+    
+    /* Hide non-essential columns on mobile */
+    .hide-mobile {
+        display: none !important;
+    }
+    
+    /* Navbar adjustments */
+    nav .flex-1 .ml-4 h2 {
+        font-size: 1rem !important;
+    }
+    
+    nav .flex-1 .ml-4 nav {
+        display: none !important; /* Hide breadcrumbs on mobile */
+    }
+    
+    /* Stats cards - full width */
+    .grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Modal adjustments */
+    .modal-content, [class*="max-w-"] {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 1rem auto !important;
+    }
+    
+    /* Toast notifications */
+    #toast-container {
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+        bottom: 0.5rem !important;
+    }
+    
+    /* Charts */
+    canvas {
+        max-height: 200px !important;
+    }
+    
+    /* Footer */
+    footer .flex {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 0.5rem !important;
+    }
+}
+
+/* Small Devices (landscape phones, 576px to 767px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    main { padding: 1rem !important; }
+    
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Two column layout for stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Medium Devices (tablets, 768px to 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    main { padding: 1.25rem !important; }
+    
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Adjust sidebar width */
+    #sidebar.sidebar-expanded {
+        width: 14rem !important;
+    }
+    
+    /* Table adjustments */
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 800px;
+    }
+}
+
+/* Large Devices (desktops, 992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .grid-cols-4 {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+/* ---------- Responsive Tables ---------- */
+@media (max-width: 768px) {
+    /* Make tables horizontally scrollable */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        font-size: 0.875rem;
+    }
+    
+    table th, table td {
+        padding: 0.75rem 0.5rem !important;
+        white-space: nowrap;
+    }
+    
+    /* Action buttons compact */
+    table td:last-child {
+        white-space: nowrap;
+    }
+    
+    table td:last-child button,
+    table td:last-child a {
+        padding: 0.25rem !important;
+        margin: 0 0.125rem !important;
+    }
+}
+
+/* ---------- Responsive Cards & Grids ---------- */
+@media (max-width: 640px) {
+    /* Stack cards vertically */
+    .grid {
+        gap: 1rem !important;
+    }
+    
+    /* Full width cards */
+    .card, .bg-white.rounded-xl {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+        border-radius: 0 !important;
+    }
+    
+    /* Adjust card content */
+    .card .flex {
+        flex-wrap: wrap;
+    }
+}
+
+/* ---------- Responsive Navigation ---------- */
+@media (max-width: 767.98px) {
+    /* Navbar compact */
+    nav {
+        padding: 0.5rem !important;
+    }
+    
+    nav .h-16 {
+        height: 3.5rem !important;
+    }
+    
+    /* Hide quick search on mobile */
+    #quick-search {
+        display: none !important;
+    }
+    
+    /* Mobile menu button larger touch target */
+    #mobile-menu-btn {
+        width: 44px;
+        height: 44px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Profile dropdown adjustments */
+    .profile-dropdown {
+        right: 0;
+        width: 100vw;
+        max-width: 300px;
+    }
+}
+
+/* ---------- Responsive Forms ---------- */
+@media (max-width: 640px) {
+    /* Stack form fields */
+    .form-row, .flex.gap-4 {
+        flex-direction: column !important;
+    }
+    
+    .form-row > *, .flex.gap-4 > * {
+        width: 100% !important;
+    }
+    
+    /* Full width inputs */
+    input, select, textarea {
+        width: 100% !important;
+    }
+    
+    /* Filter section */
+    .filter-section {
+        flex-direction: column;
+    }
+    
+    .filter-section > * {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ---------- Responsive Modals ---------- */
+@media (max-width: 640px) {
+    /* Full screen modals on mobile */
+    .modal, [class*="fixed inset-0"] > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: 90vh !important;
+        margin: auto !important;
+        border-radius: 1rem 1rem 0 0 !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+    }
+    
+    /* Modal content scrollable */
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+}
+
+/* ---------- Responsive Charts ---------- */
+@media (max-width: 768px) {
+    /* Charts responsive */
+    .chart-container {
+        height: 250px !important;
+    }
+    
+    canvas {
+        max-width: 100% !important;
+    }
+    
+    /* Legend below chart */
+    .chart-legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ---------- Responsive Dashboard ---------- */
+@media (max-width: 640px) {
+    /* Welcome banner compact */
+    .welcome-banner, .bg-gradient-to-r.from-red-600 {
+        padding: 1.25rem !important;
+    }
+    
+    .welcome-banner h1 {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Stats numbers smaller */
+    .text-3xl.font-bold {
+        font-size: 1.75rem !important;
+    }
+    
+    /* Quick actions horizontal scroll */
+    .quick-actions {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .quick-actions > * {
+        flex-shrink: 0;
+        width: 80%;
+    }
+}
+
+/* ---------- Responsive Document Management ---------- */
+@media (max-width: 768px) {
+    /* Document header stack */
+    .document-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+    
+    /* Action buttons wrap */
+    .document-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    .document-actions button,
+    .document-actions .btn-primary,
+    .document-actions .btn-outline {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    /* Filters collapse */
+    .filters-section {
+        display: none;
+    }
+    
+    .filters-section.show {
+        display: block;
+    }
+    
+    /* Filter toggle button */
+    .filter-toggle {
+        display: flex !important;
+    }
+}
+
+/* ---------- Responsive Search Page ---------- */
+@media (max-width: 991.98px) {
+    /* Sidebar filters below content on tablet/mobile */
+    .search-layout {
+        flex-direction: column-reverse;
+    }
+    
+    .search-filters {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+}
+
+/* ---------- Responsive User Management ---------- */
+@media (max-width: 640px) {
+    /* User cards instead of table */
+    .user-table {
+        display: none;
+    }
+    
+    .user-cards {
+        display: block !important;
+    }
+    
+    .user-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+}
+
+/* ---------- Touch Device Optimizations ---------- */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets */
+    button, a, .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Remove hover effects that don't work on touch */
+    .hover\:scale-105:hover {
+        transform: none;
+    }
+    
+    /* Add active states instead */
+    button:active, a:active, .clickable:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+    
+    /* Disable hover dropdowns, use click instead */
+    .dropdown:hover .dropdown-menu {
+        display: none;
+    }
+}
+
+/* ---------- Print Styles ---------- */
+@media print {
+    /* Hide non-essential elements */
+    #sidebar, nav, #mobile-sidebar, #sidebar-overlay,
+    .no-print, button, .btn-primary, .btn-outline,
+    #toast-container, .modal {
+        display: none !important;
+    }
+    
+    /* Full width content */
+    main, .flex-1 {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Preserve backgrounds for badges */
+    .badge, .bg-green-100, .bg-red-100, .bg-yellow-100 {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Page breaks */
+    .page-break {
+        page-break-before: always;
+    }
+    
+    /* Table styling for print */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+}
+
+/* ---------- Orientation Changes ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+    /* Compact header in landscape */
+    nav .h-16 {
+        height: 3rem !important;
+    }
+    
+    /* Reduce padding */
+    main {
+        padding: 0.75rem !important;
+    }
+    
+    /* Smaller modals */
+    .modal {
+        max-height: 80vh !important;
+    }
+}
+
+/* ---------- High Resolution Displays ---------- */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Sharper borders */
+    .border {
+        border-width: 0.5px;
+    }
+}
+
+/* ---------- Reduced Motion Preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ---------- Safe Area Insets (for notched devices) ---------- */
+@supports (padding: max(0px)) {
+    main {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    nav {
+        padding-top: env(safe-area-inset-top);
+    }
+}
+
+/* ---------- Utility Classes for Responsive ---------- */
+.show-mobile { display: none !important; }
+.hide-desktop { display: none !important; }
+
+@media (max-width: 767.98px) {
+    .show-mobile { display: block !important; }
+    .hide-mobile { display: none !important; }
+    .show-mobile.flex { display: flex !important; }
+    .show-mobile.inline { display: inline !important; }
+}
+
+@media (min-width: 768px) {
+    .hide-desktop { display: none !important; }
+    .show-desktop { display: block !important; }
+    .show-desktop.flex { display: flex !important; }
+}
+
+/* Responsive text */
+.text-responsive {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.heading-responsive {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+}
+
+/* Responsive spacing */
+.p-responsive {
+    padding: clamp(0.75rem, 3vw, 1.5rem);
+}
+
+.gap-responsive {
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+}

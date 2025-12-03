@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#dc2626">
     <title>Login - <?php echo APP_NAME; ?></title>
     
     <!-- Tailwind CSS -->
@@ -12,7 +13,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
-<body class="bg-gradient-to-br from-red-50 via-white to-red-50 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-red-50 via-white to-red-50 min-h-screen flex items-center justify-center p-3 md:p-4">
     <style>
         /* Animation Keyframes */
         @keyframes fade-in {
@@ -36,26 +37,30 @@
         .animation-delay-200 { animation-delay: 200ms; }
         .animation-delay-300 { animation-delay: 300ms; }
         .animation-delay-400 { animation-delay: 400ms; }
+        /* Prevent zoom on input focus in iOS */
+        @media screen and (max-width: 767px) {
+            input, select, textarea { font-size: 16px !important; }
+        }
     </style>
     <div class="w-full max-w-md">
         <!-- Logo Section -->
-        <div class="text-center mb-8 animate-fade-in">
-            <div class="inline-flex items-center justify-center mb-4 animate-bounce-in">
-                <div class="bg-white rounded-full shadow-xl flex items-center justify-center overflow-hidden transform hover:scale-105 transition-all duration-300" style="width: 160px; height: 160px;">
+        <div class="text-center mb-6 md:mb-8 animate-fade-in">
+            <div class="inline-flex items-center justify-center mb-3 md:mb-4 animate-bounce-in">
+                <div class="bg-white rounded-full shadow-xl flex items-center justify-center overflow-hidden transform hover:scale-105 transition-all duration-300" style="width: 120px; height: 120px;">
                     <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" style="width: 120%; height: 120%;" class="object-cover">
                 </div>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 animate-fade-in-up animation-delay-100">LRMS</h1>
-            <p class="text-gray-600 mt-2 animate-fade-in-up animation-delay-200">Legislative Records Management System</p>
-            <p class="text-sm text-red-600 font-semibold mt-1 animate-fade-in-up animation-delay-300">City Government of Valenzuela</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fade-in-up animation-delay-100">LRMS</h1>
+            <p class="text-sm md:text-base text-gray-600 mt-1 md:mt-2 animate-fade-in-up animation-delay-200">Legislative Records Management System</p>
+            <p class="text-xs md:text-sm text-red-600 font-semibold mt-1 animate-fade-in-up animation-delay-300">City Government of Valenzuela</p>
             <p class="text-xs text-gray-500 animate-fade-in-up animation-delay-400">Metropolitan Manila</p>
         </div>
         
         <!-- Login Card -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 animate-fade-in-up animation-delay-300 transform hover:shadow-2xl transition-all duration-300">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Welcome Back</h2>
-                <p class="text-gray-600 mt-1">Sign in to access your account</p>
+        <div class="bg-white rounded-xl md:rounded-2xl shadow-xl p-5 md:p-8 animate-fade-in-up animation-delay-300 transform hover:shadow-2xl transition-all duration-300">
+            <div class="mb-4 md:mb-6">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800">Welcome Back</h2>
+                <p class="text-sm md:text-base text-gray-600 mt-1">Sign in to access your account</p>
             </div>
             
             <!-- Alert Messages -->
@@ -65,7 +70,7 @@
                 
                 // Show logout success message
                 if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
-                    echo '<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center">
+                    echo '<div class="bg-green-50 border border-green-200 text-green-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">
                             <i class="bi bi-check-circle mr-2"></i>
                             <span>You have been logged out successfully.</span>
                           </div>';
@@ -73,7 +78,7 @@
                 
                 // Show login error message
                 if (isset($_SESSION['login_error'])) {
-                    echo '<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center">
+                    echo '<div class="bg-red-50 border border-red-200 text-red-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">
                             <i class="bi bi-exclamation-circle mr-2"></i>
                             <span>' . htmlspecialchars($_SESSION['login_error']) . '</span>
                           </div>';
@@ -83,10 +88,10 @@
             </div>
             
             <!-- Login Form -->
-            <form id="login-form" action="<?php echo AUTH_URL; ?>/controllers/LoginController.php" method="POST" class="space-y-5">
+            <form id="login-form" action="<?php echo AUTH_URL; ?>/controllers/LoginController.php" method="POST" class="space-y-4 md:space-y-5">
                 <!-- Email Field -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                         <i class="bi bi-envelope mr-1"></i>Email Address
                     </label>
                     <input type="email" 
@@ -94,7 +99,7 @@
                            name="email" 
                            required
                            placeholder="your.email@lgu.gov.ph"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
+                           class="w-full px-3 md:px-4 py-2.5 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition text-base">
                     <span class="text-red-500 text-xs hidden" id="email-error"></span>
                 </div>
                 

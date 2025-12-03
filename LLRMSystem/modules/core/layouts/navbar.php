@@ -35,11 +35,11 @@ if (isset($_SESSION['user_id'])) {
             </div>
             
             <!-- Page Title & Breadcrumb -->
-            <div class="flex-1 flex items-center">
-                <div class="ml-4">
-                    <h2 class="text-xl font-bold text-gray-800"><?php echo $pageTitle ?? 'Dashboard'; ?></h2>
+            <div class="flex-1 flex items-center min-w-0">
+                <div class="ml-2 md:ml-4 min-w-0">
+                    <h2 class="text-sm md:text-xl font-bold text-gray-800 truncate"><?php echo $pageTitle ?? 'Dashboard'; ?></h2>
                     <?php if (isset($breadcrumbs)): ?>
-                    <nav class="flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
+                    <nav class="hidden md:flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
                         <?php foreach ($breadcrumbs as $index => $crumb): ?>
                             <?php if ($index > 0): ?>
                                 <i class="bi bi-chevron-right mx-2 text-xs"></i>
@@ -58,7 +58,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             
             <!-- Right Side Actions -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-1 md:space-x-4">
                 <!-- Search Bar -->
                 <div class="hidden lg:block">
                     <div class="relative">
@@ -72,7 +72,7 @@ if (isset($_SESSION['user_id'])) {
                 
                 <!-- Dark/Light Mode Toggle -->
                 <button id="theme-toggle" class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
-                    <i class="bi bi-moon-fill text-xl dark-mode-icon"></i>
+                    <i class="bi bi-moon-fill text-lg md:text-xl dark-mode-icon"></i>
                     <i class="bi bi-sun-fill text-xl light-mode-icon hidden"></i>
                 </button>
                 
@@ -119,11 +119,11 @@ if (isset($_SESSION['user_id'])) {
                                 <i class="bi bi-person-fill"></i>
                             </div>
                         <?php endif; ?>
-                        <div class="hidden md:block text-left">
-                            <p class="text-sm font-medium text-gray-800"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest User'); ?></p>
+                        <div class="hidden sm:block text-left">
+                            <p class="text-sm font-medium text-gray-800 truncate max-w-[120px] md:max-w-none"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest User'); ?></p>
                             <p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Guest'); ?></p>
                         </div>
-                        <i class="bi bi-chevron-down text-gray-600 text-xs"></i>
+                        <i class="bi bi-chevron-down text-gray-600 text-xs hidden sm:inline"></i>
                     </button>
                     
                     <!-- Profile Dropdown -->

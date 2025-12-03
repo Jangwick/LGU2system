@@ -17,6 +17,34 @@ class DocumentManager {
         this.attachEventListeners();
         this.initializeFilters();
         this.initializeAdvancedFilters();
+        this.initializeMobileFilterToggle();
+    }
+    
+    // Mobile filter toggle functionality
+    initializeMobileFilterToggle() {
+        const filterToggle = document.getElementById('mobile-filter-toggle');
+        const filtersSection = document.getElementById('filters-section');
+        const filterToggleIcon = document.getElementById('filter-toggle-icon');
+        
+        if (filterToggle && filtersSection) {
+            filterToggle.addEventListener('click', () => {
+                const isHidden = filtersSection.classList.contains('hidden');
+                
+                if (isHidden) {
+                    filtersSection.classList.remove('hidden');
+                    filtersSection.classList.add('animate-fade-in-up');
+                    if (filterToggleIcon) {
+                        filterToggleIcon.style.transform = 'rotate(180deg)';
+                    }
+                } else {
+                    filtersSection.classList.add('hidden');
+                    filtersSection.classList.remove('animate-fade-in-up');
+                    if (filterToggleIcon) {
+                        filterToggleIcon.style.transform = 'rotate(0deg)';
+                    }
+                }
+            });
+        }
     }
     
     attachEventListeners() {

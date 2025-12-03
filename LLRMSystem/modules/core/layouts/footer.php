@@ -1,17 +1,17 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-10 h-10 object-contain">
-                    <div class="text-sm text-gray-600">
-                        &copy; <?php echo date('Y'); ?> City Government of Valenzuela - LRMS. All rights reserved.
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 md:py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0">
+                <div class="flex items-center space-x-2 md:space-x-3">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-8 h-8 md:w-10 md:h-10 object-contain">
+                    <div class="text-xs md:text-sm text-gray-600 text-center md:text-left">
+                        &copy; <?php echo date('Y'); ?> <span class="hidden sm:inline">City Government of Valenzuela - </span>LRMS<span class="hidden md:inline">. All rights reserved.</span>
                     </div>
                 </div>
-                <div class="flex items-center space-x-6 mt-2 md:mt-0">
-                    <a href="/modules/help/views/privacy.php" class="text-sm text-gray-600 hover:text-red-600">Privacy Policy</a>
-                    <a href="/modules/help/views/terms.php" class="text-sm text-gray-600 hover:text-red-600">Terms of Service</a>
-                    <a href="/modules/help/views/contact.php" class="text-sm text-gray-600 hover:text-red-600">Contact Support</a>
+                <div class="flex items-center space-x-3 md:space-x-6">
+                    <a href="/modules/help/views/privacy.php" class="text-xs md:text-sm text-gray-600 hover:text-red-600">Privacy</a>
+                    <a href="/modules/help/views/terms.php" class="text-xs md:text-sm text-gray-600 hover:text-red-600">Terms</a>
+                    <a href="/modules/help/views/contact.php" class="text-xs md:text-sm text-gray-600 hover:text-red-600">Support</a>
                 </div>
             </div>
         </div>
@@ -22,21 +22,109 @@
     
     <!-- Mobile Sidebar -->
     <div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-64 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-transform duration-300 ease-in-out overflow-y-auto">
-        <!-- Mobile sidebar content (same as desktop sidebar) -->
-        <div class="p-6 border-b border-red-700">
+        <!-- Mobile sidebar header -->
+        <div class="p-4 border-b border-red-700">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-white rounded-full p-1.5 shadow-md">
-                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-14 h-14 object-contain">
+                    <div class="bg-white rounded-full p-1 shadow-md">
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-10 h-10 object-contain">
                     </div>
                     <div>
                         <h1 class="text-lg font-bold">LRMS</h1>
                         <p class="text-xs text-red-200">Legislative Records</p>
                     </div>
                 </div>
-                <button id="close-mobile-sidebar" class="text-white">
+                <button id="close-mobile-sidebar" class="text-white p-2 hover:bg-red-700 rounded-lg">
                     <i class="bi bi-x-lg text-xl"></i>
                 </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <nav class="flex-1 py-4 px-3">
+            <?php 
+            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+            ?>
+            
+            <!-- Dashboard -->
+            <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'dashboard' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-speedometer2 mr-3 text-lg"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <!-- Documents Section -->
+            <div class="mt-4 mb-2 px-4">
+                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Documents</p>
+            </div>
+            
+            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'documents' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-file-earmark-text mr-3 text-lg"></i>
+                <span>All Documents</span>
+            </a>
+            
+            <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'search' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-search mr-3 text-lg"></i>
+                <span>Advanced Search</span>
+            </a>
+            
+            <!-- Reports & Analytics - Officer and Admin only -->
+            <?php if (in_array($userRole, ['officer', 'administrator', 'admin'])): ?>
+            <div class="mt-4 mb-2 px-4">
+                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Analytics</p>
+            </div>
+            
+            <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'reports' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-graph-up mr-3 text-lg"></i>
+                <span>Reports & Analytics</span>
+            </a>
+            <?php endif; ?>
+            
+            <!-- Administration - Admin only -->
+            <?php if (in_array($userRole, ['administrator', 'admin'])): ?>
+            <div class="mt-4 mb-2 px-4">
+                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Administration</p>
+            </div>
+            
+            <a href="<?php echo USERS_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'users' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-people mr-3 text-lg"></i>
+                <span>User Management</span>
+            </a>
+            
+            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'audit' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-shield-check mr-3 text-lg"></i>
+                <span>Audit Log</span>
+            </a>
+            <?php endif; ?>
+            
+            <!-- Help -->
+            <div class="mt-4 mb-2 px-4">
+                <p class="text-xs font-semibold text-red-300 uppercase tracking-wider">Support</p>
+            </div>
+            
+            <a href="<?php echo HELP_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700 rounded-lg mb-1 transition-colors <?php echo ($currentPage ?? '') === 'help' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-question-circle mr-3 text-lg"></i>
+                <span>Help & Support</span>
+            </a>
+        </nav>
+        
+        <!-- Mobile User Profile Section -->
+        <div class="p-4 border-t border-red-700 mt-auto">
+            <div class="flex items-center space-x-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-red-700 flex items-center justify-center">
+                    <i class="bi bi-person text-white text-lg"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-white truncate"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest'); ?></p>
+                    <p class="text-xs text-red-200 truncate"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Viewer'); ?></p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="<?php echo USERS_URL; ?>/views/profile.php" class="flex-1 text-center py-2 text-xs bg-red-700 hover:bg-red-600 rounded-lg transition-colors">
+                    <i class="bi bi-person mr-1"></i>Profile
+                </a>
+                <a href="<?php echo LOGOUT_URL; ?>" class="flex-1 text-center py-2 text-xs bg-red-950 hover:bg-red-900 rounded-lg transition-colors">
+                    <i class="bi bi-box-arrow-right mr-1"></i>Logout
+                </a>
             </div>
         </div>
     </div>

@@ -122,16 +122,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
         
+        <!-- Mobile Filter Toggle Button -->
+        <button id="mobile-filter-toggle" class="md:hidden w-full bg-white rounded-xl shadow-md p-4 mb-4 flex items-center justify-between text-gray-700 hover:bg-gray-50 transition-all duration-200">
+            <span class="flex items-center">
+                <i class="bi bi-funnel mr-2 text-red-600"></i>
+                <span class="font-medium">Filters & Search</span>
+            </span>
+            <i class="bi bi-chevron-down transition-transform" id="filter-toggle-icon"></i>
+        </button>
+        
         <!-- Filters Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div id="filters-section" class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100 hidden md:block">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
-                <div class="md:col-span-2">
+                <div class="sm:col-span-2 md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Search Documents</label>
                     <div class="relative group">
                         <input type="text" 
                                placeholder="Search by title, reference, or keywords..." 
-                               class="input-field pl-10 focus:ring-2 focus:ring-red-500 transition-all duration-200">
+                               class="input-field pl-10 focus:ring-2 focus:ring-red-500 transition-all duration-200 w-full">
                         <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 transition-all group-focus-within:text-red-600 group-focus-within:scale-110"></i>
                     </div>
                 </div>
@@ -139,7 +148,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Document Type Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Document Type</label>
-                    <select class="input-field focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:border-red-300">
+                    <select class="input-field focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:border-red-300 w-full">
                         <option value="">All Types</option>
                         <option value="ordinance">Ordinance</option>
                         <option value="resolution">Resolution</option>
@@ -153,7 +162,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Status Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select class="input-field">
+                    <select class="input-field w-full">
                         <option value="">All Status</option>
                         <option value="draft">Draft</option>
                         <option value="pending">Pending Review</option>
@@ -176,54 +185,62 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Documents Table -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
             <!-- Table Header Actions -->
-            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="select-all-top" class="w-4 h-4 text-red-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
-                        <span class="ml-2 text-sm text-gray-700">Select All</span>
-                    </label>
-                    <span class="text-sm text-gray-600" id="selected-count">
+            <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <!-- Left: Select All & Count -->
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="select-all-top" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500" onchange="toggleSelectAll(this)">
+                            <span class="ml-2 text-sm text-gray-700 whitespace-nowrap">Select All</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Center: Document Count -->
+                    <span class="text-sm text-gray-600 order-3 sm:order-none w-full sm:w-auto text-center sm:text-left" id="selected-count">
                         <span id="total-docs">0</span> documents found
                     </span>
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <button class="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
-                        <i class="bi bi-download mr-1"></i>Bulk Download
-                    </button>
-                    <button class="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg">
-                        <i class="bi bi-trash mr-1"></i>Delete Selected
-                    </button>
+                    
+                    <!-- Right: Bulk Actions -->
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-1 transition-colors">
+                            <i class="bi bi-download"></i>
+                            <span class="hidden xs:inline">Download</span>
+                        </button>
+                        <button class="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-1 transition-colors">
+                            <i class="bi bi-trash"></i>
+                            <span class="hidden xs:inline">Selected</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-50 hidden md:table-header-group">
                         <tr>
-                            <th class="px-6 py-3 text-left">
+                            <th class="px-4 md:px-6 py-3 text-left">
                                 <input type="checkbox" id="select-all-header" class="w-4 h-4 text-red-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                                 Type
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden xl:table-cell">
                                 Reference
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                                 Date
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden xl:table-cell">
                                 Size
                             </th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -249,97 +266,127 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php else: ?>
                             <?php foreach ($data['documents'] as $doc): ?>
-                                <tr class="hover:bg-gray-50" data-document-id="<?php echo $doc['id']; ?>">
-                                    <td class="px-6 py-4">
+                                <!-- Desktop: Table Row | Mobile: Card -->
+                                <tr class="hover:bg-gray-50 md:table-row hidden md:table-row-group" data-document-id="<?php echo $doc['id']; ?>">
+                                    <td class="px-4 md:px-6 py-2 md:py-4">
                                         <input type="checkbox" class="document-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded" value="<?php echo $doc['id']; ?>">
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 md:px-6 py-2 md:py-4">
                                         <div class="flex items-center">
-                                            <div class="<?php echo getFileIconClass($doc['file_type']); ?> rounded-lg p-2 mr-3">
+                                            <div class="<?php echo getFileIconClass($doc['file_type']); ?> rounded-lg p-2 mr-3 flex-shrink-0">
                                                 <i class="<?php echo getFileIcon($doc['file_type']); ?> text-xl"></i>
                                             </div>
-                                            <div>
-                                                <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($doc['title']); ?></p>
-                                                <p class="text-xs text-gray-500"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                            <div class="min-w-0 flex-1">
+                                                <p class="text-sm font-medium text-gray-900 truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
+                                                <p class="text-xs text-gray-500 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden lg:table-cell whitespace-nowrap">
                                         <span class="badge badge-primary"><?php echo ucfirst($doc['document_type']); ?></span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden xl:table-cell whitespace-nowrap text-sm text-gray-600">
                                         <?php echo htmlspecialchars($doc['reference_number']); ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 md:px-6 py-2 md:py-4 whitespace-nowrap">
                                         <?php echo getStatusBadge($doc['status']); ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden lg:table-cell whitespace-nowrap text-sm text-gray-600">
                                         <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-2 md:py-4 hidden xl:table-cell whitespace-nowrap text-sm text-gray-600">
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <!-- View button - All roles can view -->
-                                        <button class="text-blue-600 hover:text-blue-700 mr-3" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
-                                            <i class="bi bi-eye"></i>
+                                    <td class="px-4 md:px-6 py-2 md:py-4 text-right text-sm font-medium">
+                                        <div class="flex justify-end gap-3">
+                                            <button class="text-blue-600 hover:text-blue-700" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 hover:text-green-700" title="Download">
+                                                <i class="bi bi-download"></i>
+                                            </a>
+                                            <?php 
+                                            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                                            $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
+                                            $canEdit = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
+                                            $canDelete = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
+                                            ?>
+                                            <?php if ($canEdit): ?>
+                                            <button class="text-gray-600 hover:text-gray-700" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete): ?>
+                                            <button class="text-red-600 hover:text-red-700" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+                
+                <!-- Mobile Card View -->
+                <div class="md:hidden divide-y divide-gray-200">
+                    <?php if (!empty($data['documents'])): ?>
+                        <?php foreach ($data['documents'] as $doc): ?>
+                            <div class="p-4 hover:bg-gray-50" data-document-id="<?php echo $doc['id']; ?>">
+                                <!-- Document Info Row -->
+                                <div class="flex items-start gap-3 mb-3">
+                                    <div class="<?php echo getFileIconClass($doc['file_type']); ?> rounded-lg p-2.5 flex-shrink-0">
+                                        <i class="<?php echo getFileIcon($doc['file_type']); ?> text-2xl"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-sm font-semibold text-gray-900 mb-1"><?php echo htmlspecialchars($doc['title']); ?></h4>
+                                        <p class="text-xs text-gray-500 truncate mb-2"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                <?php echo ucfirst($doc['document_type']); ?>
+                                            </span>
+                                            <span class="text-xs text-gray-500">
+                                                <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Status and Actions Row -->
+                                <div class="flex items-center justify-between pl-12">
+                                    <div>
+                                        <?php echo getStatusBadge($doc['status']); ?>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                            <i class="bi bi-eye text-lg"></i>
                                         </button>
-                                        
-                                        <!-- Download button - All roles can download -->
-                                        <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 hover:text-green-700 mr-3" title="Download">
-                                            <i class="bi bi-download"></i>
+                                        <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="p-2 text-green-600 hover:bg-green-50 rounded-lg" title="Download">
+                                            <i class="bi bi-download text-lg"></i>
                                         </a>
-                                        
                                         <?php 
                                         $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                         $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
                                         $canEdit = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
                                         $canDelete = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
                                         ?>
-                                        
-                                        <!-- Edit button - Staff (own docs), Officer, Admin -->
                                         <?php if ($canEdit): ?>
-                                        <button class="text-gray-600 hover:text-gray-700 mr-3" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
-                                            <i class="bi bi-pencil"></i>
+                                        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                            <i class="bi bi-pencil text-lg"></i>
                                         </button>
                                         <?php endif; ?>
-                                        
-                                        <!-- Delete button - Staff (own docs), Officer, Admin -->
                                         <?php if ($canDelete): ?>
-                                        <button class="text-red-600 hover:text-red-700" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
-                                            <i class="bi bi-trash"></i>
+                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                            <i class="bi bi-trash text-lg"></i>
                                         </button>
                                         <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                Nov 19, 2025
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                1.8 MB
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button class="text-blue-600 hover:text-blue-700 mr-3" title="View">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button class="text-green-600 hover:text-green-700 mr-3" title="Download">
-                                    <i class="bi bi-download"></i>
-                                </button>
-                                <button class="text-gray-600 hover:text-gray-700 mr-3" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="text-red-600 hover:text-red-700" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        
-                        <!-- More rows would be loaded dynamically -->
-                    </tbody>
-                </table>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             </div>
             
             <!-- Pagination -->
