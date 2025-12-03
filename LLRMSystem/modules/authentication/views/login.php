@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/../../core/config/config.php'; ?>
+<?php
+session_start();
+require_once __DIR__ . '/../../core/config/config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,19 +44,52 @@
         @media screen and (max-width: 767px) {
             input, select, textarea { font-size: 16px !important; }
         }
+        /* Ensure logo is always visible */
+        .login-logo-container {
+            width: 120px !important;
+            height: 120px !important;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        .login-logo-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        /* Logo-safe animations that don't hide content */
+        .logo-bounce {
+            animation: logo-bounce-anim 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+        @keyframes logo-bounce-anim {
+            0% { transform: scale(0.5); }
+            50% { transform: scale(1.1); }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        .text-slide-up {
+            animation: text-slide-anim 0.5s ease-out forwards;
+        }
+        @keyframes text-slide-anim {
+            from { transform: translateY(10px); opacity: 0.5; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
     <div class="w-full max-w-md">
         <!-- Logo Section -->
-        <div class="text-center mb-6 md:mb-8 animate-fade-in">
-            <div class="inline-flex items-center justify-center mb-3 md:mb-4 animate-bounce-in">
-                <div class="bg-white rounded-full shadow-xl flex items-center justify-center overflow-hidden transform hover:scale-105 transition-all duration-300" style="width: 120px; height: 120px;">
-                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" style="width: 120%; height: 120%;" class="object-cover">
+        <div class="text-center mb-6 md:mb-8">
+            <div class="inline-flex items-center justify-center mb-3 md:mb-4 logo-bounce">
+                <div class="login-logo-container bg-white rounded-full shadow-xl items-center justify-center p-3 transform hover:scale-105 transition-all duration-300">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" class="login-logo-img" onerror="this.onerror=null; this.src='<?php echo BASE_URL; ?>/images/valenzuela%20logo.webp';">
                 </div>
             </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fade-in-up animation-delay-100">LRMS</h1>
-            <p class="text-sm md:text-base text-gray-600 mt-1 md:mt-2 animate-fade-in-up animation-delay-200">Legislative Records Management System</p>
-            <p class="text-xs md:text-sm text-red-600 font-semibold mt-1 animate-fade-in-up animation-delay-300">City Government of Valenzuela</p>
-            <p class="text-xs text-gray-500 animate-fade-in-up animation-delay-400">Metropolitan Manila</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 text-slide-up" style="animation-delay: 0.1s;">LRMS</h1>
+            <p class="text-sm md:text-base text-gray-600 mt-1 md:mt-2 text-slide-up" style="animation-delay: 0.2s;">Legislative Records Management System</p>
+            <p class="text-xs md:text-sm text-red-600 font-semibold mt-1 text-slide-up" style="animation-delay: 0.3s;">City Government of Valenzuela</p>
+            <p class="text-xs text-gray-500 text-slide-up" style="animation-delay: 0.4s;">Metropolitan Manila</p>
         </div>
         
         <!-- Login Card -->
@@ -66,8 +102,6 @@
             <!-- Alert Messages -->
             <div id="alert-container" class="mb-4">
                 <?php
-                session_start();
-                
                 // Show logout success message
                 if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
                     echo '<div class="bg-green-50 border border-green-200 text-green-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">

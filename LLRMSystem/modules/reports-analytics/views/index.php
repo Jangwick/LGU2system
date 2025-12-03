@@ -11,7 +11,6 @@ $documentsByStatus = $controller->getDocumentsByStatus();
 $timeline = $controller->getDocumentsTimeline();
 $topUploaders = $controller->getTopUploaders(5);
 $activityByAction = $controller->getActivityByAction();
-$recentActivities = $controller->getRecentActivities(10);
 $documentsByDepartment = $controller->getDocumentsByDepartment();
 $storageByType = $controller->getStorageByType();
 $monthlyGrowth = $controller->getMonthlyGrowth();
@@ -225,54 +224,6 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-
-        <!-- Recent Activities -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h3 class="text-lg font-semibold text-gray-900">Recent Activities</h3>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($recentActivities as $activity): ?>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                    <?php echo date('M d, H:i', strtotime($activity['created_at'])); ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <?php echo htmlspecialchars($activity['full_name'] ?? $activity['username'] ?? 'Unknown'); ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <?php
-                                    $actionClass = match($activity['action']) {
-                                        'create' => 'bg-green-100 text-green-800',
-                                        'update' => 'bg-blue-100 text-blue-800',
-                                        'delete' => 'bg-red-100 text-red-800',
-                                        'login' => 'bg-indigo-100 text-indigo-800',
-                                        default => 'bg-gray-100 text-gray-800'
-                                    };
-                                    ?>
-                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $actionClass; ?>">
-                                        <?php echo ucfirst($activity['action']); ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">
-                                    <?php echo htmlspecialchars($activity['description']); ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
             </div>
         </div>
     </main>
