@@ -18,13 +18,13 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Page Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
+                <div class="animate-slide-in-left">
                     <h1 class="text-2xl font-bold mb-2">User Management</h1>
-                    <p class="text-red-100">Manage system users and permissions</p>
+                    <p class="text-red-100 animation-delay-100">Manage system users and permissions</p>
                 </div>
-                <button onclick="openCreateModal()" class="add-user-btn bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition shadow-md flex items-center">
+                <button onclick="openCreateModal()" class="add-user-btn bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 animate-slide-in-right">
                     <i class="bi bi-person-plus mr-2"></i> Add New User
                 </button>
             </div>
@@ -32,47 +32,47 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-100 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-people-fill text-blue-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">Total Users</div>
-                        <div class="text-2xl font-bold text-gray-900"><?php echo number_format($stats['total_users']); ?></div>
+                        <div class="text-sm text-gray-600 transition-colors group-hover:text-blue-600">Total Users</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all group-hover:scale-110"><?php echo number_format($stats['total_users']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-200 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-person-check-fill text-green-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">Active Users</div>
-                        <div class="text-2xl font-bold text-gray-900"><?php echo number_format($stats['active_users']); ?></div>
+                        <div class="text-sm text-gray-600 transition-colors group-hover:text-green-600">Active Users</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all group-hover:scale-110"><?php echo number_format($stats['active_users']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-300 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-calendar-plus text-indigo-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">New (7 days)</div>
-                        <div class="text-2xl font-bold text-gray-900"><?php echo number_format($stats['recent_users']); ?></div>
+                        <div class="text-sm text-gray-600 transition-colors group-hover:text-indigo-600">New (7 days)</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all group-hover:scale-110"><?php echo number_format($stats['recent_users']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-400 group cursor-pointer">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                         <i class="bi bi-shield-check text-amber-600 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600">Administrators</div>
-                        <div class="text-2xl font-bold text-gray-900">
+                        <div class="text-sm text-gray-600 transition-colors group-hover:text-amber-600">Administrators</div>
+                        <div class="text-2xl font-bold text-gray-900 transform transition-all group-hover:scale-110">
                             <?php 
                             $adminCount = 0;
                             foreach ($stats['users_by_role'] as $roleData) {
@@ -90,7 +90,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
@@ -150,7 +150,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Users Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
             <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">
@@ -184,11 +184,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                 </td>
                             </tr>
                         <?php else: ?>
-                            <?php foreach ($data['users'] as $user): ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
+                            <?php $rowIndex = 0; foreach ($data['users'] as $user): $rowIndex++; ?>
+                                <tr class="hover:bg-gray-50 transition-all duration-200 hover:shadow-sm animate-fade-in-up" style="animation-delay: <?php echo 700 + ($rowIndex * 50); ?>ms;">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center transform transition-all duration-200 hover:scale-110">
                                                 <i class="bi bi-person-fill text-blue-600 text-xl"></i>
                                             </div>
                                             <div class="ml-4">
@@ -207,7 +207,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                             default => 'bg-gray-100 text-gray-800'
                                         };
                                         ?>
-                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $roleClass; ?>">
+                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $roleClass; ?> transition-transform duration-200 hover:scale-105">
                                             <?php echo ucfirst($user['role']); ?>
                                         </span>
                                     </td>
@@ -223,7 +223,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                             default => 'bg-gray-100 text-gray-800'
                                         };
                                         ?>
-                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $statusClass; ?>">
+                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $statusClass; ?> transition-transform duration-200 hover:scale-105">
                                             <?php echo ucfirst($user['status']); ?>
                                         </span>
                                     </td>
@@ -231,11 +231,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button onclick="editUser(<?php echo $user['id']; ?>)" class="text-red-600 hover:text-red-700 mr-3">
+                                        <button onclick="editUser(<?php echo $user['id']; ?>)" class="text-red-600 hover:text-red-700 mr-3 transition-all duration-200 hover:scale-110">
                                             <i class="bi bi-pencil"></i> Edit
                                         </button>
                                         <button onclick="deleteUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['name']); ?>')" 
-                                                class="text-red-600 hover:text-red-900">
+                                                class="text-red-600 hover:text-red-900 transition-all duration-200 hover:scale-110">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </td>

@@ -33,7 +33,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
-            <div class="mb-6">
+            <div class="mb-6 animate-fade-in">
                 <h1 class="text-2xl font-bold text-gray-800 mb-2">Upload New Document</h1>
                 <p class="text-gray-600">Add a new legislative document to the repository</p>
             </div>
@@ -41,7 +41,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Upload Form -->
             <form id="upload-form" action="<?php echo DOCUMENTS_URL; ?>/api/upload.php" method="POST" enctype="multipart/form-data">
                 <!-- File Upload Section -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
                     <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                         <i class="bi bi-cloud-upload mr-2 text-blue-600"></i>
                         Document File
@@ -80,7 +80,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- Document Information -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
                     <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                         <i class="bi bi-info-circle mr-2 text-blue-600"></i>
                         Document Information

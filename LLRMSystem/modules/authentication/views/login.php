@@ -13,22 +13,46 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body class="bg-gradient-to-br from-red-50 via-white to-red-50 min-h-screen flex items-center justify-center p-4">
+    <style>
+        /* Animation Keyframes */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce-in {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .animate-fade-in { opacity: 0; animation: fade-in 0.6s ease-out forwards; }
+        .animate-fade-in-up { opacity: 0; transform: translateY(20px); animation: fade-in-up 0.6s ease-out forwards; }
+        .animate-bounce-in { opacity: 0; transform: scale(0.3); animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
+        .animation-delay-100 { animation-delay: 100ms; }
+        .animation-delay-200 { animation-delay: 200ms; }
+        .animation-delay-300 { animation-delay: 300ms; }
+        .animation-delay-400 { animation-delay: 400ms; }
+    </style>
     <div class="w-full max-w-md">
         <!-- Logo Section -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center mb-4">
-                <div class="bg-white rounded-full shadow-xl flex items-center justify-center overflow-hidden" style="width: 160px; height: 160px;">
+        <div class="text-center mb-8 animate-fade-in">
+            <div class="inline-flex items-center justify-center mb-4 animate-bounce-in">
+                <div class="bg-white rounded-full shadow-xl flex items-center justify-center overflow-hidden transform hover:scale-105 transition-all duration-300" style="width: 160px; height: 160px;">
                     <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" style="width: 120%; height: 120%;" class="object-cover">
                 </div>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800">LRMS</h1>
-            <p class="text-gray-600 mt-2">Legislative Records Management System</p>
-            <p class="text-sm text-red-600 font-semibold mt-1">City Government of Valenzuela</p>
-            <p class="text-xs text-gray-500">Metropolitan Manila</p>
+            <h1 class="text-3xl font-bold text-gray-800 animate-fade-in-up animation-delay-100">LRMS</h1>
+            <p class="text-gray-600 mt-2 animate-fade-in-up animation-delay-200">Legislative Records Management System</p>
+            <p class="text-sm text-red-600 font-semibold mt-1 animate-fade-in-up animation-delay-300">City Government of Valenzuela</p>
+            <p class="text-xs text-gray-500 animate-fade-in-up animation-delay-400">Metropolitan Manila</p>
         </div>
         
         <!-- Login Card -->
-        <div class="bg-white rounded-2xl shadow-xl p-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 animate-fade-in-up animation-delay-300 transform hover:shadow-2xl transition-all duration-300">
             <div class="mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Welcome Back</h2>
                 <p class="text-gray-600 mt-1">Sign in to access your account</p>

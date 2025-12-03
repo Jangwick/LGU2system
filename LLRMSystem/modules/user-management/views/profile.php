@@ -49,10 +49,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
         <div class="max-w-6xl mx-auto">
             <!-- Profile Header -->
-            <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+            <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <!-- Avatar -->
-                    <div class="relative">
+                    <div class="relative animate-bounce-in">
                         <?php if (!empty($user['profile_picture'])): ?>
                             <img id="profile-avatar" src="<?php echo BASE_URL; ?>/storage/profiles/<?php echo htmlspecialchars($user['profile_picture']); ?>" 
                                  alt="Profile Picture" 
@@ -71,7 +71,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- User Info -->
-                    <div class="flex-1 text-center md:text-left">
+                    <div class="flex-1 text-center md:text-left animate-slide-in-left animation-delay-100">
                         <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($user['full_name'] ?? 'N/A'); ?></h1>
                         <p class="text-red-100 text-lg mb-2"><?php echo htmlspecialchars($user['email']); ?></p>
                         <div class="flex flex-wrap gap-2 justify-center md:justify-start">
@@ -92,8 +92,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Quick Actions -->
-                    <div class="flex gap-3">
-                        <button onclick="openEditModal()" class="btn-outline border-white text-white hover:bg-white hover:text-red-600">
+                    <div class="flex gap-3 animate-slide-in-right animation-delay-100">
+                        <button onclick="openEditModal()" class="btn-outline border-white text-white hover:bg-white hover:text-red-600 transform hover:scale-105 transition-all">
                             <i class="bi bi-pencil mr-2"></i>Edit Profile
                         </button>
                     </div>
@@ -102,52 +102,52 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-200 group cursor-pointer">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <i class="bi bi-file-earmark-text-fill text-red-600 text-4xl"></i>
                         </div>
                         <div class="ml-4">
-                            <div class="text-sm text-gray-600">Documents</div>
-                            <div class="text-2xl font-bold text-gray-900"><?php echo number_format($user['document_count'] ?? 0); ?></div>
+                            <div class="text-sm text-gray-600 transition-colors group-hover:text-red-600">Documents</div>
+                            <div class="text-2xl font-bold text-gray-900 transform transition-all group-hover:scale-110"><?php echo number_format($user['document_count'] ?? 0); ?></div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-300 group cursor-pointer">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <i class="bi bi-activity text-green-600 text-4xl"></i>
                         </div>
                         <div class="ml-4">
-                            <div class="text-sm text-gray-600">Activities</div>
-                            <div class="text-2xl font-bold text-gray-900"><?php echo number_format($user['activity_count'] ?? 0); ?></div>
+                            <div class="text-sm text-gray-600 transition-colors group-hover:text-green-600">Activities</div>
+                            <div class="text-2xl font-bold text-gray-900 transform transition-all group-hover:scale-110"><?php echo number_format($user['activity_count'] ?? 0); ?></div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-400 group cursor-pointer">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <i class="bi bi-calendar-check text-purple-600 text-4xl"></i>
                         </div>
                         <div class="ml-4">
-                            <div class="text-sm text-gray-600">Member Since</div>
-                            <div class="text-lg font-bold text-gray-900">
+                            <div class="text-sm text-gray-600 transition-colors group-hover:text-purple-600">Member Since</div>
+                            <div class="text-lg font-bold text-gray-900 transform transition-all group-hover:scale-110">
                                 <?php echo date('M Y', strtotime($user['created_at'] ?? 'now')); ?>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-500 group cursor-pointer">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <i class="bi bi-clock-history text-amber-600 text-4xl"></i>
                         </div>
                         <div class="ml-4">
-                            <div class="text-sm text-gray-600">Last Active</div>
-                            <div class="text-sm font-bold text-gray-900">
+                            <div class="text-sm text-gray-600 transition-colors group-hover:text-amber-600">Last Active</div>
+                            <div class="text-sm font-bold text-gray-900 transform transition-all group-hover:scale-105">
                                 <?php 
                                 if ($user['last_activity']) {
                                     $diff = time() - strtotime($user['last_activity']);

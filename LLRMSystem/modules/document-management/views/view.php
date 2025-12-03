@@ -100,9 +100,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div class="flex-1">
+                <div class="flex-1 animate-slide-in-left">
                     <div class="flex items-center gap-3 mb-2">
                         <h1 class="text-2xl font-bold text-gray-800"><?= htmlspecialchars($document['title']) ?></h1>
                         <span class="px-3 py-1 rounded-full text-xs font-semibold <?= getStatusBadge($document['status']) ?>">
@@ -139,7 +139,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Document Details -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Document Information</h2>
                     
                     <div class="grid grid-cols-2 gap-4">
@@ -191,7 +191,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
 
                 <!-- Version History -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Version History</h2>
                     
                     <?php if (empty($versions)): ?>

@@ -13,6 +13,28 @@
     }
 }
 
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @keyframes fade-out {
     from {
         opacity: 1;
@@ -35,13 +57,19 @@
 
 /* Set initial hidden state BEFORE animation starts */
 .animate-fade-in,
-.animate-slide-in {
+.animate-slide-in,
+.animate-fade-in-up {
     opacity: 0;
 }
 
 .animate-fade-in {
     transform: translateY(-10px);
     animation: fade-in 0.3s ease-in-out forwards;
+}
+
+.animate-fade-in-up {
+    transform: translateY(20px);
+    animation: fade-in-up 0.4s ease-out forwards;
 }
 
 .animate-fade-out {
@@ -52,6 +80,17 @@
     transform: translateX(100%);
     animation: slide-in 0.3s ease-in-out forwards;
 }
+
+/* Animation Delay Utilities */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-600 { animation-delay: 600ms; }
+.animation-delay-700 { animation-delay: 700ms; }
+.animation-delay-800 { animation-delay: 800ms; }
+.animation-delay-900 { animation-delay: 900ms; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

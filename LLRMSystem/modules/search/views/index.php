@@ -53,13 +53,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Search Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
-            <h1 class="text-3xl font-bold mb-3">Advanced Document Search</h1>
-            <p class="text-red-100">Search through thousands of legislative documents with powerful filters</p>
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
+            <h1 class="text-3xl font-bold mb-3 animate-slide-in-left">Advanced Document Search</h1>
+            <p class="text-red-100 animate-slide-in-left animation-delay-100">Search through thousands of legislative documents with powerful filters</p>
         </div>
         
         <!-- Main Search Box -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
             <div class="flex gap-3">
                 <div class="flex-1 relative">
                     <input type="text" 
@@ -95,7 +95,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Advanced Filters Sidebar -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6">
+                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
                     <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                         <i class="bi bi-funnel mr-2 text-blue-600"></i>
                         Filters
@@ -209,7 +209,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Search Results -->
             <div class="lg:col-span-3">
                 <!-- Results Header -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-300">
                     <div class="flex items-center justify-between flex-wrap gap-4">
                         <div>
                             <p class="text-gray-600">Found <span class="font-bold text-gray-800">1,248 documents</span></p>
@@ -239,7 +239,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Results List -->
                 <div class="space-y-4" id="search-results">
                     <!-- Result Item 1 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition animate-fade-in">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-fade-in-up animation-delay-400">
                         <div class="flex items-start gap-4">
                             <div class="bg-red-100 rounded-lg p-3">
                                 <i class="bi bi-file-pdf text-red-600 text-2xl"></i>

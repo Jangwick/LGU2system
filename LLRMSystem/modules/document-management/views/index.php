@@ -174,7 +174,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Documents Table -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
             <!-- Table Header Actions -->
             <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <div class="flex items-center gap-4">

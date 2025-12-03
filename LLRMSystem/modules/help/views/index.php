@@ -19,16 +19,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
         <div class="max-w-6xl mx-auto">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white">
+            <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
                 <div class="text-center">
-                    <i class="bi bi-headset text-6xl mb-4"></i>
-                    <h1 class="text-3xl font-bold mb-2">Help & Support Center</h1>
-                    <p class="text-red-100 text-lg">We're here to help you navigate the LRMS system</p>
+                    <i class="bi bi-headset text-6xl mb-4 animate-bounce-in"></i>
+                    <h1 class="text-3xl font-bold mb-2 animate-slide-in-left animation-delay-100">Help & Support Center</h1>
+                    <p class="text-red-100 text-lg animate-slide-in-left animation-delay-200">We're here to help you navigate the LRMS system</p>
                 </div>
             </div>
             
             <!-- Search Bar -->
-            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
                 <div class="flex gap-3">
                     <div class="flex-1 relative">
                         <input type="text" 
@@ -45,12 +45,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Quick Help Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition cursor-pointer">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-200 group">
                     <div class="text-center">
-                        <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <i class="bi bi-book text-red-600 text-3xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800 mb-2">User Guide</h3>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-red-600 transition-colors">User Guide</h3>
                         <p class="text-sm text-gray-600 mb-4">Step-by-step instructions for using LRMS</p>
                         <button onclick="showUserGuide()" class="text-red-600 hover:text-red-700 font-medium text-sm">
                             Learn More <i class="bi bi-arrow-right ml-1"></i>
@@ -58,12 +58,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition cursor-pointer">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-300 group">
                     <div class="text-center">
-                        <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <i class="bi bi-play-circle text-green-600 text-3xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800 mb-2">Video Tutorials</h3>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors">Video Tutorials</h3>
                         <p class="text-sm text-gray-600 mb-4">Watch video guides and walkthroughs</p>
                         <button onclick="showVideoTutorials()" class="text-green-600 hover:text-green-700 font-medium text-sm">
                             Watch Now <i class="bi bi-arrow-right ml-1"></i>
@@ -71,12 +71,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition cursor-pointer">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-400 group">
                     <div class="text-center">
-                        <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <i class="bi bi-chat-dots text-purple-600 text-3xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800 mb-2">Contact Support</h3>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">Contact Support</h3>
                         <p class="text-sm text-gray-600 mb-4">Get in touch with our support team</p>
                         <button onclick="openContactModal()" class="text-purple-600 hover:text-purple-700 font-medium text-sm">
                             Contact Us <i class="bi bi-arrow-right ml-1"></i>
@@ -89,7 +89,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- FAQs -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                             <i class="bi bi-question-circle mr-2 text-red-600"></i>
                             Frequently Asked Questions
@@ -198,7 +198,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Helpful Resources -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                             <i class="bi bi-journal-text mr-2 text-red-600"></i>
                             Helpful Resources
@@ -235,7 +235,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Sidebar -->
                 <div class="space-y-6">
                     <!-- Contact Information -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-700">
                         <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <i class="bi bi-telephone mr-2 text-red-600"></i>
                             Contact Information

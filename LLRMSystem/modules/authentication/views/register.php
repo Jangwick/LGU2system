@@ -13,18 +13,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-screen flex items-center justify-center p-4">
+    <style>
+        /* Animation Keyframes */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce-in {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .animate-fade-in { opacity: 0; animation: fade-in 0.6s ease-out forwards; }
+        .animate-fade-in-up { opacity: 0; transform: translateY(20px); animation: fade-in-up 0.6s ease-out forwards; }
+        .animate-bounce-in { opacity: 0; transform: scale(0.3); animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
+        .animation-delay-100 { animation-delay: 100ms; }
+        .animation-delay-200 { animation-delay: 200ms; }
+        .animation-delay-300 { animation-delay: 300ms; }
+    </style>
     <div class="w-full max-w-2xl">
         <!-- Logo Section -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
+        <div class="text-center mb-8 animate-fade-in">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg animate-bounce-in transform hover:scale-105 transition-all duration-300">
                 <i class="bi bi-file-earmark-text text-white text-3xl"></i>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800">Create Account</h1>
-            <p class="text-gray-600 mt-2">Join the Legislative Records Management System</p>
+            <h1 class="text-3xl font-bold text-gray-800 animate-fade-in-up animation-delay-100">Create Account</h1>
+            <p class="text-gray-600 mt-2 animate-fade-in-up animation-delay-200">Join the Legislative Records Management System</p>
         </div>
         
         <!-- Registration Card -->
-        <div class="bg-white rounded-2xl shadow-xl p-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 animate-fade-in-up animation-delay-300 transform hover:shadow-2xl transition-all duration-300">
             <!-- Alert Messages -->
             <div id="alert-container" class="mb-4"></div>
             
