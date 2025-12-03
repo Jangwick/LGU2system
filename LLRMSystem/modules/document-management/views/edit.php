@@ -216,6 +216,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </form>
         </div>
     </main>
+
+<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
 
 <script>
@@ -317,5 +319,3 @@ document.getElementById('editDocumentForm').addEventListener('submit', function(
     });
 });
 </script>
-
-<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

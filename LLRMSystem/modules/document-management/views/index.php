@@ -386,9 +386,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <?php endif; ?>
         </div>
     </main>
-</div>
 
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+</div>
 
 <script src="<?php echo asset('js/documents.js'); ?>"></script>
 <script>

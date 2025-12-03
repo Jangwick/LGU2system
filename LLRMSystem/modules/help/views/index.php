@@ -324,6 +324,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
     </main>
+
+<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
 
 <!-- Contact Support Modal -->
@@ -498,5 +500,3 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     transition: transform 0.3s ease;
 }
 </style>
-
-<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

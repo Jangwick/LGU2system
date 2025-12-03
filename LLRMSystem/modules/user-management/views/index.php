@@ -279,6 +279,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <?php endif; ?>
         </div>
     </main>
+
+<?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
 
 <!-- Create/Edit User Modal -->
@@ -446,10 +448,8 @@ function deleteUser(id, name) {
             }
         })
         .catch(error => {
-            alert('Network error: ' + error);
-        });
+        alert('Network error: ' + error);
+    });
     }
 }
 </script>
-
-<?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>

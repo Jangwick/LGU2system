@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<aside id="sidebar" class="w-64 bg-gradient-to-b from-red-800 to-red-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300 animate-slide-in-left">
+<aside id="sidebar" class="w-64 bg-gradient-to-b from-red-800 to-red-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300 animate-slide-in-left min-h-full">
     <!-- Logo Section -->
     <div class="p-6 border-b border-red-700 animate-fade-in">
         <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition-all duration-300 transform hover:scale-105 group">

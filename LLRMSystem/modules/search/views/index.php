@@ -347,8 +347,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
     </main>
-</div>
-
+    
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+</div>
 
 <script src="/public/assets/js/search.js"></script>

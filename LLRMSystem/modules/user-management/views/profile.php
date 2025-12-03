@@ -312,6 +312,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
     </main>
+
+<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
 
 <!-- Edit Profile Modal -->
@@ -557,5 +559,3 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 </script>
-
-<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

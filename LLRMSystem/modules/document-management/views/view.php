@@ -309,6 +309,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
     </main>
+
+<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
 
 <script>
@@ -367,5 +369,3 @@ function deleteDocument(id) {
     }
 }
 </script>
-
-<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

@@ -288,4 +288,4 @@
         </div>
     </div>
     
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex min-h-screen">

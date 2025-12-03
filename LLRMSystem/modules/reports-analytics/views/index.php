@@ -276,6 +276,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
     </main>
+
+<?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
 
 <!-- Export Modal -->
@@ -644,5 +646,3 @@ document.getElementById('exportModal')?.addEventListener('click', function(e) {
 </script>
 
 <script src="<?php echo asset('js/reports.js'); ?>"></script>
-
-<?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>

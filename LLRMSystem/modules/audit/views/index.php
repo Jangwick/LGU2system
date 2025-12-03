@@ -298,9 +298,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     </div>
 </main>
 
-</div>
-
 <?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+</div>
 
 <script>
 // Handle export CSV
