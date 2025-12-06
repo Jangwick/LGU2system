@@ -38,25 +38,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
         <!-- Welcome Banner -->
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl md:rounded-2xl shadow-xl p-4 md:p-8 mb-4 md:mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-xl md:rounded-2xl shadow-xl p-4 md:p-8 mb-4 md:mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div class="animate-slide-in-left">
                     <h1 class="text-xl md:text-3xl font-bold mb-1 md:mb-2">
                         Welcome back, <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?>! 👋
                     </h1>
-                    <p class="text-blue-100 text-sm md:text-base">
+                    <p class="text-red-100 text-sm md:text-base">
                         Here's what's happening with your legislative voting today.
                     </p>
                 </div>
                 <div class="flex gap-2 md:gap-3 animate-slide-in-right">
                     <?php if (hasRole(['secretary', 'admin'])): ?>
-                    <a href="<?php echo VOTING_URL; ?>/views/create-session.php" class="bg-white text-blue-600 px-3 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all shadow-md flex items-center transform hover:scale-105 text-xs md:text-base">
+                    <a href="<?php echo VOTING_URL; ?>/views/create-session.php" class="bg-white text-red-600 px-3 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 text-xs md:text-base">
                         <i class="bi bi-plus-circle mr-1 md:mr-2"></i>
                         <span class="hidden sm:inline">New </span>Session
                     </a>
                     <?php endif; ?>
                     <?php if (hasRole(['councilor', 'admin'])): ?>
-                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="bg-blue-700 text-white px-3 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-blue-800 transition-all flex items-center transform hover:scale-105 text-xs md:text-base">
+                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="bg-red-700 text-white px-3 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-red-800 transition-all flex items-center transform hover:scale-105 text-xs md:text-base">
                         <i class="bi bi-hand-thumbs-up mr-1 md:mr-2"></i>
                         Cast Vote
                     </a>
@@ -71,14 +71,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="bg-white rounded-xl shadow-md p-4 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-100 group cursor-pointer">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <div>
-                        <p class="text-gray-500 text-xs md:text-sm font-medium mb-1 group-hover:text-blue-600">Total Documents</p>
+                        <p class="text-gray-500 text-xs md:text-sm font-medium mb-1 group-hover:text-red-600">Total Documents</p>
                         <h3 class="text-xl md:text-3xl font-bold text-gray-800"><?php echo number_format($stats['total_documents']); ?></h3>
-                        <p class="text-blue-600 text-xs md:text-sm mt-1 hidden sm:block">
+                        <p class="text-red-600 text-xs md:text-sm mt-1 hidden sm:block">
                             <i class="bi bi-file-earmark-text"></i> All types
                         </p>
                     </div>
-                    <div class="bg-blue-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-file-earmark-text text-blue-600 text-lg md:text-2xl"></i>
+                    <div class="bg-red-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
+                        <i class="bi bi-file-earmark-text text-red-600 text-lg md:text-2xl"></i>
                     </div>
                 </div>
             </div>
@@ -167,7 +167,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-700">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Recent Documents</h2>
-                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-red-600 hover:text-red-700 text-sm font-medium">
                         View All <i class="bi bi-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -181,8 +181,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <?php else: ?>
                         <?php foreach ($recentDocuments as $doc): ?>
                             <div class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                                <div class="bg-blue-100 rounded-lg p-2">
-                                    <i class="bi bi-file-earmark-text text-blue-600"></i>
+                                <div class="bg-red-100 rounded-lg p-2">
+                                    <i class="bi bi-file-earmark-text text-red-600"></i>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-medium text-gray-800 truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
@@ -201,7 +201,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-800">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Upcoming Sessions</h2>
-                    <a href="<?php echo VOTING_URL; ?>/views/sessions.php" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    <a href="<?php echo VOTING_URL; ?>/views/sessions.php" class="text-red-600 hover:text-red-700 text-sm font-medium">
                         View All <i class="bi bi-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -238,7 +238,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-900">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Recent Votes</h2>
-                    <a href="<?php echo VOTING_URL; ?>/views/results.php" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    <a href="<?php echo VOTING_URL; ?>/views/results.php" class="text-red-600 hover:text-red-700 text-sm font-medium">
                         View All <i class="bi bi-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -269,7 +269,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
     </main>
-</div>
+    
+    <!-- Footer inside the main content area -->
+    <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 
 <script>
 // Chart.js - Voting Statistics
@@ -346,5 +348,3 @@ if (statusCtx) {
     });
 }
 </script>
-
-<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

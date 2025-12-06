@@ -141,7 +141,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <i class="bi bi-calendar-x text-6xl text-gray-300 mb-4"></i>
                     <h2 class="text-xl font-semibold text-gray-700 mb-2">No Active Sessions</h2>
                     <p class="text-gray-500 mb-4">There are no voting sessions currently in progress.</p>
-                    <a href="sessions.php" class="inline-flex items-center text-blue-600 hover:text-blue-700">
+                    <a href="sessions.php" class="inline-flex items-center text-red-600 hover:text-red-700">
                         <i class="bi bi-arrow-left mr-2"></i> View All Sessions
                     </a>
                 </div>
@@ -170,10 +170,10 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm text-gray-600">
-                                        <span class="font-semibold text-blue-600"><?php echo $activeSession['pending_docs']; ?></span> items pending
+                                        <span class="font-semibold text-red-600"><?php echo $activeSession['pending_docs']; ?></span> items pending
                                     </span>
                                     <a href="cast-vote.php?session=<?php echo $activeSession['id']; ?>" 
-                                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                       class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                                         Enter Session
                                     </a>
                                 </div>
@@ -237,7 +237,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                             $progress = $totalCount > 0 ? ($votedCount / $totalCount) * 100 : 0;
                             ?>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: <?php echo $progress; ?>%"></div>
+                                <div class="bg-red-600 h-2 rounded-full transition-all duration-500" style="width: <?php echo $progress; ?>%"></div>
                             </div>
                             <p class="text-xs text-gray-500 mt-1 text-center"><?php echo round($progress); ?>% Complete</p>
                         </div>
@@ -287,14 +287,14 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                             <div class="flex-1">
                                                 <div class="flex items-center gap-2 mb-2">
                                                     <span class="text-sm text-gray-500"><?php echo htmlspecialchars($doc['doc_number']); ?></span>
-                                                    <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800"><?php echo ucfirst($doc['type']); ?></span>
+                                                    <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800"><?php echo ucfirst($doc['type']); ?></span>
                                                 </div>
                                                 <h3 class="text-lg font-semibold text-gray-900 mb-2"><?php echo htmlspecialchars($doc['title']); ?></h3>
                                                 <?php if ($doc['summary']): ?>
                                                     <p class="text-gray-600 text-sm mb-4"><?php echo htmlspecialchars(substr($doc['summary'], 0, 200)); ?>...</p>
                                                 <?php endif; ?>
                                             </div>
-                                            <a href="#" class="text-blue-600 hover:text-blue-700 text-sm ml-4">
+                                            <a href="#" class="text-red-600 hover:text-red-700 text-sm ml-4">
                                                 <i class="bi bi-eye mr-1"></i> View
                                             </a>
                                         </div>
@@ -343,11 +343,11 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                                 <div class="mb-4">
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Remarks (Optional)</label>
                                                     <textarea name="remarks" rows="2" 
-                                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                                                               placeholder="Add any comments about your vote..."></textarea>
                                                 </div>
                                                 
-                                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors">
+                                                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-medium transition-colors">
                                                     <i class="bi bi-check2-circle mr-2"></i> Submit Vote
                                                 </button>
                                             </form>

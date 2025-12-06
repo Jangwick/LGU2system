@@ -160,7 +160,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <!-- Basic Information -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-info-circle text-blue-600 mr-2"></i>
+                    <i class="bi bi-info-circle text-red-600 mr-2"></i>
                     Session Information
                 </h2>
                 
@@ -168,39 +168,39 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Session Title <span class="text-red-500">*</span></label>
                         <input type="text" name="title" value="<?php echo htmlspecialchars($_POST['title'] ?? ''); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                placeholder="e.g., Regular Session - October 2024" required>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Session Date <span class="text-red-500">*</span></label>
                         <input type="date" name="session_date" value="<?php echo htmlspecialchars($_POST['session_date'] ?? ''); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Start Time <span class="text-red-500">*</span></label>
                             <input type="time" name="start_time" value="<?php echo htmlspecialchars($_POST['start_time'] ?? '09:00'); ?>" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
                             <input type="time" name="end_time" value="<?php echo htmlspecialchars($_POST['end_time'] ?? '17:00'); ?>" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         </div>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
                         <input type="text" name="location" value="<?php echo htmlspecialchars($_POST['location'] ?? 'Session Hall'); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                placeholder="e.g., Session Hall, Conference Room A">
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Committee (Optional)</label>
-                        <select name="committee_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <select name="committee_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                             <option value="">-- No specific committee --</option>
                             <?php foreach ($committees as $committee): ?>
                                 <option value="<?php echo $committee['id']; ?>"><?php echo htmlspecialchars($committee['name']); ?></option>
@@ -210,7 +210,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Vote Type</label>
-                        <select name="vote_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <select name="vote_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                             <option value="roll_call">Roll Call Vote</option>
                             <option value="voice">Voice Vote</option>
                             <option value="ballot">Ballot Vote (Secret)</option>
@@ -222,14 +222,14 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                         <label class="block text-sm font-medium text-gray-700 mb-1">Quorum Required</label>
                         <input type="number" name="quorum_required" value="<?php echo htmlspecialchars($_POST['quorum_required'] ?? '5'); ?>" 
                                min="1" max="50"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <p class="text-xs text-gray-500 mt-1">Minimum number of members required for a valid vote</p>
                     </div>
                     
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                         <textarea name="description" rows="3"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                   placeholder="Describe the purpose and agenda of this session..."><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
                     </div>
                 </div>
@@ -238,7 +238,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <!-- Documents Selection -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-file-earmark-text text-blue-600 mr-2"></i>
+                    <i class="bi bi-file-earmark-text text-red-600 mr-2"></i>
                     Documents for Voting
                 </h2>
                 
@@ -246,7 +246,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <div class="text-center py-8 bg-gray-50 rounded-lg">
                         <i class="bi bi-inbox text-4xl text-gray-300 mb-2"></i>
                         <p class="text-gray-500">No documents pending for vote</p>
-                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-blue-600 hover:text-blue-700 text-sm">
+                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="text-red-600 hover:text-red-700 text-sm">
                             Manage Documents <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
@@ -255,7 +255,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                         <?php foreach ($pendingDocuments as $doc): ?>
                             <label class="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                                 <input type="checkbox" name="documents[]" value="<?php echo $doc['id']; ?>" 
-                                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                       class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
                                 <div class="ml-3 flex-1">
                                     <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($doc['title']); ?></div>
                                     <div class="text-xs text-gray-500"><?php echo htmlspecialchars($doc['doc_number']); ?> • <?php echo ucfirst($doc['type']); ?></div>
@@ -270,7 +270,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <!-- Attendees Selection -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-people text-blue-600 mr-2"></i>
+                    <i class="bi bi-people text-red-600 mr-2"></i>
                     Expected Attendees
                 </h2>
                 
@@ -278,7 +278,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <?php foreach ($councilors as $councilor): ?>
                         <label class="flex items-center p-3 bg-gray-50 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
                             <input type="checkbox" name="attendees[]" value="<?php echo $councilor['id']; ?>" 
-                                   class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                                   class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" checked>
                             <div class="ml-3">
                                 <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($councilor['full_name']); ?></div>
                                 <div class="text-xs text-gray-500"><?php echo htmlspecialchars($councilor['position'] ?? 'Councilor'); ?></div>
@@ -293,7 +293,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                 <a href="sessions.php" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                     Cancel
                 </a>
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center">
+                <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors inline-flex items-center">
                     <i class="bi bi-plus-circle mr-2"></i>
                     Create Session
                 </button>

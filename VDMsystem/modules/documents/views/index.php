@@ -74,7 +74,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                 <p class="text-gray-600 text-sm mt-1">Manage legislative documents, resolutions, and ordinances</p>
             </div>
             <?php if (hasRole(['admin', 'secretary', 'encoder'])): ?>
-            <a href="create.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center">
+            <a href="create.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center">
                 <i class="bi bi-plus-circle mr-2"></i>
                 New Document
             </a>
@@ -88,12 +88,12 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <div class="relative">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($searchQuery); ?>" 
                                placeholder="Search documents..." 
-                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     </div>
                 </div>
                 <div>
-                    <select name="type" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select name="type" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <option value="">All Types</option>
                         <?php foreach ($documentTypes as $type): ?>
                             <option value="<?php echo $type; ?>" <?php echo $typeFilter === $type ? 'selected' : ''; ?>>
@@ -103,7 +103,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     </select>
                 </div>
                 <div>
-                    <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <option value="">All Status</option>
                         <?php foreach ($statusList as $status): ?>
                             <option value="<?php echo $status; ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>>
@@ -155,7 +155,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <h3 class="text-lg font-medium text-gray-700 mb-2">No Documents Found</h3>
                     <p class="text-gray-500 mb-4">There are no documents matching your criteria.</p>
                     <?php if (hasRole(['admin', 'secretary', 'encoder'])): ?>
-                    <a href="create.php" class="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    <a href="create.php" class="inline-flex items-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
                         <i class="bi bi-plus-circle mr-2"></i> Create Document
                     </a>
                     <?php endif; ?>
@@ -178,8 +178,8 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
-                                            <div class="bg-blue-100 rounded-lg p-2 mr-3">
-                                                <i class="bi bi-file-earmark-text text-blue-600 text-xl"></i>
+                                            <div class="bg-red-100 rounded-lg p-2 mr-3">
+                                                <i class="bi bi-file-earmark-text text-red-600 text-xl"></i>
                                             </div>
                                             <div>
                                                 <div class="font-medium text-gray-900"><?php echo htmlspecialchars($doc['title']); ?></div>
@@ -188,7 +188,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
                                             <?php echo ucfirst(str_replace('_', ' ', $doc['type'])); ?>
                                         </span>
                                     </td>
@@ -206,7 +206,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                     <td class="px-6 py-4 text-right whitespace-nowrap">
                                         <div class="flex items-center justify-end space-x-2">
                                             <a href="view.php?id=<?php echo $doc['id']; ?>" 
-                                               class="text-blue-600 hover:text-blue-800 p-1.5" title="View">
+                                               class="text-red-600 hover:text-red-800 p-1.5" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                             <?php if (hasRole(['admin', 'secretary', 'encoder']) && in_array($doc['status'], ['draft', 'under_review'])): ?>

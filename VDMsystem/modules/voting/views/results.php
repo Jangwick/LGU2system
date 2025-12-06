@@ -90,7 +90,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <p class="text-gray-600 text-sm mt-1">View voting outcomes and statistics</p>
                 </div>
                 <?php if (hasRole(['admin', 'secretary'])): ?>
-                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center">
+                <a href="#" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center">
                     <i class="bi bi-download mr-2"></i>
                     Export Report
                 </a>
@@ -129,8 +129,8 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                         <div class="text-lg font-bold text-red-600"><?php echo $cs['total_rejected']; ?></div>
                                         <div class="text-xs text-gray-500">Rejected</div>
                                     </div>
-                                    <div class="text-center p-2 bg-blue-50 rounded-lg">
-                                        <div class="text-lg font-bold text-blue-600"><?php echo $cs['total_votes']; ?></div>
+                                    <div class="text-center p-2 bg-red-50 rounded-lg">
+                                        <div class="text-lg font-bold text-red-600"><?php echo $cs['total_votes']; ?></div>
                                         <div class="text-xs text-gray-500">Total</div>
                                     </div>
                                 </div>
@@ -149,7 +149,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <!-- Single Session Results -->
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <a href="results.php" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+                    <a href="results.php" class="text-red-600 hover:text-red-700 text-sm mb-2 inline-block">
                         <i class="bi bi-arrow-left mr-1"></i> Back to All Results
                     </a>
                     <h1 class="text-2xl font-bold text-gray-800"><?php echo htmlspecialchars($session['title']); ?></h1>
@@ -160,7 +160,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <button onclick="window.print()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">
                         <i class="bi bi-printer mr-1"></i> Print
                     </button>
-                    <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                    <a href="#" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                         <i class="bi bi-download mr-1"></i> Export PDF
                     </a>
                 </div>
@@ -181,8 +181,8 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                             <p class="text-xs text-gray-500 uppercase">Total Votes</p>
                             <p class="text-2xl font-bold text-gray-800"><?php echo $totalVotes; ?></p>
                         </div>
-                        <div class="bg-blue-100 rounded-full p-3">
-                            <i class="bi bi-people text-blue-600 text-xl"></i>
+                        <div class="bg-red-100 rounded-full p-3">
+                            <i class="bi bi-people text-red-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -257,7 +257,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-1">
                                             <span class="text-sm text-gray-500"><?php echo htmlspecialchars($docResult['doc_number']); ?></span>
-                                            <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800"><?php echo ucfirst($docResult['type']); ?></span>
+                                            <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800"><?php echo ucfirst($docResult['type']); ?></span>
                                             <span class="px-2 py-0.5 text-xs rounded-full <?php echo $resultClass; ?>"><?php echo $result; ?></span>
                                         </div>
                                         <h3 class="font-semibold text-gray-900"><?php echo htmlspecialchars($docResult['title']); ?></h3>
@@ -298,7 +298,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                 <?php if ($showDetails): ?>
                                     <!-- Expandable Vote Details -->
                                     <details class="mt-4">
-                                        <summary class="cursor-pointer text-sm text-blue-600 hover:text-blue-700">
+                                        <summary class="cursor-pointer text-sm text-red-600 hover:text-red-700">
                                             View Individual Votes
                                         </summary>
                                         <div class="mt-3 pl-4 border-l-2 border-gray-200">

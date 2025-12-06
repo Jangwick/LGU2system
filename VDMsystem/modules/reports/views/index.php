@@ -88,7 +88,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                 <button onclick="window.print()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">
                     <i class="bi bi-printer mr-1"></i> Print
                 </button>
-                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                     <i class="bi bi-download mr-1"></i> Export
                 </button>
             </div>
@@ -100,14 +100,14 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
                     <input type="date" name="start_date" value="<?php echo $startDate; ?>" 
-                           class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                           class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
                     <input type="date" name="end_date" value="<?php echo $endDate; ?>" 
-                           class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                           class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                 </div>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                     <i class="bi bi-funnel mr-1"></i> Apply Filter
                 </button>
                 <a href="index.php" class="text-gray-500 hover:text-gray-700 px-4 py-2">Reset</a>
@@ -122,8 +122,8 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                         <p class="text-gray-500 text-sm mb-1">Voting Sessions</p>
                         <p class="text-3xl font-bold text-gray-800"><?php echo $stats['total_sessions']; ?></p>
                     </div>
-                    <div class="bg-blue-100 rounded-full p-3">
-                        <i class="bi bi-calendar-check text-blue-600 text-2xl"></i>
+                    <div class="bg-red-100 rounded-full p-3">
+                        <i class="bi bi-calendar-check text-red-600 text-2xl"></i>
                     </div>
                 </div>
             </div>
@@ -228,7 +228,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                <div class="bg-blue-600 h-2 rounded-full" style="width: <?php echo $participation; ?>%"></div>
+                                                <div class="bg-red-600 h-2 rounded-full" style="width: <?php echo $participation; ?>%"></div>
                                             </div>
                                             <span class="text-sm text-gray-600"><?php echo round($participation); ?>%</span>
                                         </div>

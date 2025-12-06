@@ -88,7 +88,7 @@ const VDM = {
                 success: 'bg-green-500',
                 error: 'bg-red-500',
                 warning: 'bg-yellow-500',
-                info: 'bg-blue-500'
+                info: 'bg-red-500'
             };
             
             const toast = document.createElement('div');
@@ -175,14 +175,14 @@ const VDM = {
             modal.innerHTML = `
                 <div class="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4">
                     <div class="text-center mb-6">
-                        <i class="bi bi-question-circle text-5xl text-blue-500 mb-4"></i>
+                        <i class="bi bi-question-circle text-5xl text-red-500 mb-4"></i>
                         <p class="text-gray-700">${message}</p>
                     </div>
                     <div class="flex gap-3 justify-center">
                         <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300" id="modal-cancel">
                             Cancel
                         </button>
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" id="modal-confirm">
+                        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" id="modal-confirm">
                             Confirm
                         </button>
                     </div>

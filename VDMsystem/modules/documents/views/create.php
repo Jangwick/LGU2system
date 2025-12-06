@@ -151,7 +151,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <!-- Document Information -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-file-earmark-text text-blue-600 mr-2"></i>
+                    <i class="bi bi-file-earmark-text text-red-600 mr-2"></i>
                     Document Information
                 </h2>
                 
@@ -159,13 +159,13 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Document Title <span class="text-red-500">*</span></label>
                         <input type="text" name="title" value="<?php echo htmlspecialchars($_POST['title'] ?? ''); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                placeholder="Enter document title" required>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Document Type <span class="text-red-500">*</span></label>
-                        <select name="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        <select name="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
                             <option value="">-- Select Type --</option>
                             <?php foreach ($documentTypes as $value => $label): ?>
                                 <option value="<?php echo $value; ?>" <?php echo ($_POST['type'] ?? '') === $value ? 'selected' : ''; ?>>
@@ -177,7 +177,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Committee (Optional)</label>
-                        <select name="committee_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <select name="committee_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                             <option value="">-- No specific committee --</option>
                             <?php foreach ($committees as $committee): ?>
                                 <option value="<?php echo $committee['id']; ?>" <?php echo ($_POST['committee_id'] ?? '') == $committee['id'] ? 'selected' : ''; ?>>
@@ -190,14 +190,14 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Summary</label>
                         <textarea name="summary" rows="3"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                   placeholder="Brief summary of the document..."><?php echo htmlspecialchars($_POST['summary'] ?? ''); ?></textarea>
                     </div>
                     
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
                         <input type="text" name="tags" value="<?php echo htmlspecialchars($_POST['tags'] ?? ''); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                placeholder="Comma-separated tags (e.g., budget, 2024, infrastructure)">
                         <p class="text-xs text-gray-500 mt-1">Separate multiple tags with commas</p>
                     </div>
@@ -207,14 +207,14 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <!-- Document Content -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-card-text text-blue-600 mr-2"></i>
+                    <i class="bi bi-card-text text-red-600 mr-2"></i>
                     Document Content
                 </h2>
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
                     <textarea name="content" rows="15" id="content"
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono text-sm"
                               placeholder="Enter document content here..."><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
                     <p class="text-xs text-gray-500 mt-1">You can use basic HTML formatting if needed</p>
                 </div>
@@ -224,14 +224,14 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <input type="checkbox" name="submit_for_review" id="submit_for_review" 
-                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                           class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
                     <label for="submit_for_review" class="ml-2 text-sm text-gray-700">Submit for review immediately</label>
                 </div>
                 <div class="flex gap-4">
                     <a href="index.php" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                         Cancel
                     </a>
-                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center">
+                    <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors inline-flex items-center">
                         <i class="bi bi-check-circle mr-2"></i>
                         Create Document
                     </button>

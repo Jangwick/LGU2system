@@ -64,7 +64,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                 <p class="text-gray-600 text-sm mt-1">Manage and monitor all legislative voting sessions</p>
             </div>
             <?php if (hasRole(['admin', 'secretary'])): ?>
-            <a href="create-session.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center">
+            <a href="create-session.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center">
                 <i class="bi bi-plus-circle mr-2"></i>
                 Create New Session
             </a>
@@ -78,12 +78,12 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <div class="relative">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($searchQuery); ?>" 
                                placeholder="Search by title or session number..." 
-                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     </div>
                 </div>
                 <div>
-                    <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         <option value="">All Statuses</option>
                         <option value="scheduled" <?php echo $statusFilter === 'scheduled' ? 'selected' : ''; ?>>Scheduled</option>
                         <option value="in_progress" <?php echo $statusFilter === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
@@ -105,7 +105,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
         <!-- Quick Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white rounded-lg shadow p-4 text-center">
-                <div class="text-3xl font-bold text-blue-600"><?php echo count(array_filter($sessions, fn($s) => $s['status'] === 'scheduled')); ?></div>
+                <div class="text-3xl font-bold text-red-600"><?php echo count(array_filter($sessions, fn($s) => $s['status'] === 'scheduled')); ?></div>
                 <div class="text-gray-500 text-sm">Scheduled</div>
             </div>
             <div class="bg-white rounded-lg shadow p-4 text-center">
@@ -130,7 +130,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                     <h3 class="text-lg font-medium text-gray-700 mb-2">No Sessions Found</h3>
                     <p class="text-gray-500 mb-4">There are no voting sessions matching your criteria.</p>
                     <?php if (hasRole(['admin', 'secretary'])): ?>
-                    <a href="create-session.php" class="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    <a href="create-session.php" class="inline-flex items-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
                         <i class="bi bi-plus-circle mr-2"></i> Create Your First Session
                     </a>
                     <?php endif; ?>
@@ -153,8 +153,8 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
-                                            <div class="bg-blue-100 rounded-lg p-2 mr-3">
-                                                <i class="bi bi-calendar-event text-blue-600 text-xl"></i>
+                                            <div class="bg-red-100 rounded-lg p-2 mr-3">
+                                                <i class="bi bi-calendar-event text-red-600 text-xl"></i>
                                             </div>
                                             <div>
                                                 <div class="font-medium text-gray-900"><?php echo htmlspecialchars($session['title']); ?></div>
@@ -172,7 +172,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <span class="inline-flex items-center justify-center min-w-[32px] px-2 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">
+                                        <span class="inline-flex items-center justify-center min-w-[32px] px-2 py-1 text-sm font-medium bg-red-100 text-red-800 rounded-full">
                                             <?php echo $session['document_count']; ?>
                                         </span>
                                     </td>
@@ -184,7 +184,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                     <td class="px-6 py-4 text-center">
                                         <?php
                                         $statusColors = [
-                                            'scheduled' => 'bg-blue-100 text-blue-800',
+                                            'scheduled' => 'bg-red-100 text-red-800',
                                             'in_progress' => 'bg-green-100 text-green-800',
                                             'completed' => 'bg-purple-100 text-purple-800',
                                             'cancelled' => 'bg-red-100 text-red-800'
@@ -201,7 +201,7 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
                                     <td class="px-6 py-4 text-right whitespace-nowrap">
                                         <div class="flex items-center justify-end space-x-2">
                                             <a href="session-details.php?id=<?php echo $session['id']; ?>" 
-                                               class="text-blue-600 hover:text-blue-800 p-1.5" title="View Details">
+                                               class="text-red-600 hover:text-red-800 p-1.5" title="View Details">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                             <?php if ($session['status'] === 'in_progress' && hasRole(['councilor', 'admin'])): ?>
