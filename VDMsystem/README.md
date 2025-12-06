@@ -55,9 +55,14 @@ This module integrates with other LGU modules:
 3. Ensure XAMPP/Apache and MySQL are running
 4. Access via `http://localhost/LGU2system/VDMsystem/`
 
-## Default Credentials
+## Default Credentials (Same as LLRMSystem)
 
-- **Admin:** admin@vdm.gov.ph / admin123
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@lgu.gov.ph | admin123 |
+| Officer | officer@lgu.gov.ph | admin123 |
+| Staff | staff@lgu.gov.ph | admin123 |
+| Viewer | viewer@lgu.gov.ph | admin123 |
 - **Secretary:** secretary@vdm.gov.ph / secretary123
 - **Councilor:** councilor@vdm.gov.ph / councilor123
 

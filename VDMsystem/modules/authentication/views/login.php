@@ -183,13 +183,14 @@ require_once __DIR__ . '/../../core/config/config.php';
             </div>
         </div>
         
-        <!-- Demo Credentials -->
+        <!-- Demo Credentials (Same as LLRMSystem) -->
         <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200 animate-fade-in-up animation-delay-400">
-            <p class="text-xs font-semibold text-blue-800 mb-2"><i class="bi bi-info-circle mr-1"></i> Demo Credentials:</p>
+            <p class="text-xs font-semibold text-blue-800 mb-2"><i class="bi bi-info-circle mr-1"></i> Demo Credentials (Same as LLRM):</p>
             <div class="text-xs text-blue-700 space-y-1">
-                <p><strong>Admin:</strong> admin@vdm.gov.ph / admin123</p>
-                <p><strong>Secretary:</strong> secretary@vdm.gov.ph / admin123</p>
-                <p><strong>Councilor:</strong> councilor1@vdm.gov.ph / admin123</p>
+                <p><strong>Admin:</strong> admin@lgu.gov.ph / admin123</p>
+                <p><strong>Officer:</strong> officer@lgu.gov.ph / admin123</p>
+                <p><strong>Staff:</strong> staff@lgu.gov.ph / admin123</p>
+                <p><strong>Viewer:</strong> viewer@lgu.gov.ph / admin123</p>
             </div>
         </div>
         
