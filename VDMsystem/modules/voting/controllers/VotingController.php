@@ -39,7 +39,7 @@ class VotingController {
             return dbFetchAll(
                 "SELECT vs.*, u.full_name as created_by_name,
                         (SELECT COUNT(*) FROM session_documents WHERE session_id = vs.id) as document_count,
-                        (SELECT COUNT(*) FROM session_attendees WHERE session_id = vs.id AND is_present = 1) as attendee_count,
+                        (SELECT COUNT(*) FROM session_attendees WHERE session_id = vs.id AND status = 'present') as attendee_count,
                         (SELECT COUNT(*) FROM votes WHERE session_id = vs.id) as vote_count
                  FROM voting_sessions vs
                  LEFT JOIN users u ON vs.created_by = u.id
@@ -116,7 +116,7 @@ class VotingController {
                     dbInsert('session_attendees', [
                         'session_id' => $sessionId,
                         'user_id' => $userId,
-                        'is_present' => 0
+                        'status' => 'absent'
                     ]);
                 }
             }
@@ -326,14 +326,14 @@ class VotingController {
             
             if ($attendee) {
                 dbUpdate('session_attendees', $attendee['id'], [
-                    'is_present' => $isPresent ? 1 : 0,
+                    'status' => $isPresent ? 'present' : 'absent',
                     'check_in_time' => $isPresent ? date('Y-m-d H:i:s') : null
                 ]);
             } else {
                 dbInsert('session_attendees', [
                     'session_id' => $sessionId,
                     'user_id' => $userId,
-                    'is_present' => $isPresent ? 1 : 0,
+                    'status' => $isPresent ? 'present' : 'absent',
                     'check_in_time' => $isPresent ? date('Y-m-d H:i:s') : null
                 ]);
             }

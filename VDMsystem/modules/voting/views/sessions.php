@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../../core/config/config.php';
-require_once __DIR__ . '/../../../core/config/database.php';
+require_once __DIR__ . '/../../core/config/config.php';
+require_once __DIR__ . '/../../core/config/database.php';
 
 // Check authentication
 if (!isset($_SESSION['user_id'])) {
@@ -29,7 +29,7 @@ if ($searchQuery) {
 $sessions = dbFetchAll(
     "SELECT vs.*, u.full_name as created_by_name,
             (SELECT COUNT(*) FROM session_documents WHERE session_id = vs.id) as document_count,
-            (SELECT COUNT(*) FROM session_attendees WHERE session_id = vs.id AND is_present = 1) as attendee_count
+            (SELECT COUNT(*) FROM session_attendees WHERE session_id = vs.id AND status = 'present') as attendee_count
      FROM voting_sessions vs
      LEFT JOIN users u ON vs.created_by = u.id
      WHERE $where
@@ -44,16 +44,16 @@ $breadcrumbs = [
     ['label' => 'Sessions']
 ];
 
-include_once __DIR__ . '/../../../core/layouts/header.php';
+include_once __DIR__ . '/../../core/layouts/header.php';
 ?>
 
 <!-- Sidebar -->
-<?php include_once __DIR__ . '/../../../core/layouts/sidebar.php'; ?>
+<?php include_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
 
 <!-- Main Content Area -->
 <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Top Navbar -->
-    <?php include_once __DIR__ . '/../../../core/layouts/navbar.php'; ?>
+    <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
@@ -232,6 +232,5 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             <?php endif; ?>
         </div>
     </main>
-</div>
-
-<?php include_once __DIR__ . '/../../../core/layouts/footer.php'; ?>
+    
+    <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

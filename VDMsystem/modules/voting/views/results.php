@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../../core/config/config.php';
-require_once __DIR__ . '/../../../core/config/database.php';
+require_once __DIR__ . '/../../core/config/config.php';
+require_once __DIR__ . '/../../core/config/database.php';
 
 // Check authentication
 if (!isset($_SESSION['user_id'])) {
@@ -69,16 +69,16 @@ if ($sessionId) {
     $breadcrumbs[] = ['label' => $session['session_number']];
 }
 
-include_once __DIR__ . '/../../../core/layouts/header.php';
+include_once __DIR__ . '/../../core/layouts/header.php';
 ?>
 
 <!-- Sidebar -->
-<?php include_once __DIR__ . '/../../../core/layouts/sidebar.php'; ?>
+<?php include_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
 
 <!-- Main Content Area -->
 <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Top Navbar -->
-    <?php include_once __DIR__ . '/../../../core/layouts/navbar.php'; ?>
+    <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
@@ -336,6 +336,5 @@ include_once __DIR__ . '/../../../core/layouts/header.php';
             </div>
         <?php endif; ?>
     </main>
-</div>
-
-<?php include_once __DIR__ . '/../../../core/layouts/footer.php'; ?>
+    
+    <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
