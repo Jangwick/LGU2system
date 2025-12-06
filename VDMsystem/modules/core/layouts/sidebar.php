@@ -3,8 +3,8 @@
     <!-- Logo Section -->
     <div class="p-6 mb-2 border-b border-red-700 animate-fade-in sidebar-logo">
         <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center space-x-3 hover:opacity-80 transition-all duration-300 transform hover:scale-105 group">
-            <div class="bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" style="width: 70px; height: 70px;">
-                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" style="width: 120%; height: 120%;" class="object-cover">
+            <div class="bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" style="width: 60px; height: 60px; padding: 4px;">
+                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-full h-full object-contain">
             </div>
             <div class="transform transition-all duration-300 group-hover:translate-x-1 sidebar-text">
                 <h1 class="text-lg font-bold">VDM System</h1>
