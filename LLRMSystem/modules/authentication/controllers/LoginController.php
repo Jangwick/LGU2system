@@ -113,10 +113,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (PDOException $e) {
         // Database error
         error_log("Login error: " . $e->getMessage());
-        echo json_encode([
-            'success' => false,
-            'message' => 'A system error occurred. Please try again later.'
-        ]);
+        
+        // Check if it's a connection error
+        $errorCode = $e->getCode();
+        $errorMessage = $e->getMessage();
+        
+        if (strpos($errorMessage, 'Connection refused') !== false || 
+            strpos($errorMessage, 'MySQL server has gone away') !== false ||
+            $errorCode == 2002 || $errorCode == 2006) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Database connection failed. Please ensure MySQL is running in XAMPP Control Panel.'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'A system error occurred. Please try again later.'
+            ]);
+        }
         exit;
     }
 } else {
