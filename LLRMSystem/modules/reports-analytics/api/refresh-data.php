@@ -110,7 +110,6 @@ try {
         SELECT 
             u.id,
             u.full_name,
-            u.name,
             u.department,
             COUNT(ld.id) as document_count
         FROM users u

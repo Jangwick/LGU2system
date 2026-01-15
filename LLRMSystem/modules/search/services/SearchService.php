@@ -11,18 +11,17 @@ class SearchService {
      * Perform fulltext search with advanced filters
      */
     public function search($query, $filters = []) {
-        $sql = "SELECT d.*, u.name as uploaded_by_name,
-                MATCH(d.title, d.description, d.tags) AGAINST(:search_query) as relevance
+        $sql = "SELECT d.*, u.full_name as uploaded_by_name
                 FROM legislative_documents d
                 LEFT JOIN users u ON d.uploaded_by = u.id
                 WHERE d.deleted_at IS NULL";
         
-        $params = [':search_query' => $query];
+        $params = [];
         
-        // Fulltext search
+        // Text search using LIKE (more compatible than FULLTEXT)
         if (!empty($query)) {
-            $sql .= " AND MATCH(d.title, d.description, d.tags) AGAINST(:query IN BOOLEAN MODE)";
-            $params[':query'] = $query;
+            $sql .= " AND (d.title LIKE :query OR d.description LIKE :query OR d.document_number LIKE :query)";
+            $params[':query'] = '%' . $query . '%';
         }
         
         // Apply filters
@@ -37,12 +36,12 @@ class SearchService {
         }
         
         if (!empty($filters['date_from'])) {
-            $sql .= " AND d.document_date >= :date_from";
+            $sql .= " AND d.created_at >= :date_from";
             $params[':date_from'] = $filters['date_from'];
         }
         
         if (!empty($filters['date_to'])) {
-            $sql .= " AND d.document_date <= :date_to";
+            $sql .= " AND d.created_at <= :date_to";
             $params[':date_to'] = $filters['date_to'];
         }
         
@@ -60,12 +59,8 @@ class SearchService {
             )";
         }
         
-        // Order by relevance if searching, otherwise by date
-        if (!empty($query)) {
-            $sql .= " ORDER BY relevance DESC, d.created_at DESC";
-        } else {
-            $sql .= " ORDER BY d.created_at DESC";
-        }
+        // Order by date
+        $sql .= " ORDER BY d.created_at DESC";
         
         // Pagination
         $limit = $filters['limit'] ?? 20;
@@ -100,8 +95,8 @@ class SearchService {
         $params = [];
         
         if (!empty($query)) {
-            $whereClause .= " AND MATCH(title, description, tags) AGAINST(:query IN BOOLEAN MODE)";
-            $params[':query'] = $query;
+            $whereClause .= " AND (title LIKE :query OR description LIKE :query)";
+            $params[':query'] = '%' . $query . '%';
         }
         
         // Count by document type
@@ -134,10 +129,10 @@ class SearchService {
         
         // Count by year
         $stmt = $this->db->prepare("
-            SELECT YEAR(document_date) as year, COUNT(*) as count
+            SELECT YEAR(created_at) as year, COUNT(*) as count
             FROM legislative_documents
             {$whereClause}
-            GROUP BY YEAR(document_date)
+            GROUP BY YEAR(created_at)
             ORDER BY year DESC
         ");
         foreach ($params as $key => $value) {
@@ -166,14 +161,14 @@ class SearchService {
         // Data rows
         foreach ($results as $row) {
             fputcsv($output, [
-                $row['reference_number'],
+                $row['document_number'] ?? '',
                 $row['title'],
                 $row['document_type'],
                 $row['status'],
-                $row['document_date'],
-                $row['file_name'],
-                $row['file_size'],
-                $row['uploaded_by_name'],
+                $row['session_date'] ?? $row['created_at'],
+                $row['file_name'] ?? '',
+                $row['file_size'] ?? '',
+                $row['uploaded_by_name'] ?? '',
                 $row['created_at']
             ]);
         }
@@ -230,12 +225,12 @@ class SearchService {
         }
         
         if (!empty($filters['date_from'])) {
-            $sql .= " AND d.document_date >= :date_from";
+            $sql .= " AND d.created_at >= :date_from";
             $params[':date_from'] = $filters['date_from'];
         }
         
         if (!empty($filters['date_to'])) {
-            $sql .= " AND d.document_date <= :date_to";
+            $sql .= " AND d.created_at <= :date_to";
             $params[':date_to'] = $filters['date_to'];
         }
         

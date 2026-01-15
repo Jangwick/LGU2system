@@ -102,7 +102,6 @@ class ReportController {
             SELECT 
                 u.id,
                 u.full_name,
-                u.name,
                 u.email,
                 u.department,
                 COUNT(ld.id) as document_count
@@ -178,7 +177,6 @@ class ReportController {
             SELECT 
                 u.id,
                 u.full_name,
-                u.name,
                 u.email,
                 u.role,
                 u.department,

@@ -34,7 +34,7 @@ class AuditController {
         $offset = ($page - 1) * $perPage;
         
         // Build query
-        $query = "SELECT al.*, u.username, u.full_name, u.email 
+        $query = "SELECT al.*, u.full_name, u.email 
                   FROM activity_logs al
                   LEFT JOIN users u ON al.user_id = u.id
                   WHERE 1=1";
@@ -67,12 +67,12 @@ class AuditController {
         }
         
         if ($filters['search']) {
-            $query .= " AND (al.description LIKE :search OR u.username LIKE :search OR u.full_name LIKE :search)";
+            $query .= " AND (al.description LIKE :search OR u.full_name LIKE :search OR u.email LIKE :search)";
             $params[':search'] = '%' . $filters['search'] . '%';
         }
         
         // Count total
-        $countStmt = $this->db->prepare(str_replace("SELECT al.*, u.username, u.full_name, u.email", "SELECT COUNT(*)", $query));
+        $countStmt = $this->db->prepare(str_replace("SELECT al.*, u.full_name, u.email", "SELECT COUNT(*)", $query));
         $countStmt->execute($params);
         $total = $countStmt->fetchColumn();
         
@@ -112,7 +112,7 @@ class AuditController {
      */
     private function getUsers() {
         $stmt = $this->db->query("
-            SELECT DISTINCT u.id, u.username, u.full_name 
+            SELECT DISTINCT u.id, u.full_name, u.email 
             FROM users u
             INNER JOIN activity_logs al ON u.id = al.user_id
             ORDER BY u.full_name
@@ -159,7 +159,7 @@ class AuditController {
         ];
         
         // Build query (same as index but without pagination)
-        $query = "SELECT al.*, u.username, u.full_name 
+        $query = "SELECT al.*, u.full_name, u.email 
                   FROM activity_logs al
                   LEFT JOIN users u ON al.user_id = u.id
                   WHERE 1=1";
@@ -191,7 +191,7 @@ class AuditController {
         }
         
         if ($filters['search']) {
-            $query .= " AND (al.description LIKE :search OR u.username LIKE :search)";
+            $query .= " AND (al.description LIKE :search OR u.full_name LIKE :search)";
             $params[':search'] = '%' . $filters['search'] . '%';
         }
         
@@ -215,7 +215,7 @@ class AuditController {
             fputcsv($output, [
                 $log['id'],
                 $log['created_at'],
-                $log['full_name'] ?? $log['username'] ?? 'Unknown',
+                $log['full_name'] ?? 'Unknown',
                 $log['action'],
                 $log['table_name'],
                 $log['record_id'],

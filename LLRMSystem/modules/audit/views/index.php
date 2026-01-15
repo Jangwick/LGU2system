@@ -217,7 +217,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                             </div>
                                             <div>
                                                 <div class="font-medium text-gray-900 group-hover:text-red-700 transition-colors"><?php echo htmlspecialchars($log['full_name'] ?? 'Unknown'); ?></div>
-                                                <div class="text-sm text-gray-500"><?php echo htmlspecialchars($log['username'] ?? ''); ?></div>
+                                                <div class="text-sm text-gray-500"><?php echo htmlspecialchars($log['email'] ?? ''); ?></div>
                                             </div>
                                         </div>
                                     </td>
