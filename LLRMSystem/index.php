@@ -120,11 +120,11 @@ $pageTitle = "Home";
             <div class="text-center">
                 <div data-aos="fade-down" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-red-50 text-red-700 text-xs font-black mb-8 shadow-sm">
                     <span class="flex h-2 w-2 rounded-full bg-red-600 mr-2 animate-pulse"></span>
-                    NEW: VOTING ANALYTICS & DOCUMENT COMPARISON
+                    OFFICIAL LEGISLATIVE ARCHIVE
                 </div>
                 <h1 data-aos="fade-up" data-aos-delay="100" class="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 mb-8 tracking-tighter leading-[0.9]">
-                    The Modern Standard for <br class="hidden md:block">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-br from-red-600 to-red-900">Lawmaking Records.</span>
+                    Preserving the <br class="hidden md:block">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-br from-red-600 to-red-900">Legislative Legacy.</span>
                 </h1>
                 <p data-aos="fade-up" data-aos-delay="200" class="max-w-2xl mx-auto text-lg md:text-2xl text-gray-500 mb-12 leading-relaxed font-medium">
                     A digital ecosystem for the City Government of Valenzuela to preserve, query, and analyze the legislative DNA of our community.
@@ -232,11 +232,16 @@ $pageTitle = "Home";
                     <div class="absolute bottom-0 right-0 w-96 h-96 border-[60px] border-white rounded-full translate-x-1/3 translate-y-1/3"></div>
                 </div>
                 
-                <h2 class="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-none">Modernize the Legislative <br>Workflow Today.</h2>
-                <p class="text-red-100 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-bold opacity-80">Empower your office with a system that puts the entire legislative history of Valenzuela City at your fingertips.</p>
+                <h2 class="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-none">Ready to shape <br>the future?</h2>
+                <p class="text-red-100 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-bold opacity-80">Secure your access to Valenzuela's official legislative portal and start managing records with precision.</p>
                 <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-10">
-                    <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-white text-gray-900 font-black px-12 py-5 rounded-2xl text-lg shadow-xl">Request Access</a>
-                    <a href="<?php echo LOGIN_URL; ?>" class="btn-modern bg-red-900/40 text-white font-black px-12 py-5 rounded-2xl text-lg hover:bg-red-900 transition-all border border-red-400/30">Admin Dashboard</a>
+                    <a href="<?php echo LOGIN_URL; ?>" class="btn-modern bg-white text-gray-900 font-black px-12 py-5 rounded-2xl text-lg shadow-xl">
+                        <i class="bi bi-door-open-fill mr-2"></i>
+                        Portal Login
+                    </a>
+                    <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-900/40 text-white font-black px-12 py-5 rounded-2xl text-lg hover:bg-red-900 transition-all border border-red-400/30">
+                        Register Account
+                    </a>
                 </div>
             </div>
         </div>
