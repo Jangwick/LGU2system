@@ -2,9 +2,143 @@
 
 class SearchService {
     private $db;
+    private $embeddingService;
     
-    public function __construct($database) {
+    public function __construct($database, $embeddingService = null) {
         $this->db = $database;
+        $this->embeddingService = $embeddingService;
+    }
+    
+    /**
+     * Perform hybrid search (Keyword + Semantic)
+     */
+    public function hybridSearch($query, $filters = []) {
+        // 1. Get keyword results (existing)
+        $keywordResults = $this->search($query, $filters);
+        
+        // 2. Get semantic results (new)
+        $semanticResults = [];
+        if (!empty($query) && $this->embeddingService) {
+            $semanticResults = $this->semanticSearch($query, $filters);
+        }
+        
+        // 3. Merge and re-rank using Reciprocal Rank Fusion (RRF)
+        return $this->mergeResults($keywordResults, $semanticResults);
+    }
+
+    /**
+     * Perform semantic search using vector embeddings
+     */
+    public function semanticSearch($query, $filters = []) {
+        if (!$this->embeddingService) return [];
+
+        // Generate query embedding
+        $queryEmbedding = $this->embeddingService->generateEmbedding($query);
+        if (!$queryEmbedding) return [];
+
+        // Fetch all embeddings from DB (for demonstration)
+        // In production, we would use a vector database
+        $stmt = $this->db->prepare("SELECT document_id, embedding FROM document_embeddings");
+        $stmt->execute();
+        $allEmbeddings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $scores = [];
+        foreach ($allEmbeddings as $row) {
+            $docEmbedding = json_decode($row['embedding'], true);
+            $similarity = $this->cosineSimilarity($queryEmbedding, $docEmbedding);
+            
+            if ($similarity > 0.7) { // Threshold
+                $scores[$row['document_id']] = $similarity;
+            }
+        }
+
+        if (empty($scores)) return [];
+
+        // Sort by similarity
+        arsort($scores);
+        $topIds = array_keys(array_slice($scores, 0, 20, true));
+
+        // Fetch full document details
+        $placeholders = implode(',', array_fill(0, count($topIds), '?'));
+        $sql = "SELECT d.*, u.full_name as uploaded_by_name
+                FROM legislative_documents d
+                LEFT JOIN users u ON d.uploaded_by = u.id
+                WHERE d.id IN ($placeholders) AND d.deleted_at IS NULL";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($topIds);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Add similarity scores
+        foreach ($results as &$row) {
+            $row['relevance_score'] = $scores[$row['id']];
+        }
+
+        // Re-sort results by score as SQL IN clause doesn't preserve order
+        usort($results, function($a, $b) {
+            return $b['relevance_score'] <=> $a['relevance_score'];
+        });
+
+        return $results;
+    }
+
+    /**
+     * Simple Cosine Similarity calculation
+     */
+    private function cosineSimilarity($vec1, $vec2) {
+        $dotProduct = 0;
+        $normA = 0;
+        $normB = 0;
+        
+        foreach ($vec1 as $i => $val) {
+            $dotProduct += $val * $vec2[$i];
+            $normA += $val * $val;
+            $normB += $vec2[$i] * $vec2[$i];
+        }
+        
+        $divisor = sqrt($normA) * sqrt($normB);
+        return $divisor == 0 ? 0 : $dotProduct / $divisor;
+    }
+
+    /**
+     * Merge results using Reciprocal Rank Fusion (RRF)
+     */
+    private function mergeResults($keywordResults, $semanticResults) {
+        $ranks = [];
+        $k = 60; // Constant for RRF
+
+        // Score keyword results
+        foreach ($keywordResults as $index => $doc) {
+            $id = $doc['id'];
+            $ranks[$id] = [
+                'doc' => $doc,
+                'score' => 1 / ($k + $index + 1)
+            ];
+        }
+
+        // Add/update semantic results
+        foreach ($semanticResults as $index => $doc) {
+            $id = $doc['id'];
+            $score = 1 / ($k + $index + 1);
+            if (isset($ranks[$id])) {
+                $ranks[$id]['score'] += $score;
+                $ranks[$id]['doc']['relevance_score'] = ($ranks[$id]['doc']['relevance_score'] ?? 0) + ($doc['relevance_score'] ?? 0);
+            } else {
+                $ranks[$id] = [
+                    'doc' => $doc,
+                    'score' => $score
+                ];
+            }
+        }
+
+        // Sort by RRF score
+        uasort($ranks, function($a, $b) {
+            return $b['score'] <=> $a['score'];
+        });
+
+        return array_map(function($item) {
+            return $item['doc'];
+        }, array_values($ranks));
     }
     
     /**
@@ -20,8 +154,10 @@ class SearchService {
         
         // Text search using LIKE (more compatible than FULLTEXT)
         if (!empty($query)) {
-            $sql .= " AND (d.title LIKE :query OR d.description LIKE :query OR d.document_number LIKE :query)";
-            $params[':query'] = '%' . $query . '%';
+            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3)";
+            $params[':q1'] = '%' . $query . '%';
+            $params[':q2'] = '%' . $query . '%';
+            $params[':q3'] = '%' . $query . '%';
         }
         
         // Apply filters
@@ -95,8 +231,10 @@ class SearchService {
         $params = [];
         
         if (!empty($query)) {
-            $whereClause .= " AND (title LIKE :query OR description LIKE :query)";
-            $params[':query'] = '%' . $query . '%';
+            $whereClause .= " AND (title LIKE :q1 OR description LIKE :q2 OR reference_number LIKE :q3)";
+            $params[':q1'] = '%' . $query . '%';
+            $params[':q2'] = '%' . $query . '%';
+            $params[':q3'] = '%' . $query . '%';
         }
         
         // Count by document type
@@ -161,11 +299,11 @@ class SearchService {
         // Data rows
         foreach ($results as $row) {
             fputcsv($output, [
-                $row['document_number'] ?? '',
+                $row['reference_number'] ?? '',
                 $row['title'],
                 $row['document_type'],
                 $row['status'],
-                $row['session_date'] ?? $row['created_at'],
+                $row['document_date'] ?? $row['created_at'],
                 $row['file_name'] ?? '',
                 $row['file_size'] ?? '',
                 $row['uploaded_by_name'] ?? '',

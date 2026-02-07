@@ -11,347 +11,398 @@ require_once __DIR__ . '/../controllers/SearchController.php';
 $controller = new SearchController();
 $data = $controller->index();
 
-$pageTitle = 'Advanced Search';
-$currentPage = 'search';
-$breadcrumbs = [
-    ['label' => 'Dashboard', 'url' => DASHBOARD_INDEX_URL],
-    ['label' => 'Search']
-];
+// Extract data for view
+$results = $data['results'] ?? [];
+$total = $data['total'] ?? 0;
+$facets = $data['facets'] ?? [];
+$query = $data['query'] ?? '';
+$filters = $data['filters'] ?? [];
 
-// Helper functions
-function getStatusBadge($status) {
+$pageTitle = 'Advanced Search System';
+$currentPage = 'search';
+
+/**
+ * Helper: Get status badge styling
+ */
+function getStatusBadgeClass($status) {
     $badges = [
-        'draft' => 'bg-gray-100 text-gray-800',
-        'pending' => 'bg-yellow-100 text-yellow-800',
-        'approved' => 'bg-green-100 text-green-800',
-        'rejected' => 'bg-red-100 text-red-800',
-        'archived' => 'bg-blue-100 text-blue-800',
-        'superseded' => 'bg-purple-100 text-purple-800'
+        'approved' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+        'pending' => 'bg-yellow-100 text-yellow-700 border-yellow-200',
+        'draft' => 'bg-gray-100 text-gray-700 border-gray-200',
+        'rejected' => 'bg-red-100 text-red-700 border-red-200',
+        'archived' => 'bg-blue-100 text-blue-700 border-blue-200'
     ];
-    return $badges[$status] ?? 'bg-gray-100 text-gray-800';
+    return $badges[strtolower($status)] ?? 'bg-gray-100 text-gray-700 border-gray-200';
 }
 
-function formatFileSize($bytes) {
-    if ($bytes >= 1073741824) {
-        return number_format($bytes / 1073741824, 2) . ' GB';
-    } elseif ($bytes >= 1048576) {
-        return number_format($bytes / 1048576, 2) . ' MB';
-    } elseif ($bytes >= 1024) {
-        return number_format($bytes / 1024, 2) . ' KB';
-    } else {
-        return $bytes . ' bytes';
-    }
+/**
+ * Helper: Get document type icon
+ */
+function getTypeIcon($type) {
+    $icons = [
+        'ordinance' => 'bi-journal-text text-amber-600',
+        'resolution' => 'bi-file-earmark-check text-blue-600',
+        'session' => 'bi-people text-emerald-600',
+        'agenda' => 'bi-list-ul text-rose-600',
+        'committee' => 'bi-shield-check text-indigo-600',
+        'research' => 'bi-search text-purple-600'
+    ];
+    return $icons[strtolower($type)] ?? 'bi-file-earmark text-gray-600';
 }
 
 include_once __DIR__ . '/../../core/layouts/header.php';
 ?>
 
+<!-- Sidebar -->
 <?php include_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
 
+<!-- Main Content Area -->
 <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top Navbar -->
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
-        <!-- Search Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8 mb-4 md:mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
-            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 animate-slide-in-left">Advanced Document Search</h1>
-            <p class="text-sm sm:text-base text-red-100 animate-slide-in-left animation-delay-100">Search through thousands of legislative documents with powerful filters</p>
-        </div>
-        
-        <!-- Main Search Box -->
-        <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
-            <div class="flex flex-col sm:flex-row gap-3">
-                <div class="flex-1 relative">
-                    <input type="text" 
-                           id="main-search" 
-                           placeholder="Search documents..."
-                           class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="bi bi-search absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl"></i>
-                </div>
-                <button class="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg">
-                    <i class="bi bi-search mr-2"></i>
-                    Search
-                </button>
-            </div>
-            
-            <!-- Quick Filters -->
-            <div class="flex flex-wrap items-center gap-2 mt-3 sm:mt-4">
-                <span class="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">Quick filters:</span>
-                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors">
-                    <i class="bi bi-clock mr-1"></i>This Month
-                </button>
-                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors">
-                    <i class="bi bi-check-circle mr-1"></i>Approved
-                </button>
-                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200 transition-colors">
-                    <i class="bi bi-journal-text mr-1"></i>Ordinances
-                </button>
-                <button class="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-yellow-100 text-yellow-700 rounded-full hover:bg-yellow-200 transition-colors">
-                    <i class="bi bi-star mr-1"></i>High Priority
-                </button>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
-            <!-- Advanced Filters Sidebar -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 sticky top-6 max-h-[calc(100vh-8rem)] overflow-y-auto filter-scroll hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
-                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center">
-                        <i class="bi bi-funnel mr-2 text-blue-600"></i>
-                        Filters
-                    </h2>
-                    
-                    <!-- Document Type -->
-                    <div class="mb-5">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Document Type</h3>
-                        <div class="space-y-1">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Ordinances</span>
-                                <span class="filter-count">450</span>
-                            </label>
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Sessions</span>
-                                <span class="filter-count">280</span>
-                            </label>
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Agendas</span>
-                                <span class="filter-count">185</span>
-                            </label>
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Committees</span>
-                                <span class="filter-count">120</span>
-                            </label>
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Other</span>
-                                <span class="filter-count">213</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Status -->
-                    <div class="mb-5 pb-5 border-b border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Status</h3>
-                        <div class="space-y-1">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Draft</span>
-                                <span class="filter-count">45</span>
-                            </label>
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Pending</span>
-                                <span class="filter-count">23</span>
-                            </label>
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Approved</span>
-                                <span class="filter-count">892</span>
-                            </label>
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <span class="filter-label">Archived</span>
-                                <span class="filter-count">288</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Date Range -->
-                    <div class="mb-5 pb-5 border-b border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Date Range</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="text-xs text-gray-600 mb-1 block">From</label>
-                                <input type="date" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label class="text-xs text-gray-600 mb-1 block">To</label>
-                                <input type="date" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- File Type -->
-                    <div class="mb-5">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">File Type</h3>
-                        <div class="space-y-1">
-                            <label class="filter-checkbox-label-icon">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <i class="bi bi-file-earmark-pdf text-red-500"></i>
-                                <span class="filter-label">PDF</span>
-                            </label>
-                            <label class="filter-checkbox-label-icon">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <i class="bi bi-file-earmark-word text-blue-500"></i>
-                                <span class="filter-label">Word</span>
-                            </label>
-                            <label class="filter-checkbox-label-icon">
-                                <input type="checkbox" class="text-blue-600 rounded border-gray-300">
-                                <i class="bi bi-file-earmark-excel text-green-500"></i>
-                                <span class="filter-label">Excel</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="space-y-2">
-                        <button class="w-full btn-primary text-sm py-2.5">
-                            <i class="bi bi-check2 mr-1"></i>Apply Filters
-                        </button>
-                        <button class="w-full px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                            <i class="bi bi-arrow-counterclockwise mr-1"></i>Reset Filters
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Search Results -->
-            <div class="lg:col-span-3">
-                <!-- Results Header -->
-                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-300">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6 custom-scrollbar">
+        <div class="max-w-7xl mx-auto space-y-6">
+                
+                <!-- Search Hero/Header -->
+                <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-6 md:p-10 text-white relative overflow-hidden mb-6" data-aos="fade-down">
+                    <!-- Background Decor -->
+                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                    <div class="absolute -left-10 -top-10 w-48 h-48 bg-red-400/20 rounded-full blur-2xl"></div>
+
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <p class="text-sm sm:text-base text-gray-600">Found <span class="font-bold text-gray-800">1,248 documents</span></p>
-                        </div>
-                        <div class="flex items-center gap-2 sm:gap-3">
-                            <label class="text-xs sm:text-sm text-gray-600 whitespace-nowrap">Sort by:</label>
-                            <select class="flex-1 sm:flex-none px-2 sm:px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
-                                <option>Most Relevant</option>
-                                <option>Newest First</option>
-                                <option>Oldest First</option>
-                                <option>Title A-Z</option>
-                                <option>Title Z-A</option>
-                            </select>
-                            
-                            <div class="flex border border-gray-300 rounded-lg overflow-hidden">
-                                <button class="px-3 py-2 bg-red-600 text-white">
-                                    <i class="bi bi-list-ul"></i>
-                                </button>
-                                <button class="px-3 py-2 hover:bg-gray-100">
-                                    <i class="bi bi-grid"></i>
-                                </button>
+                            <div class="flex items-center gap-2 text-red-100 font-bold tracking-wider text-xs uppercase mb-3">
+                                <span class="w-8 h-0.5 bg-red-100/50"></span>
+                                AI-Powered Intelligence
                             </div>
+                            <h1 class="text-3xl md:text-4xl font-black mb-2">Advanced Search</h1>
+                            <p class="text-red-50 text-sm md:text-base max-w-xl opacity-90">Intelligent hybrid engine combining traditional keyword matching with semantic AI understanding.</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-black/10 p-1.5 rounded-xl backdrop-blur-md border border-white/10">
+                            <button class="px-5 py-2.5 rounded-lg bg-white text-red-700 font-bold text-sm shadow-lg whitespace-nowrap">Documents</button>
+                            <button class="px-5 py-2.5 rounded-lg text-white hover:bg-white/10 font-bold text-sm transition-all whitespace-nowrap">Legislations</button>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Results List -->
-                <div class="space-y-4" id="search-results">
-                    <!-- Result Item 1 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-fade-in-up animation-delay-400">
-                        <div class="flex items-start gap-4">
-                            <div class="bg-red-100 rounded-lg p-3">
-                                <i class="bi bi-file-pdf text-red-600 text-2xl"></i>
+
+                <!-- Main Layout Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Left Sidebar Filters (Static to prevent flicker on reload) -->
+                    <aside class="space-y-6 lg:sticky lg:top-0 h-fit">
+                        <!-- Filters Card -->
+                        <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="bi bi-sliders2 text-red-600"></i> Refine Results
+                                </h3>
+                                <a href="?" class="text-[10px] text-gray-400 hover:text-red-600 transition-colors uppercase font-black tracking-widest">Clear All</a>
                             </div>
-                            <div class="flex-1">
-                                <div class="flex items-start justify-between mb-2">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-gray-800 mb-1">
-                                            Ordinance No. 2025-042: Revenue Code Amendment
-                                        </h3>
-                                        <div class="flex items-center gap-3 text-sm text-gray-600">
-                                            <span><i class="bi bi-hash mr-1"></i>ORD-2025-042</span>
-                                            <span><i class="bi bi-calendar3 mr-1"></i>Nov 20, 2025</span>
-                                            <span><i class="bi bi-hdd mr-1"></i>2.4 MB</span>
+
+                            <form id="filter-form" action="" method="GET" class="space-y-6">
+                                <input type="hidden" name="q" value="<?= htmlspecialchars($query) ?>">
+
+                                <!-- Category Filter -->
+                                <div>
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Document Type</label>
+                                    <div class="space-y-1">
+                                        <?php 
+                                        $types = [
+                                            'ordinance' => 'Ordinance',
+                                            'resolution' => 'Resolution',
+                                            'session' => 'Session',
+                                            'agenda' => 'Agenda',
+                                            'committee' => 'Committee',
+                                            'research' => 'Research'
+                                        ];
+                                        
+                                        $getFacetCount = function($type) use ($facets) {
+                                            if (!isset($facets['by_type'])) return 0;
+                                            foreach ($facets['by_type'] as $f) {
+                                                if (strtolower($f['document_type']) === $type) return $f['count'];
+                                            }
+                                            return 0;
+                                        };
+
+                                        foreach($types as $value => $label): 
+                                            $checked = ($filters['type'] ?? '') === $value ? 'checked' : '';
+                                            $count = $getFacetCount($value);
+                                        ?>
+                                        <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 cursor-pointer group transition-all <?= $checked ? 'bg-red-50 ring-1 ring-red-100' : '' ?>">
+                                            <div class="flex items-center gap-3">
+                                                <input type="radio" name="type" value="<?= $value ?>" <?= $checked ?> class="w-4 h-4 rounded-full border-gray-300 text-red-600 focus:ring-red-500/20">
+                                                <span class="text-sm font-bold <?= $checked ? 'text-red-700' : 'text-gray-600' ?> group-hover:text-red-600"><?= $label ?></span>
+                                            </div>
+                                            <span class="text-[10px] font-black <?= $checked ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-400' ?> px-2 py-0.5 rounded-full transition-all">
+                                                <?= number_format($count) ?>
+                                            </span>
+                                        </label>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Status Filter -->
+                                <div>
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Status</label>
+                                    <select name="status" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
+                                        <option value="">All Statuses</option>
+                                        <option value="approved" <?= ($filters['status'] ?? '') === 'approved' ? 'selected' : '' ?>>Approved</option>
+                                        <option value="pending" <?= ($filters['status'] ?? '') === 'pending' ? 'selected' : '' ?>>Pending</option>
+                                        <option value="draft" <?= ($filters['status'] ?? '') === 'draft' ? 'selected' : '' ?>>Draft</option>
+                                        <option value="archived" <?= ($filters['status'] ?? '') === 'archived' ? 'selected' : '' ?>>Archived</option>
+                                    </select>
+                                </div>
+
+                                <!-- Date Range -->
+                                <div>
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Time Period</label>
+                                    <div class="space-y-2">
+                                        <div class="relative group">
+                                            <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs group-focus-within:text-red-500 transition-colors"></i>
+                                            <input type="date" name="date_from" value="<?= $filters['date_from'] ?? '' ?>" class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 focus:ring-2 focus:ring-red-500/20 outline-none">
+                                        </div>
+                                        <div class="relative group">
+                                            <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs group-focus-within:text-red-500 transition-colors"></i>
+                                            <input type="date" name="date_to" value="<?= $filters['date_to'] ?? '' ?>" class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 focus:ring-2 focus:ring-red-500/20 outline-none">
                                         </div>
                                     </div>
-                                    <span class="badge badge-success">Approved</span>
                                 </div>
-                                <p class="text-sm text-gray-600 mb-3">
-                                    An ordinance amending the local revenue code to update tax rates and introduce new revenue-generating measures...
-                                </p>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex gap-2">
-                                        <span class="badge badge-primary">Ordinance</span>
-                                        <span class="badge badge-info">Finance</span>
+
+                                <button type="submit" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                    <i class="bi bi-funnel-fill"></i> Apply Filters
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                            <h4 class="text-[10px] font-black text-gray-400 uppercase mb-4 tracking-widest">System Insights</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600 shadow-sm">
+                                        <i class="bi bi-database"></i>
                                     </div>
-                                    <div class="flex gap-2">
-                                        <button class="px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg">
-                                            <i class="bi bi-eye mr-1"></i>View
-                                        </button>
-                                        <button class="px-3 py-1.5 text-sm text-green-600 hover:bg-green-50 rounded-lg">
-                                            <i class="bi bi-download mr-1"></i>Download
-                                        </button>
+                                    <div>
+                                        <div class="text-[10px] text-gray-400 font-bold uppercase">Total Records</div>
+                                        <div class="text-sm font-black text-gray-800"><?= number_format($total) ?></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm">
+                                        <i class="bi bi-lightning-charge-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] text-gray-400 font-bold uppercase">AI Status</div>
+                                        <div class="text-sm font-black text-emerald-600"><?= defined('GEMINI_API_KEY') && !empty(GEMINI_API_KEY) ? 'Online' : 'Offline' ?></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Result Item 2 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-fade-in-up animation-delay-500">
-                        <div class="flex items-start gap-4">
-                            <div class="bg-blue-100 rounded-lg p-3">
-                                <i class="bi bi-file-word text-blue-600 text-2xl"></i>
+                    </aside>
+
+                    <!-- Main Search Results -->
+                    <div class="lg:col-span-3 space-y-6">
+                        
+                        <!-- Top Search Bar -->
+                        <div class="bg-white border border-gray-200 rounded-2xl p-2 pl-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50" data-aos="fade-up">
+                            <i class="bi bi-search text-gray-300 text-xl"></i>
+                            <form action="" method="GET" class="flex-1 flex items-center gap-2">
+                                <input type="text" name="q" value="<?= htmlspecialchars($query) ?>" placeholder="Search by keywords, reference numbers, or intent..." class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 py-4 text-base md:text-lg font-medium" autocomplete="off">
+                                
+                                <!-- Search Mode Toggle -->
+                                <div class="hidden md:flex items-center gap-1 bg-gray-100 p-1 rounded-xl border border-gray-200 mr-2">
+                                    <span class="px-3 py-1.5 text-[10px] font-black uppercase text-red-600 bg-white rounded-lg shadow-sm border border-gray-200">Hybrid</span>
+                                    <span class="px-3 py-1.5 text-[10px] font-black uppercase text-gray-400 hover:text-gray-600 cursor-pointer transition-colors">Semantic Only</span>
+                                </div>
+
+                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white w-14 h-14 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30 transition-all active:scale-95 group">
+                                    <i class="bi bi-arrow-right text-2xl group-hover:translate-x-0.5 transition-transform"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Results Meta -->
+                        <div id="search-meta" class="flex items-center justify-between px-2" data-aos="fade-up" data-aos-delay="100">
+                            <div class="flex items-center gap-4">
+                                <span class="text-sm text-gray-500 font-medium">
+                                    Found <span class="text-gray-900 font-black"><?= number_format($total) ?></span> matches 
+                                    <?php if($query): ?> for "<span class="text-red-600 italic font-bold"><?= htmlspecialchars($query) ?></span>"<?php endif; ?>
+                                </span>
+                                <div class="flex items-center gap-2 bg-white px-4 py-1.5 rounded-full border border-gray-200 text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+                                    Relevance Results
+                                </div>
                             </div>
-                            <div class="flex-1">
-                                <div class="flex items-start justify-between mb-2">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-gray-800 mb-1">
-                                            Regular Session Minutes - November 2025
-                                        </h3>
-                                        <div class="flex items-center gap-3 text-sm text-gray-600">
-                                            <span><i class="bi bi-hash mr-1"></i>SS-2025-11</span>
-                                            <span><i class="bi bi-calendar3 mr-1"></i>Nov 19, 2025</span>
-                                            <span><i class="bi bi-hdd mr-1"></i>1.8 MB</span>
+                            <div class="flex items-center gap-2">
+                                <button class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-red-600 bg-white rounded-lg border border-gray-200 shadow-sm transition-all"><i class="bi bi-grid-fill"></i></button>
+                                <button class="w-9 h-9 flex items-center justify-center text-red-600 bg-red-50 rounded-lg border border-red-200 shadow-sm transition-all"><i class="bi bi-list-task"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Results List -->
+                        <div id="results-list" class="space-y-4">
+                            <?php if (empty($results)): ?>
+                                <!-- Empty State -->
+                                <div class="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-16 md:p-24 text-center shadow-sm" data-aos="zoom-in">
+                                    <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300 shadow-inner">
+                                        <i class="bi bi-search text-5xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-black text-gray-800 mb-2">No documents found</h3>
+                                    <p class="text-gray-500 max-w-sm mx-auto font-medium">Try adjusting your filters or use more specific keywords like "Ordinance 2024".</p>
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($results as $index => $doc): ?>
+                                <div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1" 
+                                     data-aos="fade-up" 
+                                     data-aos-delay="<?= $index * 50 ?>">
+                                    <div class="flex flex-col md:flex-row gap-6">
+                                        <!-- Doc Icon -->
+                                        <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 group-hover:border-red-100 transition-all duration-300">
+                                            <i class="bi <?= getTypeIcon($doc['document_type']) ?>"></i>
+                                        </div>
+
+                                        <!-- Doc Info -->
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex flex-wrap items-center gap-2 mb-3">
+                                                <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest <?= getStatusBadgeClass($doc['status']) ?>">
+                                                    <?= $doc['status'] ?>
+                                                </span>
+                                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">REF: <?= $doc['reference_number'] ?? 'N/A' ?></span>
+                                                
+                                                <?php if(isset($doc['relevance_score'])): ?>
+                                                <div class="ml-auto flex items-center gap-2 bg-red-50/50 px-3 py-1.5 rounded-xl border border-red-100">
+                                                    <div class="text-[9px] font-black uppercase text-red-600 tracking-tighter">AI Relevance</div>
+                                                    <div class="h-1.5 w-14 bg-gray-200 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-red-500 shadow-sm shadow-red-500/50" style="width: <?= $doc['relevance_score'] * 100 ?>%"></div>
+                                                    </div>
+                                                </div>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <h3 class="text-xl font-black text-gray-800 group-hover:text-red-600 transition-colors line-clamp-1 mb-2">
+                                                <?= htmlspecialchars($doc['title']) ?>
+                                            </h3>
+
+                                            <p class="text-gray-500 text-sm line-clamp-2 mb-6 leading-relaxed font-medium">
+                                                <?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?>
+                                            </p>
+
+                                            <div class="flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 pt-5">
+                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400">
+                                                    <i class="bi bi-calendar-event text-red-500 text-sm"></i>
+                                                    <?= date('M d, Y', strtotime($doc['created_at'])) ?>
+                                                </div>
+                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400">
+                                                    <i class="bi bi-person-circle text-gray-300 text-sm"></i>
+                                                    <span class="hover:text-red-500 transition-colors cursor-default"><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
+                                                </div>
+                                                <div class="flex items-center gap-1.5">
+                                                    <?php 
+                                                    $tags = explode(',', $doc['tags'] ?? '');
+                                                    foreach(array_slice($tags, 0, 3) as $tag): if(empty($tag)) continue; ?>
+                                                    <span class="px-2.5 py-1 rounded-lg bg-gray-50 text-[10px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer">#<?= trim($tag) ?></span>
+                                                    <?php endforeach; ?>
+                                                </div>
+
+                                                <div class="ml-auto flex items-center gap-3">
+                                                    <button class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
+                                                        <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
+                                                    </button>
+                                                    <button class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
+                                                        <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <span class="badge badge-warning">Pending Review</span>
                                 </div>
-                                <p class="text-sm text-gray-600 mb-3">
-                                    Official transcript of the regular legislative session held on November 15, 2025, covering budget discussions...
-                                </p>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex gap-2">
-                                        <span class="badge badge-info">Session</span>
-                                        <span class="badge badge-primary">Legislative</span>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button class="px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg">
-                                            <i class="bi bi-eye mr-1"></i>View
-                                        </button>
-                                        <button class="px-3 py-1.5 text-sm text-green-600 hover:bg-green-50 rounded-lg">
-                                            <i class="bi bi-download mr-1"></i>Download
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- More results... -->
-                </div>
-                
-                <!-- Pagination -->
-                <div class="mt-6 bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            Showing 1-10 of 1,248 results
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-200" disabled>
-                                Previous
-                            </button>
-                            <button class="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200">1</button>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">2</button>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">3</button>
-                            <span class="px-2">...</span>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">125</button>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all duration-200">
-                                Next
-                            </button>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-    
-<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+        </main>
+
+        <style>
+            .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+            .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+            .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 20px; }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(220,38,38,0.2); }
+        </style>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({
+                        duration: 800,
+                        once: true,
+                        easing: 'ease-out-quad'
+                    });
+                }
+
+                const filterForm = document.getElementById('filter-form');
+                const resultsList = document.getElementById('results-list');
+                const searchMeta = document.getElementById('search-meta');
+
+                if (filterForm) {
+                    // Function to handle filter updates via AJAX
+                    const updateResults = async () => {
+                        // Show loading state
+                        resultsList.classList.add('opacity-50', 'pointer-events-none');
+                        
+                        const formData = new FormData(filterForm);
+                        const params = new URLSearchParams(formData);
+                        const url = `${window.location.pathname}?${params.toString()}`;
+                        
+                        try {
+                            const response = await fetch(url);
+                            const html = await response.text();
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            
+                            // Update results and meta
+                            const newResults = doc.getElementById('results-list');
+                            const newMeta = doc.getElementById('search-meta');
+                            
+                            if (newResults) resultsList.innerHTML = newResults.innerHTML;
+                            if (newMeta) searchMeta.innerHTML = newMeta.innerHTML;
+                            
+                            // Update URL without refreshing
+                            window.history.pushState({}, '', url);
+                            
+                            // Re-init AOS for new elements
+                            if (typeof AOS !== 'undefined') {
+                                AOS.refresh();
+                            }
+                        } catch (error) {
+                            console.error('Search failed:', error);
+                            // Fallback to traditional submit if AJAX fails
+                            filterForm.submit();
+                        } finally {
+                            resultsList.classList.remove('opacity-50', 'pointer-events-none');
+                        }
+                    };
+
+                    filterForm.querySelectorAll('input[type="radio"], select').forEach(el => {
+                        el.addEventListener('change', (e) => {
+                            e.preventDefault();
+                            updateResults();
+                        });
+                    });
+
+                    // Prevent tradition submit on the form
+                    filterForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        updateResults();
+                    });
+                }
+            });
+        </script>
+
+        <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+    </div>
 </div>
 
-<script src="/public/assets/js/search.js"></script>

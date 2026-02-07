@@ -182,6 +182,9 @@ define('APP_SHORT_NAME', 'LRMS');
 define('APP_VERSION', '1.0.0');
 define('APP_ENV', 'development'); // development, production
 
+// AI Configuration
+define('AIzaSyDwta1TxN-r7kxm8VeV5gBB-zacldg7TkI', ''); // Add your Google Gemini API key here
+
 // Session configuration
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);

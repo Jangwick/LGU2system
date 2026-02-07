@@ -2,16 +2,19 @@
 
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../services/SearchService.php';
+require_once __DIR__ . '/../services/EmbeddingService.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 
 class SearchController {
     private $searchService;
+    private $embeddingService;
     private $logger;
     private $db;
     
     public function __construct() {
         $this->db = getDatabase();
-        $this->searchService = new SearchService($this->db);
+        $this->embeddingService = new EmbeddingService();
+        $this->searchService = new SearchService($this->db, $this->embeddingService);
         $this->logger = new Logger($this->db);
     }
     
@@ -33,8 +36,15 @@ class SearchController {
             'offset' => ($page - 1) * $perPage
         ];
         
-        $results = $this->searchService->search($query, $filters);
-        $total = $this->searchService->getCount($query, $filters);
+        // Use hybrid search (Keyword + Semantic) if query is present
+        if (!empty($query)) {
+            $results = $this->searchService->hybridSearch($query, $filters);
+            $total = count($results); // Note: total count with pagination in hybrid search is complex
+        } else {
+            $results = $this->searchService->search($query, $filters);
+            $total = $this->searchService->getCount($query, $filters);
+        }
+        
         $facets = $this->searchService->getFacets($query);
         
         // Log search if user is logged in
