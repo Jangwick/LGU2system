@@ -77,7 +77,15 @@ require_once __DIR__ . '/../../core/config/config.php';
             from { transform: translateY(10px); opacity: 0.5; }
             to { transform: translateY(0); opacity: 1; }
         }
-    </style>
+</style>
+    
+    <!-- Back to Landing Page -->
+    <a href="<?php echo BASE_URL; ?>/index.php" class="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-gray-600 hover:text-red-600 font-medium transition-all duration-300 z-50 group bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg shadow-sm hover:shadow-md">
+        <i class="bi bi-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform"></i>
+        <span class="hidden sm:inline">Back to Home</span>
+        <span class="sm:hidden">Back</span>
+    </a>
+
     <div class="w-full max-w-md">
         <!-- Logo Section -->
         <div class="text-center mb-6 md:mb-8">
