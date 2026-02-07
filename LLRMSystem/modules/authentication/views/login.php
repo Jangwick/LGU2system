@@ -181,28 +181,6 @@ require_once __DIR__ . '/../../core/config/config.php';
                 </button>
             </form>
             
-            <!-- Divider -->
-            <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
-                </div>
-                <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
-                </div>
-            </div>
-            
-            <!-- Alternative Login Options -->
-            <div class="grid grid-cols-2 gap-3">
-                <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                    <i class="bi bi-microsoft text-lg mr-2"></i>
-                    <span class="text-sm font-medium text-gray-700">Microsoft</span>
-                </button>
-                <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                    <i class="bi bi-google text-lg mr-2"></i>
-                    <span class="text-sm font-medium text-gray-700">Google</span>
-                </button>
-            </div>
-            
             <!-- Register Link -->
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
