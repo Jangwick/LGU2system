@@ -94,9 +94,9 @@ require_once __DIR__ . '/../../core/config/config.php';
                     <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" class="login-logo-img" onerror="this.onerror=null; this.src='<?php echo BASE_URL; ?>/images/valenzuela%20logo.webp';">
                 </div>
             </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 text-slide-up" style="animation-delay: 0.1s;">LRMS</h1>
+            <h1 class="text-2xl md:text-3xl font-black text-red-600 text-slide-up" style="animation-delay: 0.1s;">LRMS</h1>
             <p class="text-sm md:text-base text-gray-600 mt-1 md:mt-2 text-slide-up" style="animation-delay: 0.2s;">Legislative Records Management System</p>
-            <p class="text-xs md:text-sm text-red-600 font-semibold mt-1 text-slide-up" style="animation-delay: 0.3s;">City Government of Valenzuela</p>
+            <p class="text-xs md:text-sm text-[#002d72] font-semibold mt-1 text-slide-up" style="animation-delay: 0.3s;">City Government of Valenzuela</p>
             <p class="text-xs text-gray-500 text-slide-up" style="animation-delay: 0.4s;">Metropolitan Manila</p>
         </div>
         

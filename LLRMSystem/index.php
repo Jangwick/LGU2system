@@ -94,10 +94,10 @@ $pageTitle = "Home";
             <div class="flex justify-between h-16 md:h-20">
                 <div class="flex items-center group cursor-pointer">
                     <div class="relative">
-                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-10 w-10 md:h-12 md:w-12 mr-3 transition-transform duration-500 group-hover:rotate-12" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-10 w-10 md:h-12 md:w-12 mr-3 transition-transform duration-500 group-hover:rotate-12 shadow-sm rounded-full" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
                     </div>
                     <div>
-                        <span class="text-xl md:text-2xl font-black text-gray-900 tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
+                        <span class="text-xl md:text-2xl font-black text-[#002d72] tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
                         <div class="hidden md:flex items-center">
                             <span class="h-px w-4 bg-red-600 mr-2"></span>
                             <span class="text-[9px] text-gray-400 font-bold uppercase tracking-[0.2em] leading-none">Legislative Office</span>
@@ -253,8 +253,8 @@ $pageTitle = "Home";
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                 <div class="mb-12 md:mb-0">
                     <div class="flex items-center mb-6">
-                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-12 w-12 mr-4 filter grayscale contrast-125">
-                        <div class="text-gray-900 font-black text-2xl tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></div>
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-12 w-12 mr-4 shadow-sm rounded-full">
+                        <div class="text-[#002d72] font-black text-2xl tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></div>
                     </div>
                     <p class="text-gray-400 font-bold text-xs uppercase tracking-widest max-w-xs leading-loose">
                         Official Legislative Records Management System. <br>
