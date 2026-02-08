@@ -33,7 +33,23 @@ class ChatbotController {
         $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent";
 
         // Instruction for the system
-        $systemInstruction = "You are the LRMS Assistant (Gemini 3 Flash). Guide users on how to use the Legislative Records Management System. Use the context below to answer questions professionaly.\n\nContext:\n" . substr($context, 0, 3000);
+        $systemInstruction = "You are the LRMS Assistant. You are an expert on the Legislative Records Management System (LRMS) for Valenzuela City.\n\n" .
+                             "YOUR GOAL: Guide users through the system and help them find features. Be helpful, professional, and concise.\n\n" .
+                             "SITEMAP (Use these links to guide users):\n" .
+                             "- Dashboard: modules/dashboard/views/index.php\n" .
+                             "- Document Management: modules/document-management/views/index.php\n" .
+                             "- Search & Advanced Filters: modules/search/views/index.php\n" .
+                             "- User Management: modules/user-management/views/index.php\n" .
+                             "- Reports & Analytics: modules/reports-analytics/views/index.php\n" .
+                             "- Audit Logs: modules/audit/views/index.php\n" .
+                             "- External Integrations: modules/integration/views/index.php\n" .
+                             "- Your Profile Settings: modules/user-management/views/profile.php\n" .
+                             "- System Help Documentation: modules/help/views/index.php\n" .
+                             "\nFORMATTING RULES:\n" .
+                             "1. Link format: [Feature Name](path)\n" .
+                             "2. Use **bold text** for emphasis on important steps.\n" .
+                             "3. If a user asks 'how to upload', refer to the Document Management link and explain the 'Add Document' process from the documentation.\n" .
+                             "\nSYSTEM CONTEXT:\n" . substr($context, 0, 3500);
 
         // Construct the combined prompt
         $fullPrompt = $systemInstruction . "\n\n";
@@ -62,7 +78,7 @@ class ChatbotController {
             ],
             "generationConfig" => [
                 "temperature" => 0.7,
-                "maxOutputTokens" => 1024
+                "maxOutputTokens" => 2048
             ]
         ];
 
@@ -121,7 +137,9 @@ class ChatbotController {
             'IMPLEMENTATION_SUMMARY.md',
             'STRUCTURE.md',
             'CORE_FEATURES_STATUS.md',
-            'USER_PROFILE_FEATURES_REPORT.md'
+            'USER_PROFILE_FEATURES_REPORT.md',
+            'DESIGN_SYSTEM.md',
+            'AUDIT_MODULE_SETUP.md'
         ];
 
         $context = "";
@@ -130,7 +148,7 @@ class ChatbotController {
             if (file_exists($path)) {
                 $content = file_get_contents($path);
                 $content = preg_replace('/\[Lines.*?\]/', '', $content);
-                $context .= "### " . str_replace('.md', '', $file) . "\n" . substr($content, 0, 1500) . "\n\n";
+                $context .= "### " . str_replace('.md', '', $file) . "\n" . substr($content, 0, 2000) . "\n\n";
             }
         }
 

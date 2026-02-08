@@ -1,5 +1,5 @@
 <!-- Chatbot Widget -->
-<div id="chatbot-container" class="fixed bottom-6 right-6 z-[100] font-sans">
+<div id="chatbot-container" class="fixed bottom-6 right-6 z-[100001] font-sans">
     <!-- Chat Bubble (Toggle Button) -->
     <button id="chatbot-toggle" class="bg-red-600 hover:bg-red-700 text-white rounded-full w-14 h-14 shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 group relative">
         <div class="absolute -top-1 -right-1 flex h-4 w-4">
@@ -61,8 +61,7 @@
 </div>
 
 <script>
-(function() {
-    const toggleBtn = document.getElementById('chatbot-toggle');
+(function() {    const baseUrl = '<?php echo BASE_URL; ?>';    const toggleBtn = document.getElementById('chatbot-toggle');
     const chatWindow = document.getElementById('chatbot-window');
     const chatForm = document.getElementById('chatbot-form');
     const chatInput = document.getElementById('chatbot-input');
@@ -171,10 +170,20 @@
 
     function appendMessage(role, text) {
         const isBot = role === 'bot';
+        
+        // Simple Markdown link and bold parser
+        let formattedText = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\[(.*?)\]\((.*?)\)/g, (match, title, url) => {
+                const fullUrl = url.startsWith('http') ? url : `${baseUrl}/${url.replace(/^\//, '')}`;
+                return `<a href="${fullUrl}" class="text-red-600 font-semibold underline hover:bg-red-50" target="_blank">${title} <i class="bi bi-box-arrow-up-right text-[10px]"></i></a>`;
+            })
+            .replace(/\n/g, '<br>');
+
         const html = `
             <div class="flex ${isBot ? 'justify-start' : 'justify-end'}">
                 <div class="${isBot ? 'bg-white shadow-sm border border-gray-100 rounded-tl-none' : 'bg-red-600 text-white rounded-tr-none'} rounded-2xl p-3 max-w-[85%] text-sm">
-                    ${text.replace(/\n/g, '<br>')}
+                    ${formattedText}
                 </div>
             </div>
         `;

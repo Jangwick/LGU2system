@@ -35,7 +35,7 @@
     
     <!-- Back to Top Button -->
     <button id="back-to-top" 
-            style="position: fixed; bottom: 24px; right: 24px; z-index: 99999; width: 50px; height: 50px; background-color: #dc2626; color: white; border-radius: 50%; border: 3px solid #ffffff; cursor: pointer; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); display: none; align-items: center; justify-content: center; transition: all 0.3s ease;"
+            style="position: fixed; bottom: 90px; right: 26px; z-index: 99999; width: 46px; height: 46px; background-color: #dc2626; color: white; border-radius: 50%; border: 3px solid #ffffff; cursor: pointer; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); display: none; align-items: center; justify-content: center; transition: all 0.3s ease;"
             title="Back to top"
             aria-label="Scroll to top">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16">
