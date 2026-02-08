@@ -9,6 +9,17 @@ if (!isset($_SESSION['user_id'])) {
 // Load controller
 require_once __DIR__ . '/../controllers/SearchController.php';
 $controller = new SearchController();
+
+// Handle AJAX suggestions
+if (isset($_GET['action']) && $_GET['action'] === 'suggestions') {
+    $controller->suggestions();
+}
+
+// Handle AJAX export
+if (isset($_GET['action']) && $_GET['action'] === 'export') {
+    $controller->export();
+}
+
 $data = $controller->index();
 
 // Extract data for view
@@ -16,7 +27,10 @@ $results = $data['results'] ?? [];
 $total = $data['total'] ?? 0;
 $facets = $data['facets'] ?? [];
 $query = $data['query'] ?? '';
+$mode = $data['mode'] ?? 'hybrid';
 $filters = $data['filters'] ?? [];
+$page = $data['page'] ?? 1;
+$totalPages = $data['total_pages'] ?? 1;
 
 $pageTitle = 'Advanced Search System';
 $currentPage = 'search';
@@ -206,21 +220,37 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="lg:col-span-3 space-y-6">
                         
                         <!-- Top Search Bar -->
-                        <div class="bg-white border border-gray-200 rounded-2xl p-2 pl-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50 animate-fade-in-up">
-                            <i class="bi bi-search text-gray-300 text-xl"></i>
-                            <form action="" method="GET" class="flex-1 flex items-center gap-2">
-                                <input type="text" name="q" value="<?= htmlspecialchars($query) ?>" placeholder="Search by keywords, reference numbers, or intent..." class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 py-4 text-base md:text-lg font-medium" autocomplete="off">
-                                
-                                <!-- Search Mode Toggle -->
-                                <div class="hidden md:flex items-center gap-1 bg-gray-100 p-1 rounded-xl border border-gray-200 mr-2">
-                                    <span class="px-3 py-1.5 text-[10px] font-black uppercase text-red-600 bg-white rounded-lg shadow-sm border border-gray-200">Hybrid</span>
-                                    <span class="px-3 py-1.5 text-[10px] font-black uppercase text-gray-400 hover:text-gray-600 cursor-pointer transition-colors">Semantic Only</span>
-                                </div>
+                        <div class="relative group" data-aos="fade-up">
+                            <div class="bg-white border border-gray-200 rounded-2xl p-2 pl-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50 animate-fade-in-up">
+                                <i class="bi bi-search text-gray-300 text-xl"></i>
+                                <form id="search-main-form" action="" method="GET" class="flex-1 flex items-center gap-2">
+                                    <input type="hidden" name="mode" id="search-mode" value="<?= htmlspecialchars($mode) ?>">
+                                    <input type="text" name="q" id="search-input" value="<?= htmlspecialchars($query) ?>" placeholder="Search by keywords, reference numbers, or intent..." class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 py-4 text-base md:text-lg font-medium" autocomplete="off">
+                                    
+                                    <!-- Search Mode Toggle -->
+                                    <div class="hidden md:flex items-center gap-1 bg-gray-100 p-1 rounded-xl border border-gray-200 mr-2">
+                                        <button type="button" onclick="setSearchMode('hybrid')" 
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'hybrid' ? 'text-red-600 bg-white shadow-sm border border-gray-200' : 'text-gray-400 hover:text-gray-600' ?>">
+                                            Hybrid
+                                        </button>
+                                        <button type="button" onclick="setSearchMode('semantic')" 
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'semantic' ? 'text-red-600 bg-white shadow-sm border border-gray-200' : 'text-gray-400 hover:text-gray-600' ?>">
+                                            Semantic
+                                        </button>
+                                    </div>
 
-                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white w-14 h-14 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30 transition-all active:scale-95 group">
-                                    <i class="bi bi-arrow-right text-2xl group-hover:translate-x-0.5 transition-transform"></i>
-                                </button>
-                            </form>
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white w-14 h-14 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30 transition-all active:scale-95 group">
+                                        <i class="bi bi-arrow-right text-2xl group-hover:translate-x-0.5 transition-transform"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <!-- Suggestions Dropdown -->
+                            <div id="suggestions-box" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 hidden transition-all duration-200 opacity-0 transform translate-y-2">
+                                <div id="suggestions-content" class="max-h-80 overflow-y-auto p-2">
+                                    <!-- Suggestions will be injected here -->
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Results Meta -->
@@ -232,8 +262,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </span>
                                 <div class="flex items-center gap-2 bg-white px-4 py-1.5 rounded-full border border-gray-200 text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-                                    Relevance Results
+                                    <?= ucfirst($mode) ?> Engine
                                 </div>
+                                <button onclick="exportResults()" class="flex items-center gap-2 bg-white hover:bg-gray-50 px-4 py-1.5 rounded-full border border-gray-200 text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest transition-all">
+                                    <i class="bi bi-download text-red-600"></i> Export CSV
+                                </button>
                             </div>
                             <div class="flex items-center gap-2">
                                 <button class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-red-600 bg-white rounded-lg border border-gray-200 shadow-sm transition-all"><i class="bi bi-grid-fill"></i></button>
@@ -307,18 +340,41 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 </div>
 
                                                 <div class="ml-auto flex items-center gap-3">
-                                                    <button class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
+                                                    <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?= $doc['id'] ?>" class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
                                                         <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
-                                                    </button>
-                                                    <button class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
+                                                    </a>
+                                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
                                                         <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
-                                                    </button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
+                                
+                                <!-- Pagination -->
+                                <?php if ($totalPages > 1): ?>
+                                <div id="pagination" class="flex items-center justify-center gap-2 pt-8">
+                                    <?php if ($page > 1): ?>
+                                        <button onclick="changePage(<?= $page - 1 ?>)" class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:border-red-600 hover:text-red-600 transition-all shadow-sm">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </button>
+                                    <?php endif; ?>
+
+                                    <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
+                                        <button onclick="changePage(<?= $i ?>)" class="w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm <?= $i === $page ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border border-gray-200 hover:border-red-600 hover:text-red-600' ?>">
+                                            <?= $i ?>
+                                        </button>
+                                    <?php endfor; ?>
+
+                                    <?php if ($page < $totalPages): ?>
+                                        <button onclick="changePage(<?= $page + 1 ?>)" class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:border-red-600 hover:text-red-600 transition-all shadow-sm">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -334,6 +390,165 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </style>
 
         <script>
+            /**
+             * Interface Controls
+             */
+            const searchInput = document.getElementById('search-input');
+            const searchModeInput = document.getElementById('search-mode');
+            const suggestionsBox = document.getElementById('suggestions-box');
+            const suggestionsContent = document.getElementById('suggestions-content');
+            const filterForm = document.getElementById('filter-form');
+            const mainForm = document.getElementById('search-main-form');
+            const resultsList = document.getElementById('results-list');
+            const searchMeta = document.getElementById('search-meta');
+            
+            let queryTimer;
+            
+            // Set Search Mode
+            function setSearchMode(mode) {
+                searchModeInput.value = mode;
+                
+                // Update UI buttons
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    if (btn.textContent.trim().toLowerCase() === mode) {
+                        btn.classList.add('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200');
+                        btn.classList.remove('text-gray-400', 'hover:text-gray-600');
+                    } else {
+                        btn.classList.remove('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200');
+                        btn.classList.add('text-gray-400', 'hover:text-gray-600');
+                    }
+                });
+                
+                updateResults();
+            }
+
+            // Export Results
+            function exportResults() {
+                const formData = new FormData(filterForm);
+                const mainData = new FormData(mainForm);
+                const params = new URLSearchParams(formData);
+                for (const [key, value] of mainData.entries()) {
+                    params.append(key, value);
+                }
+                params.append('action', 'export');
+                window.location.href = `?${params.toString()}`;
+            }
+
+            // Change Page
+            function changePage(page) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', page);
+                window.history.pushState({}, '', url);
+                updateResults(page);
+                
+                // Scroll to results
+                window.scrollTo({
+                    top: resultsList.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
+
+            /**
+             * AJAX Functions
+             */
+            const updateResults = async (page = 1) => {
+                // Show loading state
+                resultsList.classList.add('opacity-50', 'pointer-events-none');
+                
+                const filterData = new FormData(filterForm);
+                const mainData = new FormData(mainForm);
+                const params = new URLSearchParams(filterData);
+                for (const [key, value] of mainData.entries()) {
+                    params.set(key, value);
+                }
+                params.set('page', page);
+                
+                const url = `${window.location.pathname}?${params.toString()}`;
+                
+                try {
+                    const response = await fetch(url);
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Update results and meta
+                    const newResults = doc.getElementById('results-list');
+                    const newMeta = doc.getElementById('search-meta');
+                    
+                    if (newResults) resultsList.innerHTML = newResults.innerHTML;
+                    if (newMeta) searchMeta.innerHTML = newMeta.innerHTML;
+                    
+                    // Update URL without refreshing
+                    window.history.pushState({}, '', url);
+                    
+                    // Re-init AOS for new elements
+                    if (typeof AOS !== 'undefined') {
+                        AOS.refresh();
+                    }
+                } catch (error) {
+                    console.error('Search failed:', error);
+                } finally {
+                    resultsList.classList.remove('opacity-50', 'pointer-events-none');
+                }
+            };
+
+            // Handle Suggestions
+            const showSuggestions = async (q) => {
+                if (q.length < 2) {
+                    hideSuggestions();
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`?action=suggestions&q=${encodeURIComponent(q)}`);
+                    const suggestions = await response.json();
+                    
+                    if (suggestions.length > 0) {
+                        suggestionsContent.innerHTML = suggestions.map(s => `
+                            <div class="p-4 hover:bg-red-50 cursor-pointer border-b border-gray-50 flex items-center justify-between group" onclick="selectSuggestion('${s.title}')">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-red-600 transition-all">
+                                        <i class="bi bi-clock-history"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-gray-800 group-hover:text-red-700 transition-colors">${s.title}</div>
+                                        <div class="text-[10px] text-gray-400 font-black uppercase tracking-widest">${s.reference_number || s.document_type}</div>
+                                    </div>
+                                </div>
+                                <i class="bi bi-arrow-up-left text-gray-300 group-hover:text-red-400 transition-all opacity-0 group-hover:opacity-100"></i>
+                            </div>
+                        `).join('');
+                        
+                        suggestionsBox.classList.remove('hidden');
+                        setTimeout(() => {
+                            suggestionsBox.classList.remove('opacity-0', 'translate-y-2');
+                            suggestionsBox.classList.add('opacity-100', 'translate-y-0');
+                        }, 10);
+                    } else {
+                        hideSuggestions();
+                    }
+                } catch (error) {
+                    console.error('Suggestions failed:', error);
+                }
+            };
+
+            const hideSuggestions = () => {
+                suggestionsBox.classList.add('opacity-0', 'translate-y-2');
+                suggestionsBox.classList.remove('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    suggestionsBox.classList.add('hidden');
+                }, 200);
+            };
+
+            window.selectSuggestion = (title) => {
+                searchInput.value = title;
+                hideSuggestions();
+                updateResults();
+            };
+
+            /**
+             * Event Listeners
+             */
             document.addEventListener('DOMContentLoaded', function() {
                 if (typeof AOS !== 'undefined') {
                     AOS.init({
@@ -343,58 +558,34 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     });
                 }
 
-                const filterForm = document.getElementById('filter-form');
-                const resultsList = document.getElementById('results-list');
-                const searchMeta = document.getElementById('search-meta');
+                // Search Input Suggestions
+                searchInput?.addEventListener('input', (e) => {
+                    clearTimeout(queryTimer);
+                    queryTimer = setTimeout(() => showSuggestions(e.target.value), 300);
+                });
+
+                // Listen for clicks outside to hide suggestions
+                document.addEventListener('click', (e) => {
+                    if (!suggestionsBox?.contains(e.target) && e.target !== searchInput) {
+                        hideSuggestions();
+                    }
+                });
 
                 if (filterForm) {
-                    // Function to handle filter updates via AJAX
-                    const updateResults = async () => {
-                        // Show loading state
-                        resultsList.classList.add('opacity-50', 'pointer-events-none');
-                        
-                        const formData = new FormData(filterForm);
-                        const params = new URLSearchParams(formData);
-                        const url = `${window.location.pathname}?${params.toString()}`;
-                        
-                        try {
-                            const response = await fetch(url);
-                            const html = await response.text();
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, 'text/html');
-                            
-                            // Update results and meta
-                            const newResults = doc.getElementById('results-list');
-                            const newMeta = doc.getElementById('search-meta');
-                            
-                            if (newResults) resultsList.innerHTML = newResults.innerHTML;
-                            if (newMeta) searchMeta.innerHTML = newMeta.innerHTML;
-                            
-                            // Update URL without refreshing
-                            window.history.pushState({}, '', url);
-                            
-                            // Re-init AOS for new elements
-                            if (typeof AOS !== 'undefined') {
-                                AOS.refresh();
-                            }
-                        } catch (error) {
-                            console.error('Search failed:', error);
-                            // Fallback to traditional submit if AJAX fails
-                            filterForm.submit();
-                        } finally {
-                            resultsList.classList.remove('opacity-50', 'pointer-events-none');
-                        }
-                    };
-
-                    filterForm.querySelectorAll('input[type="radio"], select').forEach(el => {
+                    filterForm.querySelectorAll('input[type="radio"], input[type="date"], select').forEach(el => {
                         el.addEventListener('change', (e) => {
-                            e.preventDefault();
                             updateResults();
                         });
                     });
 
-                    // Prevent tradition submit on the form
                     filterForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        updateResults();
+                    });
+                }
+
+                if (mainForm) {
+                    mainForm.addEventListener('submit', (e) => {
                         e.preventDefault();
                         updateResults();
                     });

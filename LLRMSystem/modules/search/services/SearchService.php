@@ -36,18 +36,42 @@ class SearchService {
         $queryEmbedding = $this->embeddingService->generateEmbedding($query);
         if (!$queryEmbedding) return [];
 
-        // Fetch all embeddings from DB (for demonstration)
-        // In production, we would use a vector database
-        $stmt = $this->db->prepare("SELECT document_id, embedding FROM document_embeddings");
-        $stmt->execute();
+        // Fetch embeddings with potential pre-filtering
+        $sql = "SELECT e.document_id, e.embedding 
+                FROM document_embeddings e
+                INNER JOIN legislative_documents d ON e.document_id = d.id
+                WHERE d.deleted_at IS NULL";
+        
+        $params = [];
+        if (!empty($filters['type'])) {
+            $sql .= " AND d.document_type = :type";
+            $params[':type'] = $filters['type'];
+        }
+        if (!empty($filters['status'])) {
+            $sql .= " AND d.status = :status";
+            $params[':status'] = $filters['status'];
+        }
+        if (!empty($filters['date_from'])) {
+            $sql .= " AND d.created_at >= :date_from";
+            $params[':date_from'] = $filters['date_from'];
+        }
+        if (!empty($filters['date_to'])) {
+            $sql .= " AND d.created_at <= :date_to";
+            $params[':date_to'] = $filters['date_to'];
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         $allEmbeddings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $scores = [];
         foreach ($allEmbeddings as $row) {
             $docEmbedding = json_decode($row['embedding'], true);
+            if (!$docEmbedding) continue;
+            
             $similarity = $this->cosineSimilarity($queryEmbedding, $docEmbedding);
             
-            if ($similarity > 0.7) { // Threshold
+            if ($similarity > 0.6) { // Lowered threshold for more results
                 $scores[$row['document_id']] = $similarity;
             }
         }
@@ -56,7 +80,7 @@ class SearchService {
 
         // Sort by similarity
         arsort($scores);
-        $topIds = array_keys(array_slice($scores, 0, 20, true));
+        $topIds = array_keys(array_slice($scores, 0, 50, true)); // Get top 50, pagination will handle the rest
 
         // Fetch full document details
         $placeholders = implode(',', array_fill(0, count($topIds), '?'));
@@ -347,9 +371,12 @@ class SearchService {
         
         $params = [];
         
+        // Use the same LIKE logic as search() for consistency
         if (!empty($query)) {
-            $sql .= " AND MATCH(d.title, d.description, d.tags) AGAINST(:query IN BOOLEAN MODE)";
-            $params[':query'] = $query;
+            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3)";
+            $params[':q1'] = '%' . $query . '%';
+            $params[':q2'] = '%' . $query . '%';
+            $params[':q3'] = '%' . $query . '%';
         }
         
         if (!empty($filters['type'])) {
@@ -379,6 +406,6 @@ class SearchService {
         $stmt->execute();
         
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total'];
+        return (int)$result['total'];
     }
 }

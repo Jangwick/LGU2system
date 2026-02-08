@@ -23,8 +23,9 @@ class SearchController {
      */
     public function index() {
         $query = $_GET['q'] ?? '';
-        $page = $_GET['page'] ?? 1;
-        $perPage = 20;
+        $mode = $_GET['mode'] ?? 'hybrid'; // Default search mode
+        $page = (int)($_GET['page'] ?? 1);
+        $perPage = 10;
         
         $filters = [
             'type' => $_GET['type'] ?? '',
@@ -36,10 +37,16 @@ class SearchController {
             'offset' => ($page - 1) * $perPage
         ];
         
-        // Use hybrid search (Keyword + Semantic) if query is present
+        // Handle different search modes
         if (!empty($query)) {
-            $results = $this->searchService->hybridSearch($query, $filters);
-            $total = count($results); // Note: total count with pagination in hybrid search is complex
+            if ($mode === 'semantic') {
+                $results = $this->searchService->semanticSearch($query, $filters);
+                $total = count($results); // Note: total count with pagination in semantic search is complex
+            } else {
+                // Hybrid (Keyword + Semantic)
+                $results = $this->searchService->hybridSearch($query, $filters);
+                $total = count($results);
+            }
         } else {
             $results = $this->searchService->search($query, $filters);
             $total = $this->searchService->getCount($query, $filters);
@@ -50,8 +57,9 @@ class SearchController {
         // Log search if user is logged in
         if (isset($_SESSION['user_id']) && !empty($query)) {
             $this->logger->logActivity(Logger::ACTION_SEARCH, 'search', null,
-                "Search query: {$query}", [
+                "Search query: {$query} (Mode: {$mode})", [
                     'query' => $query,
+                    'mode' => $mode,
                     'results_count' => $total,
                     'filters' => $filters
                 ]);
@@ -59,6 +67,7 @@ class SearchController {
         
         return [
             'query' => $query,
+            'mode' => $mode,
             'results' => $results,
             'total' => $total,
             'facets' => $facets,
