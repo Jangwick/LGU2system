@@ -66,7 +66,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <div class="max-w-7xl mx-auto space-y-6">
                 
                 <!-- Search Hero/Header -->
-                <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-6 md:p-10 text-white relative overflow-hidden mb-6" data-aos="fade-down">
+                <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-6 md:p-10 text-white relative overflow-hidden mb-6 animate-fade-in">
                     <!-- Background Decor -->
                     <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                     <div class="absolute -left-10 -top-10 w-48 h-48 bg-red-400/20 rounded-full blur-2xl"></div>
@@ -91,7 +91,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     
                     <!-- Left Sidebar Filters (Static to prevent flicker on reload) -->
-                    <aside class="space-y-6 lg:sticky lg:top-0 h-fit">
+                    <aside class="space-y-6 lg:sticky lg:top-0 h-fit animate-slide-in-left">
                         <!-- Filters Card -->
                         <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100">
                             <div class="flex items-center justify-between mb-6">
@@ -206,7 +206,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="lg:col-span-3 space-y-6">
                         
                         <!-- Top Search Bar -->
-                        <div class="bg-white border border-gray-200 rounded-2xl p-2 pl-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50" data-aos="fade-up">
+                        <div class="bg-white border border-gray-200 rounded-2xl p-2 pl-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50 animate-fade-in-up">
                             <i class="bi bi-search text-gray-300 text-xl"></i>
                             <form action="" method="GET" class="flex-1 flex items-center gap-2">
                                 <input type="text" name="q" value="<?= htmlspecialchars($query) ?>" placeholder="Search by keywords, reference numbers, or intent..." class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 py-4 text-base md:text-lg font-medium" autocomplete="off">
@@ -224,7 +224,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
 
                         <!-- Results Meta -->
-                        <div id="search-meta" class="flex items-center justify-between px-2" data-aos="fade-up" data-aos-delay="100">
+                        <div id="search-meta" class="flex items-center justify-between px-2 animate-fade-in-up animation-delay-100">
                             <div class="flex items-center gap-4">
                                 <span class="text-sm text-gray-500 font-medium">
                                     Found <span class="text-gray-900 font-black"><?= number_format($total) ?></span> matches 
@@ -245,7 +245,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div id="results-list" class="space-y-4">
                             <?php if (empty($results)): ?>
                                 <!-- Empty State -->
-                                <div class="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-16 md:p-24 text-center shadow-sm" data-aos="zoom-in">
+                                <div class="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-16 md:p-24 text-center shadow-sm animate-bounce-in">
                                     <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300 shadow-inner">
                                         <i class="bi bi-search text-5xl"></i>
                                     </div>
@@ -253,10 +253,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <p class="text-gray-500 max-w-sm mx-auto font-medium">Try adjusting your filters or use more specific keywords like "Ordinance 2024".</p>
                                 </div>
                             <?php else: ?>
-                                <?php foreach ($results as $index => $doc): ?>
-                                <div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1" 
-                                     data-aos="fade-up" 
-                                     data-aos-delay="<?= $index * 50 ?>">
+                                <?php foreach ($results as $index => $doc): 
+                                    $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
+                                ?>
+                                <div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
                                     <div class="flex flex-col md:flex-row gap-6">
                                         <!-- Doc Icon -->
                                         <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 group-hover:border-red-100 transition-all duration-300">
