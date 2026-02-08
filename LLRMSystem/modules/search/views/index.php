@@ -340,9 +340,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 </div>
 
                                                 <div class="ml-auto flex items-center gap-3">
-                                                    <a href="<?php echo DOCUMENTS_URL; ?>/views/view.php?id=<?= $doc['id'] ?>" class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
+                                                    <button onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
                                                         <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
-                                                    </a>
+                                                    </button>
                                                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
                                                         <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
                                                     </a>
@@ -381,6 +381,104 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
         </main>
+
+        <!-- Document Preview Modal -->
+        <div id="preview-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <!-- Overlay -->
+                <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
+
+                <!-- Modal Content -->
+                <div id="preview-content" class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                    <!-- Modal Header -->
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-center justify-between text-white">
+                        <div class="flex items-center gap-4">
+                            <div id="modal-icon-bg" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                                <i id="modal-icon" class="bi bi-file-earmark-text"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-black leading-6" id="modal-title">Document Preview</h3>
+                                <p id="modal-subtitle" class="text-red-100 text-xs font-bold uppercase tracking-widest mt-1 opacity-80">Reference ID: ---</p>
+                            </div>
+                        </div>
+                        <button onclick="closePreview()" class="w-10 h-10 rounded-xl hover:bg-white/10 flex items-center justify-center transition-all">
+                            <i class="bi bi-x-lg text-xl"></i>
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="bg-white px-6 py-8 md:px-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Left: Details -->
+                            <div class="md:col-span-2 space-y-6">
+                                <div>
+                                    <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Document Title</h4>
+                                    <h2 id="preview-title" class="text-2xl font-black text-gray-800 leading-tight">---</h2>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Description</h4>
+                                    <p id="preview-desc" class="text-gray-600 leading-relaxed font-medium">---</p>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                                        <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</h4>
+                                        <div id="preview-status" class="inline-flex mt-1">
+                                            <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-gray-100 text-gray-600">---</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                                        <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Date Created</h4>
+                                        <p id="preview-date" class="text-sm font-bold text-gray-800 mt-1">---</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Metadata & Actions -->
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 rounded-3xl p-6 border border-gray-100">
+                                    <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">File Information</h4>
+                                    <div class="space-y-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-red-600 shadow-sm border border-gray-100">
+                                                <i class="bi bi-file-earmark-pdf"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <p id="preview-filename" class="text-xs font-bold text-gray-800 truncate">filename.pdf</p>
+                                                <p id="preview-filesize" class="text-[10px] text-gray-400">0.0 MB</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-gray-400 shadow-sm border border-gray-100">
+                                                <i class="bi bi-person-circle"></i>
+                                            </div>
+                                            <div>
+                                                <p id="preview-uploader" class="text-sm font-bold text-gray-800">Uploader</p>
+                                                <p class="text-[10px] text-gray-400">Uploaded By</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="preview-tags" class="mt-6 flex flex-wrap gap-2">
+                                        <!-- Tags will be injected here -->
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <a id="preview-download-btn" href="#" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                        <i class="bi bi-download"></i> Download Document
+                                    </a>
+                                    <a id="preview-full-view" href="#" class="w-full py-3.5 bg-gray-800 hover:bg-gray-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg shadow-gray-200 transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                        <i class="bi bi-fullscreen"></i> Detailed View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <style>
             .custom-scrollbar::-webkit-scrollbar { width: 6px; }
@@ -447,6 +545,113 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     behavior: 'smooth'
                 });
             }
+
+            // Preview Document In Modal
+            async function previewDocument(id) {
+                const modal = document.getElementById('preview-modal');
+                const overlay = document.getElementById('preview-overlay');
+                const content = document.getElementById('preview-content');
+
+                // Show modal & initial loader state
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                    overlay.classList.add('opacity-100', 'pointer-events-auto');
+                    content.classList.remove('opacity-0', 'translate-y-4', 'scale-95');
+                    content.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+                }, 10);
+
+                try {
+                    const response = await fetch(`<?= BASE_URL ?>/modules/document-management/api/get_details.php?id=${id}`);
+                    const result = await response.json();
+
+                    if (result.success) {
+                        const doc = result.document;
+                        
+                        // Update Modal Content
+                        document.getElementById('modal-title').textContent = "Document Preview";
+                        document.getElementById('modal-subtitle').textContent = `REF: ${doc.reference_number || 'N/A'}`;
+                        document.getElementById('preview-title').textContent = doc.title;
+                        document.getElementById('preview-desc').textContent = doc.description || "No description available for this legislative record.";
+                        document.getElementById('preview-date').textContent = new Date(doc.created_at).toLocaleDateString();
+                        document.getElementById('preview-filename').textContent = doc.file_name;
+                        document.getElementById('preview-filesize').textContent = formatFileSize(doc.file_size || 0);
+                        document.getElementById('preview-uploader').textContent = doc.full_name || "System Admin";
+                        
+                        // Status Badge
+                        const statusClasses = {
+                            'approved': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                            'pending': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                            'draft': 'bg-gray-100 text-gray-700 border-gray-200',
+                            'rejected': 'bg-red-100 text-red-700 border-red-200'
+                        };
+                        const statusClass = statusClasses[doc.status.toLowerCase()] || 'bg-gray-100 text-gray-700 border-gray-200';
+                        document.getElementById('preview-status').innerHTML = `<span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest ${statusClass}">${doc.status}</span>`;
+
+                        // Icon
+                        const iconClasses = {
+                            'ordinance': 'bi-journal-text',
+                            'resolution': 'bi-file-earmark-check',
+                            'session': 'bi-people',
+                            'agenda': 'bi-list-ul',
+                            'committee': 'bi-shield-check',
+                            'research': 'bi-search'
+                        };
+                        document.getElementById('modal-icon').className = `bi ${iconClasses[doc.document_type.toLowerCase()] || 'bi-file-earmark-text'}`;
+
+                        // Tags
+                        const tagsContainer = document.getElementById('preview-tags');
+                        tagsContainer.innerHTML = '';
+                        if (doc.tags) {
+                            doc.tags.split(',').forEach(tag => {
+                                if (tag.trim()) {
+                                    const span = document.createElement('span');
+                                    span.className = 'px-2 py-1 rounded-lg bg-white text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-100';
+                                    span.textContent = `#${tag.trim()}`;
+                                    tagsContainer.appendChild(span);
+                                }
+                            });
+                        }
+
+                        // Buttons
+                        document.getElementById('preview-download-btn').href = `<?= BASE_URL ?>/modules/document-management/api/download.php?id=${doc.id}`;
+                        document.getElementById('preview-full-view').href = `<?= BASE_URL ?>/modules/document-management/views/view.php?id=${doc.id}`;
+                    } else {
+                        showToast(result.error || "Failed to load document details", "error");
+                        closePreview();
+                    }
+                } catch (error) {
+                    console.error('Preview error:', error);
+                    showToast("An unexpected error occurred", "error");
+                    closePreview();
+                }
+            }
+
+            function closePreview() {
+                const modal = document.getElementById('preview-modal');
+                const overlay = document.getElementById('preview-overlay');
+                const content = document.getElementById('preview-content');
+
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                overlay.classList.remove('opacity-100', 'pointer-events-auto');
+                content.classList.add('opacity-0', 'translate-y-4', 'scale-95');
+                content.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+
+            // Close on escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closePreview();
+            });
+            
+            // Close on overlay click
+            document.getElementById('preview-overlay')?.addEventListener('click', closePreview);
 
             /**
              * AJAX Functions
