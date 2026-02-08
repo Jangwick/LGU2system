@@ -182,8 +182,15 @@ define('APP_SHORT_NAME', 'LRMS');
 define('APP_VERSION', '1.0.0');
 define('APP_ENV', 'development'); // development, production
 
+// Load local configuration if it exists
+if (file_exists(__DIR__ . '/config.local.php')) {
+    require_once __DIR__ . '/config.local.php';
+}
+
 // AI Configuration
-define('AIzaSyDwta1TxN-r7kxm8VeV5gBB-zacldg7TkI', ''); // Add your Google Gemini API key here
+if (!defined('GEMINI_API_KEY')) {
+    define('GEMINI_API_KEY', ''); // Fallback to empty if not defined in local config
+}
 
 // Session configuration
 if (session_status() === PHP_SESSION_NONE) {
