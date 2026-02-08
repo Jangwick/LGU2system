@@ -68,13 +68,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in overflow-visible">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div class="animate-slide-in-left">
+                <div>
                     <h1 class="text-2xl font-bold text-gray-800 mb-2">Document Management</h1>
                     <p class="text-gray-600">Manage all legislative documents in one place</p>
                 </div>
-                <div class="flex gap-3 animate-slide-in-right relative">
+                <div class="flex gap-3 relative">
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
@@ -439,11 +439,236 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <script src="<?php echo asset('js/documents.js'); ?>"></script>
 <script>
 function viewDocument(id) {
-    window.location.href = 'view.php?id=' + id;
+    const modal = document.getElementById('preview-modal');
+    const content = document.getElementById('preview-content');
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    content.innerHTML = `
+        <div class="flex items-center justify-center p-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+    `;
+
+    fetch(App.apiUrl('documents', `get_details.php?id=${id}`))
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                const doc = res.document;
+                const statusBadge = getStatusBadgeHTML(doc.status);
+                
+                content.innerHTML = `
+                    <div class="p-6">
+                        <!-- Top Header Area -->
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8 pb-6 border-b border-gray-100">
+                            <div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h2 class="text-3xl font-extrabold text-gray-900">${doc.title}</h2>
+                                    ${statusBadge}
+                                </div>
+                                <div class="flex flex-wrap items-center gap-y-2 text-sm text-gray-500">
+                                    <span class="flex items-center">
+                                        <i class="bi bi-hash mr-1.5 text-red-500"></i>
+                                        Reference: <span class="font-bold text-gray-800 ml-1">${doc.reference_number}</span>
+                                    </span>
+                                    <span class="mx-3 text-gray-300">|</span>
+                                    <span class="flex items-center">
+                                        <i class="bi bi-file-earmark-text mr-1.5 text-blue-500"></i>
+                                        Type: <span class="capitalize ml-1">${doc.document_type}</span>
+                                    </span>
+                                    <span class="mx-3 text-gray-300">|</span>
+                                    <span class="flex items-center">
+                                        <i class="bi bi-calendar3 mr-1.5 text-green-500"></i>
+                                        Date: <span class="ml-1">${formatDate(doc.document_date)}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <a href="${App.apiUrl('documents', `download.php?id=${doc.id}`)}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center shadow-lg transform hover:scale-105 active:scale-95 transition-all">
+                                    <i class="bi bi-download mr-2"></i> Download
+                                </a>
+                                <button onclick="editDocument(${doc.id})" class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold flex items-center shadow-lg transform hover:scale-105 active:scale-95 transition-all">
+                                    <i class="bi bi-pencil-square mr-2"></i> Edit
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Main Content Grid -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Left: Primary Information -->
+                            <div class="lg:col-span-2 space-y-8">
+                                <section class="bg-white rounded-2xl border border-gray-100 p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center">
+                                        <span class="w-1.5 h-6 bg-red-600 rounded-full mr-3"></span>
+                                        Document Information
+                                    </h3>
+                                    <div class="grid md:grid-cols-2 gap-y-6 gap-x-8">
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">File Name</label>
+                                            <p class="text-gray-700 font-semibold break-all">${doc.file_name}</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">File Size</label>
+                                            <p class="text-gray-700 font-semibold">${formatSize(doc.file_size)}</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">File Type</label>
+                                            <p class="text-gray-700 font-semibold uppercase">${doc.file_type}</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Uploaded By</label>
+                                            <p class="text-gray-700 font-semibold">${doc.uploader_name || 'Admin User'}</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Created At</label>
+                                            <p class="text-gray-700 font-semibold">${formatDateTime(doc.created_at)}</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Last Updated</label>
+                                            <p class="text-gray-700 font-semibold">${formatDateTime(doc.updated_at)}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-8 pt-6 border-t border-gray-50">
+                                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2.5">Description</label>
+                                        <p class="text-gray-600 leading-relaxed">${doc.description || 'No description provided.'}</p>
+                                    </div>
+                                </section>
+
+                                <section class="bg-white rounded-2xl border border-gray-100 p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center">
+                                        <span class="w-1.5 h-6 bg-blue-600 rounded-full mr-3"></span>
+                                        Version History
+                                    </h3>
+                                    <div class="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                                        <p class="text-gray-400 italic text-sm">No previous versions available.</p>
+                                    </div>
+                                </section>
+                            </div>
+
+                            <!-- Right: Sidebar Information -->
+                            <div class="space-y-6">
+                                <section class="bg-white rounded-2xl border border-gray-100 p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                        <i class="bi bi-link-45deg mr-2 text-indigo-600"></i>
+                                        Related Documents
+                                    </h3>
+                                    <div class="text-center py-6">
+                                        <p class="text-gray-400 italic text-sm">No related documents</p>
+                                    </div>
+                                </section>
+
+                                <section class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-5 flex items-center">
+                                        <i class="bi bi-lightning-charge mr-2 text-yellow-500"></i>
+                                        Quick Actions
+                                    </h3>
+                                    <div class="grid gap-3">
+                                        <button class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl border border-gray-100 transition-colors">
+                                            <i class="bi bi-share mr-3 text-blue-500"></i> Share Document
+                                        </button>
+                                        <button class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl border border-gray-100 transition-colors">
+                                            <i class="bi bi-printer mr-3 text-gray-500"></i> Print Details
+                                        </button>
+                                        <button class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl border border-gray-100 transition-colors">
+                                            <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
+                                        </button>
+                                        <div class="mt-2 pt-2 border-t border-gray-50">
+                                            <button onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                                                <i class="bi bi-trash mr-3"></i> Delete Document
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `<div class="p-12 text-center text-red-600">${res.error}</div>`;
+            }
+        })
+        .catch(e => {
+            content.innerHTML = `<div class="p-12 text-center text-red-600">Failed to load document details</div>`;
+        });
+}
+
+function closePreviewModal() {
+    document.getElementById('preview-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Helper functions for modal
+function getStatusBadgeHTML(status) {
+    const badges = {
+        'draft': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-yellow-50 text-yellow-700 border border-yellow-200"><i class="bi bi-pencil-fill mr-1.5"></i>Draft</span>',
+        'pending': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-blue-50 text-blue-700 border border-blue-200"><i class="bi bi-clock-history mr-1.5"></i>Pending</span>',
+        'approved': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-green-50 text-green-700 border border-green-200"><i class="bi bi-check-circle-fill mr-1.5"></i>Approved</span>',
+        'rejected': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-red-50 text-red-700 border border-red-200"><i class="bi bi-x-circle-fill mr-1.5"></i>Rejected</span>',
+        'archived': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-gray-50 text-gray-700 border border-gray-200"><i class="bi bi-archive-fill mr-1.5"></i>Archived</span>'
+    };
+    return badges[status] || `<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-gray-50 text-gray-700 border border-gray-200">${status}</span>`;
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return 'N/A';
+    return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatDateTime(dateStr) {
+    if (!dateStr) return 'N/A';
+    return new Date(dateStr).toLocaleDateString('en-US', { 
+        year: 'numeric', month: 'long', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit' 
+    });
+}
+
+function formatSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 function editDocument(id) {
-    window.location.href = 'edit.php?id=' + id;
+    const modal = document.getElementById('edit-modal');
+    const form = document.getElementById('edit-form-modal');
+    
+    // Show loading state or at least the modal
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // Fetch details to populate form
+    fetch(App.apiUrl('documents', `get_details.php?id=${id}`))
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                const doc = res.document;
+                // Populate fields
+                form.querySelector('[name="document_id"]').value = doc.id;
+                form.querySelector('[name="title"]').value = doc.title;
+                form.querySelector('[name="document_type"]').value = doc.document_type;
+                form.querySelector('[name="reference_number"]').value = doc.reference_number;
+                form.querySelector('[name="description"]').value = doc.description || '';
+                form.querySelector('[name="document_date"]').value = doc.document_date;
+                form.querySelector('[name="status"]').value = doc.status;
+                form.querySelector('[name="tags"]').value = doc.tags || '';
+            } else {
+                alert('Error loading document: ' + res.error);
+                closeEditModal();
+            }
+        })
+        .catch(err => {
+            alert('Failed to connect to API');
+            closeEditModal();
+        });
+}
+
+function closeEditModal() {
+    document.getElementById('edit-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    document.getElementById('edit-form-modal').reset();
 }
 
 function deleteDocument(id) {
@@ -609,9 +834,146 @@ function closeUploadModal() {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeUploadModal();
+        closePreviewModal();
+        closeEditModal();
     }
 });
 </script>
+
+<!-- Edit Document Modal -->
+<div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10 rounded-t-2xl">
+            <h2 class="text-2xl font-bold text-gray-800">Edit Document</h2>
+            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="bi bi-x-lg text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form id="edit-form-modal" class="p-6">
+            <input type="hidden" name="document_id">
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="bi bi-info-circle mr-2 text-red-600"></i>
+                    Update Information
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Document Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Document Type <span class="text-red-500">*</span>
+                        </label>
+                        <select name="document_type" required class="input-field">
+                            <option value="ordinance">Ordinance</option>
+                            <option value="resolution">Resolution</option>
+                            <option value="session">Session Minutes</option>
+                            <option value="agenda">Agenda</option>
+                            <option value="committee">Committee Report</option>
+                            <option value="hearing">Public Hearing</option>
+                            <option value="consultation">Public Consultation</option>
+                            <option value="research">Research Document</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Reference Number -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Reference Number <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="reference_number" required class="input-field">
+                    </div>
+                    
+                    <!-- Document Title -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Document Title <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="title" required class="input-field">
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Description
+                        </label>
+                        <textarea name="description" rows="3" class="input-field"></textarea>
+                    </div>
+                    
+                    <!-- Document Date -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Document Date <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="document_date" required class="input-field">
+                    </div>
+                    
+                    <!-- Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Status <span class="text-red-500">*</span>
+                        </label>
+                        <select name="status" required class="input-field">
+                            <option value="draft">Draft</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="approved">Approved</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Tags (comma-separated)
+                        </label>
+                        <input type="text" name="tags" placeholder="e.g., budget, taxation, public works" class="input-field">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                <button type="button" onclick="closeEditModal()" class="btn-secondary">
+                    <i class="bi bi-x-circle mr-2"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn-primary">
+                    <i class="bi bi-check-circle mr-2"></i>
+                    Update Document
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Document Preview Modal -->
+<div id="preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-[60] flex items-center justify-center p-4">
+    <div class="bg-gray-50 rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up">
+        <!-- Sticky Modal Header -->
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10 shadow-sm">
+            <div class="flex items-center">
+                <div class="p-2 bg-red-50 rounded-xl mr-3">
+                    <i class="bi bi-file-earmark-pdf text-red-600 text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Document Preview</span>
+                </div>
+            </div>
+            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-all">
+                <i class="bi bi-x-lg text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Scrollable Modal Content -->
+        <div id="preview-content" class="overflow-y-auto overflow-x-hidden flex-1">
+            <!-- Content injected by JS -->
+        </div>
+    </div>
+</div>
 
 <!-- Upload Document Modal -->
 <div id="upload-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -904,6 +1266,43 @@ document.getElementById('upload-form-modal').addEventListener('submit', async (e
             location.reload(); // Reload to show new document
         } else {
             alert('Error: ' + (result.error || 'Upload failed'));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    } catch (error) {
+        alert('Network error: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    }
+});
+
+// Handle Edit form submission
+document.getElementById('edit-form-modal').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Create FormData
+    const formData = new FormData(e.target);
+    
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-arrow-repeat mr-2 animate-spin"></i>Updating...';
+    
+    try {
+        const response = await fetch('<?php echo DOCUMENTS_URL; ?>/api/update.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Document updated successfully!');
+            closeEditModal();
+            location.reload(); 
+        } else {
+            alert('Error: ' + (result.error || 'Update failed'));
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
         }
