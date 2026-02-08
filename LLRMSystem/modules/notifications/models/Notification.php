@@ -98,15 +98,7 @@ class Notification {
                 $sql .= " AND is_read = 0";
             }
             
-            $sql .= " ORDER BY 
-                        CASE priority 
-                            WHEN 'urgent' THEN 1 
-                            WHEN 'high' THEN 2 
-                            WHEN 'normal' THEN 3 
-                            ELSE 4 
-                        END,
-                        created_at DESC 
-                    LIMIT :limit OFFSET :offset";
+            $sql .= " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
             
             $stmt = $this->db->prepare($sql);
             $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);

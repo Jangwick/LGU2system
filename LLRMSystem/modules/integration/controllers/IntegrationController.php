@@ -1,14 +1,17 @@
 <?php
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
+require_once __DIR__ . '/../../notifications/models/Notification.php';
 
 class IntegrationController {
     private $db;
     private $logger;
+    private $notification;
 
     public function __construct() {
         $this->db = getDatabase();
         $this->logger = new Logger($this->db);
+        $this->notification = new Notification();
     }
 
     /**
@@ -56,7 +59,18 @@ class IntegrationController {
 
         if ($result) {
             $id = $this->db->lastInsertId();
-            $this->logger->logActivity('INTEGRATION_RECEIVED', 'integrated_records', $id, "Received {$data['module_type']} from {$data['source_system']}");
+            $this->logger->logActivity('INTEGRATION_RECEIVED', 'integrated_records', $id, "Received {$moduleType} from " . ($data['source_system'] ?? 'External Integration'));
+            
+            // Notify staff about incoming external data
+            $this->notification->broadcast([
+                'type' => 'integration',
+                'title' => 'Incoming External Data',
+                'message' => "New " . ($moduleType ?: 'record') . " received: " . $title,
+                'source_module' => 'integration',
+                'source_id' => $id,
+                'data' => ['link' => "modules/integration/views/{$moduleType}.php"]
+            ]);
+
             return ['success' => true, 'id' => $id];
         }
 
@@ -135,6 +149,16 @@ class IntegrationController {
             
             $this->logger->logActivity('INTEGRATION_IMPORTED', 'legislative_documents', $docId, "Imported {$record['module_type']} Record #{$id} as Document #{$docId}");
             
+            // Notify about successful sync
+            $this->notification->broadcast([
+                'type' => 'file',
+                'title' => 'Record Imported',
+                'message' => "External record '{$record['title']}' has been successfully imported as Document #$refNum",
+                'source_module' => 'document-management',
+                'source_id' => $docId,
+                'data' => ['link' => "modules/document-management/views/view.php?id={$docId}"]
+            ]);
+
             return ['success' => true, 'document_id' => $docId];
         }
 

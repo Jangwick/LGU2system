@@ -502,6 +502,8 @@
             const notificationCountText = document.getElementById('notification-count-text');
             const markAllReadBtn = document.getElementById('mark-all-read-btn');
             
+            let currentNotifications = [];
+
             if (!notificationBtn || !notificationDropdown) return;
             
             // Get notification API URL using PHP BASE_URL
@@ -516,6 +518,7 @@
                     const data = await response.json();
                     
                     if (data.success) {
+                        currentNotifications = data.notifications;
                         updateNotificationBadge(data.unread_count);
                         renderNotifications(data.notifications);
                     } else {
@@ -553,9 +556,11 @@
                     return;
                 }
                 
-                notificationsList.innerHTML = notifications.map(n => `
+                notificationsList.innerHTML = notifications.map(n => {
+                    const link = (n.data && n.data.link) ? n.data.link : '';
+                    return `
                     <div class="p-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer notification-item ${n.is_read ? 'opacity-60' : ''}" 
-                         data-id="${n.id}" onclick="markNotificationRead(${n.id})">
+                         data-id="${n.id}" onclick="handleNotificationClick(${n.id}, '${link}')">
                         <div class="flex items-start space-x-3">
                             <div class="${getNotificationIconBg(n.type)} rounded-full p-2 flex-shrink-0">
                                 <i class="bi ${getNotificationIcon(n.type)} ${getNotificationIconColor(n.type)}"></i>
@@ -575,9 +580,39 @@
                             ${!n.is_read ? '<div class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>' : ''}
                         </div>
                     </div>
-                `).join('');
+                `;
+                }).join('');
             }
             
+            // Handle clicking a notification (Read & Redirect)
+            window.handleNotificationClick = async function(id, link = '') {
+                const n = currentNotifications.find(item => item.id == id);
+                if (!n) return;
+
+                // Mark as read in background if unread
+                if (!n.is_read) {
+                    try {
+                        await fetch(NOTIFICATION_API_URL + '?action=read', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'same-origin',
+                            body: JSON.stringify({ notification_id: id })
+                        });
+                    } catch (error) {
+                        console.error('Error marking read:', error);
+                    }
+                }
+
+                // Redirect logic
+                if (link) {
+                    window.location.href = '<?php echo BASE_URL; ?>/' + link;
+                } else if (n.source_module === 'document-management') {
+                    window.location.href = '<?php echo BASE_URL; ?>/modules/document-management/views/index.php';
+                } else {
+                    window.location.href = '<?php echo BASE_URL; ?>/modules/document-management/views/index.php';
+                }
+            };
+
             // Get icon based on notification type
             function getNotificationIcon(type) {
                 const icons = {
@@ -632,7 +667,7 @@
                 return div.innerHTML;
             }
             
-            // Mark notification as read
+            // Mark notification as read (legacy/other usage)
             window.markNotificationRead = async function(id) {
                 try {
                     await fetch(NOTIFICATION_API_URL + '?action=read', {
