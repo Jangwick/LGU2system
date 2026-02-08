@@ -185,10 +185,10 @@ require_once __DIR__ . '/../../core/config/config.php';
                                     required
                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition bg-white">
                                 <option value="">Select Role</option>
-                                <option value="USER">User</option>
-                                <option value="STAFF">Staff</option>
-                                <option value="MANAGER">Manager</option>
-                                <option value="ADMIN">Administrator</option>
+                                <option value="viewer">User/Viewer</option>
+                                <option value="staff">Staff</option>
+                                <option value="officer">Officer</option>
+                                <option value="administrator">Administrator</option>
                             </select>
                         </div>
                     </div>

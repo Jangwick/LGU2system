@@ -199,16 +199,30 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <?php
-                                        $roleClass = match($user['role']) {
-                                            'administrator' => 'bg-purple-100 text-purple-800',
-                                            'officer' => 'bg-blue-100 text-blue-800',
+                                        $userRole = strtolower(trim($user['role'] ?? ''));
+                                        $roleClass = match($userRole) {
+                                            'administrator', 'admin' => 'bg-purple-100 text-purple-800',
+                                            'officer', 'manager' => 'bg-blue-100 text-blue-800',
                                             'staff' => 'bg-green-100 text-green-800',
-                                            'viewer' => 'bg-gray-100 text-gray-800',
-                                            default => 'bg-gray-100 text-gray-800'
+                                            'viewer', 'user' => 'bg-gray-100 text-gray-800',
+                                            default => 'bg-gray-100 text-gray-800 text-opacity-70'
                                         };
                                         ?>
                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $roleClass; ?> transition-transform duration-200 hover:scale-105">
-                                            <?php echo ucfirst($user['role']); ?>
+                                            <?php 
+                                            if (empty($userRole)) {
+                                                echo '<span class="flex items-center text-red-500 font-bold"><i class="bi bi-exclamation-triangle-fill mr-1"></i>Unassigned</span>';
+                                            } else {
+                                                echo htmlspecialchars(match($userRole) {
+                                                    'administrator', 'admin' => 'Administrator',
+                                                    'officer' => 'Officer',
+                                                    'manager' => 'Manager',
+                                                    'staff' => 'Staff',
+                                                    'viewer', 'user' => 'Viewer',
+                                                    default => ucfirst($userRole)
+                                                });
+                                            }
+                                            ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
