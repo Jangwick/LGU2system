@@ -130,7 +130,16 @@
                 })
             });
 
-            const result = await response.json();
+            const responseText = await response.text();
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (e) {
+                console.error("Non-JSON response:", responseText);
+                document.getElementById(typingId).remove();
+                appendMessage('bot', 'Error: The server returned an invalid response. Check console for details.');
+                return;
+            }
             
             // Remove typing indicator
             document.getElementById(typingId).remove();
@@ -138,16 +147,21 @@
             if (result.success) {
                 appendMessage('bot', result.answer);
                 chatHistory.push({ role: 'user', text: text });
-                chatHistory.push({ role: 'bot', text: result.answer });
+                chatHistory.push({ role: 'model', text: result.answer });
                 
                 // Keep history manageable
-                if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+                if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
             } else {
-                appendMessage('bot', 'Sorry, I encountered an error: ' + result.error);
+                let errorMsg = result.error;
+                if (result.details && result.details.error && result.details.error.message) {
+                    errorMsg += ': ' + result.details.error.message;
+                }
+                appendMessage('bot', 'Sorry, I encountered an error: ' + errorMsg);
             }
         } catch (error) {
+            console.error("Chat Error:", error);
             document.getElementById(typingId).remove();
-            appendMessage('bot', 'Failed to connect to the assistant. Please try again later.');
+            appendMessage('bot', 'Failed to connect to the assistant. Error: ' + error.message);
         } finally {
             sendBtn.disabled = false;
             chatInput.disabled = false;

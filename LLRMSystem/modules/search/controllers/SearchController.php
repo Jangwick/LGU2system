@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../services/SearchService.php';
 require_once __DIR__ . '/../services/EmbeddingService.php';

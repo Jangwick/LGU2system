@@ -27,4 +27,9 @@ $history = $input['history'] ?? [];
 $controller = new ChatbotController();
 $result = $controller->ask($message, $history);
 
+if (isset($result['details'])) {
+    // Log for debugging
+    error_log("Chatbot Detail: " . json_encode($result['details']));
+}
+
 echo json_encode($result);
