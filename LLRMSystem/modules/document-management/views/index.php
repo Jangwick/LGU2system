@@ -841,10 +841,10 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 <!-- Edit Document Modal -->
-<div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+<div id="edit-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/20">
         <!-- Modal Header -->
-        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10 rounded-t-2xl">
+        <div class="sticky top-0 bg-white/50 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10 rounded-t-2xl">
             <h2 class="text-2xl font-bold text-gray-800">Edit Document</h2>
             <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
                 <i class="bi bi-x-lg text-2xl"></i>
@@ -951,10 +951,10 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <!-- Document Preview Modal -->
-<div id="preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-[60] flex items-center justify-center p-4">
-    <div class="bg-gray-50 rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up">
+<div id="preview-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+    <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up border border-white/20">
         <!-- Sticky Modal Header -->
-        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10 shadow-sm">
+        <div class="sticky top-0 bg-white/50 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
             <div class="flex items-center">
                 <div class="p-2 bg-red-50 rounded-xl mr-3">
                     <i class="bi bi-file-earmark-pdf text-red-600 text-xl"></i>
@@ -976,10 +976,10 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <!-- Upload Document Modal -->
-<div id="upload-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+<div id="upload-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/20">
         <!-- Modal Header -->
-        <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <div class="sticky top-0 bg-white/50 backdrop-blur-md border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
             <h2 class="text-2xl font-bold text-gray-800">Upload New Document</h2>
             <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 transition">
                 <i class="bi bi-x-lg text-2xl"></i>

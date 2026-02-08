@@ -135,8 +135,8 @@ $records = $controller->getRecords($currentModule);
 </div>
 
 <!-- Simulator Modal -->
-<div id="simulatorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up">
+<div id="simulatorModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-50 items-center justify-center p-4">
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-white/20">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-xl font-bold text-gray-900 flex items-center">
                 <i class="bi bi-cpu mr-2 text-red-600"></i> Integration Simulator
