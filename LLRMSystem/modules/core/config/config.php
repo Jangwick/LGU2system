@@ -104,6 +104,7 @@ define('SEARCH_URL', BASE_URL . '/modules/search');
 define('AUDIT_URL', BASE_URL . '/modules/audit');
 define('HELP_URL', BASE_URL . '/modules/help');
 define('NOTIFICATIONS_URL', BASE_URL . '/modules/notifications');
+define('INTEGRATION_URL', BASE_URL . '/modules/integration');
 
 // Common page URLs
 define('LOGIN_URL', AUTH_URL . '/views/login.php');

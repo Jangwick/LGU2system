@@ -94,47 +94,47 @@
                 </button>
                 
                 <div id="integrationDropdown" class="dropdown-content hidden">
-                    <a href="/modules/integration-ordinances/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'ordinances' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-ordinances/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'ordinances' ? 'active' : ''; ?>">
                         <i class="bi bi-journal-text"></i>
                         <span class="sidebar-text">Ordinances</span>
                     </a>
                     
-                    <a href="/modules/integration-sessions/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'sessions' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-sessions/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'sessions' ? 'active' : ''; ?>">
                         <i class="bi bi-calendar3"></i>
                         <span class="sidebar-text">Sessions</span>
                     </a>
                     
-                    <a href="/modules/integration-agendas/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'agendas' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-agendas/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'agendas' ? 'active' : ''; ?>">
                         <i class="bi bi-list-check"></i>
                         <span class="sidebar-text">Agendas</span>
                     </a>
                     
-                    <a href="/modules/integration-committees/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'committees' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-committees/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'committees' ? 'active' : ''; ?>">
                         <i class="bi bi-people"></i>
                         <span class="sidebar-text">Committees</span>
                     </a>
                     
-                    <a href="/modules/integration-voting/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'voting' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-voting/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'voting' ? 'active' : ''; ?>">
                         <i class="bi bi-hand-thumbs-up"></i>
                         <span class="sidebar-text">Voting Records</span>
                     </a>
                     
-                    <a href="/modules/integration-hearings/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'hearings' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-hearings/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'hearings' ? 'active' : ''; ?>">
                         <i class="bi bi-megaphone"></i>
                         <span class="sidebar-text">Public Hearings</span>
                     </a>
                     
-                    <a href="/modules/integration-archives/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'archives' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-archives/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'archives' ? 'active' : ''; ?>">
                         <i class="bi bi-archive"></i>
                         <span class="sidebar-text">Archives</span>
                     </a>
                     
-                    <a href="/modules/integration-consultations/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'consultations' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-consultations/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'consultations' ? 'active' : ''; ?>">
                         <i class="bi bi-chat-dots"></i>
                         <span class="sidebar-text">Consultations</span>
                     </a>
                     
-                    <a href="/modules/integration-research/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'research' ? 'active' : ''; ?>">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration-research/views/index.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'research' ? 'active' : ''; ?>">
                         <i class="bi bi-book"></i>
                         <span class="sidebar-text">Research</span>
                     </a>
