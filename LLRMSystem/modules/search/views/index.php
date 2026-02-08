@@ -269,8 +269,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </button>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-red-600 bg-white rounded-lg border border-gray-200 shadow-sm transition-all"><i class="bi bi-grid-fill"></i></button>
-                                <button class="w-9 h-9 flex items-center justify-center text-red-600 bg-red-50 rounded-lg border border-red-200 shadow-sm transition-all"><i class="bi bi-list-task"></i></button>
+                                <button onclick="setView('grid')" id="view-grid" class="w-9 h-9 flex items-center justify-center transition-all bg-white border border-gray-200 text-gray-400 hover:text-red-600 rounded-lg shadow-sm">
+                                    <i class="bi bi-grid-fill"></i>
+                                </button>
+                                <button onclick="setView('list')" id="view-list" class="w-9 h-9 flex items-center justify-center transition-all bg-red-50 border border-red-200 text-red-600 rounded-lg shadow-sm">
+                                    <i class="bi bi-list-task"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -305,7 +309,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">REF: <?= $doc['reference_number'] ?? 'N/A' ?></span>
                                                 
                                                 <?php if(isset($doc['relevance_score'])): ?>
-                                                <div class="ml-auto flex items-center gap-2 bg-red-50/50 px-3 py-1.5 rounded-xl border border-red-100">
+                                                <div class="relevance-bar ml-auto flex items-center gap-2 bg-red-50/50 px-3 py-1.5 rounded-xl border border-red-100">
                                                     <div class="text-[9px] font-black uppercase text-red-600 tracking-tighter">AI Relevance</div>
                                                     <div class="h-1.5 w-14 bg-gray-200 rounded-full overflow-hidden">
                                                         <div class="h-full bg-red-500 shadow-sm shadow-red-500/50" style="width: <?= $doc['relevance_score'] * 100 ?>%"></div>
@@ -339,7 +343,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                     <?php endforeach; ?>
                                                 </div>
 
-                                                <div class="ml-auto flex items-center gap-3">
+                                                <div class="card-actions ml-auto flex items-center gap-3">
                                                     <button onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
                                                         <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
                                                     </button>
@@ -501,7 +505,72 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             const searchMeta = document.getElementById('search-meta');
             
             let queryTimer;
+            let currentView = localStorage.getItem('searchView') || 'list';
             
+            // Set View (Grid/List)
+            function setView(view) {
+                currentView = view;
+                localStorage.setItem('searchView', view);
+                
+                const resultsList = document.getElementById('results-list');
+                const gridBtn = document.getElementById('view-grid');
+                const listBtn = document.getElementById('view-list');
+                
+                if (view === 'grid') {
+                    resultsList.classList.remove('space-y-4');
+                    resultsList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4');
+                    
+                    // Update buttons
+                    gridBtn.classList.add('bg-red-50', 'border-red-200', 'text-red-600');
+                    gridBtn.classList.remove('bg-white', 'border-gray-200', 'text-gray-400');
+                    listBtn.classList.remove('bg-red-50', 'border-red-200', 'text-red-600');
+                    listBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-400');
+                    
+                    // Update items
+                    resultsList.querySelectorAll('.group > div').forEach(item => {
+                        item.classList.remove('md:flex-row');
+                        item.classList.add('flex-col');
+                    });
+                    
+                    // Adjust uploader/date section for grid
+                    resultsList.querySelectorAll('.card-actions').forEach(actions => {
+                        actions.classList.remove('ml-auto');
+                        actions.classList.add('w-full', 'justify-between', 'pt-2');
+                    });
+                    
+                    resultsList.querySelectorAll('.relevance-bar').forEach(bar => {
+                        bar.classList.remove('ml-auto');
+                        bar.classList.add('mb-2');
+                    });
+                } else {
+                    resultsList.classList.add('space-y-4');
+                    resultsList.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4');
+                    
+                    // Update buttons
+                    listBtn.classList.add('bg-red-50', 'border-red-200', 'text-red-600');
+                    listBtn.classList.remove('bg-white', 'border-gray-200', 'text-gray-400');
+                    gridBtn.classList.remove('bg-red-50', 'border-red-200', 'text-red-600');
+                    gridBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-400');
+                    
+                    // Update items
+                    resultsList.querySelectorAll('.group > div').forEach(item => {
+                        item.classList.add('md:flex-row');
+                        item.classList.remove('flex-col');
+                    });
+
+                    // Restore classes
+                    resultsList.querySelectorAll('.card-actions').forEach(actions => {
+                        actions.classList.add('ml-auto');
+                        actions.classList.remove('w-full', 'justify-between', 'pt-2');
+                    });
+                    
+                    resultsList.querySelectorAll('.relevance-bar').forEach(bar => {
+                        bar.classList.add('ml-auto');
+                        bar.classList.remove('mb-2');
+                    });
+                }
+            }
+
             // Set Search Mode
             function setSearchMode(mode) {
                 searchModeInput.value = mode;
@@ -683,6 +752,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     if (newResults) resultsList.innerHTML = newResults.innerHTML;
                     if (newMeta) searchMeta.innerHTML = newMeta.innerHTML;
                     
+                    // Re-apply view style
+                    setView(currentView);
+                    
                     // Update URL without refreshing
                     window.history.pushState({}, '', url);
                     
@@ -755,6 +827,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
              * Event Listeners
              */
             document.addEventListener('DOMContentLoaded', function() {
+                // Initialize view
+                setView(currentView);
+
                 if (typeof AOS !== 'undefined') {
                     AOS.init({
                         duration: 800,
