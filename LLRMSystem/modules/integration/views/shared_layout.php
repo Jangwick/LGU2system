@@ -151,6 +151,15 @@ $records = $controller->getRecords($currentModule);
         <form id="simulatorForm" class="space-y-4">
             <input type="hidden" name="module_type" value="<?php echo $currentModule; ?>">
             
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-4">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="text-gray-500 font-bold uppercase">Target Module:</span>
+                    <span class="text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded italic">
+                        <?php echo $config['title']; ?> (<?php echo $currentModule; ?>)
+                    </span>
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Source System</label>

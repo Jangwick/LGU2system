@@ -33,8 +33,11 @@ class IntegrationController {
      * Receive data from external system
      */
     public function receive($data) {
-        if (empty($data['module_type']) || empty($data['title'])) {
-            return ['success' => false, 'error' => 'Missing required fields'];
+        $moduleType = $data['module_type'] ?? $data['type'] ?? null;
+        $title = $data['title'] ?? null;
+
+        if (empty($moduleType) || empty($title)) {
+            return ['success' => false, 'error' => 'Missing required fields (module_type/type, title)'];
         }
 
         $stmt = $this->db->prepare("
@@ -43,9 +46,9 @@ class IntegrationController {
         ");
 
         $result = $stmt->execute([
-            ':type' => $data['module_type'],
+            ':type' => $moduleType,
             ':ext_id' => $data['external_id'] ?? null,
-            ':title' => $data['title'],
+            ':title' => $title,
             ':summary' => $data['summary'] ?? null,
             ':payload' => json_encode($data['payload'] ?? []),
             ':source' => $data['source_system'] ?? 'External Integration'
@@ -81,8 +84,23 @@ class IntegrationController {
         $docDate = $payload['document_date'] ?? date('Y-m-d');
         $tags = $payload['tags'] ?? '';
 
+        // Map module_type to document_type labels used in LRMS (Matches ENUM in documents table)
+        $typeMap = [
+            'ordinances' => 'ordinance',
+            'sessions' => 'session',
+            'agendas' => 'agenda',
+            'committees' => 'committee',
+            'research' => 'research',
+            'resolutions' => 'resolution',
+            'voting' => 'voting',
+            'hearings' => 'hearing',
+            'archives' => 'archive',
+            'consultations' => 'consultation'
+        ];
+        $docType = $typeMap[$record['module_type']] ?? 'ordinance'; // Default to ordinance if unknown to satisfy ENUM
+
         // Generate a reference number
-        $refPrefix = strtoupper(substr($record['module_type'], 0, 3));
+        $refPrefix = strtoupper(substr($docType, 0, 3));
         $refNum = $refPrefix . '-' . date('Y') . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
 
         // Insert into legislative_documents
@@ -101,7 +119,7 @@ class IntegrationController {
         $result = $stmt->execute([
             ':ref' => $refNum,
             ':title' => $record['title'],
-            ':type' => $record['module_type'],
+            ':type' => $docType,
             ':doc_date' => $docDate,
             ':desc' => $record['summary'],
             ':tags' => $tags,
