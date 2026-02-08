@@ -53,8 +53,11 @@ class UserController {
         }
         
         if ($filters['search']) {
-            $query .= " AND (name LIKE :search OR email LIKE :search OR username LIKE :search)";
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $query .= " AND (name LIKE :search1 OR email LIKE :search2 OR username LIKE :search3)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
+            $params[':search3'] = $searchValue;
         }
         
         // Count total

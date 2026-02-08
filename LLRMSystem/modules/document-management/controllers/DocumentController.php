@@ -33,6 +33,10 @@ class DocumentController {
                 'status' => $_GET['status'] ?? '',
                 'date_from' => $_GET['date_from'] ?? '',
                 'date_to' => $_GET['date_to'] ?? '',
+                'file_size' => $_GET['file_size'] ?? '',
+                'tags' => $_GET['tags'] ?? '',
+                'category' => $_GET['category'] ?? '',
+                'reference' => $_GET['reference'] ?? '',
                 'sort_by' => $_GET['sort_by'] ?? 'created_at',
                 'sort_dir' => $_GET['sort_dir'] ?? 'DESC',
                 'user_role' => strtolower(trim($_SESSION['user_role'] ?? 'viewer'))

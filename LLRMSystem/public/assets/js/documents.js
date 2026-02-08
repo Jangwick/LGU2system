@@ -2,6 +2,36 @@
  * Document Management JavaScript
  * Handles document CRUD operations, filtering, and interactions
  */
+console.log('Documents JS Version 2.0 Loading...');
+
+// Global handles for HTML event attributes (Defined at top for immediate availability)
+function toggleAdvancedFilters() {
+    console.log('toggleAdvancedFilters triggered');
+    const panel = document.getElementById('advanced-filters-panel');
+    const chevron = document.getElementById('advanced-filters-chevron');
+    if (panel) {
+        const isHidden = panel.classList.toggle('hidden');
+        if (chevron) {
+            chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+    }
+}
+
+function applyFilters() {
+    if (window.docManager) window.docManager.applyFilters();
+}
+
+function applyAdvancedFilters() {
+    if (window.docManager) window.docManager.applyAdvancedFilters();
+}
+
+function clearAdvancedFilters() {
+    if (window.docManager) window.docManager.clearFilters();
+}
+
+function toggleSelectAll(el) {
+    if (window.docManager) window.docManager.selectAll(el.checked);
+}
 
 // Global variables
 let selectedDocuments = [];
@@ -14,10 +44,15 @@ class DocumentManager {
     }
     
     init() {
-        this.attachEventListeners();
-        this.initializeFilters();
-        this.initializeAdvancedFilters();
-        this.initializeMobileFilterToggle();
+        try {
+            this.attachEventListeners();
+            this.initializeFilters();
+            this.initializeAdvancedFilters();
+            this.initializeMobileFilterToggle();
+            this.populateAdvancedFilters(); // Ensure existing filters are shown
+        } catch (e) {
+            console.error('Error in DocumentManager init:', e);
+        }
     }
     
     // Mobile filter toggle functionality
@@ -25,6 +60,15 @@ class DocumentManager {
         const filterToggle = document.getElementById('mobile-filter-toggle');
         const filtersSection = document.getElementById('filters-section');
         const filterToggleIcon = document.getElementById('filter-toggle-icon');
+        
+        // Auto-show if any filters are active
+        const params = new URLSearchParams(window.location.search);
+        const hasFilters = Array.from(params.keys()).some(k => ['search', 'type', 'status', 'date_from', 'date_to', 'tags', 'category', 'reference'].includes(k) && params.get(k) !== '');
+        
+        if (hasFilters && filtersSection && window.innerWidth < 768) {
+            filtersSection.classList.remove('hidden');
+            if (filterToggleIcon) filterToggleIcon.style.transform = 'rotate(180deg)';
+        }
         
         if (filterToggle && filtersSection) {
             filterToggle.addEventListener('click', () => {
@@ -75,120 +119,179 @@ class DocumentManager {
         });
         
         // Bulk action buttons
-        const bulkDownloadBtn = document.querySelector('button:has(.bi-download)');
-        if (bulkDownloadBtn && bulkDownloadBtn.textContent.includes('Bulk')) {
+        const bulkDownloadBtn = Array.from(document.querySelectorAll('button')).find(btn => 
+            btn.querySelector('.bi-download') && btn.textContent.includes('Download')
+        );
+        if (bulkDownloadBtn) {
             bulkDownloadBtn.addEventListener('click', () => this.bulkDownload());
         }
         
-        const bulkDeleteBtn = document.querySelectorAll('button:has(.bi-trash)');
-        bulkDeleteBtn.forEach(btn => {
-            if (btn.textContent.includes('Delete Selected')) {
-                btn.addEventListener('click', () => this.bulkDelete());
-            }
+        const bulkDeleteBtns = Array.from(document.querySelectorAll('button')).filter(btn => 
+            btn.querySelector('.bi-trash') && (btn.textContent.includes('Selected') || btn.textContent.includes('Delete'))
+        );
+        bulkDeleteBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.bulkDelete());
         });
     }
     
     initializeFilters() {
-        const searchInput = document.querySelector('input[placeholder*="Search"]');
-        const typeFilter = document.querySelector('select');
-        const statusFilter = document.querySelectorAll('select')[1];
+        const searchInput = document.getElementById('main-search');
+        const typeFilter = document.getElementById('type-filter');
+        const statusFilter = document.getElementById('status-filter');
         
         if (searchInput) {
             let searchTimeout;
-            searchInput.addEventListener('input', function(e) {
+            searchInput.addEventListener('input', (e) => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
-                    applyFilters();
-                }, 500);
+                    this.applyFilters();
+                }, 800);
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.applyFilters();
+                }
             });
         }
         
         if (typeFilter) {
-            typeFilter.addEventListener('change', applyFilters);
+            typeFilter.addEventListener('change', () => this.applyFilters());
         }
         
         if (statusFilter) {
-            statusFilter.addEventListener('change', applyFilters);
+            statusFilter.addEventListener('change', () => this.applyFilters());
+        }
+
+        // Check if we should auto-show advanced filters
+        const params = new URLSearchParams(window.location.search);
+        const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
+        const hasAdvanced = advancedKeys.some(key => params.has(key) && params.get(key) !== '');
+        
+        if (hasAdvanced) {
+            this.toggleAdvancedFilters();
         }
     }
     
     initializeAdvancedFilters() {
-        const advancedFiltersBtn = document.querySelector('button:has(.bi-funnel)');
-        
-        if (advancedFiltersBtn) {
-            advancedFiltersBtn.addEventListener('click', () => this.toggleAdvancedFilters());
-        }
+        // Handled by inline onclick for reliability
     }
     
     toggleAdvancedFilters() {
-        let advancedPanel = document.getElementById('advanced-filters-panel');
+        const advancedPanel = document.getElementById('advanced-filters-panel');
+        const chevron = document.getElementById('advanced-filters-chevron');
         
-        if (!advancedPanel) {
-            advancedPanel = this.createAdvancedFiltersPanel();
-            const filtersSection = document.querySelector('.bg-white.rounded-xl.shadow-md.p-6.mb-6:nth-child(2)');
-            if (filtersSection) {
-                filtersSection.appendChild(advancedPanel);
+        if (!advancedPanel) return;
+        
+        const isHidden = advancedPanel.classList.contains('hidden');
+        
+        if (isHidden) {
+            advancedPanel.classList.remove('hidden');
+            advancedPanel.style.display = 'block'; // Force display if class toggle fails
+            if (chevron) {
+                chevron.style.transform = 'rotate(180deg)';
+                chevron.classList.add('text-red-600');
+            }
+        } else {
+            advancedPanel.classList.add('hidden');
+            advancedPanel.style.display = 'none';
+            if (chevron) {
+                chevron.style.transform = 'rotate(0deg)';
+                chevron.classList.remove('text-red-600');
             }
         }
+    }
+
+    applyFilters() {
+        const searchInput = document.getElementById('main-search');
+        const typeFilter = document.getElementById('type-filter');
+        const statusFilter = document.getElementById('status-filter');
         
-        advancedPanel.classList.toggle('hidden');
+        const params = new URLSearchParams(window.location.search);
+        
+        if (searchInput && searchInput.value) {
+            params.set('search', searchInput.value);
+        } else {
+            params.delete('search');
+        }
+        
+        if (typeFilter && typeFilter.value) {
+            params.set('type', typeFilter.value);
+        } else {
+            params.delete('type');
+        }
+        
+        if (statusFilter && statusFilter.value) {
+            params.set('status', statusFilter.value);
+        } else {
+            params.delete('status');
+        }
+        
+        // Preserve advanced filters if they exist
+        const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
+        advancedKeys.forEach(key => {
+            const val = params.get(key);
+            if (val) params.set(key, val);
+        });
+        
+        // Reload page with filters
+        window.location.href = window.location.pathname + '?' + params.toString();
+    }
+
+    applyAdvancedFilters() {
+        const params = new URLSearchParams(window.location.search);
+        
+        const dateFrom = document.getElementById('filter-date-from');
+        const dateTo = document.getElementById('filter-date-to');
+        const reference = document.getElementById('filter-reference');
+        const tags = document.getElementById('filter-tags');
+        
+        if (dateFrom && dateFrom.value) params.set('date_from', dateFrom.value);
+        else params.delete('date_from');
+        
+        if (dateTo && dateTo.value) params.set('date_to', dateTo.value);
+        else params.delete('date_to');
+        
+        if (reference && reference.value) params.set('reference', reference.value);
+        else params.delete('reference');
+        
+        if (tags && tags.value) params.set('tags', tags.value);
+        else params.delete('tags');
+        
+        window.location.href = window.location.pathname + '?' + params.toString();
+    }
+
+    clearFilters() {
+        const params = new URLSearchParams(window.location.search);
+        const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
+        advancedKeys.forEach(key => params.delete(key));
+        
+        window.location.href = window.location.pathname + '?' + params.toString();
+    }
+
+    populateAdvancedFilters() {
+        const params = new URLSearchParams(window.location.search);
+        
+        const map = {
+            'filter-date-from': 'date_from',
+            'filter-date-to': 'date_to',
+            'filter-file-size': 'file_size',
+            'filter-tags': 'tags',
+            'filter-category': 'category',
+            'filter-reference': 'reference'
+        };
+        
+        for (const [id, param] of Object.entries(map)) {
+            const el = document.getElementById(id);
+            if (el && params.has(param)) {
+                el.value = params.get(param);
+            }
+        }
     }
     
     createAdvancedFiltersPanel() {
-        const panel = document.createElement('div');
-        panel.id = 'advanced-filters-panel';
-        panel.className = 'mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 hidden';
-        panel.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
-                    <input type="date" name="date_from" class="input-field" id="filter-date-from">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
-                    <input type="date" name="date_to" class="input-field" id="filter-date-to">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">File Size</label>
-                    <select name="file_size" class="input-field" id="filter-file-size">
-                        <option value="">Any Size</option>
-                        <option value="small">Small (< 1MB)</option>
-                        <option value="medium">Medium (1-10MB)</option>
-                        <option value="large">Large (> 10MB)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                    <input type="text" name="tags" placeholder="Enter tags..." class="input-field" id="filter-tags">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                    <select name="category" class="input-field" id="filter-category">
-                        <option value="">All Categories</option>
-                        <option value="legislative">Legislative</option>
-                        <option value="administrative">Administrative</option>
-                        <option value="financial">Financial</option>
-                        <option value="legal">Legal</option>
-                        <option value="public-service">Public Service</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Reference Number</label>
-                    <input type="text" name="reference" placeholder="Search by reference..." class="input-field" id="filter-reference">
-                </div>
-            </div>
-            
-            <div class="mt-4 flex justify-end gap-2">
-                <button type="button" onclick="clearAdvancedFilters()" class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                    <i class="bi bi-x-circle mr-1"></i>Clear Filters
-                </button>
-                <button type="button" onclick="applyAdvancedFilters()" class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                    <i class="bi bi-search mr-1"></i>Apply Filters
-                </button>
-            </div>
-        `;
-        
-        return panel;
+        // This is now handled in the PHP template for better performance
+        return document.getElementById('advanced-filters-panel');
     }
     
     selectAll(checked) {
@@ -214,23 +317,26 @@ class DocumentManager {
     }
     
     updateBulkActionsVisibility() {
-        const bulkDownloadBtn = document.querySelector('button:has(.bi-download)');
-        const bulkDeleteBtn = document.querySelectorAll('button:has(.bi-trash)');
+        // More compatible selectors than :has()
+        const bulkDownloadBtn = Array.from(document.querySelectorAll('button')).find(btn => 
+            btn.querySelector('.bi-download') && btn.textContent.includes('Download')
+        );
+        const bulkDeleteBtn = Array.from(document.querySelectorAll('button')).filter(btn => 
+            btn.querySelector('.bi-trash') && btn.textContent.includes('Selected')
+        );
         
         const hasSelected = this.selectedDocuments.size > 0;
         
-        if (bulkDownloadBtn && bulkDownloadBtn.textContent.includes('Bulk')) {
+        if (bulkDownloadBtn) {
             bulkDownloadBtn.disabled = !hasSelected;
             bulkDownloadBtn.classList.toggle('opacity-50', !hasSelected);
             bulkDownloadBtn.classList.toggle('cursor-not-allowed', !hasSelected);
         }
         
         bulkDeleteBtn.forEach(btn => {
-            if (btn.textContent.includes('Delete Selected')) {
-                btn.disabled = !hasSelected;
-                btn.classList.toggle('opacity-50', !hasSelected);
-                btn.classList.toggle('cursor-not-allowed', !hasSelected);
-            }
+            btn.disabled = !hasSelected;
+            btn.classList.toggle('opacity-50', !hasSelected);
+            btn.classList.toggle('cursor-not-allowed', !hasSelected);
         });
     }
     
@@ -328,87 +434,14 @@ class DocumentManager {
 }
 
 // Initialize Document Manager
-const docManager = new DocumentManager();
+window.docManager = new DocumentManager();
 
-// Apply basic filters
-function applyFilters() {
-    const searchInput = document.querySelector('input[placeholder*="Search"]');
-    const typeFilter = document.querySelector('select');
-    const statusFilter = document.querySelectorAll('select')[1];
-    
-    const params = new URLSearchParams(window.location.search);
-    
-    if (searchInput && searchInput.value) {
-        params.set('search', searchInput.value);
-    } else {
-        params.delete('search');
-    }
-    
-    if (typeFilter && typeFilter.value) {
-        params.set('type', typeFilter.value);
-    } else {
-        params.delete('type');
-    }
-    
-    if (statusFilter && statusFilter.value) {
-        params.set('status', statusFilter.value);
-    } else {
-        params.delete('status');
-    }
-    
-    // Reload page with filters
-    window.location.href = window.location.pathname + '?' + params.toString();
-}
-
-// Apply advanced filters
-function applyAdvancedFilters() {
-    const panel = document.getElementById('advanced-filters-panel');
-    if (!panel) return;
-    
-    const params = new URLSearchParams(window.location.search);
-    
-    const dateFrom = document.getElementById('filter-date-from');
-    const dateTo = document.getElementById('filter-date-to');
-    const fileSize = document.getElementById('filter-file-size');
-    const tags = document.getElementById('filter-tags');
-    const category = document.getElementById('filter-category');
-    const reference = document.getElementById('filter-reference');
-    
-    if (dateFrom && dateFrom.value) params.set('date_from', dateFrom.value);
-    else params.delete('date_from');
-    
-    if (dateTo && dateTo.value) params.set('date_to', dateTo.value);
-    else params.delete('date_to');
-    
-    if (fileSize && fileSize.value) params.set('file_size', fileSize.value);
-    else params.delete('file_size');
-    
-    if (tags && tags.value) params.set('tags', tags.value);
-    else params.delete('tags');
-    
-    if (category && category.value) params.set('category', category.value);
-    else params.delete('category');
-    
-    if (reference && reference.value) params.set('reference', reference.value);
-    else params.delete('reference');
-    
-    window.location.href = window.location.pathname + '?' + params.toString();
-}
-
-// Clear advanced filters
-function clearAdvancedFilters() {
-    const panel = document.getElementById('advanced-filters-panel');
-    if (!panel) return;
-    
-    const inputs = panel.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        if (input.type === 'date' || input.type === 'text') {
-            input.value = '';
-        } else if (input.tagName === 'SELECT') {
-            input.selectedIndex = 0;
-        }
-    });
-}
+// Ensure global compatibility
+window.toggleAdvancedFilters = toggleAdvancedFilters;
+window.applyFilters = applyFilters;
+window.applyAdvancedFilters = applyAdvancedFilters;
+window.clearAdvancedFilters = clearAdvancedFilters;
+window.toggleSelectAll = toggleSelectAll;
 
 // Show notification
 function showNotification(message, type = 'info') {

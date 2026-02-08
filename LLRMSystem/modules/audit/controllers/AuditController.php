@@ -67,8 +67,11 @@ class AuditController {
         }
         
         if ($filters['search']) {
-            $query .= " AND (al.description LIKE :search OR u.full_name LIKE :search OR u.email LIKE :search)";
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $query .= " AND (al.description LIKE :search1 OR u.full_name LIKE :search2 OR u.email LIKE :search3)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
+            $params[':search3'] = $searchValue;
         }
         
         // Count total
@@ -191,8 +194,10 @@ class AuditController {
         }
         
         if ($filters['search']) {
-            $query .= " AND (al.description LIKE :search OR u.full_name LIKE :search)";
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $query .= " AND (al.description LIKE :search1 OR u.full_name LIKE :search2)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
         }
         
         $query .= " ORDER BY al.created_at DESC";

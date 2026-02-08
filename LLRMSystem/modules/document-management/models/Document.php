@@ -25,8 +25,11 @@ class Document {
         
         // Apply filters
         if (!empty($filters['search'])) {
-            $sql .= " AND (d.title LIKE :search OR d.reference_number LIKE :search OR d.description LIKE :search)";
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $sql .= " AND (d.title LIKE :search1 OR d.reference_number LIKE :search2 OR d.description LIKE :search3)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
+            $params[':search3'] = $searchValue;
         }
         
         if (!empty($filters['type'])) {
@@ -47,6 +50,26 @@ class Document {
         if (!empty($filters['date_to'])) {
             $sql .= " AND d.document_date <= :date_to";
             $params[':date_to'] = $filters['date_to'];
+        }
+        
+        if (!empty($filters['tags'])) {
+            $sql .= " AND d.tags LIKE :tags";
+            $params[':tags'] = '%' . $filters['tags'] . '%';
+        }
+        
+        if (!empty($filters['reference'])) {
+            $sql .= " AND d.reference_number LIKE :reference";
+            $params[':reference'] = '%' . $filters['reference'] . '%';
+        }
+        
+        if (!empty($filters['file_size'])) {
+            if ($filters['file_size'] === 'small') {
+                $sql .= " AND d.file_size < 1048576";
+            } elseif ($filters['file_size'] === 'medium') {
+                $sql .= " AND d.file_size BETWEEN 1048576 AND 10485760";
+            } elseif ($filters['file_size'] === 'large') {
+                $sql .= " AND d.file_size > 10485760";
+            }
         }
         
         // Sorting
@@ -187,8 +210,10 @@ class Document {
         $params = [];
         
         if (!empty($filters['search'])) {
-            $sql .= " AND (d.title LIKE :search OR d.reference_number LIKE :search)";
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $sql .= " AND (d.title LIKE :search1 OR d.reference_number LIKE :search2)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
         }
         
         $sql .= " ORDER BY d.deleted_at DESC";
@@ -218,8 +243,11 @@ class Document {
         $params = [];
         
         if (!empty($filters['search'])) {
-            $sql .= " AND (title LIKE :search OR reference_number LIKE :search OR description LIKE :search)";
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $sql .= " AND (title LIKE :search1 OR reference_number LIKE :search2 OR description LIKE :search3)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
+            $params[':search3'] = $searchValue;
         }
         
         if (!empty($filters['type'])) {
@@ -230,6 +258,36 @@ class Document {
         if (!empty($filters['status'])) {
             $sql .= " AND status = :status";
             $params[':status'] = $filters['status'];
+        }
+
+        if (!empty($filters['date_from'])) {
+            $sql .= " AND document_date >= :date_from";
+            $params[':date_from'] = $filters['date_from'];
+        }
+        
+        if (!empty($filters['date_to'])) {
+            $sql .= " AND document_date <= :date_to";
+            $params[':date_to'] = $filters['date_to'];
+        }
+
+        if (!empty($filters['tags'])) {
+            $sql .= " AND tags LIKE :tags";
+            $params[':tags'] = '%' . $filters['tags'] . '%';
+        }
+        
+        if (!empty($filters['reference'])) {
+            $sql .= " AND reference_number LIKE :reference";
+            $params[':reference'] = '%' . $filters['reference'] . '%';
+        }
+        
+        if (!empty($filters['file_size'])) {
+            if ($filters['file_size'] === 'small') {
+                $sql .= " AND file_size < 1048576";
+            } elseif ($filters['file_size'] === 'medium') {
+                $sql .= " AND file_size BETWEEN 1048576 AND 10485760";
+            } elseif ($filters['file_size'] === 'large') {
+                $sql .= " AND file_size > 10485760";
+            }
         }
         
         $stmt = $this->db->prepare($sql);

@@ -130,14 +130,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </button>
         
         <!-- Filters Section -->
-        <div id="filters-section" class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6 transform hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100 hidden md:block">
+        <div id="filters-section" class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up animation-delay-100 hidden md:block">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="sm:col-span-2 md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Search Documents</label>
                     <div class="relative group">
                         <input type="text" 
+                               id="main-search"
                                placeholder="Search by title, reference, or keywords..." 
+                               value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>"
                                class="input-field pl-10 focus:ring-2 focus:ring-red-500 transition-all duration-200 w-full">
                         <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 transition-all group-focus-within:text-red-600 group-focus-within:scale-110"></i>
                     </div>
@@ -146,37 +148,83 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Document Type Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Document Type</label>
-                    <select class="input-field focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:border-red-300 w-full">
+                    <select id="type-filter" class="input-field focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:border-red-300 w-full">
                         <option value="">All Types</option>
-                        <option value="ordinance">Ordinance</option>
-                        <option value="resolution">Resolution</option>
-                        <option value="session">Session Minutes</option>
-                        <option value="agenda">Agenda</option>
-                        <option value="committee">Committee Report</option>
-                        <option value="other">Other</option>
+                        <?php 
+                        $types = ['ordinance', 'resolution', 'session', 'agenda', 'committee', 'other'];
+                        $selectedType = $_GET['type'] ?? '';
+                        foreach ($types as $t): ?>
+                            <option value="<?php echo $t; ?>" <?php echo $selectedType === $t ? 'selected' : ''; ?>>
+                                <?php echo ucfirst($t === 'session' ? 'session minutes' : $t); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 
                 <!-- Status Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select class="input-field w-full">
+                    <select id="status-filter" class="input-field w-full">
                         <option value="">All Status</option>
-                        <option value="draft">Draft</option>
-                        <option value="pending">Pending Review</option>
-                        <option value="approved">Approved</option>
-                        <option value="archived">Archived</option>
+                        <?php 
+                        $statuses = [
+                            'draft' => 'Draft',
+                            'pending' => 'Pending Review',
+                            'approved' => 'Approved',
+                            'archived' => 'Archived'
+                        ];
+                        $selectedStatus = $_GET['status'] ?? '';
+                        foreach ($statuses as $val => $label): ?>
+                            <option value="<?php echo $val; ?>" <?php echo $selectedStatus === $val ? 'selected' : ''; ?>>
+                                <?php echo $label; ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
             </div>
             
             <!-- Advanced Filters Toggle -->
-            <div class="mt-4 pt-4 border-t border-gray-200">
-                <button class="text-red-600 hover:text-red-700 text-sm font-medium flex items-center">
+            <div class="mt-4 pt-4 border-t border-gray-100">
+                <button id="advanced-filters-btn" type="button" onclick="toggleAdvancedFilters()" class="inline-flex items-center px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-all duration-200 font-bold border border-red-100 shadow-sm cursor-pointer active:scale-95">
                     <i class="bi bi-funnel mr-2"></i>
                     Advanced Filters
-                    <i class="bi bi-chevron-down ml-2"></i>
+                    <i class="bi bi-chevron-down ml-2 transition-transform duration-300" id="advanced-filters-chevron"></i>
                 </button>
+            </div>
+
+            <!-- Advanced Filters Panel -->
+            <div id="advanced-filters-panel" class="hidden mt-4 pt-4 border-t border-gray-100">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Date From -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
+                        <input type="date" id="filter-date-from" value="<?php echo htmlspecialchars($_GET['date_from'] ?? ''); ?>" class="input-field w-full">
+                    </div>
+                    <!-- Date To -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
+                        <input type="date" id="filter-date-to" value="<?php echo htmlspecialchars($_GET['date_to'] ?? ''); ?>" class="input-field w-full">
+                    </div>
+                    <!-- Reference Number -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference No.</label>
+                        <input type="text" id="filter-reference" placeholder="e.g. 2023-001" value="<?php echo htmlspecialchars($_GET['reference'] ?? ''); ?>" class="input-field w-full">
+                    </div>
+                    <!-- Tags -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                        <input type="text" id="filter-tags" placeholder="e.g. budget, land" value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>" class="input-field w-full">
+                    </div>
+                </div>
+                
+                <div class="mt-4 flex justify-end gap-3">
+                    <button type="button" onclick="clearAdvancedFilters()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">
+                        Clear All
+                    </button>
+                    <button type="button" onclick="applyAdvancedFilters()" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-sm font-medium">
+                        Apply Advanced Filters
+                    </button>
+                </div>
             </div>
         </div>
         
@@ -436,8 +484,37 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
 
-<script src="<?php echo asset('js/documents.js'); ?>"></script>
+<script src="<?php echo asset('js/documents.js'); ?>?v=<?php echo time(); ?>"></script>
 <script>
+// Essential Global Handlers (Redefined here for reliability)
+function toggleAdvancedFilters() {
+    const panel = document.getElementById('advanced-filters-panel');
+    const chevron = document.getElementById('advanced-filters-chevron');
+    if (panel) {
+        const isHidden = panel.classList.toggle('hidden');
+        if (chevron) {
+            chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+    }
+}
+
+function applyFilters() {
+    if (window.docManager) window.docManager.applyFilters();
+    else if (typeof window.applyFilters === 'function') window.applyFilters();
+}
+
+function applyAdvancedFilters() {
+    if (window.docManager) window.docManager.applyAdvancedFilters();
+}
+
+function clearAdvancedFilters() {
+    if (window.docManager) window.docManager.clearFilters();
+}
+
+function toggleSelectAll(el) {
+    if (window.docManager) window.docManager.selectAll(el.checked);
+}
+
 function viewDocument(id) {
     const modal = document.getElementById('preview-modal');
     const content = document.getElementById('preview-content');
