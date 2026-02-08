@@ -699,6 +699,10 @@
             setInterval(fetchNotifications, 60000); // Refresh every minute
         })();
     </script>
+
+    <!-- AI Chatbot Assistant -->
+    <?php include_once __DIR__ . '/../../chatbot/views/chat_widget.php'; ?>
+
     </div> <!-- Close flex container from header -->
 </body>
 </html>
