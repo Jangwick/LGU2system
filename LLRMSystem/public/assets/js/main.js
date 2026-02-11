@@ -109,7 +109,8 @@ if (quickSearch) {
         if (e.key === 'Enter') {
             const query = e.target.value.trim();
             if (query.length > 0) {
-                window.location.href = `/modules/search/views/index.php?q=${encodeURIComponent(query)}`;
+                const baseUrl = window.App?.config?.baseUrl || '';
+                window.location.href = `${baseUrl}/modules/search/views/index.php?q=${encodeURIComponent(query)}`;
             }
         }
     });

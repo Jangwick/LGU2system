@@ -60,9 +60,15 @@ class SearchService {
             $params[':date_to'] = $filters['date_to'];
         }
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        $allEmbeddings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            $allEmbeddings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Table doesn't exist or other SQL error
+            error_log("SearchService: Semantic search failed (table missing?): " . $e->getMessage());
+            return [];
+        }
 
         $scores = [];
         foreach ($allEmbeddings as $row) {
@@ -178,10 +184,12 @@ class SearchService {
         
         // Text search using LIKE (more compatible than FULLTEXT)
         if (!empty($query)) {
-            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3)";
+            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3 OR d.tags LIKE :q4 OR d.document_type LIKE :q5)";
             $params[':q1'] = '%' . $query . '%';
             $params[':q2'] = '%' . $query . '%';
             $params[':q3'] = '%' . $query . '%';
+            $params[':q4'] = '%' . $query . '%';
+            $params[':q5'] = '%' . $query . '%';
         }
         
         // Apply filters
@@ -350,7 +358,7 @@ class SearchService {
             SELECT DISTINCT title, reference_number, document_type
             FROM legislative_documents
             WHERE deleted_at IS NULL
-            AND (title LIKE :query OR reference_number LIKE :query)
+            AND (title LIKE :query OR reference_number LIKE :query OR tags LIKE :query OR document_type LIKE :query)
             LIMIT :limit
         ");
         
@@ -373,10 +381,12 @@ class SearchService {
         
         // Use the same LIKE logic as search() for consistency
         if (!empty($query)) {
-            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3)";
+            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3 OR d.tags LIKE :q4 OR d.document_type LIKE :q5)";
             $params[':q1'] = '%' . $query . '%';
             $params[':q2'] = '%' . $query . '%';
             $params[':q3'] = '%' . $query . '%';
+            $params[':q4'] = '%' . $query . '%';
+            $params[':q5'] = '%' . $query . '%';
         }
         
         if (!empty($filters['type'])) {

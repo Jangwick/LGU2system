@@ -69,7 +69,8 @@ class SearchManager {
         
         try {
             const params = new URLSearchParams(searchParams);
-            const response = await fetch(`/modules/search/controllers/SearchController.php?${params.toString()}`);
+            const baseUrl = window.App?.config?.baseUrl || '';
+            const response = await fetch(`${baseUrl}/modules/search/controllers/SearchController.php?${params.toString()}`);
             const result = await response.json();
             
             if (result.success) {

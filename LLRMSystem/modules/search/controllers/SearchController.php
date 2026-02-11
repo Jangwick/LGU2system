@@ -40,14 +40,23 @@ class SearchController {
         
         // Handle different search modes
         if (!empty($query)) {
+            $keywordTotal = $this->searchService->getCount($query, $filters);
+            
             if ($mode === 'semantic') {
-                $results = $this->searchService->semanticSearch($query, $filters);
-                $total = count($results); // Note: total count with pagination in semantic search is complex
+                $allResults = $this->searchService->semanticSearch($query, $filters);
+                $total = count($allResults);
             } else {
                 // Hybrid (Keyword + Semantic)
-                $results = $this->searchService->hybridSearch($query, $filters);
-                $total = count($results);
+                // Use a larger pool for better reranking, then paginate the result
+                $poolFilters = $filters;
+                $poolFilters['limit'] = 100; 
+                $poolFilters['offset'] = 0;
+                $allResults = $this->searchService->hybridSearch($query, $poolFilters);
+                $total = max($keywordTotal, count($allResults));
             }
+            
+            // Manual pagination for AI/Hybrid results
+            $results = array_slice($allResults, ($page - 1) * $perPage, $perPage);
         } else {
             $results = $this->searchService->search($query, $filters);
             $total = $this->searchService->getCount($query, $filters);

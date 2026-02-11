@@ -42,7 +42,7 @@ class IndexWorker {
             echo "Indexing Document ID: {$doc['id']} - {$doc['title']}... ";
             
             try {
-                if ($this->embeddingService->embedDocument($doc['id'])) {
+                if ($this->embeddingService->embedDocument($this->db, $doc['id'])) {
                     echo "OK\n";
                     $success++;
                 } else {
