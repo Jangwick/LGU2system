@@ -889,7 +889,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize count
     const totalDocs = checkboxes.length;
-    document.getElementById('total-docs').textContent = totalDocs;
+    if (document.getElementById('total-docs')) {
+        document.getElementById('total-docs').textContent = totalDocs;
+    }
+
+    // Auto-open upload modal if requested in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('upload') === 'true') {
+        openUploadModal();
+        // Remove the parameter from URL without reloading
+        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+    }
 });
 
 // Upload Modal Functions

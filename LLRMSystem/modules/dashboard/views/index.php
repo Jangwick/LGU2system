@@ -53,7 +53,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="bg-white text-red-600 px-3 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-xs md:text-base">
+                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="bg-white text-red-600 px-3 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-xs md:text-base">
                         <i class="bi bi-upload mr-1 md:mr-2"></i>
                         <span class="hidden sm:inline">Upload </span>Document
                     </a>
@@ -249,7 +249,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
                     <div class="space-y-2">
                         <?php if (!in_array($userRole, ['viewer'])): ?>
-                        <a href="<?php echo DOCUMENTS_URL; ?>/views/create.php" class="flex items-center p-3 hover:bg-red-50 rounded-lg transition">
+                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="flex items-center p-3 hover:bg-red-50 rounded-lg transition">
                             <div class="bg-red-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-upload text-red-600"></i>
                             </div>
