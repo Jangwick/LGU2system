@@ -1,0 +1,19 @@
+# Local configuration files
+modules/core/config/config.local.php
+.env
+
+# XAMPP/Local environment specific
+.vscode/
+*.log
+temp/
+storage/temp/*
+storage/documents/*
+!storage/documents/.gitkeep
+storage/profiles/*
+!storage/profiles/.gitkeep
+storage/versions/*
+!storage/versions/.gitkeep
+
+# OS generated files
+.DS_Store
+Thumbs.db

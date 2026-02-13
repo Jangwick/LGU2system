@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <radialGradient id="silverGradient">
+      <stop offset="0%" style="stop-color:#e8e8e8"/>
+      <stop offset="50%" style="stop-color:#c0c0c0"/>
+      <stop offset="100%" style="stop-color:#a0a0a0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Outer silver/gray metallic ring -->
+  <circle cx="200" cy="200" r="195" fill="url(#silverGradient)" stroke="#808080" stroke-width="2"/>
+  
+  <!-- White border circle -->
+  <circle cx="200" cy="200" r="175" fill="white"/>
+  
+  <!-- Main seal circle background -->
+  <circle cx="200" cy="200" r="160" fill="white"/>
+  
+  <!-- QUARTERS (Rotated to match actual logo) -->
+  
+  <!-- BLUE Quarter (BOTTOM-LEFT) - Industry/Water -->
+  <path d="M 200 200 L 200 360 A 160 160 0 0 1 40 200 Z" fill="#1a5fa8"/>
+  
+  <!-- GREEN Quarter (TOP-LEFT) - Mountains/Agriculture -->  
+  <path d="M 200 200 L 40 200 A 160 160 0 0 1 200 40 Z" fill="#2d8b3c"/>
+  
+  <!-- YELLOW Quarter (TOP-RIGHT) - Lighthouse/Progress -->
+  <path d="M 200 200 L 200 40 A 160 160 0 0 1 360 200 Z" fill="#ffd800"/>
+  
+  <!-- RED Quarter (BOTTOM-RIGHT) - Culture/Heritage -->
+  <path d="M 200 200 L 360 200 A 160 160 0 0 1 200 360 Z" fill="#d92027"/>
+  
+  <!-- ============ YELLOW SECTION (TOP-RIGHT) - Lighthouse ============ -->
+  <g id="lighthouse">
+    <!-- Lighthouse tower with horizontal stripes -->
+    <rect x="290" y="90" width="22" height="80" fill="#000000"/>
+    <!-- White stripes -->
+    <rect x="290" y="95" width="22" height="6" fill="#ffffff"/>
+    <rect x="290" y="107" width="22" height="6" fill="#ffffff"/>
+    <rect x="290" y="119" width="22" height="6" fill="#ffffff"/>
+    <rect x="290" y="131" width="22" height="6" fill="#ffffff"/>
+    <rect x="290" y="143" width="22" height="6" fill="#ffffff"/>
+    <rect x="290" y="155" width="22" height="6" fill="#ffffff"/>
+    
+    <!-- Lighthouse top/light house -->
+    <rect x="287" y="85" width="28" height="8" fill="#000000"/>
+    
+    <!-- Light beams (horizontal lines) -->
+    <line x1="287" y1="89" x2="270" y2="89" stroke="#000000" stroke-width="3"/>
+    <line x1="315" y1="89" x2="332" y2="89" stroke="#000000" stroke-width="3"/>
+    
+    <!-- Base platform -->
+    <rect x="285" y="168" width="32" height="6" fill="#000000"/>
+    
+    <!-- Three stars -->
+    <polygon points="260,65 262,73 270,73 264,78 266,86 260,81 254,86 256,78 250,73 258,73" fill="#000000"/>
+    <polygon points="301,50 303,58 311,58 305,63 307,71 301,66 295,71 297,63 291,58 299,58" fill="#000000"/>
+    <polygon points="342,65 344,73 352,73 346,78 348,86 342,81 336,86 338,78 332,73 340,73" fill="#000000"/>
+  </g>
+  
+  <!-- ============ GREEN SECTION (TOP-LEFT) - Mountains ============ -->
+  <g id="mountains">
+    <!-- Large prominent mountains -->
+    <path d="M 50 200 L 90 120 L 130 160 L 170 100 L 200 140 L 200 200 Z" fill="#1a5c28" opacity="0.8"/>
+    <path d="M 50 200 L 80 140 L 110 170 L 140 120 L 170 150 L 200 200 Z" fill="#0f4018" opacity="0.6"/>
+    
+    <!-- Small star at mountain peak -->
+    <polygon points="170,95 171,100 176,100 172,103 173,108 170,105 167,108 168,103 164,100 169,100" fill="#000000"/>
+  </g>
+  
+  <!-- ============ BLUE SECTION (BOTTOM-LEFT) - Industry/Water ============ -->
+  <g id="industry">
+    <!-- Water waves at bottom -->
+    <path d="M 45 330 Q 60 325 75 330 T 105 330 T 135 330 T 165 330 T 195 330 L 200 360 L 40 360 Z" fill="#0d4a7a" opacity="0.4"/>
+    <path d="M 45 340 Q 60 335 75 340 T 105 340 T 135 340 T 165 340 T 195 340 L 200 360 L 40 360 Z" fill="#0d4a7a" opacity="0.3"/>
+    
+    <!-- Factory/Building silhouette -->
+    <rect x="60" y="280" width="30" height="50" fill="#0d3d6e"/>
+    <rect x="95" y="265" width="35" height="65" fill="#0d3d6e"/>
+    <rect x="135" y="285" width="25" height="45" fill="#0d3d6e"/>
+    
+    <!-- Chimneys/Smokestacks -->
+    <rect x="68" y="260" width="6" height="20" fill="#0d3d6e"/>
+    <rect x="110" y="245" width="6" height="20" fill="#0d3d6e"/>
+    
+    <!-- Windows -->
+    <rect x="65" y="290" width="5" height="6" fill="#87ceeb"/>
+    <rect x="75" y="290" width="5" height="6" fill="#87ceeb"/>
+    <rect x="65" y="302" width="5" height="6" fill="#87ceeb"/>
+    <rect x="75" y="302" width="5" height="6" fill="#87ceeb"/>
+    
+    <!-- Left laurel branch -->
+    <path d="M 55 250 Q 50 260 52 270 Q 54 280 58 285" stroke="#1a4d2e" stroke-width="3" fill="none"/>
+    <ellipse cx="48" cy="255" rx="4" ry="6" fill="#1a4d2e"/>
+    <ellipse cx="47" cy="263" rx="4" ry="6" fill="#1a4d2e"/>
+    <ellipse cx="48" cy="271" rx="4" ry="6" fill="#1a4d2e"/>
+    <ellipse cx="50" cy="279" rx="4" ry="6" fill="#1a4d2e"/>
+  </g>
+  
+  <!-- ============ RED SECTION (BOTTOM-RIGHT) - Carabao/Agriculture ============ -->
+  <g id="agriculture">
+    <!-- Water Buffalo / Carabao (simplified silhouette) -->
+    <ellipse cx="280" cy="300" rx="45" ry="25" fill="#8b1515"/>
+    <ellipse cx="260" cy="295" rx="20" ry="18" fill="#8b1515"/>
+    <!-- Head -->
+    <ellipse cx="245" cy="290" rx="12" ry="10" fill="#8b1515"/>
+    <!-- Horns -->
+    <path d="M 238 285 Q 235 280 233 283" stroke="#000000" stroke-width="2" fill="none"/>
+    <path d="M 252 285 Q 255 280 257 283" stroke="#000000" stroke-width="2" fill="none"/>
+    <!-- Legs -->
+    <rect x="265" y="315" width="6" height="15" fill="#8b1515"/>
+    <rect x="285" y="315" width="6" height="15" fill="#8b1515"/>
+    
+    <!-- Right laurel branch -->
+    <path d="M 345 250 Q 350 260 348 270 Q 346 280 342 285" stroke="#1a4d2e" stroke-width="3" fill="none"/>
+    <ellipse cx="352" cy="255" rx="4" ry="6" fill="#1a4d2e"/>
+    <ellipse cx="353" cy="263" rx="4" ry="6" fill="#1a4d2e"/>
+    <ellipse cx="352" cy="271" rx="4" ry="6" fill="#1a4d2e"/>
+    <ellipse cx="350" cy="279" rx="4" ry="6" fill="#1a4d2e"/>
+  </g>
+  
+  <!-- ============ CIRCULAR TEXT ============ -->
+  <defs>
+    <path id="topArc" d="M 60,200 A 140,140 0 0,1 340,200"/>
+    <path id="bottomArc" d="M 340,200 A 140,140 0 0,1 60,200"/>
+  </defs>
+  
+  <!-- Top text: CITY GOVERNMENT OF VALENZUELA -->
+  <text font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#000000" letter-spacing="2">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">
+      CITY GOVERNMENT OF VALENZUELA
+    </textPath>
+  </text>
+  
+  <!-- Bottom text: METROPOLITAN MANILA -->
+  <text font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#000000" letter-spacing="2">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">
+      METROPOLITAN MANILA
+    </textPath>
+  </text>
+  
+  <!-- Decorative bullet points (dots) on left and right -->
+  <circle cx="50" cy="200" r="6" fill="#000000"/>
+  <circle cx="350" cy="200" r="6" fill="#000000"/>
+  
+  <!-- Inner circle border -->
+  <circle cx="200" cy="200" r="160" fill="none" stroke="#d0d0d0" stroke-width="1" opacity="0.5"/>
+</svg>
