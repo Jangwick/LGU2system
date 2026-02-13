@@ -21,7 +21,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <div class="max-w-7xl mx-auto">
             <div class="mb-4">
-                <a href="index.php" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
+                <a href="index.php" class="inline-flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                     <i class="bi bi-arrow-left mr-2"></i> Back to Analysis Dashboard
                 </a>
             </div>
