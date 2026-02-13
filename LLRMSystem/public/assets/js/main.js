@@ -94,28 +94,6 @@ function debounce(func, wait) {
     };
 }
 
-// Quick Search Functionality
-const quickSearch = document.getElementById('quick-search');
-if (quickSearch) {
-    quickSearch.addEventListener('keyup', debounce(function(e) {
-        const query = e.target.value.trim();
-        if (query.length > 2) {
-            // Perform search (API call would go here)
-            console.log('Searching for:', query);
-        }
-    }, 500));
-    
-    quickSearch.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            const query = e.target.value.trim();
-            if (query.length > 0) {
-                const baseUrl = window.App?.config?.baseUrl || '';
-                window.location.href = `${baseUrl}/modules/search/views/index.php?q=${encodeURIComponent(query)}`;
-            }
-        }
-    });
-}
-
 // Table Row Selection
 document.querySelectorAll('table input[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('change', function() {

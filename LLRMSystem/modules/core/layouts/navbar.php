@@ -59,16 +59,6 @@ if (isset($_SESSION['user_id'])) {
             
             <!-- Right Side Actions -->
             <div class="flex items-center space-x-1 md:space-x-4">
-                <!-- Search Bar -->
-                <div class="hidden lg:block">
-                    <div class="relative">
-                        <input type="text" 
-                               id="quick-search" 
-                               placeholder="Quick search documents..." 
-                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                </div>
                 
                 <!-- Dark/Light Mode Toggle -->
                 <button id="theme-toggle" class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">

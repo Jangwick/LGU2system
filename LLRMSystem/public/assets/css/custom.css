@@ -1441,11 +1441,6 @@ nav ul li a.bg-red-600 {
         height: 3.5rem !important;
     }
     
-    /* Hide quick search on mobile */
-    #quick-search {
-        display: none !important;
-    }
-    
     /* Mobile menu button larger touch target */
     #mobile-menu-btn {
         width: 44px;
