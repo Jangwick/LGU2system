@@ -130,25 +130,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </button>
         
         <!-- Filters Section -->
-        <div id="filters-section" class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up animation-delay-100 hidden md:block">
+        <div id="filters-section" class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up animation-delay-100 hidden md:block border border-transparent dark:border-gray-800">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="sm:col-span-2 md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Search Documents</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search Documents</label>
                     <div class="relative group">
                         <input type="text" 
                                id="main-search"
                                placeholder="Search by title, reference, or keywords..." 
                                value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>"
-                               class="input-field pl-10 focus:ring-2 focus:ring-red-500 transition-all duration-200 w-full">
-                        <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 transition-all group-focus-within:text-red-600 group-focus-within:scale-110"></i>
+                               class="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
+                        <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 transition-all group-focus-within:text-red-500 group-focus-within:scale-110"></i>
                     </div>
                 </div>
                 
                 <!-- Document Type Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Document Type</label>
-                    <select id="type-filter" class="input-field focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:border-red-300 w-full">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Document Type</label>
+                    <select id="type-filter" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 hover:border-red-300 dark:hover:border-red-900">
                         <option value="">All Types</option>
                         <?php 
                         $types = ['ordinance', 'resolution', 'session', 'agenda', 'committee', 'other'];
@@ -163,8 +163,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 
                 <!-- Status Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select id="status-filter" class="input-field w-full">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                    <select id="status-filter" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                         <option value="">All Status</option>
                         <?php 
                         $statuses = [
@@ -183,8 +183,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Advanced Filters Toggle -->
-            <div class="mt-4 pt-4 border-t border-gray-100">
-                <button id="advanced-filters-btn" type="button" onclick="toggleAdvancedFilters()" class="inline-flex items-center px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-all duration-200 font-bold border border-red-100 shadow-sm cursor-pointer active:scale-95">
+            <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                <button id="advanced-filters-btn" type="button" onclick="toggleAdvancedFilters()" class="inline-flex items-center px-4 py-2 bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-500 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20 transition-all duration-200 font-bold border border-red-100 dark:border-red-900/30 shadow-sm cursor-pointer active:scale-95">
                     <i class="bi bi-funnel mr-2"></i>
                     Advanced Filters
                     <i class="bi bi-chevron-down ml-2 transition-transform duration-300" id="advanced-filters-chevron"></i>
@@ -192,32 +192,32 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Advanced Filters Panel -->
-            <div id="advanced-filters-panel" class="hidden mt-4 pt-4 border-t border-gray-100">
+            <div id="advanced-filters-panel" class="hidden mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <!-- Date From -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
-                        <input type="date" id="filter-date-from" value="<?php echo htmlspecialchars($_GET['date_from'] ?? ''); ?>" class="input-field w-full">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date From</label>
+                        <input type="date" id="filter-date-from" value="<?php echo htmlspecialchars($_GET['date_from'] ?? ''); ?>" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     <!-- Date To -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
-                        <input type="date" id="filter-date-to" value="<?php echo htmlspecialchars($_GET['date_to'] ?? ''); ?>" class="input-field w-full">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date To</label>
+                        <input type="date" id="filter-date-to" value="<?php echo htmlspecialchars($_GET['date_to'] ?? ''); ?>" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     <!-- Reference Number -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference No.</label>
-                        <input type="text" id="filter-reference" placeholder="e.g. 2023-001" value="<?php echo htmlspecialchars($_GET['reference'] ?? ''); ?>" class="input-field w-full">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Reference No.</label>
+                        <input type="text" id="filter-reference" placeholder="e.g. 2023-001" value="<?php echo htmlspecialchars($_GET['reference'] ?? ''); ?>" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     <!-- Tags -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                        <input type="text" id="filter-tags" placeholder="e.g. budget, land" value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>" class="input-field w-full">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
+                        <input type="text" id="filter-tags" placeholder="e.g. budget, land" value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                 </div>
                 
                 <div class="mt-4 flex justify-end gap-3">
-                    <button type="button" onclick="clearAdvancedFilters()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">
+                    <button type="button" onclick="clearAdvancedFilters()" class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
                         Clear All
                     </button>
                     <button type="button" onclick="applyAdvancedFilters()" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-sm font-medium">
@@ -934,22 +934,22 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 <!-- Edit Document Modal -->
-<div id="edit-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/20">
+<div id="edit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:bg-gray-900 dark:border-gray-800 transition-colors duration-300">
         <!-- Modal Header -->
-        <div class="sticky top-0 bg-white/50 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10 rounded-t-2xl">
-            <h2 class="text-2xl font-bold text-gray-800">Edit Document</h2>
-            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
+        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10 rounded-t-2xl">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Edit Document</h2>
+            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <form id="edit-form-modal" class="p-6">
+        <form id="edit-form-modal" class="p-6 bg-white dark:bg-gray-900">
             <input type="hidden" name="document_id">
             
             <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                     <i class="bi bi-info-circle mr-2 text-red-600"></i>
                     Update Information
                 </h3>
@@ -957,10 +957,10 @@ document.addEventListener('keydown', function(e) {
                 <div class="grid md:grid-cols-2 gap-4">
                     <!-- Document Type -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Document Type <span class="text-red-500">*</span>
                         </label>
-                        <select name="document_type" required class="input-field">
+                        <select name="document_type" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                             <option value="ordinance">Ordinance</option>
                             <option value="resolution">Resolution</option>
                             <option value="session">Session Minutes</option>
@@ -975,42 +975,42 @@ document.addEventListener('keydown', function(e) {
                     
                     <!-- Reference Number -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Reference Number <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="reference_number" required class="input-field">
+                        <input type="text" name="reference_number" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     
                     <!-- Document Title -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Document Title <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="title" required class="input-field">
+                        <input type="text" name="title" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     
                     <!-- Description -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Description
                         </label>
-                        <textarea name="description" rows="3" class="input-field"></textarea>
+                        <textarea name="description" rows="3" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"></textarea>
                     </div>
                     
                     <!-- Document Date -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Document Date <span class="text-red-500">*</span>
                         </label>
-                        <input type="date" name="document_date" required class="input-field">
+                        <input type="date" name="document_date" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     
                     <!-- Status -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Status <span class="text-red-500">*</span>
                         </label>
-                        <select name="status" required class="input-field">
+                        <select name="status" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                             <option value="draft">Draft</option>
                             <option value="pending">Pending Review</option>
                             <option value="approved">Approved</option>
@@ -1019,22 +1019,20 @@ document.addEventListener('keydown', function(e) {
 
                     <!-- Tags -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Tags (comma-separated)
                         </label>
-                        <input type="text" name="tags" placeholder="e.g., budget, taxation, public works" class="input-field">
+                        <input type="text" name="tags" placeholder="e.g., budget, taxation, public works" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                 </div>
             </div>
 
             <!-- Modal Footer -->
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-                <button type="button" onclick="closeEditModal()" class="btn-secondary">
-                    <i class="bi bi-x-circle mr-2"></i>
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
+                <button type="button" onclick="closeEditModal()" class="px-6 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                     Cancel
                 </button>
-                <button type="submit" class="btn-primary">
-                    <i class="bi bi-check-circle mr-2"></i>
+                <button type="submit" class="px-8 py-2 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 shadow-lg shadow-red-200 dark:shadow-none transition transform active:scale-95">
                     Update Document
                 </button>
             </div>
@@ -1043,73 +1041,75 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <!-- Document Preview Modal -->
-<div id="preview-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-    <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up border border-white/20">
+<div id="preview-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up border border-gray-200 dark:bg-gray-900 dark:border-gray-800 transition-colors duration-300">
         <!-- Sticky Modal Header -->
-        <div class="sticky top-0 bg-white/50 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
             <div class="flex items-center">
-                <div class="p-2 bg-red-50 rounded-xl mr-3">
+                <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-xl mr-3">
                     <i class="bi bi-file-earmark-pdf text-red-600 text-xl"></i>
                 </div>
                 <div>
-                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Document Preview</span>
+                    <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Document Preview</span>
                 </div>
             </div>
-            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-all">
+            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
 
         <!-- Scrollable Modal Content -->
-        <div id="preview-content" class="overflow-y-auto overflow-x-hidden flex-1">
+        <div id="preview-content" class="overflow-y-auto overflow-x-hidden flex-1 bg-white dark:bg-gray-900">
             <!-- Content injected by JS -->
         </div>
     </div>
 </div>
 
 <!-- Upload Document Modal -->
-<div id="upload-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/20">
+<div id="upload-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:bg-gray-900 dark:border-gray-800 transition-all duration-300">
         <!-- Modal Header -->
-        <div class="sticky top-0 bg-white/50 backdrop-blur-md border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-            <h2 class="text-2xl font-bold text-gray-800">Upload New Document</h2>
-            <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 transition">
+        <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl dark:bg-gray-900 dark:border-gray-800 z-10">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Upload New Document</h2>
+            <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <form id="upload-form-modal" class="p-6">
+        <form id="upload-form-modal" class="p-6 bg-white dark:bg-gray-900">
             <!-- File Upload Section -->
             <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                     <i class="bi bi-cloud-upload mr-2 text-red-600"></i>
                     Document File
                 </h3>
                 
                 <!-- Drag & Drop Area -->
-                <div id="drop-zone-modal" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-red-500 transition cursor-pointer">
-                    <i class="bi bi-cloud-arrow-up text-6xl text-gray-400 mb-4"></i>
-                    <p class="text-lg font-medium text-gray-700 mb-2">Drag and drop your file here</p>
-                    <p class="text-sm text-gray-500 mb-4">or click to browse</p>
+                <div id="drop-zone-modal" class="bg-white dark:bg-gray-800/50 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-10 text-center hover:border-red-500 transition-all duration-300 cursor-pointer group">
+                    <div class="mb-4 relative">
+                        <i class="bi bi-cloud-arrow-up text-6xl text-gray-400 group-hover:text-red-500 transition-colors duration-300"></i>
+                    </div>
+                    <p class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-1">Drag and drop your file here</p>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6">or click to browse from your computer</p>
                     <input type="file" id="file-input-modal" name="document_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="hidden" required>
-                    <button type="button" onclick="document.getElementById('file-input-modal').click()" class="btn-primary">
+                    <button type="button" onclick="document.getElementById('file-input-modal').click()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-200 dark:shadow-none flex items-center mx-auto">
                         <i class="bi bi-folder2-open mr-2"></i>
                         Browse Files
                     </button>
-                    <p class="text-xs text-gray-500 mt-4">
-                        Supported formats: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX (Max 50MB)
+                    <p class="text-xs text-gray-400 mt-6 uppercase tracking-widest font-semibold italic">
+                        Supported: PDF, DOC, XLS, PPT (Max 50MB)
                     </p>
                 </div>
                 
                 <!-- File Preview -->
-                <div id="file-preview-modal" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div id="file-preview-modal" class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <i class="bi bi-file-earmark text-red-600 text-2xl mr-3"></i>
                             <div>
-                                <p id="file-name-modal" class="text-sm font-medium text-gray-800"></p>
-                                <p id="file-size-modal" class="text-xs text-gray-600"></p>
+                                <p id="file-name-modal" class="text-sm font-medium text-gray-800 dark:text-gray-200"></p>
+                                <p id="file-size-modal" class="text-xs text-gray-600 dark:text-gray-400"></p>
                             </div>
                         </div>
                         <button type="button" id="remove-file-modal" class="text-red-600 hover:text-red-700">
@@ -1121,7 +1121,7 @@ document.addEventListener('keydown', function(e) {
 
             <!-- Document Information -->
             <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                     <i class="bi bi-info-circle mr-2 text-red-600"></i>
                     Document Information
                 </h3>
@@ -1129,10 +1129,10 @@ document.addEventListener('keydown', function(e) {
                 <div class="grid md:grid-cols-2 gap-4">
                     <!-- Document Type -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Document Type <span class="text-red-500">*</span>
                         </label>
-                        <select name="document_type" required class="input-field">
+                        <select name="document_type" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                             <option value="">Select Type</option>
                             <option value="ordinance">Ordinance</option>
                             <option value="resolution">Resolution</option>
@@ -1148,35 +1148,62 @@ document.addEventListener('keydown', function(e) {
                     
                     <!-- Reference Number -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Reference Number <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="reference_number" required placeholder="e.g., ORD-2025-042" class="input-field">
+                        <input type="text" name="reference_number" required placeholder="e.g., ORD-2025-042" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     
                     <!-- Document Title -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Document Title <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="title" required placeholder="Enter document title" class="input-field">
+                        <input type="text" name="title" required placeholder="Enter document title" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
                     
                     <!-- Description -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Description
                         </label>
-                        <textarea name="description" rows="3" placeholder="Brief description of the document" class="input-field"></textarea>
+                        <textarea name="description" rows="3" placeholder="Brief description of the document" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"></textarea>
                     </div>
                     
                     <!-- Document Date -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Document Date <span class="text-red-500">*</span>
                         </label>
-                        <input type="date" name="document_date" id="document-date-modal" required class="input-field">
+                        <input type="date" name="document_date" id="document-date-modal" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
+                    
+                    <!-- Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Status <span class="text-red-500">*</span>
+                        </label>
+                        <select name="status" id="status-modal" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
+                            <option value="Draft">Draft</option>
+                            <option value="Published">Published</option>
+                            <option value="Archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-gray-900 py-4 border-t border-gray-200 dark:border-gray-800 z-10">
+                <button type="button" onclick="closeUploadModal()" class="px-6 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                    Cancel
+                </button>
+                <button type="submit" id="upload-submit-btn" class="px-8 py-2 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 shadow-lg shadow-red-200 dark:shadow-none transition transform active:scale-95 flex items-center">
+                    <span>Upload Document</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
                     
                     <!-- Status -->
                     <div>
