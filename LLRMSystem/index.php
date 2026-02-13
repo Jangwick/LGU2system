@@ -120,7 +120,7 @@ $pageTitle = "Home";
             <div class="text-center">
                 <div data-aos="fade-down" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-red-50 text-red-700 text-xs font-black mb-8 shadow-sm">
                     <span class="flex h-2 w-2 rounded-full bg-red-600 mr-2 animate-pulse"></span>
-                    OFFICIAL LEGISLATIVE ARCHIVE
+                    OFFICIAL LEGISLATIVE RECORDS
                 </div>
                 <h1 data-aos="fade-up" data-aos-delay="100" class="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 mb-8 tracking-tighter leading-[0.9]">
                     Preserving the <br class="hidden md:block">
