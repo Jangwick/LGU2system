@@ -32,15 +32,25 @@ try {
         $name = trim($_POST['name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $department = trim($_POST['department'] ?? '');
-        $position = trim($_POST['position'] ?? '');
         $role = trim($_POST['role'] ?? '');
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
         $terms = isset($_POST['terms']);
 
+        // Determine initial status based on role
+        // viewer: active (auto-approved)
+        // staff, officer: pending (requires admin approval)
+        $status = ($role === 'viewer') ? 'active' : 'pending';
+
         // Basic validation
         if (empty($name) || empty($email) || empty($department) || empty($role) || empty($password)) {
             echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
+            exit;
+        }
+
+        // Prevent registration of administrators through public form
+        if ($role === 'administrator') {
+            echo json_encode(['success' => false, 'message' => 'Administrator registration is not allowed.']);
             exit;
         }
 
@@ -86,9 +96,9 @@ try {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // Insert new user
-        // We include name, full_name, email, username, password, department, position, role, status
-        $sql = "INSERT INTO users (name, full_name, email, username, password, department, position, role, status, created_at) 
-                VALUES (:name, :full_name, :email, :username, :password, :department, :position, :role, 'active', NOW())";
+        // We include name, full_name, email, username, password, department, role, status
+        $sql = "INSERT INTO users (name, full_name, email, username, password, department, role, status, created_at) 
+                VALUES (:name, :full_name, :email, :username, :password, :department, :role, :status, NOW())";
         
         $stmt = $conn->prepare($sql);
         $success = $stmt->execute([
@@ -98,8 +108,8 @@ try {
             ':username' => $username,
             ':password' => $hashedPassword,
             ':department' => $department,
-            ':position' => $position,
-            ':role' => $role
+            ':role' => $role,
+            ':status' => $status
         ]);
 
         if ($success) {

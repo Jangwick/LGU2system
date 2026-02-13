@@ -234,6 +234,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                             'active' => 'bg-green-100 text-green-800',
                                             'inactive' => 'bg-gray-100 text-gray-800',
                                             'suspended' => 'bg-red-100 text-red-800',
+                                            'pending' => 'bg-amber-100 text-amber-800',
                                             default => 'bg-gray-100 text-gray-800'
                                         };
                                         ?>
@@ -353,9 +354,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
                 <select id="userStatus" name="status" required class="input-field">
-                    <option value="active">Active</option>
+                    <option value="active">Active (Approved)</option>
+                    <option value="pending">Pending Approval</option>
                     <option value="inactive">Inactive</option>
-                    <option value="suspended">Suspended</option>
+                    <option value="suspended">Suspended (Denied)</option>
                 </select>
             </div>
             

@@ -196,10 +196,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Department</label>
                                 <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($user['department'] ?? 'N/A'); ?></p>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-600 mb-1">Position</label>
-                                <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($user['position'] ?? 'Not set'); ?></p>
-                            </div>
+
                         </div>
                     </div>
                     
@@ -362,10 +359,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
                     <input type="text" name="department" value="<?php echo htmlspecialchars($user['department'] ?? ''); ?>" class="input-field">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Position</label>
-                    <input type="text" name="position" value="<?php echo htmlspecialchars($user['position'] ?? ''); ?>" class="input-field">
                 </div>
             </div>
             

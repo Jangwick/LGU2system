@@ -163,20 +163,8 @@ require_once __DIR__ . '/../../core/config/config.php';
                             </select>
                         </div>
                         
-                        <!-- Position -->
-                        <div>
-                            <label for="position" class="block text-sm font-medium text-gray-700 mb-1">
-                                Position
-                            </label>
-                            <input type="text" 
-                                   id="position" 
-                                   name="position"
-                                   placeholder="Legislative Staff"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
-                        </div>
-                        
                         <!-- Role -->
-                        <div>
+                        <div class="md:col-span-2">
                             <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
                                 Role <span class="text-red-500">*</span>
                             </label>
@@ -185,10 +173,9 @@ require_once __DIR__ . '/../../core/config/config.php';
                                     required
                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition bg-white">
                                 <option value="">Select Role</option>
-                                <option value="viewer">User/Viewer</option>
-                                <option value="staff">Staff</option>
-                                <option value="officer">Officer</option>
-                                <option value="administrator">Administrator</option>
+                                <option value="viewer">User/Viewer (Auto-approved)</option>
+                                <option value="staff">Staff (Requires Approval)</option>
+                                <option value="officer">Officer (Requires Approval)</option>
                             </select>
                         </div>
                     </div>

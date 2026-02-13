@@ -19,10 +19,9 @@ try {
     $email = $_POST['email'] ?? '';
     $phone = $_POST['phone'] ?? '';
     $department = $_POST['department'] ?? '';
-    $position = $_POST['position'] ?? '';
     
     // Get current profile for comparison
-    $currentStmt = $db->prepare("SELECT full_name, username, email, phone, department, position FROM users WHERE id = ?");
+    $currentStmt = $db->prepare("SELECT full_name, username, email, phone, department FROM users WHERE id = ?");
     $currentStmt->execute([$_SESSION['user_id']]);
     $currentProfile = $currentStmt->fetch(PDO::FETCH_ASSOC);
     
@@ -56,7 +55,6 @@ try {
             email = ?, 
             phone = ?, 
             department = ?, 
-            position = ?,
             updated_at = NOW()
         WHERE id = ?
     ");
@@ -67,7 +65,6 @@ try {
         $email,
         $phone,
         $department,
-        $position,
         $_SESSION['user_id']
     ]);
     
@@ -82,8 +79,7 @@ try {
         'username' => $username,
         'email' => $email,
         'phone' => $phone,
-        'department' => $department,
-        'position' => $position
+        'department' => $department
     ];
     
     $logger->logActivity(Logger::ACTION_PROFILE_UPDATE, 'users', $_SESSION['user_id'],
