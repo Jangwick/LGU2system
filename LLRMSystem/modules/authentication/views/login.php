@@ -147,46 +147,81 @@ require_once __DIR__ . '/../../core/config/config.php';
                 
                 <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="bi bi-lock mr-1"></i>Password
-                    </label>
-                    <div class="relative">
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="password" class="block text-sm font-medium text-gray-700">
+                            <i class="bi bi-lock mr-1"></i>Password
+                        </label>
+                        <a href="forgot-password.php" class="text-xs md:text-sm font-semibold text-red-600 hover:text-red-700 transition">Forgot?</a>
+                    </div>
+                    <div class="relative group">
                         <input type="password" 
                                id="password" 
                                name="password" 
                                required
                                placeholder="Enter your password"
-                               class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
+                               class="w-full pl-3 md:pl-4 pr-10 py-2.5 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition text-base">
                         <button type="button" 
-                                id="toggle-password" 
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                            <i class="bi bi-eye" id="eye-icon"></i>
+                                id="toggle-password"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition">
+                            <i class="bi bi-eye" id="password-icon"></i>
                         </button>
                     </div>
-                    <span class="text-red-500 text-xs hidden" id="password-error"></span>
                 </div>
-                
-                <!-- Remember Me & Forgot Password -->
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center">
-                        <input type="checkbox" 
-                               name="remember" 
-                               id="remember"
-                               class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-2 focus:ring-red-500">
-                        <span class="ml-2 text-sm text-gray-700">Remember me</span>
-                    </label>
-                    <a href="<?php echo AUTH_URL; ?>/views/forgot-password.php" class="text-sm text-red-600 hover:text-red-700 font-medium">
-                        Forgot password?
-                    </a>
+
+                <!-- Remember Me -->
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" name="remember" class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
+                    <label for="remember" class="ml-2 text-xs md:text-sm text-gray-600 cursor-pointer">Remember this device</label>
                 </div>
-                
+
                 <!-- Submit Button -->
                 <button type="submit" 
-                        id="login-btn"
-                        class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-200 ease-in-out shadow-md hover:shadow-lg flex items-center justify-center">
-                    <span id="login-btn-text">Sign In</span>
-                    <i class="bi bi-arrow-right ml-2"></i>
+                        id="submit-btn"
+                        class="w-full bg-red-600 text-white font-bold py-3 md:py-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transform transition-all active:scale-95 shadow-lg flex items-center justify-center">
+                    <span id="btn-text">Sign In</span>
+                    <i class="bi bi-arrow-right-short ml-2 text-xl" id="btn-icon"></i>
                 </button>
+            </form>
+
+            <!-- OTP Form (Hidden by default) -->
+            <form id="otp-form" action="<?php echo AUTH_URL; ?>/controllers/VerifyOtpController.php" method="POST" class="hidden space-y-4 md:space-y-5 animate-fade-in">
+                <div class="text-center mb-4">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-red-100 rounded-full text-red-600 mb-3">
+                        <i class="bi bi-shield-lock text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">Verify Your Identity</h3>
+                    <p class="text-sm text-gray-600 mt-1">We've sent a 6-digit code to <br><span id="otp-target-email" class="font-semibold text-gray-800">your email</span></p>
+                </div>
+
+                <div>
+                    <label for="otp" class="block text-sm font-medium text-gray-700 mb-2">Verification Code</label>
+                    <input type="text" 
+                           id="otp" 
+                           name="otp" 
+                           maxlength="6"
+                           required
+                           placeholder="000000"
+                           class="w-full text-center text-2xl tracking-[0.5em] font-bold px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
+                </div>
+
+                <div class="text-center text-xs md:text-sm text-gray-500">
+                    Didn't receive the code? 
+                    <button type="button" id="resend-otp" class="text-red-600 font-bold hover:underline disabled:text-gray-400">Resend Code</button>
+                    <span id="countdown" class="hidden">(60s)</span>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" 
+                            id="back-to-login"
+                            class="flex-1 bg-gray-100 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-200 transition">
+                        Back
+                    </button>
+                    <button type="submit" 
+                            id="verify-btn"
+                            class="flex-[2] bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition shadow-lg flex items-center justify-center">
+                        Verify & Login
+                    </button>
+                </div>
             </form>
             
             <!-- Register Link -->
@@ -213,22 +248,201 @@ require_once __DIR__ . '/../../core/config/config.php';
     
     <!-- Application Configuration -->
     <script src="<?php echo asset('js/config.js'); ?>"></script>
-    <script src="<?php echo asset('js/auth.js'); ?>"></script>
     <script>
-        // Toggle password visibility
-        document.getElementById('toggle-password')?.addEventListener('click', function() {
-            const passwordField = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const otpForm = document.getElementById('otp-form');
+            const alertContainer = document.getElementById('alert-container');
+            const backToLoginBtn = document.getElementById('back-to-login');
+            const resendOtpBtn = document.getElementById('resend-otp');
+            const countdownSpan = document.getElementById('countdown');
             
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                eyeIcon.classList.remove('bi-eye');
-                eyeIcon.classList.add('bi-eye-slash');
-            } else {
-                passwordField.type = 'password';
-                eyeIcon.classList.remove('bi-eye-slash');
-                eyeIcon.classList.add('bi-eye');
+            // Toggle password functionality (fixed for new IDs)
+            document.getElementById('toggle-password')?.addEventListener('click', function() {
+                const passwordField = document.getElementById('password');
+                const passwordIcon = document.getElementById('password-icon');
+                
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    passwordIcon.classList.replace('bi-eye', 'bi-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    passwordIcon.classList.replace('bi-eye-slash', 'bi-eye');
+                }
+            });
+
+            function showAlert(message, type = 'red') {
+                const bgColor = type === 'red' ? 'bg-red-50 border-red-200 text-red-700' : 'bg-green-50 border-green-200 text-green-700';
+                const icon = type === 'red' ? 'bi-exclamation-circle' : 'bi-check-circle';
+                
+                alertContainer.innerHTML = `
+                    <div class="${bgColor} border px-4 py-3 rounded-lg flex items-center text-sm animate-shake">
+                        <i class="bi ${icon} mr-2"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
             }
+
+            // Handle Login Form Submission
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('submit-btn');
+                const btnText = document.getElementById('btn-text');
+                const btnIcon = document.getElementById('btn-icon');
+                const originalText = btnText.innerText;
+                
+                // Loading state
+                submitBtn.disabled = true;
+                btnText.innerText = 'Checking...';
+                btnIcon.className = 'bi bi-arrow-repeat animate-spin ml-2 text-xl';
+
+                try {
+                    const formData = new FormData(loginForm);
+                    const response = await fetch(loginForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    const responseText = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch (e) {
+                        console.error('Invalid JSON response:', responseText);
+                        throw new SyntaxError('The server returned an invalid response. Please check if MySQL is running.');
+                    }
+
+                    if (data.requires_otp) {
+                        // Switch to OTP form
+                        document.getElementById('otp-target-email').innerText = data.email || formData.get('email');
+                        loginForm.classList.add('hidden');
+                        otpForm.classList.remove('hidden');
+                        showAlert('A verification code has been sent.', 'green');
+                        startResendCountdown();
+                    } else if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        showAlert(data.message || 'Login failed. Please check your credentials.');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showAlert('An error occurred. Please try again.');
+                } finally {
+                    submitBtn.disabled = false;
+                    btnText.innerText = originalText;
+                    btnIcon.className = 'bi bi-arrow-right-short ml-2 text-xl';
+                }
+            });
+
+            // Handle OTP Verification Submission
+            otpForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const verifyBtn = document.getElementById('verify-btn');
+                const originalText = verifyBtn.innerText;
+                
+                verifyBtn.disabled = true;
+                verifyBtn.innerText = 'Verifying...';
+
+                try {
+                    const formData = new FormData(otpForm);
+                    // Add email to the OTP request if needed (usually it's in session)
+                    const response = await fetch(otpForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    const responseText = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch (e) {
+                        console.error('OTP parsing error:', responseText);
+                        throw new SyntaxError('The server returned an invalid response.');
+                    }
+
+                    if (data.success) {
+                        showAlert('Verification successful! Redirecting...', 'green');
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 1000);
+                    } else {
+                        showAlert(data.message || 'Invalid verification code.');
+                    }
+                } catch (error) {
+                    console.error('OTP error:', error);
+                    showAlert('An error occurred during verification.');
+                } finally {
+                    verifyBtn.disabled = false;
+                    verifyBtn.innerText = originalText;
+                }
+            });
+
+            // Back to Login Link
+            backToLoginBtn.addEventListener('click', function() {
+                otpForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                alertContainer.innerHTML = '';
+            });
+
+            // Resend OTP functionality
+            let countdown = 0;
+            let countdownInterval;
+
+            function startResendCountdown() {
+                countdown = 60;
+                resendOtpBtn.disabled = true;
+                countdownSpan.classList.remove('hidden');
+                
+                countdownInterval = setInterval(() => {
+                    countdown--;
+                    countdownSpan.innerText = `(${countdown}s)`;
+                    
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        resendOtpBtn.disabled = false;
+                        countdownSpan.classList.add('hidden');
+                    }
+                }, 1000);
+            }
+
+            resendOtpBtn.addEventListener('click', async function() {
+                if (countdown > 0) return;
+                
+                resendOtpBtn.innerText = 'Sending...';
+                
+                try {
+                    // We call the login controller again with current credentials
+                    // or have a specific resend endpoint. For simplicity, we can re-POST login
+                    const formData = new FormData(loginForm);
+                    const response = await fetch(loginForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    if (data.requires_otp) {
+                        showAlert('A new verification code has been sent.', 'green');
+                        startResendCountdown();
+                    } else {
+                        showAlert(data.message || 'Error resending code.');
+                    }
+                } catch (error) {
+                    showAlert('Error resending code.');
+                } finally {
+                    resendOtpBtn.innerText = 'Resend Code';
+                }
+            });
         });
     </script>
 </body>

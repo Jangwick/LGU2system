@@ -1,5 +1,14 @@
 <?php
-// Prevent any output before JSON
+/**
+ * Login Controller
+ * Handles initial authentication and OTP generation
+ */
+
+// Disable all error output to prevent breaking JSON response
+error_reporting(0);
+ini_set('display_errors', 0);
+
+// Start capture to ensure no accidental output
 ob_start();
 
 session_start();
@@ -7,21 +16,14 @@ session_start();
 // Set JSON header
 header('Content-Type: application/json');
 
-// Disable error display (log errors instead)
-ini_set('display_errors', 0);
-error_reporting(E_ALL);
-
 // Include configuration
 require_once __DIR__ . '/../../core/config/config.php';
-
-// Include database configuration
 require_once __DIR__ . '/../../core/config/database.php';
-
-// Include Logger
 require_once __DIR__ . '/../../core/utils/Logger.php';
+require_once __DIR__ . '/../../core/utils/Mailer.php';
 
-// Clear any output buffer
-ob_end_clean();
+// Clear any accidental output from included files
+if (ob_get_length()) ob_clean();
 
 // Handle login request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -51,37 +53,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user) {
             // Verify password
             if (password_verify($password, $user['password'])) {
-                // Login successful - set session variables
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_name'] = $user['full_name'] ?? $user['name'];
-                $_SESSION['user_role'] = $user['role'];
-                $_SESSION['user_department'] = $user['department'] ?? '';
-                $_SESSION['login_time'] = time();
+                // Identity verified
                 
-                // Set remember me cookie (7 days)
-                if ($remember) {
-                    $token = bin2hex(random_bytes(32));
-                    setcookie('remember_token', $token, time() + (7 * 24 * 60 * 60), '/');
-                    
-                    // Store token in database (optional - for better security)
-                    $stmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
-                    $stmt->execute([$token, $user['id']]);
+                // Determine target email for OTP
+                $targetEmail = $user['email'];
+                if ($user['email'] === 'admin@lgu.gov.ph') {
+                    $targetEmail = 'Johnrick1214@gmail.com';
                 }
+
+                // Generate OTP instead of logging in
+                $otpCode = sprintf("%06d", mt_rand(1, 999999));
+                $expiry = date('Y-m-d H:i:s', strtotime('+' . OTP_EXPIRY_MINUTES . ' minutes'));
                 
-                // Log successful login with enhanced logger
-                $logger->logSession($user['id'], Logger::ACTION_LOGIN, [
-                    'email' => $user['email'],
-                    'role' => $user['role'],
-                    'remember_me' => $remember,
-                    'login_method' => 'password'
+                // Store OTP in database
+                $stmt = $conn->prepare("INSERT INTO user_otps (user_id, otp_code, expires_at) VALUES (?, ?, ?)");
+                $stmt->execute([$user['id'], $otpCode, $expiry]);
+                
+                // Save user ID to temporary session for OTP verification
+                $_SESSION['otp_pending_user_id'] = $user['id'];
+                $_SESSION['otp_remember_me'] = $remember;
+                
+                // Send OTP email to the target email (Personal Gmail for Admin)
+                $mailer = new Mailer();
+                $emailSent = $mailer->sendOTP($targetEmail, $otpCode);
+                
+                // Log OTP generation
+                $logger->logSession($user['id'], 'OTP_GENERATED', [
+                    'account_email' => $user['email'],
+                    'delivered_to' => $targetEmail,
+                    'method' => 'email'
                 ]);
                 
-                // Return success response
+                // Return success and requires_otp flag
                 echo json_encode([
                     'success' => true,
-                    'message' => 'Login successful',
-                    'redirect' => DASHBOARD_INDEX_URL
+                    'requires_otp' => true,
+                    'message' => 'A verification code has been sent.',
+                    'email' => $targetEmail // This will update the UI to show where it was sent
                 ]);
                 exit;
             } else {

@@ -79,6 +79,21 @@ define('UTILS_PATH', CORE_PATH . DIRECTORY_SEPARATOR . 'utils');
 
 // Module paths
 define('AUTH_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'authentication');
+
+// --- Email Security / OTP Configuration ---
+// For Gmail: Use an App Password (not your main password)
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'Johnrick1214@gmail.com');
+define('SMTP_PASS', 'imok xero ttaf mypf'); // Gmail App Password
+define('SMTP_FROM', 'Johnrick1214@gmail.com');
+define('SMTP_FROM_NAME', 'LLRM System Security');
+
+// OTP Settings
+define('OTP_EXPIRY_MINUTES', 10);
+define('OTP_RESEND_COOLDOWN', 60); // Seconds
+// ------------------------------------------
+
 define('DASHBOARD_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'dashboard');
 define('DOCUMENTS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'document-management');
 define('USERS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'user-management');
