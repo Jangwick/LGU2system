@@ -307,6 +307,33 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php endif; ?>
                     </div>
                 </div>
+
+                <!-- AI Research Tools -->
+                <div class="bg-gradient-to-br from-red-50 to-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 border border-red-100">
+                    <h2 class="text-base sm:text-lg font-bold text-red-900 mb-3 sm:mb-4 flex items-center">
+                        <i class="bi bi-cpu-fill mr-2"></i> AI Research Tools
+                    </h2>
+                    
+                    <div class="space-y-3">
+                        <button onclick="generateAISummary(<?= $document['id'] ?>)" 
+                                id="summarize-btn"
+                                class="w-full px-4 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition shadow-sm flex items-center justify-center font-bold group">
+                            <i class="bi bi-magic mr-2 group-hover:animate-pulse"></i> Summarize with AI
+                        </button>
+                        
+                        <button onclick="findSimilarDocs(<?= $document['id'] ?>)" 
+                                id="similar-btn"
+                                class="w-full px-4 py-3 bg-white text-red-700 border border-red-200 rounded-xl hover:bg-red-50 transition shadow-sm flex items-center justify-center font-bold">
+                            <i class="bi bi-diagram-3 mr-2"></i> Find Similar Documents
+                        </button>
+                    </div>
+                    
+                    <div id="ai-results" class="mt-4 hidden overflow-hidden transition-all duration-300">
+                        <div class="p-4 bg-white rounded-lg border border-red-100 shadow-inner">
+                            <div id="ai-content" class="text-sm text-gray-800 leading-relaxed"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -316,7 +343,92 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <script>
 function downloadVersion(versionId) {
-    window.location.href = App.apiUrl('documents', `download-version.php?id=${versionId}`);
+    window.location.href = `../../document-management/api/download-version.php?id=${versionId}`;
+}
+
+async function generateAISummary(id) {
+    const btn = document.getElementById('summarize-btn');
+    const results = document.getElementById('ai-results');
+    const content = document.getElementById('ai-content');
+    
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-2"></i> Analyzing...';
+    
+    try {
+        const response = await fetch(`../../research-analysis/api/summarize.php?id=${id}`);
+        const data = await response.json();
+        
+        results.classList.remove('hidden');
+        if (data.success) {
+            content.innerHTML = `
+                <div class="font-bold text-red-800 mb-2 flex items-center">
+                    <i class="bi bi-journal-text mr-2"></i> Executive Summary
+                </div>
+                <div class="prose prose-sm max-w-none">
+                    ${data.summary.replace(/\*/g, '').replace(/\n/g, '<br>')}
+                </div>
+            `;
+        } else {
+            content.innerHTML = `<p class="text-red-500"><i class="bi bi-exclamation-triangle mr-1"></i> ${data.error}</p>`;
+        }
+    } catch (error) {
+        content.innerHTML = '<p class="text-red-500">Failed to connect to AI service.</p>';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+async function findSimilarDocs(id) {
+    const btn = document.getElementById('similar-btn');
+    const results = document.getElementById('ai-results');
+    const content = document.getElementById('ai-content');
+    
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-2"></i> Searching...';
+    
+    try {
+        const response = await fetch(`../../research-analysis/api/similar.php?id=${id}`);
+        const data = await response.json();
+        
+        results.classList.remove('hidden');
+        if (data.success && data.results.length > 0) {
+            let html = `
+                <div class="font-bold text-red-800 mb-3 flex items-center">
+                    <i class="bi bi-layers-half mr-2"></i> Similar Documents
+                </div>
+                <div class="space-y-2">
+            `;
+            
+            data.results.forEach(doc => {
+                html += `
+                    <a href="view.php?id=${doc.id}" class="block p-2 rounded hover:bg-red-50 border border-transparent hover:border-red-100 transition-all">
+                        <div class="flex justify-between items-start">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-bold text-gray-900 truncate">${doc.title}</p>
+                                <p class="text-[10px] text-gray-500 font-mono">${doc.reference_number}</p>
+                            </div>
+                            <span class="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold ml-2">
+                                ${doc.score}%
+                            </span>
+                        </div>
+                    </a>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+        } else {
+            content.innerHTML = '<p class="text-gray-500 italic py-4 text-center">No similar documents found.</p>';
+        }
+    } catch (error) {
+        content.innerHTML = '<p class="text-red-500">Search service unavailable.</p>';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
 }
 
 function revertVersion(documentId, versionNumber) {

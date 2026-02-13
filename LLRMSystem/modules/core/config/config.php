@@ -87,6 +87,7 @@ define('SEARCH_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'search');
 define('AUDIT_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'audit');
 define('HELP_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'help');
 define('NOTIFICATIONS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'notifications');
+define('RESEARCH_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'research-analysis');
 
 // URL paths (for use in HTML/JavaScript)
 define('ASSETS_URL', BASE_URL . '/public/assets');
@@ -98,6 +99,7 @@ define('IMAGES_URL', ASSETS_URL . '/images');
 define('AUTH_URL', BASE_URL . '/modules/authentication');
 define('DASHBOARD_URL', BASE_URL . '/modules/dashboard');
 define('DOCUMENTS_URL', BASE_URL . '/modules/document-management');
+define('RESEARCH_URL', BASE_URL . '/modules/research-analysis');
 define('USERS_URL', BASE_URL . '/modules/user-management');
 define('REPORTS_URL', BASE_URL . '/modules/reports-analytics');
 define('SEARCH_URL', BASE_URL . '/modules/search');

@@ -55,6 +55,15 @@
                 <i class="bi bi-graph-up"></i>
                 <span class="sidebar-text">Reports & Analytics</span>
             </a>
+            
+            <div class="pt-4 pb-2 sidebar-text">
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Research & Analysis</p>
+            </div>
+            
+            <a href="<?php echo RESEARCH_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'research-analysis' ? 'active' : ''; ?>">
+                <i class="bi bi-lightbulb"></i>
+                <span class="sidebar-text">Legislative Analysis</span>
+            </a>
             <?php endif; ?>
             
             <!-- Management Section - Admin Only -->
