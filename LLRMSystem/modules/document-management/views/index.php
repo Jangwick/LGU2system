@@ -252,10 +252,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <i class="bi bi-download"></i>
                             <span class="hidden xs:inline">Download</span>
                         </button>
+                        <?php if ($userRole !== 'viewer'): ?>
                         <button class="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-1 transition-colors">
                             <i class="bi bi-trash"></i>
                             <span class="hidden xs:inline">Selected</span>
                         </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
