@@ -170,8 +170,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         $statuses = [
                             'draft' => 'Draft',
                             'pending' => 'Pending Review',
-                            'approved' => 'Approved',
-                            'archived' => 'Archived'
+                            'approved' => 'Approved'
                         ];
                         $selectedStatus = $_GET['status'] ?? '';
                         foreach ($statuses as $val => $label): ?>
@@ -1015,7 +1014,6 @@ document.addEventListener('keydown', function(e) {
                             <option value="draft">Draft</option>
                             <option value="pending">Pending Review</option>
                             <option value="approved">Approved</option>
-                            <option value="archived">Archived</option>
                         </select>
                     </div>
 
