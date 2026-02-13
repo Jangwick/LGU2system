@@ -269,7 +269,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-4 md:px-6 py-3 text-left w-12">
-                                <input type="checkbox" id="select-all-header" class="w-4 h-4 text-red-600 border-gray-300 rounded" onchange="toggleSelectAll(this)">
+                                <!-- Redundant checkbox removed -->
                             </th>
                             <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
@@ -511,10 +511,6 @@ function applyAdvancedFilters() {
 
 function clearAdvancedFilters() {
     if (window.docManager) window.docManager.clearFilters();
-}
-
-function toggleSelectAll(el) {
-    if (window.docManager) window.docManager.selectAll(el.checked);
 }
 
 function viewDocument(id) {
@@ -780,6 +776,10 @@ function showNotification(message, type) {
 }
 
 function toggleSelectAll(checkbox) {
+    if (window.docManager) {
+        window.docManager.selectAll(checkbox.checked);
+    }
+
     const documentCheckboxes = document.querySelectorAll('.document-checkbox');
     const selectAllTop = document.getElementById('select-all-top');
     const selectAllHeader = document.getElementById('select-all-header');
@@ -789,8 +789,8 @@ function toggleSelectAll(checkbox) {
     });
     
     // Sync both select-all checkboxes
-    selectAllTop.checked = checkbox.checked;
-    selectAllHeader.checked = checkbox.checked;
+    if (selectAllTop) selectAllTop.checked = checkbox.checked;
+    if (selectAllHeader) selectAllHeader.checked = checkbox.checked;
     
     updateSelectedCount();
 }
