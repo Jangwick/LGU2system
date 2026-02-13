@@ -20,12 +20,17 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
         <div class="max-w-7xl mx-auto">
+            <div class="mb-4">
+                <a href="index.php" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="bi bi-arrow-left mr-2"></i> Back to Analysis Dashboard
+                </a>
+            </div>
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900 line-tight">Law Comparison Tool</h1>
                     <p class="text-gray-600">Analyze differences between ordinances and resolutions side-by-side.</p>
                 </div>
-                <button onclick="openSelectModal()" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition flex items-center shadow-md">
+                <button onclick="openSelectModal()" class="bg-red-800 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center shadow-md">
                     <i class="bi bi-plus-lg mr-2"></i> Add Document to Compare
                 </button>
             </div>
@@ -37,21 +42,21 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">No documents selected</h3>
                     <p class="text-gray-500 mb-8 max-w-sm mx-auto text-lg leading-relaxed">Select two or more documents to begin side-by-side analysis.</p>
-                    <button onclick="openSelectModal()" class="bg-gray-800 text-white px-10 py-3 rounded-xl font-bold hover:bg-gray-700 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
+                    <button onclick="openSelectModal()" class="bg-red-800 text-white px-10 py-3 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
                 </div>
             <?php else: ?>
                 <div class="mb-8 flex justify-center">
                     <button onclick="generateSmartComparison()" id="smart-compare-btn" 
-                            class="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center group">
+                            class="bg-red-800 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-red-700 transition-all flex items-center group">
                         <i class="bi bi-cpu mr-3 group-hover:animate-spin"></i> Generate Smart Analysis
                     </button>
                 </div>
 
                 <div id="analysis-container" class="hidden mb-12 animate-fade-in-up">
-                    <div class="bg-white rounded-2xl shadow-xl border-t-8 border-blue-700 p-8">
+                    <div class="bg-white rounded-2xl shadow-xl border-t-8 border-red-800 p-8">
                         <div class="flex items-center justify-between mb-6">
                             <h3 id="analysis-title" class="text-xl font-bold text-gray-900 flex items-center">
-                                <i class="bi bi-graph-up-arrow mr-3 text-blue-700"></i> Smart Legislative Analysis
+                                <i class="bi bi-graph-up-arrow mr-3 text-red-800"></i> Smart Legislative Analysis
                             </h3>
                             <button onclick="document.getElementById('analysis-container').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
                                 <i class="bi bi-x-lg"></i>
@@ -269,26 +274,26 @@ async function generateSmartComparison() {
                     <!-- Left Column: Insights -->
                     <div class="lg:col-span-2 space-y-8">
                         <div>
-                            <h4 class="font-bold text-blue-800 mb-4 flex items-center">
+                            <h4 class="font-bold text-red-800 mb-4 flex items-center">
                                 <i class="bi bi-tags-fill mr-2"></i> Overlapping Topics & Tags
                             </h4>
                             <div class="flex flex-wrap gap-2">
                                 ${analysis.shared_tags.length > 0 
-                                    ? analysis.shared_tags.map(t => `<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium border border-blue-200">${t}</span>`).join('') 
+                                    ? analysis.shared_tags.map(t => `<span class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm font-medium border border-red-200">${t}</span>`).join('') 
                                     : '<span class="text-gray-400 italic">No significant tag overlaps found.</span>'}
                             </div>
                         </div>
 
                         <div>
-                            <h4 class="font-bold text-blue-800 mb-4 flex items-center">
+                            <h4 class="font-bold text-red-800 mb-4 flex items-center">
                                 <i class="bi bi-key-fill mr-2"></i> Core Legislative Keywords
                             </h4>
                             <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 shadow-inner">
                                 <div class="flex flex-wrap gap-3">
                                     ${analysis.shared_keywords.length > 0 
                                         ? analysis.shared_keywords.map(w => `<div class="flex items-center text-gray-700 bg-white px-4 py-2 rounded-lg shadow-sm text-sm border font-medium uppercase tracking-wide">
-                                            <i class="bi bi-check-circle-fill text-blue-500 mr-2"></i>${w}
-                                          </div>`).join('')
+                                            <i class="bi bi-check-circle-fill text-red-500 mr-2"></i>${w}
+                                          </div>`).join('') 
                                         : '<p class="text-gray-400 italic w-full text-center py-4">No recurring technical terms identified across all selected documents.</p>'}
                                 </div>
                             </div>
@@ -296,7 +301,7 @@ async function generateSmartComparison() {
 
                         <!-- Facts Comparison Table -->
                         <div class="mt-8">
-                            <h4 class="font-bold text-blue-800 mb-4 flex items-center">
+                            <h4 class="font-bold text-red-800 mb-4 flex items-center">
                                 <i class="bi bi-list-columns-reverse mr-2"></i> Structural Comparison
                             </h4>
                             <div class="overflow-x-auto rounded-xl border border-gray-200">
@@ -326,30 +331,30 @@ async function generateSmartComparison() {
 
                     <!-- Right Column: Stats -->
                     <div class="space-y-6">
-                        <div class="bg-blue-50 rounded-xl p-6 border border-blue-100">
-                            <h4 class="font-bold text-blue-900 mb-4 flex items-center">
+                        <div class="bg-red-50 rounded-xl p-6 border border-red-100">
+                            <h4 class="font-bold text-red-900 mb-4 flex items-center">
                                 <i class="bi bi-bar-chart-fill mr-2"></i> Comparative Stats
                             </h4>
                             <div class="space-y-4">
-                                <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
+                                <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-red-100 shadow-sm">
                                     <span class="text-gray-600 text-sm">Timeline Span</span>
-                                    <span class="font-bold text-blue-700">${analysis.timeline_span}</span>
+                                    <span class="font-bold text-red-700">${analysis.timeline_span}</span>
                                 </div>
-                                <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
+                                <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-red-100 shadow-sm">
                                     <span class="text-gray-600 text-sm">Total Docs</span>
-                                    <span class="font-bold text-blue-700">${selectedIds.length}</span>
+                                    <span class="font-bold text-red-700">${selectedIds.length}</span>
                                 </div>
                                 
-                                <div class="mt-4 pt-4 border-t border-blue-200">
-                                    <span class="text-xs font-bold text-blue-800 uppercase tracking-wider mb-2 block">Document Volume</span>
+                                <div class="mt-4 pt-4 border-t border-red-200">
+                                    <span class="text-xs font-bold text-red-800 uppercase tracking-wider mb-2 block">Document Volume</span>
                                     ${analysis.document_stats.map(s => `
                                         <div class="mb-2">
                                             <div class="flex justify-between text-xs mb-1">
                                                 <span class="truncate pr-4">${s.title.substring(0, 30)}...</span>
                                                 <span class="font-mono">${s.word_count} words</span>
                                             </div>
-                                            <div class="w-full bg-blue-100 h-1 rounded-full overflow-hidden">
-                                                <div class="bg-blue-600 h-full" style="width: ${Math.min(100, (s.word_count / 1000) * 100)}%"></div>
+                                            <div class="w-full bg-red-100 h-1 rounded-full overflow-hidden">
+                                                <div class="bg-red-600 h-full" style="width: ${Math.min(100, (s.word_count / 1000) * 100)}%"></div>
                                             </div>
                                         </div>
                                     `).join('')}
