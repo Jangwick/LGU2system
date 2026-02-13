@@ -123,7 +123,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     $isDocOwner = ($document['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
-                    $canEdit = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
+                    $isApproved = ($document['status'] ?? '') === 'approved';
+                    $canEdit = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                     if ($canEdit): 
                     ?>
                     <a href="<?php echo DOCUMENTS_URL; ?>/views/edit.php?id=<?= $document['id'] ?>" 
@@ -295,7 +296,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <i class="bi bi-clock-history mr-2 text-gray-600"></i><span class="hidden xs:inline">Activity </span>History
                         </button>
                         <?php 
-                        $canDelete = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
+                        $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                         if ($canDelete): 
                         ?>
                         <hr class="my-2 col-span-2 sm:col-span-1">

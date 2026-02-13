@@ -357,8 +357,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                             $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
-                                            $canEdit = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
-                                            $canDelete = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
+                                            $isApproved = ($doc['status'] ?? '') === 'approved';
+                                            $canEdit = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                            $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
                                             <button class="text-gray-600 hover:text-gray-700" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
@@ -418,8 +419,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php 
                                         $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                         $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
-                                        $canEdit = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
-                                        $canDelete = in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner);
+                                        $isApproved = ($doc['status'] ?? '') === 'approved';
+                                        $canEdit = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                        $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                         ?>
                                         <?php if ($canEdit): ?>
                                         <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
@@ -649,9 +651,11 @@ function viewDocument(id) {
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
                                         <div class="mt-2 pt-2 border-t border-gray-50">
+                                            ${doc.status !== 'approved' ? `
                                             <button onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
                                                 <i class="bi bi-trash mr-3"></i> Delete Document
                                             </button>
+                                            ` : ''}
                                         </div>
                                     </div>
                                 </section>
