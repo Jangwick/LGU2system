@@ -199,7 +199,7 @@ require_once __DIR__ . '/../../core/config/config.php';
                                        id="password" 
                                        name="password" 
                                        required
-                                       placeholder="Minimum 8 characters"
+                                       placeholder="8-14 unique characters"
                                        class="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
                                 <button type="button" 
                                         id="toggle-password" 
@@ -305,17 +305,29 @@ require_once __DIR__ . '/../../core/config/config.php';
             const strengthBar = document.getElementById('strength-progress');
             const strengthText = document.getElementById('strength-text');
             
+            // Check unique characters
+            const uniqueChars = new Set(password).size;
+            const isEveryCharUnique = uniqueChars === password.length;
+            
             let strength = 0;
-            if (password.length >= 8) strength++;
+            if (password.length >= 8 && password.length <= 14) strength++;
+            if (isEveryCharUnique && password.length > 0) strength++;
             if (password.match(/[a-z]/)) strength++;
             if (password.match(/[A-Z]/)) strength++;
-            if (password.match(/[0-9]/)) strength++;
-            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            if (password.match(/[0-9]/) || password.match(/[^a-zA-Z0-9]/)) strength++;
             
             const percentage = (strength / 5) * 100;
             strengthBar.style.width = percentage + '%';
             
-            if (strength <= 2) {
+            if (password.length > 14) {
+                strengthBar.className = 'h-full bg-red-600 transition-all duration-300';
+                strengthText.textContent = 'Too Long (Max 14)';
+                strengthText.className = 'text-red-600 text-xs';
+            } else if (!isEveryCharUnique && password.length > 0) {
+                strengthBar.className = 'h-full bg-red-400 transition-all duration-300';
+                strengthText.textContent = 'Characters must be unique';
+                strengthText.className = 'text-red-500 text-xs';
+            } else if (strength <= 2) {
                 strengthBar.className = 'h-full bg-red-400 transition-all duration-300';
                 strengthText.textContent = 'Weak';
                 strengthText.className = 'text-red-500 text-xs';

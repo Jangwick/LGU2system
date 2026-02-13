@@ -102,8 +102,14 @@ if (registerForm) {
             return;
         }
         
-        if (password.length < 8) {
-            showAlert('Password must be at least 8 characters long', 'error');
+        const uniqueChars = new Set(password).size;
+        if (password.length < 8 || password.length > 14) {
+            showAlert('Password must be between 8 and 14 characters', 'error');
+            return;
+        }
+
+        if (uniqueChars < password.length) {
+            showAlert('Password must contain unique characters (no repeats)', 'error');
             return;
         }
         

@@ -64,8 +64,16 @@ try {
             exit;
         }
 
-        if (strlen($password) < 8) {
-            echo json_encode(['success' => false, 'message' => 'Password must be at least 8 characters.']);
+        $passwordLength = strlen($password);
+        $uniqueCharsCount = count(count_chars($password, 1));
+
+        if ($passwordLength < 8 || $passwordLength > 14) {
+            echo json_encode(['success' => false, 'message' => 'Password must be between 8 and 14 characters.']);
+            exit;
+        }
+
+        if ($uniqueCharsCount < $passwordLength) {
+            echo json_encode(['success' => false, 'message' => 'Password must contain unique characters (no repeats).']);
             exit;
         }
 
