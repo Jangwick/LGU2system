@@ -18,6 +18,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     <?php require_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+        <div class="mb-4">
+            <a href="index.php" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
+                <i class="bi bi-arrow-left mr-2"></i> Back to Analysis Dashboard
+            </a>
+        </div>
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900 mb-2">Legislative Cross-Reference Map</h1>
             <p class="text-gray-600">Visualizing relationships and dependencies between ordinances and resolutions.</p>

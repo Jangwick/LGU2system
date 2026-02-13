@@ -30,7 +30,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <h1 class="text-2xl font-bold text-gray-900 line-tight">Law Comparison Tool</h1>
                     <p class="text-gray-600">Analyze differences between ordinances and resolutions side-by-side.</p>
                 </div>
-                <button onclick="openSelectModal()" class="bg-red-800 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center shadow-md">
+                <button onclick="openSelectModal()" class="bg-red-800 dark:bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center shadow-md">
                     <i class="bi bi-plus-lg mr-2"></i> Add Document to Compare
                 </button>
             </div>
@@ -42,12 +42,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">No documents selected</h3>
                     <p class="text-gray-500 mb-8 max-w-sm mx-auto text-lg leading-relaxed">Select two or more documents to begin side-by-side analysis.</p>
-                    <button onclick="openSelectModal()" class="bg-red-800 text-white px-10 py-3 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
+                    <button onclick="openSelectModal()" class="bg-red-800 dark:bg-red-700 text-white px-10 py-3 rounded-xl font-bold hover:bg-red-700 dark:hover:bg-red-600 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
                 </div>
             <?php else: ?>
                 <div class="mb-8 flex justify-center">
                     <button onclick="generateSmartComparison()" id="smart-compare-btn" 
-                            class="bg-red-800 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-red-700 transition-all flex items-center group">
+                            class="bg-red-800 dark:bg-red-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-red-700 dark:hover:bg-red-600 transition-all flex items-center group">
                         <i class="bi bi-cpu mr-3 group-hover:animate-spin"></i> Generate Smart Analysis
                     </button>
                 </div>
@@ -394,4 +394,36 @@ async function generateSmartComparison() {
 .scrollbar-thin::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Force Red Theme in Dark Mode */
+.dark #smart-compare-btn,
+.dark button[onclick="openSelectModal()"] {
+    background-color: #b91c1c !important;
+    color: white !important;
+}
+
+.dark #smart-compare-btn:hover,
+.dark button[onclick="openSelectModal()"]:hover {
+    background-color: #991b1b !important;
+}
+
+/* Dark Mode text readability for analysis results */
+.dark #analysis-container {
+    background-color: #1e1e1e !important;
+    border-color: #404040 !important;
+}
+
+.dark #analysis-title, 
+.dark .font-bold.text-red-800 {
+    color: #f87171 !important; /* Lighter red for headings in dark mode */
+}
+
+.dark #analysis-content {
+    color: #e5e5e5 !important;
+}
+
+.dark .bg-red-50 {
+    background-color: rgba(153, 27, 27, 0.2) !important;
+    border-color: rgba(153, 27, 27, 0.4) !important;
+}
 </style>
