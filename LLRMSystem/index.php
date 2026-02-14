@@ -91,22 +91,22 @@ $pageTitle = "Home";
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 glass-nav border-b border-gray-100/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 md:h-20">
-                <div class="flex items-center group cursor-pointer">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <div class="flex items-center group cursor-pointer flex-shrink-0">
                     <div class="relative">
-                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-10 w-10 md:h-12 md:w-12 mr-3 transition-transform duration-500 group-hover:rotate-12 shadow-sm rounded-full" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 md:h-12 md:w-12 mr-2 md:mr-3 transition-transform duration-500 group-hover:rotate-12 shadow-sm rounded-full" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
                     </div>
-                    <div>
-                        <span class="text-xl md:text-2xl font-black text-[#002d72] tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
+                    <div class="flex flex-col md:block">
+                        <span class="text-lg md:text-2xl font-black text-[#002d72] tracking-tighter leading-none">VALENZUELA<span class="text-red-600">LRMS</span></span>
                         <div class="hidden md:flex items-center">
                             <span class="h-px w-4 bg-red-600 mr-2"></span>
                             <span class="text-[9px] text-gray-400 font-bold uppercase tracking-[0.2em] leading-none">Legislative Office</span>
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2 md:space-x-6">
-                    <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold px-4 py-2 text-sm transition-all">Sign In</a>
-                    <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-6 py-2.5 rounded-full text-sm shadow-xl shadow-red-200/50">
+                <div class="flex items-center space-x-1 md:space-x-6">
+                    <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[12px] md:text-sm transition-all whitespace-nowrap">Sign In</a>
+                    <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
                         Get Started
                     </a>
                 </div>
@@ -115,26 +115,26 @@ $pageTitle = "Home";
     </nav>
 
     <!-- Hero Section -->
-    <div class="relative overflow-hidden hero-gradient pt-32 pb-24 md:pt-48 md:pb-40">
+    <div class="relative overflow-hidden hero-gradient pt-24 pb-16 md:pt-48 md:pb-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center">
-                <div data-aos="fade-down" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-red-50 text-red-700 text-xs font-black mb-8 shadow-sm">
+                <div data-aos="fade-down" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-red-50 text-red-700 text-[10px] md:text-xs font-black mb-6 md:mb-8 shadow-sm">
                     <span class="flex h-2 w-2 rounded-full bg-red-600 mr-2 animate-pulse"></span>
                     OFFICIAL LEGISLATIVE RECORDS
                 </div>
-                <h1 data-aos="fade-up" data-aos-delay="100" class="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 mb-8 tracking-tighter leading-[0.9]">
+                <h1 data-aos="fade-up" data-aos-delay="100" class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 mb-6 md:mb-8 tracking-tighter leading-[1] md:leading-[0.9]">
                     Preserving the <br class="hidden md:block">
                     <span class="text-transparent bg-clip-text bg-gradient-to-br from-red-600 to-red-900">Legislative Legacy.</span>
                 </h1>
-                <p data-aos="fade-up" data-aos-delay="200" class="max-w-2xl mx-auto text-lg md:text-2xl text-gray-500 mb-12 leading-relaxed font-medium">
+                <p data-aos="fade-up" data-aos-delay="200" class="max-w-2xl mx-auto text-base md:text-2xl text-gray-500 mb-8 md:mb-12 leading-relaxed font-medium px-4">
                     A digital ecosystem for the City Government of Valenzuela to preserve, query, and analyze the legislative DNA of our community.
                 </p>
-                <div data-aos="fade-up" data-aos-delay="300" class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="<?php echo REGISTER_URL; ?>" class="w-full sm:w-auto btn-modern bg-gray-900 hover:bg-black text-white font-black px-12 py-5 rounded-2xl text-lg shadow-2xl">
+                <div data-aos="fade-up" data-aos-delay="300" class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4 px-6 md:px-0">
+                    <a href="<?php echo REGISTER_URL; ?>" class="w-full sm:w-auto btn-modern bg-gray-900 hover:bg-black text-white font-black px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg shadow-2xl">
                         Start Your Journey
                         <i class="bi bi-arrow-right-short ml-1 text-2xl align-middle"></i>
                     </a>
-                    <a href="#features" class="w-full sm:w-auto btn-modern bg-white hover:bg-gray-50 text-gray-900 font-bold px-12 py-5 rounded-2xl text-lg border border-gray-200 shadow-sm">
+                    <a href="#features" class="w-full sm:w-auto btn-modern bg-white hover:bg-gray-50 text-gray-900 font-bold px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg border border-gray-200 shadow-sm">
                         View Dashboard
                     </a>
                 </div>
@@ -248,42 +248,42 @@ $pageTitle = "Home";
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white py-20 border-t border-gray-100">
+    <footer class="bg-white py-16 md:py-24 border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-                <div class="mb-12 md:mb-0">
-                    <div class="flex items-center mb-6">
-                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-12 w-12 mr-4 shadow-sm rounded-full">
-                        <div class="text-[#002d72] font-black text-2xl tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-12 md:gap-0">
+                <div class="w-full md:w-auto text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start mb-6">
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-10 w-10 md:h-12 md:w-12 mr-3 md:mr-4 shadow-sm rounded-full">
+                        <div class="text-[#002d72] font-black text-xl md:text-2xl tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></div>
                     </div>
-                    <p class="text-gray-400 font-bold text-xs uppercase tracking-widest max-w-xs leading-loose">
-                        Official Legislative Records Management System. <br>
+                    <p class="text-gray-400 font-black text-[10px] md:text-xs uppercase tracking-[0.15em] max-w-xs mx-auto md:ml-0 md:mr-0 leading-relaxed md:leading-loose">
+                        Official Legislative Records <br class="md:hidden"> Management System. <br>
                         City Government of Valenzuela.
                     </p>
                 </div>
                 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-12 md:gap-24">
-                    <div>
-                        <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6">System</h4>
-                        <ul class="space-y-4 text-sm font-bold text-gray-500">
-                            <li><a href="#features" class="hover:text-red-600 transition-colors">Features</a></li>
-                            <li><a href="<?php echo LOGIN_URL; ?>" class="hover:text-red-600 transition-colors">Login</a></li>
-                            <li><a href="<?php echo REGISTER_URL; ?>" class="hover:text-red-600 transition-colors">Register</a></li>
+                <div class="w-full md:w-auto grid grid-cols-2 gap-8 sm:gap-12 md:gap-24">
+                    <div class="text-center md:text-left">
+                        <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6 border-b border-gray-100 md:border-none pb-2 md:pb-0">System</h4>
+                        <ul class="space-y-4 text-xs md:text-sm font-black md:font-bold text-gray-500">
+                            <li><a href="#features" class="hover:text-red-600 transition-colors uppercase md:capitalize">Features</a></li>
+                            <li><a href="<?php echo LOGIN_URL; ?>" class="hover:text-red-600 transition-colors uppercase md:capitalize">Login</a></li>
+                            <li><a href="<?php echo REGISTER_URL; ?>" class="hover:text-red-600 transition-colors uppercase md:capitalize">Register</a></li>
                         </ul>
                     </div>
-                    <div>
-                        <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6">Legal</h4>
-                        <ul class="space-y-4 text-sm font-bold text-gray-500">
-                            <li><a href="#" class="hover:text-red-600 transition-colors">Privacy</a></li>
-                            <li><a href="#" class="hover:text-red-600 transition-colors">Terms</a></li>
+                    <div class="text-center md:text-left">
+                        <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6 border-b border-gray-100 md:border-none pb-2 md:pb-0">Legal</h4>
+                        <ul class="space-y-4 text-xs md:text-sm font-black md:font-bold text-gray-500">
+                            <li><a href="#" class="hover:text-red-600 transition-colors uppercase md:capitalize">Privacy</a></li>
+                            <li><a href="#" class="hover:text-red-600 transition-colors uppercase md:capitalize">Terms</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
             
-            <div class="mt-20 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-400 font-black uppercase tracking-[0.2em]">
-                <div>© <?php echo date('Y'); ?> City of Valenzuela. Distributed for transparency.</div>
-                <div class="mt-4 md:mt-0">Legislative Records Department • v1.0.0</div>
+            <div class="mt-16 md:mt-20 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center text-[9px] md:text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] text-center md:text-left">
+                <div class="mb-4 md:mb-0">© <?php echo date('Y'); ?> City of Valenzuela. <br class="md:hidden"> Distributed for transparency.</div>
+                <div>Legislative Records Department • v1.0.0</div>
             </div>
         </div>
     </footer>
