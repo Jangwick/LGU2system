@@ -63,18 +63,18 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Main Map Canvas -->
-            <div class="lg:col-span-3 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden relative">
-                <div id="map-container" class="w-full h-full bg-gray-50"></div>
+            <div class="lg:col-span-3 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden relative">
+                <div id="map-container" class="w-full h-full bg-gray-50 dark:bg-gray-800"></div>
                 
                 <!-- Zoom Controls -->
                 <div class="absolute bottom-6 right-6 flex flex-col gap-2">
-                    <button id="zoom-in" class="bg-white w-10 h-10 rounded-lg shadow-md border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all">
+                    <button id="zoom-in" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 w-10 h-10 rounded-lg shadow-md border border-gray-200 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-all">
                         <i class="bi bi-plus-lg"></i>
                     </button>
-                    <button id="zoom-out" class="bg-white w-10 h-10 rounded-lg shadow-md border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all">
+                    <button id="zoom-out" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 w-10 h-10 rounded-lg shadow-md border border-gray-200 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-all">
                         <i class="bi bi-dash-lg"></i>
                     </button>
-                    <button id="fit-map" class="bg-white w-10 h-10 rounded-lg shadow-md border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all">
+                    <button id="fit-map" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 w-10 h-10 rounded-lg shadow-md border border-gray-200 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-all">
                         <i class="bi bi-arrows-fullscreen"></i>
                     </button>
                 </div>
@@ -91,7 +91,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 document.addEventListener('DOMContentLoaded', function() {
     const rawData = <?= json_encode($data) ?>;
     
-    // Create nodes
+    // Function to get label color based on current theme
+    function getLabelColor() {
+        return document.documentElement.classList.contains('dark') ? '#ffffff' : '#1f2937';
+    }
+    
+    // Create nodes with dynamic font color
     const nodes = new vis.DataSet(rawData.nodes.map(node => ({
         id: node.id,
         label: node.label,
@@ -101,7 +106,14 @@ document.addEventListener('DOMContentLoaded', function() {
             border: node.type === 'ordinance' ? '#991b1b' : '#1e40af',
             highlight: '#000'
         },
-        font: { color: '#fff', size: 12, face: 'Inter' },
+        font: { 
+            color: getLabelColor(),
+            size: 14, 
+            face: 'Inter, system-ui, sans-serif',
+            bold: true,
+            strokeWidth: 3,
+            strokeColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#f9fafb'
+        },
         shape: 'dot',
         size: 20
     })));
@@ -136,6 +148,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const network = new vis.Network(container, data, options);
 
+    // Update node labels when theme changes
+    const updateNodeLabels = () => {
+        const labelColor = getLabelColor();
+        const strokeColor = document.documentElement.classList.contains('dark') ? '#1f2937' : '#f9fafb';
+        nodes.forEach(node => {
+            nodes.update({
+                id: node.id,
+                font: {
+                    color: labelColor,
+                    size: 14,
+                    face: 'Inter, system-ui, sans-serif',
+                    bold: true,
+                    strokeWidth: 3,
+                    strokeColor: strokeColor
+                }
+            });
+        });
+    };
+
+    // Listen for theme changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                updateNodeLabels();
+            }
+        });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+
     // Zoom Controls
     document.getElementById('zoom-in').onclick = () => network.moveTo({ scale: network.getScale() * 1.2 });
     document.getElementById('zoom-out').onclick = () => network.moveTo({ scale: network.getScale() * 0.8 });
@@ -152,7 +193,13 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-.vis-network { outline: none; }
+.vis-network { 
+    outline: none; 
+    background-color: #f9fafb !important;
+}
+html.dark .vis-network {
+    background-color: #1f2937 !important;
+}
 .vis-tooltip {
     background-color: #fff !important;
     padding: 12px !important;
@@ -161,5 +208,10 @@ document.addEventListener('DOMContentLoaded', function() {
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
     font-family: 'Inter', sans-serif !important;
     max-width: 250px !important;
+}
+html.dark .vis-tooltip {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #f3f4f6 !important;
 }
 </style>
