@@ -581,33 +581,61 @@ $pageTitle = "Home";
     </section>
 
     <!-- Infrastructure Projects -->
+    <!-- Infrastructure Projects -->
     <section id="infrastructure" class="py-32 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div data-aos="fade-up" class="mb-24 flex justify-between items-end">
-                <div>
-                    <h2 class="text-red-600 font-black tracking-[0.3em] uppercase text-xs mb-4">Infrastructure</h2>
-                    <p class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">Featured Projects</p>
-                </div>
-                <a href="#" class="hidden md:block text-gray-400 font-black uppercase tracking-widest text-[10px] hover:text-red-600 transition-colors">View All Projects <i class="bi bi-arrow-right ml-2"></i></a>
+            <div data-aos="fade-up" class="text-center mb-20">
+                <h2 class="text-red-600 font-bold tracking-[0.2em] uppercase text-xs mb-4">INFRASTRUCTURE</h2>
+                <h3 class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight mb-6">Featured Projects</h3>
+                <p class="max-w-3xl mx-auto text-gray-400 font-medium text-lg leading-relaxed">Valenzuela City is committed to continuous development through sustainable infrastructure and community-centered projects.</p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
-                <div data-aos="fade-right" class="group cursor-pointer">
-                    <div class="relative h-96 overflow-hidden rounded-[40px] shadow-2xl mb-8">
-                        <img src="https://lacs.spvalenzuela.com/images/peoples-park.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute top-6 left-6 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-[10px] font-black uppercase tracking-widest border border-white/30">RECREATION</div>
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <!-- People's Park -->
+                <div data-aos="fade-up" data-aos-delay="100" class="group relative h-[450px] overflow-hidden rounded-[35px] shadow-2xl cursor-pointer">
+                    <img src="https://lacs.spvalenzuela.com/images/peoples-park.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-10">
+                        <div class="inline-block self-start px-3 py-1 bg-red-600 rounded-lg text-white text-[10px] font-black uppercase tracking-widest mb-4">Recreation</div>
+                        <h4 class="text-3xl font-black text-white mb-2">Valenzuela People's Park</h4>
                     </div>
-                    <h3 class="text-3xl font-black text-gray-900 mb-2">Valenzuela People's Park</h3>
-                    <p class="text-gray-500 font-medium leading-relaxed">1.5 hectare interactive public space with state-of-the-art amenities for families.</p>
                 </div>
-                <div data-aos="fade-left" class="group cursor-pointer">
-                    <div class="relative h-96 overflow-hidden rounded-[40px] shadow-2xl mb-8">
-                        <img src="https://lacs.spvalenzuela.com/images/housing.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute top-6 left-6 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-[10px] font-black uppercase tracking-widest border border-white/30">HOUSING</div>
+
+                <!-- Disiplina Village -->
+                <div data-aos="fade-up" data-aos-delay="200" class="group relative h-[450px] overflow-hidden rounded-[35px] shadow-2xl cursor-pointer">
+                    <img src="https://lacs.spvalenzuela.com/images/housing.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-10">
+                        <div class="inline-block self-start px-3 py-1 bg-blue-600 rounded-lg text-white text-[10px] font-black uppercase tracking-widest mb-4">Housing</div>
+                        <h4 class="text-3xl font-black text-white mb-2">Disiplina Village</h4>
+                        <p class="text-gray-300 text-sm font-medium leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">A benchmark for in-city relocation, providing safe and decent housing for informal settler families.</p>
                     </div>
-                    <h3 class="text-3xl font-black text-gray-900 mb-2">Disiplina Village</h3>
-                    <p class="text-gray-500 font-medium leading-relaxed">A benchmark for in-city relocation, providing safe and decent housing for informal settler families.</p>
                 </div>
+
+                <!-- New Legislative Building -->
+                <div data-aos="fade-up" data-aos-delay="300" class="group relative h-[450px] overflow-hidden rounded-[35px] shadow-2xl cursor-pointer">
+                    <img src="https://lacs.spvalenzuela.com/images/city-hall.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-10">
+                        <div class="inline-block self-start px-3 py-1 bg-gray-500 rounded-lg text-white text-[10px] font-black uppercase tracking-widest mb-4">Government</div>
+                        <h4 class="text-3xl font-black text-white mb-2">New Legislative Building</h4>
+                        <p class="text-gray-300 text-sm font-medium leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">Modernizing governance facilities to better serve the people of Valenzuela.</p>
+                    </div>
+                </div>
+
+                <!-- Flood Control -->
+                <div data-aos="fade-up" data-aos-delay="400" class="group relative h-[450px] overflow-hidden rounded-[35px] shadow-2xl cursor-pointer">
+                    <img src="https://lacs.spvalenzuela.com/images/flood_control.png" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-10">
+                        <div class="inline-block self-start px-3 py-1 bg-teal-500 rounded-lg text-white text-[10px] font-black uppercase tracking-widest mb-4">Resilience</div>
+                        <h4 class="text-3xl font-black text-white mb-2">Flood Control Infrastructure</h4>
+                        <p class="text-gray-300 text-sm font-medium leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">Advanced pumping stations and catchment basins to mitigate flooding and ensure safety.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="<?php echo BASE_URL; ?>/public/infrastructure.php" class="inline-flex items-center text-red-600 font-bold uppercase tracking-widest text-xs hover:text-red-700 transition-colors group">
+                    View All Infrastructure Projects 
+                    <i class="bi bi-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -615,38 +643,100 @@ $pageTitle = "Home";
     <!-- Heritage & Progress: Landmarks -->
     <section id="landmarks" class="py-32 bg-[#f8fafc]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div data-aos="fade-up" class="text-center mb-24">
+            <div data-aos="fade-up" class="text-center mb-20">
                 <h2 class="text-red-600 font-black tracking-[0.3em] uppercase text-xs mb-4">Heritage & Progress</h2>
                 <p class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight mb-6">City Landmarks</p>
                 <div class="h-2 w-20 bg-red-600 mx-auto rounded-full"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-4 rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <div class="h-64 rounded-[32px] overflow-hidden mb-6">
-                        <img src="https://lacs.spvalenzuela.com/images/bell-tower.jpg" class="w-full h-full object-cover">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Polo Riverwalk -->
+                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[40px] shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-50 group transition-all duration-500 hover:-translate-y-2">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://lacs.spvalenzuela.com/images/riverwalk1.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1544257750-572358f5da22?auto=format&fit=crop&q=80&w=800'">
                     </div>
-                    <div class="px-4 pb-4">
-                        <h4 class="text-xl font-black text-gray-900 mb-2">San Diego De Alcala</h4>
-                        <p class="text-gray-400 text-sm font-medium">17th-century historical belfry standing as a witness to the city's rich past.</p>
+                    <div class="p-10">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-[10px] font-black uppercase tracking-widest">TOURISM</span>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">New Opening</span>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 mb-4 group-hover:text-green-600 transition-colors">Polo Riverwalk Phase 1</h4>
+                        <p class="text-gray-500 font-medium text-sm leading-relaxed mb-8 line-clamp-2">A 6-kilometer linear park featuring walking paths and cycle lanes along the Polo River, connecting multiple barangays.</p>
+                        <a href="#" class="inline-flex items-center justify-center w-full px-6 py-4 bg-green-600 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-green-700 transition-all shadow-lg shadow-green-200">
+                            View Details
+                        </a>
                     </div>
                 </div>
-                <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-4 rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <div class="h-64 rounded-[32px] overflow-hidden mb-6">
-                        <img src="https://lacs.spvalenzuela.com/images/museo-val.jpg" class="w-full h-full object-cover">
+
+                <!-- Sentro Health Hub -->
+                <div data-aos="fade-up" data-aos-delay="200" class="bg-white rounded-[40px] shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-50 group transition-all duration-500 hover:-translate-y-2">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://lacs.spvalenzuela.com/images/healthhub.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800'">
                     </div>
-                    <div class="px-4 pb-4">
-                        <h4 class="text-xl font-black text-gray-900 mb-2">Museo ng Valenzuela</h4>
-                        <p class="text-gray-400 text-sm font-medium">Repository of the city's historical and cultural heritage.</p>
+                    <div class="p-10">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-widest">HEALTHCARE</span>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Inaugurated</span>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 mb-4 group-hover:text-red-600 transition-colors">Sentro Health Hubs</h4>
+                        <p class="text-gray-500 font-medium text-sm leading-relaxed mb-8 line-clamp-2">State-of-the-art community health centers in Karuhatan and Canumay West offering specialized diagnostic services.</p>
+                        <a href="#" class="inline-flex items-center justify-center w-full px-6 py-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-red-700 transition-all shadow-lg shadow-red-200">
+                            View Details
+                        </a>
                     </div>
                 </div>
-                <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-4 rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <div class="h-64 rounded-[32px] overflow-hidden mb-6">
-                        <img src="https://lacs.spvalenzuela.com/images/wes-arena.jpg?v=1.1" class="w-full h-full object-cover">
+
+                <!-- Tagalag Fishing Village -->
+                <div data-aos="fade-up" data-aos-delay="300" class="bg-white rounded-[40px] shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-50 group transition-all duration-500 hover:-translate-y-2">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://lacs.spvalenzuela.com/images/tagalag.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=800'">
                     </div>
-                    <div class="px-4 pb-4">
-                        <h4 class="text-xl font-black text-gray-900 mb-2">WES Arena</h4>
-                        <p class="text-gray-400 text-sm font-medium">State-of-the-art sports and multi-purpose indoor facility.</p>
+                    <div class="p-10">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-black uppercase tracking-widest">ECO-TOURISM</span>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Heritage Site</span>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">Tagalag Fishing Village</h4>
+                        <p class="text-gray-500 font-medium text-sm leading-relaxed mb-8 line-clamp-2">The city's premier eco-tourism destination, promoting sustainable livelihood and cultural tradition.</p>
+                        <a href="#" class="inline-flex items-center justify-center w-full px-6 py-4 bg-blue-600 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historical & Strategic Landmarks -->
+            <div class="mt-24">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Bell Tower -->
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-6 rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-50 group">
+                        <div class="h-64 rounded-[32px] overflow-hidden mb-8">
+                            <img src="https://lacs.spvalenzuela.com/images/bell-tower.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div class="px-4 pb-4">
+                            <h4 class="text-2xl font-black text-gray-900 mb-3">San Diego De Alcala</h4>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">17th-century historical belfry standing as a witness to the city's rich past and religious heritage.</p>
+                        </div>
+                    </div>
+                    <!-- Museo -->
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-6 rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-50 group">
+                        <div class="h-64 rounded-[32px] overflow-hidden mb-8">
+                            <img src="https://lacs.spvalenzuela.com/images/museo-val.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div class="px-4 pb-4">
+                            <h4 class="text-2xl font-black text-gray-900 mb-3">Museo ng Valenzuela</h4>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">Repository of the city's historical and cultural heritage, showcasing the evolution of Valenzuela.</p>
+                        </div>
+                    </div>
+                    <!-- WES Arena -->
+                    <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-6 rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-50 group">
+                        <div class="h-64 rounded-[32px] overflow-hidden mb-8">
+                            <img src="https://lacs.spvalenzuela.com/images/wes-arena.jpg?v=1.1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div class="px-4 pb-4">
+                            <h4 class="text-2xl font-black text-gray-900 mb-3">WES Arena</h4>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">State-of-the-art sports and multi-purpose indoor facility, home to city-wide athletic events.</p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -155,7 +155,8 @@ class ChatbotController {
             'CORE_FEATURES_STATUS.md',
             'USER_PROFILE_FEATURES_REPORT.md',
             'DESIGN_SYSTEM.md',
-            'AUDIT_MODULE_SETUP.md'
+            'AUDIT_MODULE_SETUP.md',
+            'VALENZUELA_LANDMARKS.md'
         ];
 
         $context = "";
