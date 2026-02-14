@@ -27,22 +27,22 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 line-tight">Law Comparison Tool</h1>
-                    <p class="text-gray-600">Analyze differences between ordinances and resolutions side-by-side.</p>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 line-tight">Law Comparison Tool</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Analyze differences between ordinances and resolutions side-by-side.</p>
                 </div>
-                <button onclick="openSelectModal()" class="bg-red-800 dark:bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center shadow-md">
+                <button onclick="openSelectModal()" class="bg-red-600 dark:bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center shadow-md">
                     <i class="bi bi-plus-lg mr-2"></i> Add Document to Compare
                 </button>
             </div>
 
             <?php if (empty($documents)): ?>
-                <div class="bg-white/50 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 p-16 text-center animate-fade-in">
-                    <div class="w-24 h-24 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 transform rotate-12 transition-all hover:rotate-0">
-                        <i class="bi bi-layout-split text-4xl text-gray-400"></i>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-16 text-center animate-fade-in">
+                    <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-3xl flex items-center justify-center mx-auto mb-6 transform rotate-12 transition-all hover:rotate-0">
+                        <i class="bi bi-layout-split text-4xl text-gray-400 dark:text-gray-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">No documents selected</h3>
-                    <p class="text-gray-500 mb-8 max-w-sm mx-auto text-lg leading-relaxed">Select two or more documents to begin side-by-side analysis.</p>
-                    <button onclick="openSelectModal()" class="bg-red-800 dark:bg-red-700 text-white px-10 py-3 rounded-xl font-bold hover:bg-red-700 dark:hover:bg-red-600 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">No documents selected</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm mx-auto text-lg leading-relaxed">Select two or more documents to begin side-by-side analysis.</p>
+                    <button onclick="openSelectModal()" class="bg-red-600 dark:bg-red-700 text-white px-10 py-3 rounded-xl font-bold hover:bg-red-700 dark:hover:bg-red-600 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
                 </div>
             <?php else: ?>
                 <div class="mb-8 flex justify-center">
