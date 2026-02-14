@@ -144,12 +144,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
 <!-- Simple Select Modal -->
 <div id="selectModal" class="hidden fixed inset-0 bg-black/50 overflow-y-auto h-full w-full z-50 animate-fade-in backdrop-blur-sm">
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-2xl rounded-2xl bg-white animate-fade-in-up">
-        <div class="flex justify-between items-center mb-6 border-b pb-4">
-            <h3 class="text-xl font-bold text-gray-900 flex items-center">
+    <div class="relative top-20 mx-auto p-5 border border-gray-200 dark:border-gray-700 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-900 animate-fade-in-up">
+        <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
                 <i class="bi bi-file-earmark-plus mr-2 text-red-600"></i> Add to Comparison
             </h3>
-            <button onclick="closeSelectModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <button onclick="closeSelectModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                 <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
@@ -158,16 +158,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <div class="relative">
                 <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input type="text" id="docSearch" placeholder="Search by title or reference number..." 
-                       class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                       class="w-full pl-10 pr-4 py-3 border-2 border-red-500 dark:border-red-600 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             </div>
         </div>
 
         <div id="searchResults" class="max-h-96 overflow-y-auto space-y-2 mb-6 custom-scrollbar pr-1">
-            <p class="text-center text-gray-500 py-8 italic font-medium">Type to search for documents...</p>
+            <p class="text-center text-gray-500 dark:text-gray-400 py-8 italic font-medium">Type to search for documents...</p>
         </div>
 
-        <div class="flex justify-end pt-4 border-t">
-            <button onclick="closeSelectModal()" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-bold transition-all">
+        <div class="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button onclick="closeSelectModal()" class="px-6 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 font-bold transition-all">
                 Cancel
             </button>
         </div>
@@ -199,12 +199,12 @@ function searchDocs(query) {
                 return;
             }
             resultsContainer.innerHTML = data.map(doc => `
-                <div class="flex justify-between items-center p-4 hover:bg-red-50 rounded-xl border border-transparent hover:border-red-200 transition-all cursor-pointer group" onclick="addDocument(${doc.id})">
+                <div class="flex justify-between items-center p-4 bg-white dark:bg-gray-800 hover:!bg-red-50 dark:hover:!bg-red-950/30 rounded-xl border border-gray-200 dark:border-gray-700 hover:!border-red-500 dark:hover:!border-red-600 transition-all duration-200 cursor-pointer group" onclick="addDocument(${doc.id})">
                     <div class="flex-1">
-                        <h5 class="font-bold text-gray-900 group-hover:text-red-700 transition-colors">${doc.title}</h5>
-                        <p class="text-xs text-gray-500 font-mono">${doc.reference_number} | ${doc.document_type} | ${doc.document_date}</p>
+                        <h5 class="font-bold text-gray-900 dark:text-gray-100 group-hover:!text-red-600 dark:group-hover:!text-red-400 transition-colors">${doc.title}</h5>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">${doc.reference_number} | ${doc.document_type} | ${doc.document_date}</p>
                     </div>
-                    <i class="bi bi-plus-circle text-red-600 text-xl opacity-0 group-hover:opacity-100 transition-all transform scale-75 group-hover:scale-100"></i>
+                    <i class="bi bi-plus-circle text-red-600 dark:text-red-500 text-xl opacity-0 group-hover:opacity-100 transition-all transform scale-75 group-hover:scale-100"></i>
                 </div>
             `).join('');
         })
