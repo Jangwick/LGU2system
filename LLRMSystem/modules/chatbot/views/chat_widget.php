@@ -26,8 +26,8 @@
                     </div>
                 </div>
             </div>
-            <button onclick="toggleChat()" class="text-white/80 hover:text-white transition">
-                <i class="bi bi-dash-lg text-xl"></i>
+            <button onclick="toggleChat()" class="text-white/80 hover:text-white transition p-1.5 hover:bg-white/10 rounded-lg bg-transparent border-none">
+                <i class="bi bi-dash-lg text-xl leading-none"></i>
             </button>
         </div>
 
