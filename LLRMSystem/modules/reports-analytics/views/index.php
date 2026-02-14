@@ -232,54 +232,58 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Export Modal -->
-<div id="exportModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-semibold text-gray-900">Export Report</h3>
-            <button onclick="closeExportModal()" class="text-gray-400 hover:text-gray-600">
-                <i class="bi bi-x-lg text-2xl"></i>
+<div id="exportModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full border border-gray-200 dark:border-gray-800 transform transition-all duration-300">
+        <!-- Modal Header -->
+        <div class="px-6 py-5 border-b border-red-200 dark:border-gray-800 flex justify-between items-center rounded-t-2xl bg-red-50 dark:bg-gray-800/50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white dark:bg-red-900/20 flex items-center justify-center shadow-sm">
+                    <i class="bi bi-file-earmark-arrow-down text-red-600 text-lg"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Export Report</h3>
+            </div>
+            <button onclick="closeExportModal()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-all">
+                <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
         
-        <form method="GET" action="<?php echo REPORTS_URL; ?>/api/export.php">
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
-                <select name="report_type" class="input-field" required>
-                    <option value="">Select Report...</option>
-                    <option value="user_activity">User Activity Report</option>
-                    <option value="document_access">Document Access Report</option>
-                    <option value="top_uploaders">Top Uploaders Report</option>
-                </select>
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Export Format</label>
-                <select name="format" class="input-field" required>
-                    <option value="">Select Format...</option>
-                    <option value="pdf">PDF Document</option>
-                    <option value="excel">Excel Spreadsheet (.xlsx)</option>
-                    <option value="word">Word Document (.docx)</option>
-                    <option value="csv">CSV File</option>
-                </select>
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Start Date (Optional)</label>
-                <input type="date" name="start_date" class="input-field">
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">End Date (Optional)</label>
-                <input type="date" name="end_date" class="input-field">
-            </div>
-            
-            <div class="flex justify-end gap-3">
-                <button type="button" onclick="closeExportModal()" class="btn-secondary">
-                    Cancel
-                </button>
-                <button type="submit" class="btn-primary">
-                    <i class="bi bi-download mr-2"></i> Export Report
-                </button>
+        <form method="GET" action="<?php echo REPORTS_URL; ?>/api/export.php" class="p-6">
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Report Type</label>
+                    <select name="report_type" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all shadow-sm hover:border-red-400 dark:hover:border-gray-600" required>
+                        <option value="">Select Report...</option>
+                        <option value="user_activity">User Activity Report</option>
+                        <option value="document_access">Document Access Report</option>
+                        <option value="top_uploaders">Top Uploaders Report</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Export Format</label>
+                    <select name="format" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all shadow-sm hover:border-red-400 dark:hover:border-gray-600" required>
+                        <option value="">Select Format...</option>
+                        <option value="pdf">PDF Document</option>
+                        <option value="excel">Excel Spreadsheet (.xlsx)</option>
+                        <option value="word">Word Document (.docx)</option>
+                        <option value="csv">CSV File</option>
+                    </select>
+                </div>
+                
+                <div class="pt-2">
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Date Range (Optional)</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">Start Date</label>
+                            <input type="date" name="start_date" class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-sm shadow-sm hover:border-red-400 dark:hover:border-gray-600 [color-scheme:light] dark:[color-scheme:dark]">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">End Date</label>
+                            <input type="date" name="end_date" class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-sm shadow-sm hover:border-red-400 dark:hover:border-gray-600 [color-scheme:light] dark:[color-scheme:dark]">
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -581,11 +585,17 @@ observer.observe(document.documentElement, {
 });
 
 function showExportModal() {
-    document.getElementById('exportModal').classList.remove('hidden');
+    const modal = document.getElementById('exportModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeExportModal() {
-    document.getElementById('exportModal').classList.add('hidden');
+    const modal = document.getElementById('exportModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = 'auto';
 }
 
 // Close modal when clicking outside
