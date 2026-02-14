@@ -61,3 +61,69 @@
 .dark .quick-action-btn .icon-orange i {
     color: #fb923c; /* orange-400 */
 }
+
+/* ----------------------------------------
+   Chatbot Widget
+   ---------------------------------------- */
+
+/* Chat Window */
+.dark #chatbot-window {
+    background-color: rgba(31, 41, 55, 0.95); /* gray-800 with opacity */
+    border-color: rgba(75, 85, 99, 0.3); /* gray-600 with opacity */
+}
+
+/* Messages Area */
+.dark #chatbot-messages {
+    background-color: rgba(17, 24, 39, 0.5); /* gray-900 with opacity */
+}
+
+/* Bot Message Bubbles */
+.dark #chatbot-messages .bg-white {
+    background-color: #374151 !important; /* gray-700 */
+    border-color: #4b5563 !important; /* gray-600 */
+    color: #e5e7eb !important; /* gray-200 */
+}
+
+/* Typing Indicator */
+.dark #chatbot-messages .text-gray-500 {
+    color: #9ca3af !important; /* gray-400 */
+}
+
+/* Suggestions Area */
+.dark #chatbot-suggestions {
+    background-color: rgba(31, 41, 55, 0.5); /* gray-800 with opacity */
+    border-color: #374151; /* gray-700 */
+}
+
+.dark #chatbot-suggestions button {
+    background-color: #374151; /* gray-700 */
+    border-color: #4b5563; /* gray-600 */
+    color: #e5e7eb; /* gray-200 */
+}
+
+.dark #chatbot-suggestions button:hover {
+    background-color: #4b5563; /* gray-600 */
+    border-color: #6b7280; /* gray-500 */
+}
+
+/* Input Area */
+.dark #chatbot-form {
+    background-color: #1f2937; /* gray-800 */
+    border-color: #374151; /* gray-700 */
+}
+
+.dark #chatbot-input {
+    background-color: #374151; /* gray-700 */
+    color: #f3f4f6; /* gray-100 */
+    border-color: #4b5563; /* gray-600 */
+}
+
+.dark #chatbot-input::placeholder {
+    color: #9ca3af; /* gray-400 */
+}
+
+.dark #chatbot-input:focus {
+    background-color: #4b5563; /* gray-600 */
+    border-color: #dc2626; /* red-600 */
+}
+
