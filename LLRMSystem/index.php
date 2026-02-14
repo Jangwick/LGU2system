@@ -4,11 +4,8 @@
  */
 require_once __DIR__ . '/modules/core/config/config.php';
 
-// Check if user is already logged in, if so, redirect to dashboard
-session_start();
-if (isset($_SESSION['user_id'])) {
-    redirectToDashboard();
-}
+// Check if user is already logged in with a valid session
+checkAlreadyLoggedIn();
 
 $pageTitle = "Home";
 ?>

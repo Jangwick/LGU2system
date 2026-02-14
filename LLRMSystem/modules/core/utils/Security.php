@@ -88,6 +88,22 @@ class Security {
     }
 
     /**
+     * Verify if the current session is still valid (not superseded by another device)
+     */
+    public function verifySession($userId, $currentSessionId) {
+        if (!$userId || !$currentSessionId) return true;
+
+        $stmt = $this->db->prepare("SELECT last_session_id FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && $user['last_session_id'] !== $currentSessionId) {
+            return false; // Another device has logged in
+        }
+        return true;
+    }
+
+    /**
      * Get client IP address accurately
      */
     public static function getClientIP() {

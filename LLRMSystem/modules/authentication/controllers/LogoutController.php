@@ -32,13 +32,12 @@ try {
         'session_duration_formatted' => gmdate("H:i:s", $sessionDuration)
     ]);
     
-    // Clear remember me cookie if exists
+    // Clear session tracking and remember me cookie
+    $stmt = $conn->prepare("UPDATE users SET last_session_id = NULL, remember_token = NULL WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+
     if (isset($_COOKIE['remember_token'])) {
         setcookie('remember_token', '', time() - 3600, '/');
-        
-        // Clear token from database
-        $stmt = $conn->prepare("UPDATE users SET remember_token = NULL WHERE id = ?");
-        $stmt->execute([$_SESSION['user_id']]);
     }
 } catch (PDOException $e) {
     // Log error but continue with logout

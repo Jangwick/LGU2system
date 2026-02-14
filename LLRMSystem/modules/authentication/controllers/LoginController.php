@@ -70,6 +70,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (password_verify($password, $user['password'])) {
                 // Identity verified - Clear any failed attempts
                 $security->clearAttempts($ip, $email);
+
+                // Check if already logged in elsewhere
+                $alreadyLoggedIn = false;
+                if (!empty($user['last_session_id'])) {
+                    // Check activity logs for recent activity (last 15 minutes)
+                    $stmt = $conn->prepare("
+                        SELECT created_at FROM activity_logs 
+                        WHERE user_id = ? 
+                        ORDER BY created_at DESC LIMIT 1
+                    ");
+                    $stmt->execute([$user['id']]);
+                    $lastActivity = $stmt->fetchColumn();
+                    
+                    if ($lastActivity && (time() - strtotime($lastActivity)) < 900) {
+                        $alreadyLoggedIn = true;
+                    }
+                }
                 
                 // Determine target email for OTP
                 $targetEmail = $user['email'];
@@ -104,7 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo json_encode([
                     'success' => true,
                     'requires_otp' => true,
-                    'message' => 'A verification code has been sent.',
+                    'already_logged_in' => $alreadyLoggedIn,
+                    'message' => $alreadyLoggedIn 
+                        ? 'Account is currently active on another device. Logging in here will disconnect the other session.' 
+                        : 'A verification code has been sent.',
                     'email' => $targetEmail // This will update the UI to show where it was sent
                 ]);
                 exit;

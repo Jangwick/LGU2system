@@ -68,6 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_department'] = $user['department'] ?? '';
             $_SESSION['login_time'] = time();
 
+            // Track current session ID to prevent concurrent logins
+            $currentSessionId = session_id();
+            $stmt = $conn->prepare("UPDATE users SET last_session_id = ? WHERE id = ?");
+            $stmt->execute([$currentSessionId, $userId]);
+            $_SESSION['current_session_id'] = $currentSessionId;
+
             // Clear pending OTP data
             unset($_SESSION['otp_pending_user_id']);
             unset($_SESSION['otp_remember_me']);

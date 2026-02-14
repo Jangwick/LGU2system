@@ -175,6 +175,83 @@ function redirectToDashboard() {
 }
 
 /**
+ * Check if the user's session is still valid (prevents concurrent logins)
+ */
+function isSessionValid() {
+    if (!isset($_SESSION['user_id']) || !isset($_SESSION['current_session_id'])) {
+        return true; // Not logged in yet or no tracking set
+    }
+
+    try {
+        require_once __DIR__ . '/database.php';
+        $db = getDatabase();
+        $stmt = $db->prepare("SELECT last_session_id FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $lastSessionId = $stmt->fetchColumn();
+
+        return ($lastSessionId === $_SESSION['current_session_id']);
+    } catch (Exception $e) {
+        return true; // if DB fails, don't lock out
+    }
+}
+
+/**
+ * Global authentication check
+ */
+function checkAuth() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (!isset($_SESSION['user_id'])) {
+        redirectToLogin();
+    }
+
+    if (!isSessionValid()) {
+        logoutSuperseded();
+    }
+}
+
+/**
+ * Handle logout for superseded sessions
+ */
+function logoutSuperseded() {
+    $_SESSION = array();
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    session_destroy();
+    
+    // Redirect with a message
+    $loginUrl = LOGIN_URL . (strpos(LOGIN_URL, '?') !== false ? '&' : '?') . 'error=session_superseded';
+    header('Location: ' . $loginUrl);
+    exit;
+}
+
+/**
+ * Check if the user is already logged in and should be redirected away from login/landing
+ */
+function checkAlreadyLoggedIn() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (isset($_SESSION['user_id'])) {
+        if (isSessionValid()) {
+            redirectToDashboard();
+        } else {
+            // If they are here with an invalid session, clean it up
+            $_SESSION = array();
+            session_destroy();
+        }
+    }
+}
+
+/**
  * Get the current page URL
  * @return string Current page URL
  */

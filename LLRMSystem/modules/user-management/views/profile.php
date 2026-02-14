@@ -2,9 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
 
-if (!isset($_SESSION['user_id'])) {
-    redirectToLogin();
-}
+checkAuth();
 
 require_once __DIR__ . '/../../core/config/database.php';
 

@@ -2,10 +2,8 @@
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
 
-// Check authentication
-if (!isset($_SESSION['user_id'])) {
-    redirectToLogin();
-}
+// Check authentication and session validity
+checkAuth();
 
 // Load dashboard controller
 require_once __DIR__ . '/../controllers/DashboardController.php';

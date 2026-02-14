@@ -1,6 +1,9 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
+
+// If already logged in with a valid session, redirect to dashboard
+checkAlreadyLoggedIn();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,6 +90,19 @@ require_once __DIR__ . '/../../core/config/config.php';
     </a>
 
     <div class="w-full max-w-md">
+        <!-- Session Error Message -->
+        <?php if (isset($_GET['error']) && $_GET['error'] === 'session_superseded'): ?>
+        <div class="mb-6 animate-fade-in-up bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm">
+            <div class="flex items-center">
+                <i class="bi bi-exclamation-triangle-fill text-amber-500 text-xl mr-3"></i>
+                <div>
+                    <p class="font-bold text-amber-800">Security Notice</p>
+                    <p class="text-sm text-amber-700">This account was logged in on another device. For your security, the previous session has been closed.</p>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Logo Section -->
         <div class="text-center mb-6 md:mb-8">
             <div class="inline-flex items-center justify-center mb-3 md:mb-4 logo-bounce">
@@ -272,8 +288,22 @@ require_once __DIR__ . '/../../core/config/config.php';
             });
 
             function showAlert(message, type = 'red') {
-                const bgColor = type === 'red' ? 'bg-red-50 border-red-200 text-red-700' : 'bg-green-50 border-green-200 text-green-700';
-                const icon = type === 'red' ? 'bi-exclamation-circle' : 'bi-check-circle';
+                let bgColor, icon;
+                
+                switch(type) {
+                    case 'green':
+                        bgColor = 'bg-green-50 border-green-200 text-green-700';
+                        icon = 'bi-check-circle';
+                        break;
+                    case 'amber':
+                        bgColor = 'bg-amber-50 border-amber-200 text-amber-800';
+                        icon = 'bi-exclamation-triangle';
+                        break;
+                    case 'red':
+                    default:
+                        bgColor = 'bg-red-50 border-red-200 text-red-700';
+                        icon = 'bi-exclamation-circle';
+                }
                 
                 alertContainer.innerHTML = `
                     <div class="${bgColor} border px-4 py-3 rounded-lg flex items-center text-sm animate-shake">
@@ -321,7 +351,13 @@ require_once __DIR__ . '/../../core/config/config.php';
                         document.getElementById('otp-target-email').innerText = data.email || formData.get('email');
                         loginForm.classList.add('hidden');
                         otpForm.classList.remove('hidden');
-                        showAlert('A verification code has been sent.', 'green');
+                        
+                        if (data.already_logged_in) {
+                            showAlert(data.message, 'amber');
+                        } else {
+                            showAlert('A verification code has been sent.', 'green');
+                        }
+                        
                         startResendCountdown();
                     } else if (data.success) {
                         window.location.href = data.redirect;
