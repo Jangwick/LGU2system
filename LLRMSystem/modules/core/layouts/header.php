@@ -73,7 +73,16 @@
             }
             
             .input-field {
-                @apply w-full px-4 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:focus:ring-red-600;
+                @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 dark:border-gray-700 dark:focus:ring-red-600;
+                background-color: #ffffff !important;
+                color: #111827 !important;
+                color-scheme: light;
+            }
+            
+            .dark .input-field {
+                background-color: #404040 !important;
+                color: #e5e5e5 !important;
+                color-scheme: dark;
             }
             
             .card {

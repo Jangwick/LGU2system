@@ -889,26 +889,32 @@ table tbody tr:hover {
     color: #e5e5e5 !important;
 }
 
-/* Dark Mode - Forms */
-.dark input,
-.dark textarea,
-.dark select {
+/* Dark Mode - Forms (scoped to not override Tailwind input-field) */
+.dark input:not(.input-field),
+.dark textarea:not(.input-field),
+.dark select:not(.input-field) {
     background-color: #404040 !important;
     border-color: #555555 !important;
     color: #e5e5e5 !important;
 }
 
-.dark input:focus,
-.dark textarea:focus,
-.dark select:focus {
+.dark input:not(.input-field):focus,
+.dark textarea:not(.input-field):focus,
+.dark select:not(.input-field):focus {
     border-color: #3b82f6 !important;
     background-color: #4d4d4d !important;
 }
 
 /* Dark Mode - Buttons */
-.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600) {
+.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600):not(td button) {
     background-color: #404040 !important;
     color: #e5e5e5 !important;
+}
+
+/* Dark Mode - Table action buttons must be transparent */
+.dark td button {
+    background-color: transparent !important;
+    background: none !important;
 }
 
 /* Dark Mode - Charts */

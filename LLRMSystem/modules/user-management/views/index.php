@@ -246,11 +246,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button onclick="editUser(<?php echo $user['id']; ?>)" class="text-red-600 hover:text-red-700 mr-3 transition-all duration-200 hover:scale-110">
+                                        <button onclick="editUser(<?php echo $user['id']; ?>)" style="background:none;border:none;" class="text-red-600 hover:text-red-700 mr-3 transition-all duration-200 hover:scale-110 cursor-pointer">
                                             <i class="bi bi-pencil"></i> Edit
                                         </button>
                                         <button onclick="deleteUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['name']); ?>')" 
-                                                class="text-red-600 hover:text-red-900 transition-all duration-200 hover:scale-110">
+                                                style="background:none;border:none;" class="text-red-600 hover:text-red-900 transition-all duration-200 hover:scale-110 cursor-pointer">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </td>
