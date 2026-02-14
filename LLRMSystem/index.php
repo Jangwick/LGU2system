@@ -322,33 +322,82 @@ $pageTitle = "Home";
         </div>
     </section>
 
-    <!-- Our Roots & Governance -->
-    <section id="roots" class="py-32 bg-[#f8fafc] overflow-hidden">
+    <!-- Our Roots Section -->
+    <section id="roots" class="py-32 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-24 items-center">
-                <div data-aos="fade-right">
-                    <h2 class="text-red-600 font-black tracking-[0.3em] uppercase text-xs mb-4">Our Roots</h2>
-                    <p class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-8">The Story of Valenzuela</p>
-                    <div class="prose prose-lg text-gray-500 font-medium leading-relaxed mb-8">
-                        <p>Originally known as Polo, derived from the Tagalog word "pulo" meaning island, our city's journey began in 1623. What started as a small settlement of fishermen has evolved into the industrial powerhouse it is today.</p>
-                        <p class="mt-4">Renamed in honor of Dr. Pio Valenzuela, a physician and a prominent figure in the Katipunan, the city embodies a legacy of patriotism and service.</p>
-                    </div>
-                    <div class="flex items-center space-x-6">
-                        <div class="flex -space-x-4">
-                            <img src="https://lacs.spvalenzuela.com/images/arkong-bato.jpg" class="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover">
-                            <img src="https://lacs.spvalenzuela.com/images/pio-valenzuela.jpg" class="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover">
+            <div class="grid lg:grid-cols-2 gap-16 items-start">
+                <!-- Left Column: Visuals -->
+                <div data-aos="fade-right" class="space-y-8">
+                    <div class="relative rounded-[40px] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.02]">
+                        <img src="https://lacs.spvalenzuela.com/images/city_hall.png" alt="Valenzuela City Hall" class="w-full h-[500px] object-cover">
+                        <!-- Established Badge -->
+                        <div class="absolute bottom-10 left-10 text-white z-10">
+                            <p class="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mb-2">Established</p>
+                            <h3 class="text-6xl font-black tracking-tighter">1623</h3>
                         </div>
-                        <div class="text-xs font-black uppercase tracking-widest text-[#002d72]">Est. 1623</div>
+                        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent"></div>
                     </div>
+                    
+                    <!-- YouTube CTA -->
+                    <a href="https://www.youtube.com/watch?v=IBUCnYd6CaQ" target="_blank" class="flex items-center p-6 bg-gray-50 rounded-3xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:-translate-y-1">
+                        <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center text-white text-2xl mr-6 shadow-lg shadow-red-200 group-hover:scale-110 transition-transform">
+                            <i class="bi bi-play-fill text-3xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-gray-900">Watch City History</h4>
+                            <p class="text-xs font-bold text-red-600 transition-colors uppercase tracking-widest mt-1">View on YouTube <i class="bi bi-box-arrow-up-right ml-1"></i></p>
+                        </div>
+                    </a>
                 </div>
-                <div data-aos="fade-left" class="relative">
-                    <div class="aspect-square bg-white rounded-[60px] shadow-2xl overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-500">
-                        <img src="https://lacs.spvalenzuela.com/images/city_hall.png" alt="Valenzuela History" class="w-full h-full object-cover">
-                    </div>
-                    <!-- Stats badge -->
-                    <div class="absolute -bottom-8 -left-8 bg-black text-white p-10 rounded-[40px] shadow-2xl">
-                        <div class="text-4xl font-black mb-1">400+</div>
-                        <div class="text-[10px] font-black uppercase tracking-widest text-red-500">Years of History</div>
+
+                <!-- Right Column: Content -->
+                <div data-aos="fade-left" class="pt-8">
+                    <h2 class="text-red-600 font-bold tracking-[0.2em] uppercase text-xs mb-4">OUR ROOTS</h2>
+                    <h3 class="text-5xl md:text-7xl font-black text-[#002d72] tracking-tight mb-8">The Story of Valenzuela</h3>
+                    
+                    <div class="space-y-8">
+                        <p class="text-gray-500 font-medium text-lg leading-relaxed">
+                            Originally known as <strong>Polo</strong>, derived from the Tagalog word <span class="text-gray-900 font-bold">"pulo"</span> meaning island, our city's journey began in 1623. What started as a small settlement of fishermen has evolved into the industrial powerhouse it is today.
+                        </p>
+
+                        <!-- Arkong Bato Wide Image -->
+                        <div class="rounded-[30px] overflow-hidden h-40 shadow-lg border border-gray-100">
+                            <img src="https://lacs.spvalenzuela.com/images/arkong-bato.jpg" alt="Arkong Bato" class="w-full h-full object-cover">
+                        </div>
+
+                        <p class="text-gray-500 font-medium text-lg leading-relaxed">
+                            Renamed in honor of <strong>Dr. Pio Valenzuela</strong>, a physician and a prominent figure in the Katipunan, the city embodies a legacy of patriotism and service.
+                        </p>
+
+                        <!-- Dr. Pio Quote -->
+                        <div class="flex items-start space-x-6 py-6 border-y border-gray-50">
+                            <img src="https://lacs.spvalenzuela.com/images/pio-valenzuela.jpg" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-xl flex-shrink-0">
+                            <p class="text-gray-400 italic font-medium pt-2 text-sm leading-relaxed">
+                                "Dr. Pio Valenzuela was a Filipino physician and revolutionary who was a principal member of the Katipunan."
+                            </p>
+                        </div>
+
+                        <!-- Highlights list -->
+                        <div class="grid grid-cols-2 gap-8 pt-4">
+                            <div class="flex items-start group">
+                                <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-red-600 mr-4 flex-shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
+                                    <i class="bi bi-bank"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-black text-gray-900 text-sm mb-1 uppercase tracking-tight">San Diego Church</h5>
+                                    <p class="text-[11px] text-gray-400 font-medium leading-relaxed">One of the city's oldest landmarks and a symbol of faith and history.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start group">
+                                <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-red-600 mr-4 flex-shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
+                                    <i class="bi bi-geo-alt"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-black text-gray-900 text-sm mb-1 uppercase tracking-tight">Arkong Bato</h5>
+                                    <p class="text-[11px] text-gray-400 font-medium leading-relaxed">The historic stone arch that serves as the boundary and gateway.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
