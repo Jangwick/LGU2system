@@ -62,6 +62,14 @@ $pageTitle = "City News & Updates";
                         </div>
                     </div>
                 </a>
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="index.php#leadership" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Officials</a>
+                    <a href="index.php#roots" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">History</a>
+                    <a href="index.php#governance" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Governance</a>
+                    <a href="index.php#recognition" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Awards</a>
+                    <a href="index.php#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Infrastructure</a>
+                    <a href="index.php#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Landmarks</a>
+                </div>
                 <div class="flex items-center space-x-1 md:space-x-6">
                     <a href="index.php" class="text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[12px] md:text-sm transition-all whitespace-nowrap">Home</a>
                     <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[12px] md:text-sm transition-all whitespace-nowrap">Sign In</a>

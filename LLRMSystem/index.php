@@ -189,7 +189,7 @@ $pageTitle = "Home";
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 <!-- Feature 1: Document Management -->
-                <div data-aos="fade-up" data-aos-delay="100" class="feature-card p-10 bg-white rounded-[40px] border border-gray-100 shadow-2xl shadow-gray-200/40 relative overflow-hidden group">
+                <div data-aos="fade-up" data-aos-delay="100" class="feature-card p-10 bg-white rounded-[40px] border border-gray-100 shadow-2xl shadow-gray-200/40 relative overflow-hidden group cursor-pointer" onclick="window.location.href='<?php echo LOGIN_URL; ?>'">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-[100px] group-hover:bg-red-100 transition-colors duration-500"></div>
                     <div class="w-16 h-16 bg-red-600 text-white rounded-3xl flex items-center justify-center mb-8 text-3xl shadow-lg shadow-red-200 relative z-10 floating">
                         <i class="bi bi-stack"></i>
@@ -199,7 +199,7 @@ $pageTitle = "Home";
                 </div>
 
                 <!-- Feature 2: Advanced Search -->
-                <div data-aos="fade-up" data-aos-delay="200" class="feature-card p-10 bg-white rounded-[40px] border border-gray-100 shadow-2xl shadow-gray-200/40 relative overflow-hidden group">
+                <div data-aos="fade-up" data-aos-delay="200" class="feature-card p-10 bg-white rounded-[40px] border border-gray-100 shadow-2xl shadow-gray-200/40 relative overflow-hidden group cursor-pointer" onclick="window.location.href='<?php echo LOGIN_URL; ?>'">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-[100px] group-hover:bg-blue-100 transition-colors duration-500"></div>
                     <div class="w-16 h-16 bg-blue-600 text-white rounded-3xl flex items-center justify-center mb-8 text-3xl shadow-lg shadow-blue-200 relative z-10 floating" style="animation-delay: 0.5s">
                         <i class="bi bi-lightning-charge-fill"></i>
@@ -209,7 +209,7 @@ $pageTitle = "Home";
                 </div>
 
                 <!-- Feature 3: Analytics -->
-                <div data-aos="fade-up" data-aos-delay="300" class="feature-card p-10 bg-white rounded-[40px] border border-gray-100 shadow-2xl shadow-gray-200/40 relative overflow-hidden group">
+                <div data-aos="fade-up" data-aos-delay="300" class="feature-card p-10 bg-white rounded-[40px] border border-gray-100 shadow-2xl shadow-gray-200/40 relative overflow-hidden group cursor-pointer" onclick="window.location.href='<?php echo LOGIN_URL; ?>'">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-[100px] group-hover:bg-green-100 transition-colors duration-500"></div>
                     <div class="w-16 h-16 bg-green-600 text-white rounded-3xl flex items-center justify-center mb-8 text-3xl shadow-lg shadow-green-200 relative z-10 floating" style="animation-delay: 1s">
                         <i class="bi bi-pie-chart-fill"></i>
@@ -826,7 +826,7 @@ $pageTitle = "Home";
 
             <div class="grid md:grid-cols-3 gap-8 mb-12">
                 <!-- News Card 1 -->
-                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer">
+                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer" onclick="window.location.href='news.php'">
                     <div class="h-56 overflow-hidden relative">
                         <img src="https://lacs.spvalenzuela.com/images/oro-inidoro.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=800'">
                     </div>
@@ -840,7 +840,7 @@ $pageTitle = "Home";
                 </div>
 
                 <!-- News Card 2 -->
-                <div data-aos="fade-up" data-aos-delay="200" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer">
+                <div data-aos="fade-up" data-aos-delay="200" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer" onclick="window.location.href='news.php'">
                     <div class="h-56 overflow-hidden relative">
                         <img src="https://lacs.spvalenzuela.com/images/housing.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800'">
                     </div>
@@ -854,7 +854,7 @@ $pageTitle = "Home";
                 </div>
 
                 <!-- News Card 3 -->
-                <div data-aos="fade-up" data-aos-delay="300" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer">
+                <div data-aos="fade-up" data-aos-delay="300" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer" onclick="window.location.href='news.php'">
                     <div class="h-56 overflow-hidden relative">
                         <img src="https://lacs.spvalenzuela.com/images/flood_control.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=800'">
                     </div>
