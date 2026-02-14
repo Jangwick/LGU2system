@@ -33,7 +33,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <p class="text-red-100 animation-delay-100">System activity and security audit trail</p>
                 </div>
                 <a href="?export=csv&<?php echo http_build_query($data['filters']); ?>" 
-                   class="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 animate-slide-in-right">
+                   class="!bg-white !text-red-600 px-6 py-3 rounded-lg font-semibold hover:!bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 animate-slide-in-right">
                     <i class="bi bi-download mr-2"></i> Export CSV
                 </a>
             </div>
