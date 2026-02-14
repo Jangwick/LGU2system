@@ -317,8 +317,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="space-y-3">
                         <button onclick="generateAISummary(<?= $document['id'] ?>)" 
                                 id="summarize-btn"
-                                class="w-full px-4 py-3 bg-red-600 dark:bg-red-700 text-white rounded-xl hover:bg-red-700 dark:hover:bg-red-600 transition shadow-sm flex items-center justify-center font-bold group">
-                            <i class="bi bi-magic mr-2 group-hover:animate-pulse"></i> Summarize with AI
+                                class="w-full px-4 py-3 bg-red-600 dark:bg-red-700 text-white dark:text-white rounded-xl hover:bg-red-700 dark:hover:bg-red-600 transition shadow-sm flex items-center justify-center font-bold group">
+                            <i class="bi bi-magic mr-2 group-hover:animate-pulse text-white dark:text-white"></i> 
+                            <span class="text-white dark:text-white">Summarize with AI</span>
                         </button>
                         
                         <button onclick="findSimilarDocs(<?= $document['id'] ?>)" 
