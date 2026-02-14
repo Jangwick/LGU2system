@@ -309,28 +309,28 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
 
                 <!-- AI Research Tools -->
-                <div class="bg-gradient-to-br from-red-50 to-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 border border-red-100">
-                    <h2 class="text-base sm:text-lg font-bold text-red-900 mb-3 sm:mb-4 flex items-center">
-                        <i class="bi bi-cpu-fill mr-2"></i> AI Research Tools
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-5 md:p-6 border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center">
+                        <i class="bi bi-cpu-fill mr-2 text-red-600"></i> AI Research Tools
                     </h2>
                     
                     <div class="space-y-3">
                         <button onclick="generateAISummary(<?= $document['id'] ?>)" 
                                 id="summarize-btn"
-                                class="w-full px-4 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition shadow-sm flex items-center justify-center font-bold group">
+                                class="w-full px-4 py-3 bg-red-600 dark:bg-red-700 text-white rounded-xl hover:bg-red-700 dark:hover:bg-red-600 transition shadow-sm flex items-center justify-center font-bold group">
                             <i class="bi bi-magic mr-2 group-hover:animate-pulse"></i> Summarize with AI
                         </button>
                         
                         <button onclick="findSimilarDocs(<?= $document['id'] ?>)" 
                                 id="similar-btn"
-                                class="w-full px-4 py-3 bg-white text-red-700 border border-red-200 rounded-xl hover:bg-red-50 transition shadow-sm flex items-center justify-center font-bold">
+                                class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition shadow-sm flex items-center justify-center font-bold">
                             <i class="bi bi-diagram-3 mr-2"></i> Find Similar Documents
                         </button>
                     </div>
                     
                     <div id="ai-results" class="mt-4 hidden overflow-hidden transition-all duration-300">
-                        <div class="p-4 bg-white rounded-lg border border-red-100 shadow-inner">
-                            <div id="ai-content" class="text-sm text-gray-800 leading-relaxed"></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-inner">
+                            <div id="ai-content" class="text-sm text-gray-800 dark:text-gray-200 leading-relaxed"></div>
                         </div>
                     </div>
                 </div>
