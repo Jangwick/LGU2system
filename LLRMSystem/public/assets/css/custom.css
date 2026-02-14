@@ -641,52 +641,51 @@ main::-webkit-scrollbar-thumb:active {
     color: #999999 !important;
 }
 
-/* Dark Mode - Sidebar */
-.dark aside,
-.dark .sidebar,
-.dark aside#sidebar {
+/* Dark Mode - Sidebar (scoped to navigation sidebar only) */
+.dark aside#sidebar,
+.dark .sidebar {
     background: linear-gradient(180deg, #7f1d1d 0%, #450a0a 100%) !important;
     border-color: #450a0a !important;
 }
 
-.dark aside nav,
+.dark aside#sidebar nav,
 .dark .sidebar nav {
     background-color: transparent !important;
 }
 
-.dark aside a,
+.dark aside#sidebar a,
 .dark .sidebar a,
-.dark aside button,
+.dark aside#sidebar button,
 .dark .sidebar button {
     color: #e5e5e5 !important;
 }
 
-.dark aside a:hover,
+.dark aside#sidebar a:hover,
 .dark .sidebar a:hover,
-.dark aside button:hover,
+.dark aside#sidebar button:hover,
 .dark .sidebar button:hover {
     background-color: rgba(220, 38, 38, 0.3) !important;
 }
 
-.dark aside a.active,
+.dark aside#sidebar a.active,
 .dark .sidebar a.active {
     background-color: rgba(220, 38, 38, 0.5) !important;
     color: #ffffff !important;
 }
 
-.dark aside .bg-red-600,
+.dark aside#sidebar .bg-red-600,
 .dark .sidebar .bg-red-600 {
     background-color: #dc2626 !important;
 }
 
 /* Dark Mode - Sidebar Section Headers */
-.dark aside .text-red-300,
+.dark aside#sidebar .text-red-300,
 .dark .sidebar .text-red-300 {
     color: #fca5a5 !important;
 }
 
 /* Dark Mode - Sidebar Dropdown */
-.dark aside .dropdown-content,
+.dark aside#sidebar .dropdown-content,
 .dark .sidebar .dropdown-content {
     background-color: rgba(127, 29, 29, 0.5) !important;
 }
@@ -706,7 +705,7 @@ main::-webkit-scrollbar-thumb:active {
     background-color: rgba(220, 38, 38, 0.3) !important;
 }
 
-.dark aside .nav-item-sub:hover,
+.dark aside#sidebar .nav-item-sub:hover,
 .dark .sidebar .nav-item-sub:hover {
     background-color: rgba(220, 38, 38, 0.4) !important;
 }
