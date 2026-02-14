@@ -265,7 +265,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Desktop Table View -->
             <div class="hidden md:block drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
                         <tr>
                             <th class="px-4 md:px-6 py-3 text-left w-12">
                                 <!-- Redundant checkbox removed -->
@@ -293,7 +293,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <?php if (isset($data['error'])): ?>
                             <tr>
                                 <td colspan="8" class="px-6 py-12 text-center">
@@ -315,7 +315,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php else: ?>
                             <?php foreach ($data['documents'] as $doc): ?>
                                 <!-- Table Row -->
-                                <tr class="hover:bg-gray-50" data-document-id="<?php echo $doc['id']; ?>">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" data-document-id="<?php echo $doc['id']; ?>">
                                     <td class="px-4 md:px-6 py-4 w-12">
                                         <input type="checkbox" class="document-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded" value="<?php echo $doc['id']; ?>">
                                     </td>
@@ -347,10 +347,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
-                                            <button class="text-blue-600 hover:text-blue-700" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                            <button class="text-blue-600 hover:text-blue-700 dark:!bg-transparent" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 hover:text-green-700" title="Download">
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 hover:text-green-700 dark:!bg-transparent" title="Download">
                                                 <i class="bi bi-download"></i>
                                             </a>
                                             <?php 
@@ -361,12 +361,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button class="text-gray-600 hover:text-gray-700" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                            <button class="text-gray-600 hover:text-gray-700 dark:!bg-transparent" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <?php endif; ?>
                                             <?php if ($canDelete): ?>
-                                            <button class="text-red-600 hover:text-red-700" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                            <button class="text-red-600 hover:text-red-700 dark:!bg-transparent" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                             <?php endif; ?>
