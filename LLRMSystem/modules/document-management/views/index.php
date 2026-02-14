@@ -217,10 +217,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <div class="mt-4 flex justify-end gap-3">
-                    <button type="button" onclick="clearAdvancedFilters()" class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+                    <button type="button" onclick="clearAdvancedFilters()" style="background:transparent !important;" class="px-4 py-2 text-sm text-gray-900 dark:text-gray-400 hover:text-black dark:hover:text-gray-200 transition-colors">
                         Clear All
                     </button>
-                    <button type="button" onclick="applyAdvancedFilters()" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-sm font-medium">
+                    <button type="button" onclick="applyAdvancedFilters()" style="background-color: #dc2626 !important;" class="px-6 py-2 text-white rounded-lg hover:bg-red-700 transition-all shadow-sm font-medium">
                         Apply Advanced Filters
                     </button>
                 </div>
