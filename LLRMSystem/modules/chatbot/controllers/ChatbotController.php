@@ -23,9 +23,16 @@ class ChatbotController {
      * Process a chat message
      */
     public function ask($message, $history = []) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if (empty($this->apiKey)) {
             return ['success' => false, 'error' => 'Chatbot is not configured. (Missing API Key)'];
         }
+
+        $userRole = $_SESSION['user_role'] ?? 'viewer';
+        $userName = $_SESSION['user_name'] ?? 'Guest';
 
         $context = $this->getSystemContext();
         
@@ -34,7 +41,16 @@ class ChatbotController {
 
         // Instruction for the system
         $systemInstruction = "You are the LRMS Assistant. You are an expert on the Legislative Records Management System (LRMS) for Valenzuela City.\n\n" .
-                             "YOUR GOAL: Guide users through the system and help them find features. Be helpful, professional, and concise.\n\n" .
+                             "CURRENT USER INFO:\n" .
+                             "- Name: $userName\n" .
+                             "- Role: $userRole\n\n" .
+                             "ROLE-BASED RULES (CRITICAL):\n" .
+                             "1. If user role is 'viewer', they CANNOT upload documents, access Reports & Analytics, Research & Analysis, User Management, or Audit Logs.\n" .
+                             "2. Only 'staff', 'officer', and 'administrator' can create or upload documents.\n" .
+                             "3. Only 'officer' and 'administrator' can access Reports & Analytics and Legislative Analysis.\n" .
+                             "4. Only 'administrator' can access User Management and Audit Logs.\n\n" .
+                             "YOUR GOAL: Guide users through the system and help them find features. Be helpful, professional, and concise.\n" .
+                             "If a feature is restricted for their role, do NOT suggest it as a primary tool they can use. Instead, focus on Search and Dashboard for viewers.\n\n" .
                              "SITEMAP (Use these links to guide users):\n" .
                              "- Dashboard: modules/dashboard/views/index.php\n" .
                              "- Document Management: modules/document-management/views/index.php\n" .
@@ -48,7 +64,7 @@ class ChatbotController {
                              "\nFORMATTING RULES:\n" .
                              "1. Link format: [Feature Name](path)\n" .
                              "2. Use **bold text** for emphasis on important steps.\n" .
-                             "3. If a user asks 'how to upload', refer to the Document Management link and explain the 'Add Document' process from the documentation.\n" .
+                             "3. If their role allows it and they ask 'how to upload', refer to the Document Management link and explain the 'Add Document' process.\n" .
                              "\nSYSTEM CONTEXT:\n" . substr($context, 0, 3500);
 
         // Construct the combined prompt

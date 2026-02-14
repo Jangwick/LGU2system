@@ -43,9 +43,42 @@
 
         <!-- Suggestions -->
         <div id="chatbot-suggestions" class="p-2 flex gap-2 overflow-x-auto whitespace-nowrap hidden border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800/50">
-            <button onclick="sendSuggestion('How to upload a document?')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">How to upload?</button>
-            <button onclick="sendSuggestion('What are the user roles?')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">User Roles</button>
-            <button onclick="sendSuggestion('Is there a mobile app?')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">Mobile App</button>
+            <?php 
+            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+            
+            // Define suggestions per role
+            $roleSuggestions = [
+                'viewer' => [
+                    ['text' => 'Search records', 'query' => 'How can I search for documents?'],
+                    ['text' => 'System features', 'query' => 'What are the main features of LRMS?'],
+                    ['text' => 'User roles', 'query' => 'What can I do with a viewer account?']
+                ],
+                'staff' => [
+                    ['text' => 'How to upload?', 'query' => 'How can I upload a new document?'],
+                    ['text' => 'Edit document', 'query' => 'How to edit an existing document?'],
+                    ['text' => 'Search records', 'query' => 'How to use advanced filters?']
+                ],
+                'officer' => [
+                    ['text' => 'How to approve?', 'query' => 'How do I approve pending documents?'],
+                    ['text' => 'Reports', 'query' => 'How can I generate analytics reports?'],
+                    ['text' => 'Advanced search', 'query' => 'How to find specific legislative records?']
+                ],
+                'administrator' => [
+                    ['text' => 'User management', 'query' => 'How to manage system users and roles?'],
+                    ['text' => 'Audit logs', 'query' => 'Where can I view all system activity logs?'],
+                    ['text' => 'System status', 'query' => 'What is the current status of the server?']
+                ]
+            ];
+
+            // Default to viewer if role not found
+            $suggestionsList = $roleSuggestions[$userRole] ?? $roleSuggestions['viewer'];
+
+            foreach ($suggestionsList as $sugg): 
+            ?>
+                <button onclick="sendSuggestion('<?php echo $sugg['query']; ?>')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">
+                    <?php echo $sugg['text']; ?>
+                </button>
+            <?php endforeach; ?>
         </div>
 
         <!-- Input Area -->
@@ -81,12 +114,34 @@
                 chatWindow.classList.add('scale-100', 'opacity-100');
             }, 10);
             suggestions.classList.remove('hidden');
+            // Save state
+            sessionStorage.setItem('chatbot_open', 'true');
         } else {
             chatWindow.classList.remove('scale-100', 'opacity-100');
             chatWindow.classList.add('scale-0', 'opacity-0');
             setTimeout(() => chatWindow.classList.add('hidden'), 300);
+            // Save state
+            sessionStorage.setItem('chatbot_open', 'false');
         }
     };
+
+    // Restore state and history on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedHistory = sessionStorage.getItem('chatbot_history');
+        if (savedHistory) {
+            chatHistory = JSON.parse(savedHistory);
+            chatHistory.forEach(msg => {
+                appendMessage(msg.role === 'user' ? 'user' : 'bot', msg.text, false);
+            });
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        const wasOpen = sessionStorage.getItem('chatbot_open');
+        if (wasOpen === 'true') {
+            isOpen = false; // set to false so toggleChat makes it true
+            toggleChat();
+        }
+    });
 
     toggleBtn.addEventListener('click', toggleChat);
 
@@ -150,6 +205,9 @@
                 
                 // Keep history manageable
                 if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+                
+                // Save to session storage
+                sessionStorage.setItem('chatbot_history', JSON.stringify(chatHistory));
             } else {
                 let errorMsg = result.error;
                 if (result.details && result.details.error && result.details.error.message) {
@@ -168,7 +226,7 @@
         }
     }
 
-    function appendMessage(role, text) {
+    function appendMessage(role, text, shouldScroll = true) {
         const isBot = role === 'bot';
         
         // Simple Markdown link and bold parser
@@ -176,7 +234,7 @@
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\[(.*?)\]\((.*?)\)/g, (match, title, url) => {
                 const fullUrl = url.startsWith('http') ? url : `${baseUrl}/${url.replace(/^\//, '')}`;
-                return `<a href="${fullUrl}" class="text-red-600 dark:text-red-400 font-semibold underline hover:bg-red-50 dark:hover:bg-red-900/30" target="_blank">${title} <i class="bi bi-box-arrow-up-right text-[10px]"></i></a>`;
+                return `<a href="${fullUrl}" class="text-red-600 dark:text-red-400 font-semibold underline hover:bg-red-50 dark:hover:bg-red-900/30">${title}</a>`;
             })
             .replace(/\n/g, '<br>');
 
@@ -188,7 +246,9 @@
             </div>
         `;
         chatMessages.insertAdjacentHTML('beforeend', html);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (shouldScroll) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     }
 
     window.sendSuggestion = function(text) {
