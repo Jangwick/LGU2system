@@ -11,7 +11,7 @@
     </button>
 
     <!-- Chat Window -->
-    <div id="chatbot-window" class="hidden absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[500px] bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
+    <div id="chatbot-window" class="hidden absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[500px] bg-white dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700/50 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
         <!-- Header -->
         <div class="bg-red-600 p-4 text-white flex items-center justify-between shadow-lg">
             <div class="flex items-center space-x-3">
@@ -32,26 +32,26 @@
         </div>
 
         <!-- Messages Area -->
-        <div id="chatbot-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+        <div id="chatbot-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-white dark:bg-gray-900/50">
             <!-- Welcome Message -->
             <div class="flex justify-start">
-                <div class="bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-none p-3 max-w-[85%] text-sm text-gray-800">
+                <div class="bg-gray-50 dark:bg-gray-700 shadow-sm border border-gray-200 dark:border-gray-600 rounded-2xl rounded-tl-none p-3 max-w-[85%] text-sm text-gray-800 dark:text-gray-200">
                     Hello! I'm your LRMS Assistant. How can I help you navigate the system today?
                 </div>
             </div>
         </div>
 
         <!-- Suggestions -->
-        <div id="chatbot-suggestions" class="p-2 flex gap-2 overflow-x-auto whitespace-nowrap hidden border-t border-gray-100 bg-white/50">
-            <button onclick="sendSuggestion('How to upload a document?')" class="text-xs bg-white border border-gray-200 px-3 py-1.5 rounded-full hover:bg-red-50 hover:border-red-200 transition">How to upload?</button>
-            <button onclick="sendSuggestion('What are the user roles?')" class="text-xs bg-white border border-gray-200 px-3 py-1.5 rounded-full hover:bg-red-50 hover:border-red-200 transition">User Roles</button>
-            <button onclick="sendSuggestion('Is there a mobile app?')" class="text-xs bg-white border border-gray-200 px-3 py-1.5 rounded-full hover:bg-red-50 hover:border-red-200 transition">Mobile App</button>
+        <div id="chatbot-suggestions" class="p-2 flex gap-2 overflow-x-auto whitespace-nowrap hidden border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800/50">
+            <button onclick="sendSuggestion('How to upload a document?')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">How to upload?</button>
+            <button onclick="sendSuggestion('What are the user roles?')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">User Roles</button>
+            <button onclick="sendSuggestion('Is there a mobile app?')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">Mobile App</button>
         </div>
 
         <!-- Input Area -->
-        <div class="p-4 bg-white border-t border-gray-100">
+        <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
             <form id="chatbot-form" class="flex items-center space-x-2">
-                <input type="text" id="chatbot-input" placeholder="Type your message..." class="flex-1 bg-gray-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-red-500 transition-all outline-none">
+                <input type="text" id="chatbot-input" placeholder="Type your message..." class="flex-1 bg-gray-100 dark:bg-gray-700 border-none rounded-xl px-4 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-red-500 transition-all outline-none">
                 <button type="submit" id="chatbot-send" class="bg-red-600 text-white rounded-xl p-2 hover:bg-red-700 transition active:scale-95 disabled:opacity-50">
                     <i class="bi bi-send-fill"></i>
                 </button>
@@ -107,11 +107,11 @@
         const typingId = 'typing-' + Date.now();
         const typingHtml = `
             <div id="${typingId}" class="flex justify-start">
-                <div class="bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-none p-3 max-w-[85%] text-sm text-gray-500 italic">
+                <div class="bg-gray-50 dark:bg-gray-700 shadow-sm border border-gray-200 dark:border-gray-600 rounded-2xl rounded-tl-none p-3 max-w-[85%] text-sm text-gray-500 dark:text-gray-400 italic">
                     <span class="flex items-center space-x-1">
-                        <span class="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></span>
-                        <span class="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-                        <span class="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+                        <span class="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"></span>
+                        <span class="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                        <span class="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
                     </span>
                 </div>
             </div>
@@ -176,13 +176,13 @@
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\[(.*?)\]\((.*?)\)/g, (match, title, url) => {
                 const fullUrl = url.startsWith('http') ? url : `${baseUrl}/${url.replace(/^\//, '')}`;
-                return `<a href="${fullUrl}" class="text-red-600 font-semibold underline hover:bg-red-50" target="_blank">${title} <i class="bi bi-box-arrow-up-right text-[10px]"></i></a>`;
+                return `<a href="${fullUrl}" class="text-red-600 dark:text-red-400 font-semibold underline hover:bg-red-50 dark:hover:bg-red-900/30" target="_blank">${title} <i class="bi bi-box-arrow-up-right text-[10px]"></i></a>`;
             })
             .replace(/\n/g, '<br>');
 
         const html = `
             <div class="flex ${isBot ? 'justify-start' : 'justify-end'}">
-                <div class="${isBot ? 'bg-white shadow-sm border border-gray-100 rounded-tl-none' : 'bg-red-600 text-white rounded-tr-none'} rounded-2xl p-3 max-w-[85%] text-sm">
+                <div class="${isBot ? 'bg-gray-50 dark:bg-gray-700 shadow-sm border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-tl-none' : 'bg-red-600 text-white rounded-tr-none'} rounded-2xl p-3 max-w-[85%] text-sm">
                     ${formattedText}
                 </div>
             </div>

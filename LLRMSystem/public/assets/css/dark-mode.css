@@ -78,6 +78,7 @@
 }
 
 /* Bot Message Bubbles */
+.dark #chatbot-messages .bg-gray-50,
 .dark #chatbot-messages .bg-white {
     background-color: #374151 !important; /* gray-700 */
     border-color: #4b5563 !important; /* gray-600 */
@@ -108,23 +109,23 @@
 
 /* Input Area */
 .dark #chatbot-form {
-    background-color: #1f2937; /* gray-800 */
+    background-color: transparent !important;
     border-color: #374151; /* gray-700 */
 }
 
 .dark #chatbot-input {
-    background-color: #374151; /* gray-700 */
-    color: #f3f4f6; /* gray-100 */
-    border-color: #4b5563; /* gray-600 */
+    background-color: #374151 !important; /* gray-700 */
+    color: #f3f4f6 !important; /* gray-100 */
+    border-color: transparent !important;
 }
 
 .dark #chatbot-input::placeholder {
-    color: #9ca3af; /* gray-400 */
+    color: #9ca3af !important; /* gray-400 */
 }
 
 .dark #chatbot-input:focus {
-    background-color: #4b5563; /* gray-600 */
-    border-color: #dc2626; /* red-600 */
+    background-color: #374151 !important; /* gray-700 */
+    border-color: transparent !important;
 }
 
 /* ----------------------------------------
