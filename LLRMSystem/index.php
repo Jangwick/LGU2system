@@ -808,40 +808,69 @@ $pageTitle = "Home";
     <!-- Updates/News -->
     <section id="updates" class="py-32 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div data-aos="fade-up" class="mb-24 flex justify-between items-end border-b-2 border-gray-50 pb-12">
+            <div data-aos="fade-up" class="mb-20 flex justify-between items-end">
                 <div>
                     <h2 class="text-red-600 font-black tracking-[0.3em] uppercase text-xs mb-4">Updates</h2>
                     <p class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">Latest News</p>
                 </div>
-                <div class="text-right">
-                    <div class="text-gray-900 font-black text-4xl mb-1">2026</div>
-                    <div class="text-red-600 font-black uppercase tracking-widest text-[10px]">Legislative Year</div>
+                <div class="hidden md:block">
+                    <a href="news.php" class="inline-flex items-center text-red-600 font-bold text-sm hover:text-red-700 transition-colors group">
+                        Read All News 
+                        <i class="bi bi-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </a>
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-16">
-                <!-- News 1 -->
-                <div data-aos="fade-up" class="flex gap-8 group cursor-pointer">
-                    <div class="w-48 h-48 rounded-3xl overflow-hidden shrink-0 shadow-xl">
-                        <img src="https://lacs.spvalenzuela.com/images/oro-inidoro.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- News Card 1 -->
+                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://lacs.spvalenzuela.com/images/oro-inidoro.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=800'">
                     </div>
-                    <div>
-                        <div class="text-red-600 font-black text-xs uppercase tracking-widest mb-2">NOV 2025</div>
-                        <h4 class="text-2xl font-black text-gray-900 mb-3 leading-tight group-hover:text-red-600 transition-colors">Maynilad's 2025 Oro Inodoro Award</h4>
-                        <p class="text-gray-500 text-sm font-medium line-clamp-2">Valenzuela City wins prestigious award for environmental sanitation management.</p>
-                    </div>
-                </div>
-                <!-- News 2 -->
-                <div data-aos="fade-up" data-aos-delay="100" class="flex gap-8 group cursor-pointer">
-                    <div class="w-48 h-48 rounded-3xl overflow-hidden shrink-0 shadow-xl">
-                        <img src="https://lacs.spvalenzuela.com/images/housing.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <div>
-                        <div class="text-red-600 font-black text-xs uppercase tracking-widest mb-2">JAN 2026</div>
-                        <h4 class="text-2xl font-black text-gray-900 mb-3 leading-tight group-hover:text-red-600 transition-colors">P14M Housing Assistance Granted</h4>
-                        <p class="text-gray-500 text-sm font-medium line-clamp-2">SHFC grants over Php 14 Million for Wawang Pulo Homeowners' Association.</p>
+                    <div class="p-10">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="text-red-600 font-black text-[10px] uppercase tracking-widest">NOV 2025</span>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 mb-4 group-hover:text-red-600 transition-colors leading-tight">Maynilad's 2025 Oro Inodoro Award</h4>
+                        <p class="text-gray-500 font-medium text-sm leading-relaxed mb-6">Valenzuela City wins prestigious award for environmental sanitation management.</p>
                     </div>
                 </div>
+
+                <!-- News Card 2 -->
+                <div data-aos="fade-up" data-aos-delay="200" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://lacs.spvalenzuela.com/images/housing.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800'">
+                    </div>
+                    <div class="p-10">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="text-red-600 font-black text-[10px] uppercase tracking-widest">JAN 2026</span>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 mb-4 group-hover:text-red-600 transition-colors leading-tight">P14M Housing Assistance Granted</h4>
+                        <p class="text-gray-500 font-medium text-sm leading-relaxed mb-6">SHFC grants over Php 14 Million for Wawang Pulo Homeowners' Association.</p>
+                    </div>
+                </div>
+
+                <!-- News Card 3 -->
+                <div data-aos="fade-up" data-aos-delay="300" class="bg-white rounded-[40px] overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] border border-gray-50 group hover:-translate-y-2 transition-all duration-500 cursor-pointer">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://lacs.spvalenzuela.com/images/flood_control.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=800'">
+                    </div>
+                    <div class="p-10">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="text-red-600 font-black text-[10px] uppercase tracking-widest">AUG 2025</span>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 mb-4 group-hover:text-red-600 transition-colors leading-tight">PANATAG Flood Control Launch</h4>
+                        <p class="text-gray-500 font-medium text-sm leading-relaxed mb-6">City launches comprehensive flood control resilience initiatives with UPRI.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Read All Button -->
+            <div class="md:hidden text-center mt-12" data-aos="fade-up">
+                <a href="news.php" class="inline-flex items-center text-red-600 font-bold text-sm hover:text-red-700 transition-colors group">
+                    Read All News 
+                    <i class="bi bi-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                </a>
             </div>
         </div>
     </section>
