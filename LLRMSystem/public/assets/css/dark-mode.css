@@ -127,3 +127,94 @@
     border-color: #dc2626; /* red-600 */
 }
 
+/* ----------------------------------------
+   Search Module - Search Bar Only
+   ---------------------------------------- */
+
+/* Search Bar Container - Target the specific div with bg-white class in search */
+.dark .relative.group[data-aos="fade-up"] > div.bg-white.border-gray-200 {
+    background-color: #2d3748 !important; /* Match document card container */
+    border-color: #4a5568 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Additional specificity for search bar */
+.dark div[data-aos="fade-up"] > div.bg-white.border.border-gray-200.rounded-2xl {
+    background-color: #2d3748 !important;
+    border-color: #4a5568 !important;
+}
+
+/* Search Icon Color */
+.dark .relative.group[data-aos="fade-up"] .bi-search {
+    color: #6b7280 !important; /* gray-500 */
+}
+
+/* Search Input Text */
+.dark #search-input {
+    color: #f3f4f6 !important; /* gray-100 */
+    background: transparent !important;
+}
+
+/* Search Input Placeholder */
+.dark #search-input::placeholder {
+    color: #6b7280 !important; /* gray-500 */
+}
+
+/* Search Mode Toggle Container */
+.dark .relative.group[data-aos="fade-up"] .bg-gray-100 {
+    background-color: #1e293b !important; /* dark slate */
+    border-color: #334155 !important;
+}
+
+/* Mode Buttons Inactive State */
+.dark .relative.group[data-aos="fade-up"] .mode-btn {
+    color: #6b7280 !important; /* gray-500 */
+}
+
+/* Mode Buttons Active State */
+.dark .relative.group[data-aos="fade-up"] .mode-btn.text-red-600 {
+    background-color: #334155 !important; /* slate-700 */
+    border-color: #475569 !important; /* slate-600 */
+    color: #f87171 !important; /* red-400 */
+}
+
+/* ----------------------------------------
+   Document Management - Action Buttons
+   ---------------------------------------- */
+
+/* Action button containers and icons */
+.dark button.text-blue-600,
+.dark button.text-green-600,
+.dark button.text-gray-600,
+.dark button.text-red-600,
+.dark a.text-blue-600,
+.dark a.text-green-600 {
+    background-color: transparent !important;
+}
+
+.dark button.text-blue-600:hover,
+.dark button.text-green-600:hover,
+.dark button.text-gray-600:hover,
+.dark button.text-red-600:hover {
+    background-color: rgba(55, 65, 81, 0.3) !important;
+}
+
+/* Mobile action buttons with backgrounds */
+.dark button.hover\:bg-blue-50,
+.dark button.hover\:bg-gray-100,
+.dark a.hover\:bg-green-50 {
+    background-color: transparent !important;
+}
+
+.dark button.hover\:bg-blue-50:hover {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+.dark button.hover\:bg-gray-100:hover {
+    background-color: rgba(75, 85, 99, 0.2) !important;
+}
+
+.dark a.hover\:bg-green-50:hover {
+    background-color: rgba(34, 197, 94, 0.1) !important;
+}
+
