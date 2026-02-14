@@ -1345,8 +1345,18 @@ nav ul li a.bg-red-600 {
     }
     
     /* Navbar adjustments */
-    nav .flex-1 .ml-4 h2 {
-        font-size: 1rem !important;
+    nav h2 {
+        font-size: 14px !important;
+        max-width: 100% !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    @media (max-width: 360px) {
+        nav h2 {
+            font-size: 12px !important;
+        }
     }
     
     nav .flex-1 .ml-4 nav {

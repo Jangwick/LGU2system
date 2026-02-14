@@ -17,60 +17,75 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 <nav class="bg-white shadow-md border-b border-gray-200 sticky top-0 z-40">
-    <div class="px-4 sm:px-6 lg:px-8">
+    <div class="px-2 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <!-- Sidebar Toggle Button (Desktop) -->
-            <button id="sidebar-toggle" class="hidden md:flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-red-600 focus:outline-none transition-all duration-200" title="Toggle Sidebar">
-                <i class="bi bi-layout-sidebar-inset text-xl"></i>
-            </button>
-            
-            <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
-                <i class="bi bi-list text-2xl"></i>
-            </button>
-            
-            <!-- Logo (Mobile) -->
-            <div class="md:hidden flex items-center">
-                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-10 h-10 object-contain">
-            </div>
-            
-            <!-- Page Title & Breadcrumb -->
-            <div class="flex-1 flex items-center justify-center md:justify-start min-w-0">
-                <div class="ml-0 md:ml-4 min-w-0">
-                    <h2 class="text-base md:text-xl font-bold text-gray-800"><?php echo $pageTitle ?? 'Dashboard'; ?></h2>
-                    <?php if (isset($breadcrumbs)): ?>
-                    <nav class="hidden md:flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
-                        <?php foreach ($breadcrumbs as $index => $crumb): ?>
-                            <?php if ($index > 0): ?>
-                                <i class="bi bi-chevron-right mx-2 text-xs"></i>
-                            <?php endif; ?>
-                            <?php if (isset($crumb['url'])): ?>
-                                <a href="<?php echo htmlspecialchars($crumb['url']); ?>" class="hover:text-blue-600">
-                                    <?php echo htmlspecialchars($crumb['label']); ?>
-                                </a>
-                            <?php else: ?>
-                                <span class="text-gray-800 font-medium"><?php echo htmlspecialchars($crumb['label']); ?></span>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </nav>
-                    <?php endif; ?>
+            <!-- Left Side: Menu + Logo -->
+            <div class="flex items-center flex-shrink-0">
+                <!-- Sidebar Toggle Button (Desktop) -->
+                <button id="sidebar-toggle" class="hidden md:flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-red-600 focus:outline-none transition-all duration-200" title="Toggle Sidebar">
+                    <i class="bi bi-layout-sidebar-inset text-xl"></i>
+                </button>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-1 text-gray-600 hover:text-gray-900 focus:outline-none">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+                
+                <!-- Logo (Mobile) -->
+                <div class="md:hidden flex items-center ml-1">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-6 h-6 object-contain">
                 </div>
             </div>
             
+            <!-- Center: Page Title -->
+            <div class="flex-1 flex flex-col justify-center min-w-0 px-1 md:px-4 overflow-hidden">
+                <h2 class="text-[14px] md:text-xl font-bold text-gray-800 leading-tight tracking-tight truncate">
+                    <span class="md:hidden"><?php 
+                        $mobTitle = $pageTitle ?? 'Dashboard';
+                        $titleMap = [
+                            'Document Management' => 'Documents',
+                            'Advanced Search System' => 'Search',
+                            'Reports & Analytics' => 'Reports',
+                            'User Management' => 'Users',
+                            'Activity Logs' => 'Logs',
+                            'Research & Analysis' => 'Analysis'
+                        ];
+                        echo $titleMap[$mobTitle] ?? $mobTitle; 
+                    ?></span>
+                    <span class="hidden md:inline"><?php echo $pageTitle ?? 'Dashboard'; ?></span>
+                </h2>
+                <?php if (isset($breadcrumbs)): ?>
+                <nav class="hidden md:flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
+                    <?php foreach ($breadcrumbs as $index => $crumb): ?>
+                        <?php if ($index > 0): ?>
+                            <i class="bi bi-chevron-right mx-2 text-xs"></i>
+                        <?php endif; ?>
+                        <?php if (isset($crumb['url'])): ?>
+                            <a href="<?php echo htmlspecialchars($crumb['url']); ?>" class="hover:text-blue-600">
+                                <?php echo htmlspecialchars($crumb['label']); ?>
+                            </a>
+                        <?php else: ?>
+                            <span class="text-gray-800 font-medium"><?php echo htmlspecialchars($crumb['label']); ?></span>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </nav>
+                <?php endif; ?>
+            </div>
+            
             <!-- Right Side Actions -->
-            <div class="flex items-center space-x-1 md:space-x-4">
+            <div class="flex items-center flex-shrink-0 space-x-0.5 md:space-x-4">
                 
                 <!-- Dark/Light Mode Toggle -->
-                <button id="theme-toggle" class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
-                    <i class="bi bi-moon-fill text-lg md:text-xl dark-mode-icon"></i>
-                    <i class="bi bi-sun-fill text-xl light-mode-icon hidden"></i>
+                <button id="theme-toggle" class="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
+                    <i class="bi bi-moon-fill text-base md:text-xl dark-mode-icon"></i>
+                    <i class="bi bi-sun-fill text-lg light-mode-icon hidden"></i>
                 </button>
                 
                 <!-- Notifications -->
                 <div class="relative" id="notifications-container">
-                    <button id="notifications-btn" class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
-                        <i class="bi bi-bell text-xl"></i>
-                        <span id="notification-badge" class="hidden absolute top-0 right-0 min-w-[18px] h-[18px] bg-red-500 rounded-full text-white text-xs font-bold flex items-center justify-center px-1">0</span>
+                    <button id="notifications-btn" class="relative w-7 h-7 md:w-10 md:h-10 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
+                        <i class="bi bi-bell text-base md:text-xl"></i>
+                        <span id="notification-badge" class="hidden absolute top-0 right-0 min-w-[12px] h-[12px] md:min-w-[18px] md:h-[18px] bg-red-500 rounded-full text-white text-[8px] md:text-xs font-bold items-center justify-center px-0.5">0</span>
                     </button>
                     
                     <!-- Notifications Dropdown -->
@@ -95,14 +110,14 @@ if (isset($_SESSION['user_id'])) {
                 
                 <!-- User Profile Dropdown -->
                 <div class="relative">
-                    <button id="profile-btn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg transition">
+                    <button id="profile-btn" class="flex items-center space-x-1 md:space-x-3 p-1 md:p-2 hover:bg-gray-100 rounded-lg transition shrink-0">
                         <?php if (!empty($navProfilePicture)): ?>
                             <img src="<?php echo BASE_URL; ?>/storage/profiles/<?php echo htmlspecialchars($navProfilePicture); ?>" 
                                  alt="Profile" 
-                                 class="w-8 h-8 rounded-full object-cover border-2 border-red-600">
+                                 class="w-6 h-6 md:w-9 md:h-9 rounded-full object-cover border border-red-600">
                         <?php else: ?>
-                            <div class="bg-red-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
-                                <i class="bi bi-person-fill"></i>
+                            <div class="bg-red-600 rounded-full w-6 h-6 md:w-9 md:h-9 flex items-center justify-center text-white font-bold text-[9px] md:text-base">
+                                <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
                             </div>
                         <?php endif; ?>
                         <div class="hidden sm:block text-left">
