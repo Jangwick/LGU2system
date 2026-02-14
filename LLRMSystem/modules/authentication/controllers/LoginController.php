@@ -21,6 +21,7 @@ require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 require_once __DIR__ . '/../../core/utils/Mailer.php';
+require_once __DIR__ . '/../../core/utils/Security.php';
 
 // Clear any accidental output from included files
 if (ob_get_length()) ob_clean();
@@ -44,7 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get database connection
         $conn = getDatabase();
         $logger = new Logger($conn);
+        $security = new Security($conn);
         
+        $ip = Security::getClientIP();
+        
+        // Check for lockout
+        $remainingSeconds = $security->checkLockout($ip, $email);
+        if ($remainingSeconds > 0) {
+            $minutes = ceil($remainingSeconds / 60);
+            echo json_encode([
+                'success' => false,
+                'message' => "Too many failed attempts. Your access is temporarily locked for security. Please try again in $minutes minutes."
+            ]);
+            exit;
+        }
+
         // Prepare statement to prevent SQL injection
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND status = 'active' LIMIT 1");
         $stmt->execute([$email]);
@@ -53,7 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user) {
             // Verify password
             if (password_verify($password, $user['password'])) {
-                // Identity verified
+                // Identity verified - Clear any failed attempts
+                $security->clearAttempts($ip, $email);
                 
                 // Determine target email for OTP
                 $targetEmail = $user['email'];
@@ -99,9 +115,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'reason' => 'invalid_password'
                 ], Logger::SEVERITY_WARNING);
                 
+                // Record attempt for lockout
+                $attemptInfo = $security->recordFailedAttempt($ip, $email);
+                
+                $message = 'Invalid password.';
+                if ($attemptInfo['count'] >= 3) {
+                    $remaining = 5 - $attemptInfo['count'];
+                    if ($remaining > 0) {
+                        $message .= " You have $remaining attempts remaining before temporary lockout.";
+                    } else {
+                        $message = "Too many failed attempts. Your access is temporarily locked for security. Please try again in 5 minutes.";
+                    }
+                }
+                
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Invalid password. Please try again.'
+                    'message' => $message
                 ]);
                 exit;
             }
@@ -112,9 +141,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'reason' => 'user_not_found_or_inactive'
             ], Logger::SEVERITY_WARNING);
             
+            // Record attempt for lockout
+            $attemptInfo = $security->recordFailedAttempt($ip, $email);
+            
+            $message = 'Email address not found or account is inactive.';
+            if ($attemptInfo['count'] >= 3) {
+                $remaining = 5 - $attemptInfo['count'];
+                if ($remaining > 0) {
+                    $message .= " You have $remaining attempts remaining.";
+                } else {
+                    $message = "Too many failed attempts. Your access is temporarily locked for security. Please try again in 5 minutes.";
+                }
+            }
+
             echo json_encode([
                 'success' => false,
-                'message' => 'Email address not found or account is inactive.'
+                'message' => $message
             ]);
             exit;
         }
