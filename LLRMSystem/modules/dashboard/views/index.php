@@ -245,36 +245,36 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Quick Links & Activity -->
             <div class="space-y-6">
                 <!-- Quick Actions -->
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-800">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+                <div class="quick-actions-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-800">
+                    <h2 class="quick-actions-title text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
                     <div class="space-y-2">
                         <?php if (!in_array($userRole, ['viewer'])): ?>
-                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="flex items-center p-3 hover:bg-red-50 rounded-lg transition">
-                            <div class="bg-red-100 rounded-lg p-2 mr-3">
+                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="quick-action-btn flex items-center p-3 hover:bg-red-50 rounded-lg transition-all duration-200">
+                            <div class="icon-red bg-red-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-upload text-red-600"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-700">Upload New Document</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700">Upload New Document</span>
                         </a>
                         <?php endif; ?>
-                        <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="flex items-center p-3 hover:bg-green-50 rounded-lg transition">
-                            <div class="bg-green-100 rounded-lg p-2 mr-3">
+                        <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="quick-action-btn flex items-center p-3 hover:bg-green-50 rounded-lg transition-all duration-200">
+                            <div class="icon-green bg-green-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-search text-green-600"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-700">Advanced Search</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700">Advanced Search</span>
                         </a>
                         <?php if (in_array($userRole, ['administrator', 'admin', 'officer'])): ?>
-                        <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="flex items-center p-3 hover:bg-purple-50 rounded-lg transition">
-                            <div class="bg-purple-100 rounded-lg p-2 mr-3">
+                        <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="quick-action-btn flex items-center p-3 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                            <div class="icon-purple bg-purple-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-graph-up text-purple-600"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-700">Generate Report</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700">Generate Report</span>
                         </a>
                         <?php endif; ?>
-                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="flex items-center p-3 hover:bg-orange-50 rounded-lg transition">
-                            <div class="bg-orange-100 rounded-lg p-2 mr-3">
+                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="quick-action-btn flex items-center p-3 hover:bg-orange-50 rounded-lg transition-all duration-200">
+                            <div class="icon-orange bg-orange-100 rounded-lg p-2 mr-3">
                                 <i class="bi bi-folder text-orange-600"></i>
                             </div>
-                            <span class="text-sm font-medium text-gray-700">Browse Documents</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700">Browse Documents</span>
                         </a>
                     </div>
                 </div>

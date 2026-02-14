@@ -37,6 +37,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo asset('css/custom.css'); ?>">
     
+    <!-- Dark Mode CSS (scoped to .dark class on html) -->
+    <link rel="stylesheet" href="<?php echo asset('css/dark-mode.css'); ?>">
+    
     <!-- Application Configuration -->
     <script src="<?php echo asset('js/config.js'); ?>"></script>
     

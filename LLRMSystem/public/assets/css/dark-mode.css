@@ -1,0 +1,63 @@
+/* ========================================
+   Dark Mode Styles
+   ========================================
+   This file contains all dark mode overrides.
+   It uses the `.dark` class on <html> to scope styles,
+   keeping light mode and dark mode completely separate.
+   ======================================== */
+
+/* ----------------------------------------
+   Quick Actions Section
+   ---------------------------------------- */
+
+/* Quick Actions Card */
+.dark .quick-actions-card {
+    background-color: #1f2937; /* gray-800 */
+    border-color: #374151; /* gray-700 */
+}
+
+.dark .quick-actions-card .quick-actions-title {
+    color: #ffffff;
+}
+
+/* Quick Action Buttons */
+.dark .quick-action-btn {
+    color: #e5e7eb; /* gray-200 */
+}
+
+.dark .quick-action-btn:hover {
+    background-color: #374151; /* gray-700 */
+}
+
+.dark .quick-action-btn .quick-action-label {
+    color: #f3f4f6; /* gray-100 */
+}
+
+/* Icon containers in dark mode */
+.dark .quick-action-btn .icon-red {
+    background-color: rgba(239, 68, 68, 0.15);
+}
+.dark .quick-action-btn .icon-red i {
+    color: #f87171; /* red-400 */
+}
+
+.dark .quick-action-btn .icon-green {
+    background-color: rgba(34, 197, 94, 0.15);
+}
+.dark .quick-action-btn .icon-green i {
+    color: #4ade80; /* green-400 */
+}
+
+.dark .quick-action-btn .icon-purple {
+    background-color: rgba(168, 85, 247, 0.15);
+}
+.dark .quick-action-btn .icon-purple i {
+    color: #c084fc; /* purple-400 */
+}
+
+.dark .quick-action-btn .icon-orange {
+    background-color: rgba(249, 115, 22, 0.15);
+}
+.dark .quick-action-btn .icon-orange i {
+    color: #fb923c; /* orange-400 */
+}
