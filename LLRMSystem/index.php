@@ -246,7 +246,7 @@ $pageTitle = "Home";
 
             <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto text-center">
                 <!-- Mayor -->
-                <div data-aos="fade-up" class="group bg-white p-10 md:p-16 rounded-[40px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.08)] border border-gray-50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                <div data-aos="fade-up" onclick="showOfficialDetails('Wes Gatchalian', 'CITY MAYOR', 'https://lacs.spvalenzuela.com/images/mayor_wes.png?v=1771093587', 'Leading Valenzuela City towards a progressive and livable future through innovative governance and compassionate public service. Known for his Gatchalian brand of proactive leadership, he has prioritized education, healthcare, and economic digitalization.', 'Focus: Education 360°, VCares, Paspas Permit')" class="group bg-white p-10 md:p-16 rounded-[40px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.08)] border border-gray-50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
                     <div class="w-48 h-48 md:w-56 md:h-56 mx-auto mb-10 overflow-hidden rounded-full border-8 border-gray-50 shadow-xl relative">
                         <img src="https://lacs.spvalenzuela.com/images/mayor_wes.png?v=1771093587" alt="Mayor Wes Gatchalian" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000">
                     </div>
@@ -256,7 +256,7 @@ $pageTitle = "Home";
                 </div>
 
                 <!-- Vice Mayor -->
-                <div data-aos="fade-up" data-aos-delay="200" class="group bg-white p-10 md:p-16 rounded-[40px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.08)] border border-gray-50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                <div data-aos="fade-up" data-aos-delay="200" onclick="showOfficialDetails('Marlon Alejandrino', 'VICE MAYOR', 'https://lacs.spvalenzuela.com/images/vice_marlon.png?v=1771093587', 'Presiding over the City Council with a focus on legislative excellence and community empowerment. He ensures that every ordinance passed serves the best interest of Valenzuelanos.', 'Focus: Legislative Oversight, Community Programs, Social Justice')" class="group bg-white p-10 md:p-16 rounded-[40px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.08)] border border-gray-50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
                     <div class="w-48 h-48 md:w-56 md:h-56 mx-auto mb-10 overflow-hidden rounded-full border-8 border-gray-50 shadow-xl relative">
                         <img src="https://lacs.spvalenzuela.com/images/vice_marlon.png?v=1771093587" alt="Vice Mayor Marlon Alejandrino" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000">
                     </div>
@@ -273,7 +273,7 @@ $pageTitle = "Home";
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- District 1 -->
-                <div data-aos="fade-up" data-aos-delay="100" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                <div data-aos="fade-up" data-aos-delay="100" onclick="showOfficialDetails('Ramon Encarnacion', 'District 1 Councilor', 'https://lacs.spvalenzuela.com/images/ramon-encarnacion.jpg', 'Advocate for youth development and sports programs across the district. He believes in empowering the next generation through active participation and mentorship.', 'Focus: Youth & Sports')" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer">
                     <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
                         <img src="https://lacs.spvalenzuela.com/images/ramon-encarnacion.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
@@ -284,7 +284,7 @@ $pageTitle = "Home";
                     </div>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="200" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                <div data-aos="fade-up" data-aos-delay="200" onclick="showOfficialDetails('Ricardo Enriquez', 'District 1 Councilor', 'https://lacs.spvalenzuela.com/images/ricardo-enriquez.jpg', 'Championing environmental sustainability and urban greening projects. His vision includes a cleaner and greener Valenzuela for all residents.', 'Focus: Environment & Parks')" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer">
                     <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
                         <img src="https://lacs.spvalenzuela.com/images/ricardo-enriquez.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
@@ -295,7 +295,7 @@ $pageTitle = "Home";
                     </div>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="300" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                <div data-aos="fade-up" data-aos-delay="300" onclick="showOfficialDetails('Cristina Marie Feliciano', 'District 1 Councilor', 'https://lacs.spvalenzuela.com/images/cristina-marie.jpg', 'Focused on healthcare accessible and women\'s welfare initiatives. She works tirelessly to ensure social services reach every household.', 'Focus: Health & Women\'s Welfare')" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer">
                     <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
                         <img src="https://lacs.spvalenzuela.com/images/cristina-marie.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
@@ -307,7 +307,7 @@ $pageTitle = "Home";
                 </div>
 
                 <!-- District 2 & Others -->
-                <div data-aos="fade-up" data-aos-delay="400" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                <div data-aos="fade-up" data-aos-delay="400" onclick="showOfficialDetails('Ghogo Deato Lee', 'District 1 Councilor', 'https://lacs.spvalenzuela.com/images/ghogo-deato.jpg', 'Supporting local businesses and economic growth in the community. He advocates for policies that foster a business-friendly environment.', 'Focus: Economy & Trade')" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer">
                     <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
                         <img src="https://lacs.spvalenzuela.com/images/ghogo-deato.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
@@ -318,7 +318,7 @@ $pageTitle = "Home";
                     </div>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="500" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                <div data-aos="fade-up" data-aos-delay="500" onclick="showOfficialDetails('Louie Nolasco', 'District 2 Councilor', 'https://lacs.spvalenzuela.com/images/louie-nolasco.jpg', 'Dedicated to education reform and scholarship programs for students. He believes that education is the key to breaking the cycle of poverty.', 'Focus: Education & Student Welfare')" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer">
                     <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
                         <img src="https://lacs.spvalenzuela.com/images/louie-nolasco.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
@@ -329,7 +329,7 @@ $pageTitle = "Home";
                     </div>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="600" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                <div data-aos="fade-up" data-aos-delay="600" onclick="showOfficialDetails('Chiqui Carreon', 'District 2 Councilor', 'https://lacs.spvalenzuela.com/images/chiqui-carreon.jpg', 'Promoting culture, arts, and tourism in Valenzuela City. She works to preserve the city\'s heritage while showcasing its modern attractions.', 'Focus: Tourism & Cultural Heritage')" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer">
                     <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
                         <img src="https://lacs.spvalenzuela.com/images/chiqui-carreon.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
@@ -913,6 +913,90 @@ $pageTitle = "Home";
                     slidesPerView: 4,
                 },
             }
+        });
+    </script>
+
+    <!-- Official Details Modal -->
+    <div id="officialModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeOfficialModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-[50px] shadow-2xl w-full max-w-2xl overflow-hidden relative animate-modal-up">
+                <button onclick="closeOfficialModal()" class="absolute top-8 right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                
+                <div class="flex flex-col md:flex-row">
+                    <!-- Image Panel -->
+                    <div class="w-full md:w-2/5 relative h-64 md:h-auto bg-gray-50">
+                        <img id="modalImg" src="" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    </div>
+                    
+                    <!-- Content Panel -->
+                    <div class="w-full md:w-3/5 p-12">
+                        <div class="mb-8">
+                            <span id="modalRole" class="inline-block px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] mb-4"></span>
+                            <h2 id="modalName" class="text-4xl font-black text-gray-900 tracking-tight leading-none mb-2"></h2>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 text-xs">Biography</h4>
+                                <p id="modalBio" class="text-gray-500 font-medium leading-relaxed"></p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 text-xs">Advocacy</h4>
+                                <div id="modalFocus" class="text-gray-900 font-bold text-sm"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 flex space-x-4">
+                            <a href="#" class="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all text-xl">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="#" class="h-10 w-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all text-xl">
+                                <i class="bi bi-envelope-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modal-up {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-modal-up {
+            animation: modal-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+
+    <script>
+        function showOfficialDetails(name, role, imgSrc, bio, focus) {
+            document.getElementById('modalName').innerText = name;
+            document.getElementById('modalRole').innerText = role;
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('modalBio').innerText = bio;
+            document.getElementById('modalFocus').innerText = focus;
+            
+            const modal = document.getElementById('officialModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeOfficialModal() {
+            const modal = document.getElementById('officialModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeOfficialModal();
         });
     </script>
 </body>
