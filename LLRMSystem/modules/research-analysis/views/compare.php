@@ -149,7 +149,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
                 <i class="bi bi-file-earmark-plus mr-2 text-red-600"></i> Add to Comparison
             </h3>
-            <button onclick="closeSelectModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+            <button onclick="closeSelectModal()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all">
                 <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
