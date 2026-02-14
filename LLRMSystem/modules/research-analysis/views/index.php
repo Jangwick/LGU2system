@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <p class="text-red-100 dark:text-red-200 animate-slide-in-left animation-delay-100">Intelligent trends, comparisons, and topical insights</p>
                 </div>
                 <div class="flex gap-3 animate-slide-in-right">
-                    <a href="compare.php" class="!bg-white !text-red-700 hover:!bg-red-50 font-bold py-2 px-6 rounded-lg transition-all duration-200 flex items-center shadow-md">
+                    <a href="compare.php" style="background-color: #ffffff !important; color: #b91c1c !important;" class="!bg-white !text-red-700 hover:!bg-red-50 font-bold py-2 px-6 rounded-lg transition-all duration-200 flex items-center shadow-md">
                         <i class="bi bi-layout-split mr-2"></i> Comparison Tool
                     </a>
                 </div>

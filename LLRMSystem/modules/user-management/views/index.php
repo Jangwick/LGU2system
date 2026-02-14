@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <h1 class="text-2xl font-bold mb-2">User Management</h1>
                     <p class="text-red-100 animation-delay-100">Manage system users and permissions</p>
                 </div>
-                <button onclick="openCreateModal()" class="add-user-btn bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 animate-slide-in-right">
+                <button onclick="openCreateModal()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="add-user-btn bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 animate-slide-in-right">
                     <i class="bi bi-person-plus mr-2"></i> Add New User
                 </button>
             </div>

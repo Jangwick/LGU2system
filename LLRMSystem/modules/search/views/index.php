@@ -95,8 +95,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <p class="text-red-50 text-sm md:text-base max-w-xl opacity-90">Intelligent hybrid engine combining traditional keyword matching with semantic AI understanding.</p>
                         </div>
                         <div class="flex items-center gap-2 bg-black/10 p-1.5 rounded-xl backdrop-blur-md border border-white/10">
-                            <button class="px-5 py-2.5 rounded-lg bg-white text-red-700 font-bold text-sm shadow-lg whitespace-nowrap">Documents</button>
-                            <button class="px-5 py-2.5 rounded-lg text-white hover:bg-white/10 font-bold text-sm transition-all whitespace-nowrap">Legislations</button>
+                            <button style="background-color: #ffffff !important; color: #dc2626 !important;" class="px-5 py-2.5 rounded-lg bg-white text-red-700 font-bold text-sm shadow-lg whitespace-nowrap">Documents</button>
+                            <button style="background: transparent !important; color: #ffffff !important;" class="px-5 py-2.5 rounded-lg text-white hover:bg-white/10 font-bold text-sm transition-all whitespace-nowrap">Legislations</button>
                         </div>
                     </div>
                 </div>

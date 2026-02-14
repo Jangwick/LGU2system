@@ -34,10 +34,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <p class="text-red-100 animate-slide-in-left animation-delay-100">Comprehensive insights and statistical analysis</p>
                 </div>
                 <div class="flex gap-3 animate-slide-in-right">
-                    <button onclick="showExportModal()" class="btn-success flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <button onclick="showExportModal()" style="background-color: #22c55e !important; color: #ffffff !important;" class="btn-success flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
                         <i class="bi bi-download mr-2 transition-transform group-hover:animate-bounce"></i> Export Reports
                     </button>
-                    <button onclick="window.print()" class="bg-white text-red-600 hover:bg-red-50 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95">
+                    <button onclick="window.print()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="bg-white text-red-600 hover:bg-red-50 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95">
                         <i class="bi bi-printer mr-2 transition-transform"></i> Print
                     </button>
                 </div>
