@@ -27,6 +27,13 @@ $pageTitle = "Infrastructure Projects";
         body { 
             font-family: 'Inter', sans-serif; 
         }
+        @keyframes modal-up {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-modal-up {
+            animation: modal-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -87,7 +94,7 @@ $pageTitle = "Infrastructure Projects";
                             </div>
                         </div>
 
-                        <a href="#" class="inline-block px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-sm">
+                        <a href="javascript:void(0)" onclick="showProjectDetails('Valenzuela People\'s Park', 'RECREATION', 'Completed 2015', 'https://lacs.spvalenzuela.com/images/peoples-park.jpg', 'A 1.5-hectare urban park featuring a mini-zoo, dancing fountain, children\'s playground, and ample green space for families and fitness enthusiasts.', ['Interactive Fountain', 'Amphitheater', 'Aero Circle'])" class="inline-block px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-sm">
                             View Details
                         </a>
                     </div>
@@ -122,7 +129,7 @@ $pageTitle = "Infrastructure Projects";
                             </div>
                         </div>
 
-                        <a href="#" class="inline-block px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors text-sm">
+                        <a href="javascript:void(0)" onclick="showProjectDetails('Disiplina Village Bignay', 'HOUSING', 'Ongoing Phase', 'https://lacs.spvalenzuela.com/images/housing.jpg', 'The country\'s biggest in-city resettlement site, providing safe and decent homes to thousands of families previously living in danger zones.', ['100+ Buildings', 'School & Health Centers', 'Livelihood Training Center'])" class="inline-block px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors text-sm">
                             View Details
                         </a>
                     </div>
@@ -141,7 +148,7 @@ $pageTitle = "Infrastructure Projects";
                         <h3 class="text-3xl font-black text-gray-900 mb-4">New Legislative Building</h3>
                         <p class="text-gray-500 font-medium leading-relaxed mb-8">A modern facility housing the sessions of the City Council, providing a transparent and efficient environment for local legislation.</p>
 
-                        <a href="#" class="inline-block px-8 py-3 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-colors text-sm">
+                        <a href="javascript:void(0)" onclick="showProjectDetails('New Legislative Building', 'GOVERNMENT', 'Modernized', 'https://lacs.spvalenzuela.com/images/city-hall.jpg', 'A modern facility housing the sessions of the City Council, providing a transparent and efficient environment for local legislation.', ['Advanced Session Hall', 'Transparent Governance', 'Digital Archiving Ready'])" class="inline-block px-8 py-3 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-colors text-sm">
                             View Details
                         </a>
                     </div>
@@ -160,7 +167,7 @@ $pageTitle = "Infrastructure Projects";
                         <h3 class="text-3xl font-black text-gray-900 mb-4">Paspas Flood Control</h3>
                         <p class="text-gray-500 font-medium leading-relaxed mb-8">Series of pumping stations and drainage upgrades across low-lying barangays to significantly reduce flooding during rainy seasons.</p>
 
-                        <a href="#" class="inline-block px-8 py-3 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition-colors text-sm">
+                        <a href="javascript:void(0)" onclick="showProjectDetails('Paspas Flood Control', 'INFRASTRUCTURE', 'Resilience', 'https://lacs.spvalenzuela.com/images/flood_control.png', 'Series of pumping stations and drainage upgrades across low-lying barangays to significantly reduce flooding during rainy seasons.', ['Automated Pumping Stations', 'Enhanced Drainage Network', 'Real-time Monitoring'])" class="inline-block px-8 py-3 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition-colors text-sm">
                             View Details
                         </a>
                     </div>
@@ -195,7 +202,7 @@ $pageTitle = "Infrastructure Projects";
                             </div>
                         </div>
 
-                        <a href="#" class="inline-block px-8 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors text-sm">
+                        <a href="javascript:void(0)" onclick="showProjectDetails('Polo Riverwalk Phase 1', 'TOURISM', 'New Opening', 'https://lacs.spvalenzuela.com/images/riverwalk1.jpg', 'A 6-kilometer linear park featuring walking paths and cycle lanes along the Polo River, connecting multiple barangays and promoting active lifestyle.', ['Bikeways & Jogging Paths', 'River Rehabilitation', 'Public Lighting & Safety'])" class="inline-block px-8 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors text-sm">
                             View Details
                         </a>
                     </div>
@@ -230,7 +237,7 @@ $pageTitle = "Infrastructure Projects";
                             </div>
                         </div>
 
-                        <a href="#" class="inline-block px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-sm">
+                        <a href="javascript:void(0)" onclick="showProjectDetails('Sentro Health Hubs', 'HEALTHCARE', 'Inaugurated', 'https://lacs.spvalenzuela.com/images/healthhub.jpg', 'State-of-the-art community health centers offering specialized diagnostic services, laboratory tests, and primary care.', ['Diagnostic Laboratory', 'X-Ray & Ultrasound', '24/7 Primary Care'])" class="inline-block px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-sm">
                             View Details
                         </a>
                     </div>
@@ -246,5 +253,104 @@ $pageTitle = "Infrastructure Projects";
             <p class="text-gray-400 text-sm">&copy; <?php echo date('Y'); ?> City Government of Valenzuela. All rights reserved.</p>
         </div>
     </footer>
+    <!-- Project Details Modal -->
+    <div id="projectModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeProjectModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-[50px] shadow-2xl w-full max-w-4xl overflow-hidden relative animate-modal-up">
+                <button onclick="closeProjectModal()" class="absolute top-8 right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                
+                <div class="flex flex-col md:flex-row h-full max-h-[90vh] overflow-y-auto">
+                    <!-- Image Panel -->
+                    <div class="w-full md:w-1/2 relative h-64 md:h-auto bg-gray-50">
+                        <img id="projectModalImg" src="" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    </div>
+                    
+                    <!-- Content Panel -->
+                    <div class="w-full md:w-1/2 p-12">
+                        <div class="mb-8">
+                            <span id="projectModalCategory" class="inline-block px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] mb-4"></span>
+                            <h2 id="projectModalTitle" class="text-4xl font-black text-gray-900 tracking-tight leading-none mb-2"></h2>
+                            <p id="projectModalStatus" class="text-xs text-gray-400 font-bold uppercase tracking-widest"></p>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 text-xs">Description</h4>
+                                <p id="projectModalDesc" class="text-gray-500 font-medium leading-relaxed"></p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 text-xs">Key Features</h4>
+                                <div id="projectModalFeatures" class="space-y-3">
+                                    <!-- Will be populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12">
+                            <button onclick="closeProjectModal()" class="w-full py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:bg-black transition-all">
+                                Close Project Overview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showProjectDetails(title, category, status, img, desc, features) {
+            document.getElementById('projectModalTitle').innerText = title;
+            document.getElementById('projectModalCategory').innerText = category;
+            document.getElementById('projectModalStatus').innerText = status;
+            document.getElementById('projectModalImg').src = img;
+            document.getElementById('projectModalDesc').innerText = desc;
+            
+            const categorySpan = document.getElementById('projectModalCategory');
+            categorySpan.className = 'inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] mb-4';
+            if(category.toLowerCase() === 'housing') {
+                categorySpan.classList.add('bg-blue-50', 'text-blue-600');
+            } else if(category.toLowerCase() === 'recreation') {
+                categorySpan.classList.add('bg-red-50', 'text-red-600');
+            } else if(category.toLowerCase() === 'government') {
+                categorySpan.classList.add('bg-purple-50', 'text-purple-600');
+            } else {
+                categorySpan.classList.add('bg-teal-50', 'text-teal-600');
+            }
+
+            const featuresContainer = document.getElementById('projectModalFeatures');
+            featuresContainer.innerHTML = '';
+            if (Array.isArray(features)) {
+                features.forEach(feature => {
+                    const featDiv = document.createElement('div');
+                    featDiv.className = 'flex items-center text-sm';
+                    featDiv.innerHTML = `
+                        <i class="bi bi-check-circle-fill text-green-500 mr-3"></i>
+                        <span class="text-gray-600 font-semibold">${feature}</span>
+                    `;
+                    featuresContainer.appendChild(featDiv);
+                });
+            }
+            
+            const modal = document.getElementById('projectModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProjectModal() {
+            const modal = document.getElementById('projectModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeProjectModal();
+        });
+    </script>
 </body>
 </html>
