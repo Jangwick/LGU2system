@@ -41,11 +41,11 @@ $pageTitle = "Infrastructure Projects";
     <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
-                <a href="<?php echo BASE_URL; ?>" class="flex items-center group cursor-pointer">
+                <a href="<?php echo BASE_URL; ?>/index.php#infrastructure" class="flex items-center group cursor-pointer">
                     <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 md:h-12 md:w-12 mr-2 md:mr-3 transition-transform duration-500 group-hover:rotate-12 shadow-sm rounded-full" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
                     <span class="text-lg md:text-2xl font-black text-[#002d72] tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
                 </a>
-                <a href="<?php echo BASE_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">
+                <a href="<?php echo BASE_URL; ?>/index.php#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">
                     <i class="bi bi-arrow-left mr-2"></i>Back to Home
                 </a>
             </div>

@@ -50,7 +50,7 @@ $pageTitle = "City News & Updates";
     <nav class="fixed top-0 w-full z-50 glass-nav border-b border-gray-100/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
-                <a href="index.php" class="flex items-center group cursor-pointer flex-shrink-0">
+                <a href="<?php echo BASE_URL; ?>/index.php#updates" class="flex items-center group cursor-pointer flex-shrink-0">
                     <div class="relative">
                         <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 md:h-12 md:w-12 mr-2 md:mr-3 transition-transform duration-500 group-hover:rotate-12 shadow-sm rounded-full" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
                     </div>
@@ -62,18 +62,9 @@ $pageTitle = "City News & Updates";
                         </div>
                     </div>
                 </a>
-                <div class="hidden lg:flex items-center space-x-8">
-                    <a href="index.php#leadership" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Officials</a>
-                    <a href="index.php#roots" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">History</a>
-                    <a href="index.php#governance" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Governance</a>
-                    <a href="index.php#recognition" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Awards</a>
-                    <a href="index.php#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Infrastructure</a>
-                    <a href="index.php#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Landmarks</a>
-                </div>
-                <div class="flex items-center space-x-1 md:space-x-6">
-                    <a href="index.php" class="text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[12px] md:text-sm transition-all whitespace-nowrap">Home</a>
-                    <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[12px] md:text-sm transition-all whitespace-nowrap">Sign In</a>
-                </div>
+                <a href="<?php echo BASE_URL; ?>/index.php#updates" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all flex items-center">
+                    <i class="bi bi-arrow-left mr-2"></i>Back to Home
+                </a>
             </div>
         </div>
     </nav>
