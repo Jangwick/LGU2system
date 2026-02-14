@@ -179,15 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const darkModeIcon = document.querySelector('.dark-mode-icon');
     const lightModeIcon = document.querySelector('.light-mode-icon');
     
-    // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    if (currentTheme === 'dark') {
-        htmlElement.classList.add('dark');
-        if (darkModeIcon) darkModeIcon.classList.add('hidden');
-        if (lightModeIcon) lightModeIcon.classList.remove('hidden');
-    }
-    
-    // Toggle theme
+    // Toggle theme on button click
     if (themeToggle) {
         themeToggle.addEventListener('click', function() {
             htmlElement.classList.toggle('dark');

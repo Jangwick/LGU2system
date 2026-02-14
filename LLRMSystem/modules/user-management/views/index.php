@@ -299,11 +299,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Create/Edit User Modal -->
-<div id="userModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-lg bg-white">
+<div id="userModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md">
         <div class="flex justify-between items-center mb-4">
-            <h3 id="modalTitle" class="text-xl font-semibold text-gray-900">Add New User</h3>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+            <h3 id="modalTitle" class="text-xl font-semibold text-gray-900 dark:text-gray-100">Add New User</h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
         </div>
@@ -313,31 +313,31 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
                     <input type="text" id="userName" name="name" required class="input-field" oninput="document.getElementById('userFullName').value = this.value">
                     <input type="hidden" id="userFullName" name="full_name">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
                     <input type="email" id="userEmail" name="email" required class="input-field">
                 </div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Username</label>
                     <input type="text" id="userUsername" name="username" class="input-field">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Password <span id="passwordRequired">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password <span id="passwordRequired">*</span></label>
                     <input type="password" id="userPassword" name="password" class="input-field">
-                    <p class="text-xs text-gray-500 mt-1">Leave blank to keep current password (when editing)</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave blank to keep current password (when editing)</p>
                 </div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Role *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role *</label>
                     <select id="userRole" name="role" required class="input-field">
                         <option value="viewer">Viewer</option>
                         <option value="staff">Staff</option>
@@ -346,13 +346,13 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
                     <input type="text" id="userDepartment" name="department" class="input-field">
                 </div>
             </div>
             
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status *</label>
                 <select id="userStatus" name="status" required class="input-field">
                     <option value="active">Active (Approved)</option>
                     <option value="pending">Pending Approval</option>
@@ -362,10 +362,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <div class="flex justify-end gap-3 mt-6">
-                <button type="button" onclick="closeModal()" class="btn-secondary">
+                <button type="button" onclick="closeModal()" class="px-6 py-2 border-2 border-gray-400 dark:border-gray-600 text-gray-800 dark:text-gray-300 hover:!bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-semibold transition-all">
                     Cancel
                 </button>
-                <button type="submit" class="btn-primary">
+                <button type="submit" style="background-color: #dc2626 !important; color: #ffffff !important;" class="px-6 py-2 rounded-lg font-semibold transition-all hover:opacity-90">
                     <i class="bi bi-save mr-2"></i> Save User
                 </button>
             </div>

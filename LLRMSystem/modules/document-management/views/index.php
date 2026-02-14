@@ -79,13 +79,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button onclick="openUploadModal()" class="btn-primary flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <button onclick="openUploadModal()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="btn-primary flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
                         <i class="bi bi-plus-circle mr-2"></i>
                         Upload Document
                     </button>
                     <?php endif; ?>
                     <div class="relative" id="export-dropdown">
-                        <button onclick="toggleExportMenu()" class="btn-outline flex items-center transform hover:scale-105 transition-all duration-200 active:scale-95">
+                        <button onclick="toggleExportMenu()" style="background-color: #dc2626 !important; color: #ffffff !important;" class="btn-outline flex items-center transform hover:scale-105 transition-all duration-200 active:scale-95">
                             <i class="bi bi-download mr-2"></i>
                             Export
                             <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>

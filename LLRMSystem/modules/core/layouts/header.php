@@ -29,9 +29,26 @@
     <!-- Prevent dark mode flicker - must run before page renders -->
     <script>
         // Check for dark mode preference immediately
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-        }
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+            
+            // Set icon visibility after DOM loads to prevent flicker
+            document.addEventListener('DOMContentLoaded', function() {
+                const darkModeIcon = document.querySelector('.dark-mode-icon');
+                const lightModeIcon = document.querySelector('.light-mode-icon');
+                
+                if (theme === 'dark') {
+                    if (darkModeIcon) darkModeIcon.classList.add('hidden');
+                    if (lightModeIcon) lightModeIcon.classList.remove('hidden');
+                } else {
+                    if (darkModeIcon) darkModeIcon.classList.remove('hidden');
+                    if (lightModeIcon) lightModeIcon.classList.add('hidden');
+                }
+            });
+        })();
     </script>
     
     <!-- Custom CSS -->
