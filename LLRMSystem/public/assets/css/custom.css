@@ -698,6 +698,39 @@ main::-webkit-scrollbar-thumb:active {
     border: none !important;
 }
 
+/* Dark Mode - Mobile Sidebar */
+.dark #mobile-sidebar {
+    background: linear-gradient(180deg, #7f1d1d 0%, #450a0a 100%) !important;
+}
+
+.dark #mobile-sidebar .sidebar-header {
+    border-color: rgba(127, 29, 29, 0.5) !important;
+    background-color: transparent !important;
+}
+
+.dark #mobile-sidebar nav {
+    background-color: transparent !important;
+}
+
+.dark #mobile-sidebar nav a {
+    color: #e5e5e5 !important;
+}
+
+.dark #mobile-sidebar nav a:hover,
+.dark #mobile-sidebar nav a.bg-red-700 {
+    background-color: rgba(220, 38, 38, 0.5) !important;
+}
+
+.dark #mobile-sidebar .sidebar-user {
+    border-color: rgba(127, 29, 29, 0.5) !important;
+    background-color: transparent !important;
+}
+
+.dark #mobile-sidebar .text-red-200,
+.dark #mobile-sidebar .text-red-300 {
+    color: #fca5a5 !important;
+}
+
 .dark aside#sidebar .dropdown-section button.nav-item:hover,
 .dark .sidebar .dropdown-section button.nav-item:hover,
 .dark aside button.nav-item:hover,
