@@ -130,6 +130,9 @@ $pageTitle = "Home";
                     <a href="#roots" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">History</a>
                     <a href="#governance" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Governance</a>
                     <a href="#recognition" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Awards</a>
+                    <a href="#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Infrastructure</a>
+                    <a href="#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Landmarks</a>
+                    <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">News</a>
                 </div>
                 <div class="flex items-center space-x-1 md:space-x-6">
                     <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[12px] md:text-sm transition-all whitespace-nowrap">Sign In</a>
@@ -920,10 +923,12 @@ $pageTitle = "Home";
                         <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6 border-b border-gray-100 md:border-none pb-2 md:pb-0">Quick Links</h4>
                         <ul class="space-y-4 text-xs md:text-sm font-black md:font-bold text-gray-500">
                             <li><a href="#leadership" class="hover:text-red-600 transition-colors uppercase md:capitalize">Officials</a></li>
-                            <li><a href="#roots" class="hover:text-red-600 transition-colors uppercase md:capitalize">Our Roots</a></li>
+                            <li><a href="#roots" class="hover:text-red-600 transition-colors uppercase md:capitalize">Our History</a></li>
                             <li><a href="#governance" class="hover:text-red-600 transition-colors uppercase md:capitalize">Governance</a></li>
-                            <li><a href="#recognition" class="hover:text-red-600 transition-colors uppercase md:capitalize">Recognition</a></li>
+                            <li><a href="#recognition" class="hover:text-red-600 transition-colors uppercase md:capitalize">Awards</a></li>
                             <li><a href="#infrastructure" class="hover:text-red-600 transition-colors uppercase md:capitalize">Infrastructure</a></li>
+                            <li><a href="#landmarks" class="hover:text-red-600 transition-colors uppercase md:capitalize">Landmarks</a></li>
+                            <li><a href="#updates" class="hover:text-red-600 transition-colors uppercase md:capitalize">News & Updates</a></li>
                         </ul>
                     </div>
                     <div class="text-center md:text-left">
