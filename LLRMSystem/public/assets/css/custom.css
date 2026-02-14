@@ -917,6 +917,15 @@ table tbody tr:hover {
     background: none !important;
 }
 
+/* Form Labels - Force visibility in light mode */
+label {
+    color: #374151 !important;
+}
+
+.dark label {
+    color: #d1d5db !important;
+}
+
 /* Dark Mode - Charts */
 .dark canvas {
     filter: brightness(0.9);

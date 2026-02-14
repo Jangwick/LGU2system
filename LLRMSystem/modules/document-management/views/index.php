@@ -1194,11 +1194,11 @@ document.addEventListener('keydown', function(e) {
 
             <!-- Form Actions -->
             <div class="flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-gray-900 py-4 border-t border-gray-200 dark:border-gray-800 z-10">
-                <button type="button" onclick="closeUploadModal()" class="px-6 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                <button type="button" onclick="closeUploadModal()" class="px-6 py-2 border-2 border-gray-400 dark:border-gray-700 rounded-lg text-gray-800 dark:text-gray-300 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                     Cancel
                 </button>
-                <button type="submit" id="upload-submit-btn" class="px-8 py-2 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 shadow-lg shadow-red-200 dark:shadow-none transition transform active:scale-95 flex items-center">
-                    <span>Upload Document</span>
+                <button type="submit" id="upload-submit-btn" class="!bg-red-600 px-8 py-2 text-white rounded-lg font-bold hover:!bg-red-700 shadow-lg shadow-red-200 dark:shadow-none transition transform active:scale-95 flex items-center">
+                    <span class="text-white">Upload Document</span>
                 </button>
             </div>
         </form>
