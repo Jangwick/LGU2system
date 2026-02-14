@@ -239,84 +239,105 @@ $pageTitle = "Home";
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div data-aos="fade-up" class="text-center mb-24">
                 <h2 class="text-red-600 font-black tracking-[0.3em] uppercase text-xs mb-4">Leadership</h2>
-                <p class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-none mb-6">City Officials</p>
+                <h3 class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-none mb-6">City Officials</h3>
+                <p class="max-w-2xl mx-auto text-gray-500 font-medium text-lg leading-relaxed mb-6">Meet the dedicated leaders serving Valenzuela City.</p>
                 <div class="h-2 w-20 bg-red-600 mx-auto rounded-full"></div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto text-center">
+            <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto text-center">
                 <!-- Mayor -->
-                <div data-aos="fade-right" class="group">
-                    <div class="relative overflow-hidden rounded-[40px] mb-8 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
-                        <img src="https://lacs.spvalenzuela.com/images/mayor_wes.png?v=1771093587" alt="Mayor Wes Gatchalian" class="w-full grayscale group-hover:grayscale-0 transition-all duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-red-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div data-aos="fade-up" class="group bg-white p-10 md:p-16 rounded-[40px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.08)] border border-gray-50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                    <div class="w-48 h-48 md:w-56 md:h-56 mx-auto mb-10 overflow-hidden rounded-full border-8 border-gray-50 shadow-xl relative">
+                        <img src="https://lacs.spvalenzuela.com/images/mayor_wes.png?v=1771093587" alt="Mayor Wes Gatchalian" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000">
                     </div>
-                    <h3 class="text-3xl font-black text-gray-900 mb-2">Wes Gatchalian</h3>
-                    <p class="text-red-600 font-bold uppercase tracking-widest text-sm mb-4">CITY MAYOR</p>
-                    <p class="text-gray-500 font-medium leading-relaxed">Leading Valenzuela City towards a progressive and livable future through innovative governance and compassionate public service.</p>
+                    <h3 class="text-3xl md:text-4xl font-black text-gray-900 mb-2">Wes Gatchalian</h3>
+                    <p class="text-red-600 font-bold uppercase tracking-[0.2em] text-xs mb-6">CITY MAYOR</p>
+                    <p class="text-gray-500 font-medium leading-relaxed px-4">Leading Valenzuela City towards a progressive and livable future through innovative governance and compassionate public service.</p>
                 </div>
 
                 <!-- Vice Mayor -->
-                <div data-aos="fade-left" class="group">
-                    <div class="relative overflow-hidden rounded-[40px] mb-8 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
-                        <img src="https://lacs.spvalenzuela.com/images/vice_marlon.png?v=1771093587" alt="Vice Mayor Marlon Alejandrino" class="w-full grayscale group-hover:grayscale-0 transition-all duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#002d72]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div data-aos="fade-up" data-aos-delay="200" class="group bg-white p-10 md:p-16 rounded-[40px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.08)] border border-gray-50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                    <div class="w-48 h-48 md:w-56 md:h-56 mx-auto mb-10 overflow-hidden rounded-full border-8 border-gray-50 shadow-xl relative">
+                        <img src="https://lacs.spvalenzuela.com/images/vice_marlon.png?v=1771093587" alt="Vice Mayor Marlon Alejandrino" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000">
                     </div>
-                    <h3 class="text-3xl font-black text-gray-900 mb-2">Marlon Alejandrino</h3>
-                    <p class="text-red-600 font-bold uppercase tracking-widest text-sm mb-4">VICE MAYOR</p>
-                    <p class="text-gray-500 font-medium leading-relaxed">Presiding over the City Council with a focus on legislative excellence and community empowerment.</p>
+                    <h3 class="text-3xl md:text-4xl font-black text-gray-900 mb-2">Marlon Alejandrino</h3>
+                    <p class="text-red-600 font-bold uppercase tracking-[0.2em] text-xs mb-6">VICE MAYOR</p>
+                    <p class="text-gray-500 font-medium leading-relaxed px-4">Presiding over the City Council with a focus on legislative excellence and community empowerment.</p>
                 </div>
             </div>
 
             <!-- Councilors -->
-            <div data-aos="fade-up" class="mt-32 text-center mb-16">
-                <p class="text-2xl font-black text-gray-900 tracking-tight">City Councilors</p>
+            <div data-aos="fade-up" class="mt-32 text-center mb-20">
+                <h3 class="text-3xl font-black text-gray-900 tracking-tight">City Councilors</h3>
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-6 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- District 1 -->
-                <div data-aos="zoom-in" data-aos-delay="100" class="group text-center">
-                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 shadow-lg border border-gray-100">
-                        <img src="https://lacs.spvalenzuela.com/images/ramon-encarnacion.jpg" alt="Ramon Encarnacion" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                <div data-aos="fade-up" data-aos-delay="100" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                    <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
+                        <img src="https://lacs.spvalenzuela.com/images/ramon-encarnacion.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
-                    <h4 class="font-black text-gray-900 text-sm">Ramon Encarnacion</h4>
-                    <p class="text-[9px] text-red-600 font-bold uppercase tracking-widest">District 1</p>
+                    <div>
+                        <h4 class="font-black text-gray-900 text-xl mb-1">Ramon Encarnacion</h4>
+                        <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-3">District 1 Councilor</p>
+                        <p class="text-xs text-gray-500 font-medium leading-relaxed">Advocate for youth development and sports programs across the district.</p>
+                    </div>
                 </div>
-                <!-- Add more councilors... -->
-                <div data-aos="zoom-in" data-aos-delay="200" class="group text-center">
-                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 shadow-lg border border-gray-100">
-                        <img src="https://lacs.spvalenzuela.com/images/ricardo-enriquez.jpg" alt="Ricardo Enriquez" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+
+                <div data-aos="fade-up" data-aos-delay="200" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                    <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
+                        <img src="https://lacs.spvalenzuela.com/images/ricardo-enriquez.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
-                    <h4 class="font-black text-gray-900 text-sm">Ricardo Enriquez</h4>
-                    <p class="text-[9px] text-red-600 font-bold uppercase tracking-widest">District 1</p>
+                    <div>
+                        <h4 class="font-black text-gray-900 text-xl mb-1">Ricardo Enriquez</h4>
+                        <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-3">District 1 Councilor</p>
+                        <p class="text-xs text-gray-500 font-medium leading-relaxed">Championing environmental sustainability and urban greening projects.</p>
+                    </div>
                 </div>
-                <div data-aos="zoom-in" data-aos-delay="300" class="group text-center">
-                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 shadow-lg border border-gray-100">
-                        <img src="https://lacs.spvalenzuela.com/images/cristina-marie.jpg" alt="Cristina Marie Feliciano" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+
+                <div data-aos="fade-up" data-aos-delay="300" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                    <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
+                        <img src="https://lacs.spvalenzuela.com/images/cristina-marie.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
-                    <h4 class="font-black text-gray-900 text-sm">Cristina Marie</h4>
-                    <p class="text-[9px] text-red-600 font-bold uppercase tracking-widest">District 1</p>
+                    <div>
+                        <h4 class="font-black text-gray-900 text-xl mb-1">Cristina Marie</h4>
+                        <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-3">District 1 Councilor</p>
+                        <p class="text-xs text-gray-500 font-medium leading-relaxed">Focused on healthcare accessible and women's welfare initiatives.</p>
+                    </div>
                 </div>
-                <div data-aos="zoom-in" data-aos-delay="400" class="group text-center">
-                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 shadow-lg border border-gray-100">
-                        <img src="https://lacs.spvalenzuela.com/images/ghogo-deato.jpg" alt="Ghogo Deato Lee" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+
+                <!-- District 2 & Others -->
+                <div data-aos="fade-up" data-aos-delay="400" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                    <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
+                        <img src="https://lacs.spvalenzuela.com/images/ghogo-deato.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
-                    <h4 class="font-black text-gray-900 text-sm">Ghogo Deato Lee</h4>
-                    <p class="text-[9px] text-red-600 font-bold uppercase tracking-widest">District 1</p>
+                    <div>
+                        <h4 class="font-black text-gray-900 text-xl mb-1">Ghogo Deato Lee</h4>
+                        <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-3">District 1 Councilor</p>
+                        <p class="text-xs text-gray-500 font-medium leading-relaxed">Supporting local businesses and economic growth in the community.</p>
+                    </div>
                 </div>
-                <!-- District 2 -->
-                <div data-aos="zoom-in" data-aos-delay="500" class="group text-center">
-                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 shadow-lg border border-gray-100">
-                        <img src="https://lacs.spvalenzuela.com/images/louie-nolasco.jpg" alt="Louie Nolasco" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+
+                <div data-aos="fade-up" data-aos-delay="500" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                    <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
+                        <img src="https://lacs.spvalenzuela.com/images/louie-nolasco.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
-                    <h4 class="font-black text-gray-900 text-sm">Louie Nolasco</h4>
-                    <p class="text-[9px] text-red-600 font-bold uppercase tracking-widest">District 2</p>
+                    <div>
+                        <h4 class="font-black text-gray-900 text-xl mb-1">Louie Nolasco</h4>
+                        <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-3">District 2 Councilor</p>
+                        <p class="text-xs text-gray-500 font-medium leading-relaxed">Dedicated to education reform and scholarship programs for students.</p>
+                    </div>
                 </div>
-                <div data-aos="zoom-in" data-aos-delay="600" class="group text-center">
-                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 shadow-lg border border-gray-100">
-                        <img src="https://lacs.spvalenzuela.com/images/chiqui-carreon.jpg" alt="Chiqui Carreon" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+
+                <div data-aos="fade-up" data-aos-delay="600" class="group bg-white p-8 rounded-[35px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex items-center space-x-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl">
+                    <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-gray-50 shadow-md">
+                        <img src="https://lacs.spvalenzuela.com/images/chiqui-carreon.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
-                    <h4 class="font-black text-gray-900 text-sm">Chiqui Carreon</h4>
-                    <p class="text-[9px] text-red-600 font-bold uppercase tracking-widest">District 2</p>
+                    <div>
+                        <h4 class="font-black text-gray-900 text-xl mb-1">Chiqui Carreon</h4>
+                        <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-3">District 2 Councilor</p>
+                        <p class="text-xs text-gray-500 font-medium leading-relaxed">Promoting culture, arts, and tourism in Valenzuela City.</p>
+                    </div>
                 </div>
             </div>
         </div>
