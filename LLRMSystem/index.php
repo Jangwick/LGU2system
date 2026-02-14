@@ -29,6 +29,10 @@ $pageTitle = "Home";
     <!-- AOS Animate on Scroll -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
+    <!-- Swiper JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
     <style>
         :root {
             --val-red: #dc2626;
@@ -81,6 +85,11 @@ $pageTitle = "Home";
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
+        }
+        
+        /* Continuous Carousel Smoothness */
+        .recognition-swiper .swiper-wrapper {
+            transition-timing-function: linear !important;
         }
     </style>
 </head>
@@ -423,62 +432,98 @@ $pageTitle = "Home";
     </section>
 
     <!-- Recognition section -->
-    <section id="recognition" class="py-32 bg-[#050505] text-white relative overflow-hidden">
-        <!-- Background light effect -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-600/10 blur-[150px] rounded-full pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div data-aos="fade-up" class="text-center mb-24">
-                <h2 class="text-red-500 font-black tracking-[0.4em] uppercase text-[10px] md:text-xs mb-6">Recognition</h2>
-                <p class="text-5xl md:text-8xl font-black tracking-tighter leading-none mb-8">A Legacy of <br class="hidden md:block"> Excellence</p>
-                <div class="h-1.5 w-24 bg-red-600 mx-auto rounded-full shadow-[0_0_20px_rgba(220,38,38,0.5)]"></div>
+    <section id="recognition" class="py-32 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div data-aos="fade-up" class="text-center mb-16">
+                <h2 class="text-red-600 font-bold tracking-[0.2em] uppercase text-xs mb-4">RECOGNITION</h2>
+                <h3 class="text-5xl md:text-6xl font-black text-[#002d72] tracking-tight">A Legacy of Excellence</h3>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
-                <!-- Award 1 -->
-                <div data-aos="zoom-in" data-aos-delay="100" class="group relative p-10 bg-white/[0.03] backdrop-blur-sm rounded-[50px] border border-white/10 hover:border-red-600/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10 text-center">
-                        <img src="https://lacs.spvalenzuela.com/images/galing-pook.jpg" class="h-28 mx-auto mb-10 object-contain transition-transform duration-500 group-hover:scale-110">
-                        <h4 class="font-black text-2xl mb-2 text-white group-hover:text-red-500 transition-colors">Galing Pook</h4>
-                        <div class="inline-block px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20">
-                            <p class="text-red-500 text-[10px] font-black uppercase tracking-[0.2em]">2024 WINNER</p>
+            <!-- Swiper Carousel -->
+            <div class="swiper recognition-swiper py-4">
+                <div class="swiper-wrapper">
+                    <!-- Seal of SGLG -->
+                    <div class="swiper-slide h-auto">
+                        <div class="bg-white rounded-[40px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex flex-col h-full overflow-hidden group">
+                            <div class="h-64 overflow-hidden">
+                                <img src="https://lacs.spvalenzuela.com/images/seal-sglg.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                            </div>
+                            <div class="p-10 text-center flex-grow">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-sm">
+                                    <i class="bi bi-patch-check-fill"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Seal of SGLG</h4>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">2024 RECIPIENT</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">Seal of Good Local Governance for transparency and accountability.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Award 2 -->
-                <div data-aos="zoom-in" data-aos-delay="200" class="group relative p-10 bg-white/[0.03] backdrop-blur-sm rounded-[50px] border border-white/10 hover:border-red-600/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10 text-center">
-                        <img src="https://lacs.spvalenzuela.com/images/seal-sglg.jpg" class="h-28 mx-auto mb-10 object-contain transition-transform duration-500 group-hover:scale-110">
-                        <h4 class="font-black text-2xl mb-2 text-white group-hover:text-red-500 transition-colors">SGLG Award</h4>
-                        <div class="inline-block px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20">
-                            <p class="text-red-500 text-[10px] font-black uppercase tracking-[0.2em]">2024 RECIPIENT</p>
+                    <!-- Good Education -->
+                    <div class="swiper-slide h-auto">
+                        <div class="bg-white rounded-[40px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex flex-col h-full overflow-hidden group">
+                            <div class="h-64 overflow-hidden text-center bg-green-50">
+                                <img src="https://lacs.spvalenzuela.com/images/good-education.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                            </div>
+                            <div class="p-10 text-center flex-grow">
+                                <div class="w-10 h-10 bg-red-500/10 border border-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-red-600 text-sm font-black">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Good Education</h4>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">2025 SYCIP AWARD</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">6th time receiving the Seal of Good Education Governance.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Award 3 -->
-                <div data-aos="zoom-in" data-aos-delay="300" class="group relative p-10 bg-white/[0.03] backdrop-blur-sm rounded-[50px] border border-white/10 hover:border-red-600/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10 text-center">
-                        <img src="https://lacs.spvalenzuela.com/images/good-education.jpeg" class="h-28 mx-auto mb-10 object-contain transition-transform duration-500 group-hover:scale-110">
-                        <h4 class="font-black text-2xl mb-2 text-white group-hover:text-red-500 transition-colors">Good Education</h4>
-                        <div class="inline-block px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20">
-                            <p class="text-red-500 text-[10px] font-black uppercase tracking-[0.2em]">SYCIP AWARD</p>
+                    <!-- Oro Inodoro Award -->
+                    <div class="swiper-slide h-auto">
+                        <div class="bg-white rounded-[40px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex flex-col h-full overflow-hidden group">
+                            <div class="h-64 overflow-hidden">
+                                <img src="https://lacs.spvalenzuela.com/images/oro-inidoro.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                            </div>
+                            <div class="p-10 text-center flex-grow">
+                                <div class="w-10 h-10 text-teal-500 flex items-center justify-center mx-auto mb-6 text-2xl">
+                                    <i class="bi bi-droplet-fill"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Oro Inodoro Award</h4>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">2025 GRAND CHAMPION</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">National Grand Champion for Best Sanitation Practices.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Award 4 -->
-                <div data-aos="zoom-in" data-aos-delay="400" class="group relative p-10 bg-white/[0.03] backdrop-blur-sm rounded-[50px] border border-white/10 hover:border-red-600/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10 text-center">
-                        <img src="https://lacs.spvalenzuela.com/images/oro-inidoro.png" class="h-28 mx-auto mb-10 object-contain transition-transform duration-500 group-hover:scale-110">
-                        <h4 class="font-black text-2xl mb-2 text-white group-hover:text-red-500 transition-colors">Oro Inodoro</h4>
-                        <div class="inline-block px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20">
-                            <p class="text-red-500 text-[10px] font-black uppercase tracking-[0.2em]">GRAND CHAMPION</p>
+                    <!-- Good Housekeeping -->
+                    <div class="swiper-slide h-auto">
+                        <div class="bg-white rounded-[40px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-100 flex flex-col h-full overflow-hidden group">
+                            <div class="h-64 overflow-hidden">
+                                <img src="https://lacs.spvalenzuela.com/images/trade-industry.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                            </div>
+                            <div class="p-10 text-center flex-grow">
+                                <div class="w-10 h-10 text-green-500 flex items-center justify-center mx-auto mb-6 text-2xl">
+                                    <i class="bi bi-bank"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Good Housekeeping</h4>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">2024 DILG PASSER</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">Consistently passing the Seal of Good Financial Housekeeping.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Galing Pook -->
+                    <div class="swiper-slide h-auto">
+                        <div class="bg-white rounded-[40px] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-gray-50 flex flex-col h-full overflow-hidden group">
+                            <div class="h-64 overflow-hidden">
+                                <img src="https://lacs.spvalenzuela.com/images/galing-pook.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                            </div>
+                            <div class="p-10 text-center flex-grow">
+                                <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <i class="bi bi-trophy-fill"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Galing Pook Award</h4>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">2024 WINNER</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">National recognition for excellence in local governance and child protection.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -686,6 +731,27 @@ $pageTitle = "Home";
             } else {
                 nav.classList.remove('shadow-lg', 'bg-white/90');
                 nav.classList.add('glass-nav');
+            }
+        });
+
+        // Initialize Swiper for Recognition
+        const swiper = new Swiper('.recognition-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            speed: 8000,
+            autoplay: {
+                delay: 0,
+                disableOnInteraction: false,
+            },
+            freeMode: true,
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 4,
+                },
             }
         });
     </script>
