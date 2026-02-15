@@ -1015,26 +1015,26 @@ $pageTitle = "Home";
     </script>
 
     <!-- Official Details Modal -->
-    <div id="officialModal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeOfficialModal()"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="bg-white rounded-[50px] shadow-2xl w-full max-w-2xl overflow-hidden relative animate-modal-up">
-                <button onclick="closeOfficialModal()" class="absolute top-8 right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center">
+    <div id="officialModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeOfficialModal()"></div>
+        <div class="flex min-h-full items-center justify-center p-4 md:p-8">
+            <div class="bg-white rounded-[32px] md:rounded-[50px] shadow-2xl w-full max-w-2xl overflow-hidden relative animate-modal-up">
+                <button onclick="closeOfficialModal()" class="absolute top-4 right-4 md:top-8 md:right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-white/80 backdrop-blur-md md:bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center shadow-lg">
                     <i class="bi bi-x-lg"></i>
                 </button>
                 
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Panel -->
-                    <div class="w-full md:w-2/5 relative h-64 md:h-auto bg-gray-50">
+                    <div class="w-full md:w-2/5 relative h-80 md:h-auto bg-gray-50">
                         <img id="modalImg" src="" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                     </div>
                     
                     <!-- Content Panel -->
-                    <div class="w-full md:w-3/5 p-12">
+                    <div class="w-full md:w-3/5 p-8 md:p-12">
                         <div class="mb-8">
                             <span id="modalRole" class="inline-block px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] mb-4"></span>
-                            <h2 id="modalName" class="text-4xl font-black text-gray-900 tracking-tight leading-none mb-2"></h2>
+                            <h2 id="modalName" class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight leading-none mb-2"></h2>
                         </div>
                         
                         <div class="space-y-6">
@@ -1049,7 +1049,7 @@ $pageTitle = "Home";
                             </div>
                         </div>
 
-                        <div class="mt-12 flex space-x-4">
+                        <div class="mt-8 md:mt-12 flex space-x-4">
                             <a id="modalFb" href="#" target="_blank" class="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all text-xl">
                                 <i class="bi bi-facebook"></i>
                             </a>
