@@ -29,11 +29,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-6 md:p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="animate-slide-in-left">
-                    <h1 class="text-2xl md:text-3xl font-black mb-2 italic uppercase tracking-tight">Audit Logs</h1>
+                    <h1 class="text-2xl font-bold mb-2">Audit Logs</h1>
                     <p class="text-red-100 font-medium opacity-90">System activity and security audit trail</p>
                 </div>
                 <a href="?export=csv&<?php echo http_build_query($data['filters']); ?>" 
-                   class="bg-white text-red-600 px-6 py-3 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-red-50 transition-all shadow-lg flex items-center justify-center transform hover:scale-105 active:scale-95 animate-slide-in-right">
+                   class="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center justify-center transform hover:scale-105 active:scale-95 animate-slide-in-right">
                     <i class="bi bi-download mr-2"></i> Export CSV
                 </a>
             </div>
@@ -47,8 +47,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <i class="bi bi-database-fill text-xl md:text-2xl"></i>
                     </div>
                     <div>
-                        <div class="text-[10px] md:text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Total Logs</div>
-                        <div class="text-lg md:text-2xl font-black text-gray-900 dark:text-white"><?php echo number_format($stats['total_logs']); ?></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Total Logs</div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-900 dark:text-white"><?php echo number_format($stats['total_logs']); ?></div>
                     </div>
                 </div>
             </div>
@@ -58,8 +58,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <i class="bi bi-calendar-day text-xl md:text-2xl"></i>
                     </div>
                     <div>
-                        <div class="text-[10px] md:text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Today</div>
-                        <div class="text-lg md:text-2xl font-black text-gray-900 dark:text-white"><?php echo number_format($stats['logs_today']); ?></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Today</div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-900 dark:text-white"><?php echo number_format($stats['logs_today']); ?></div>
                     </div>
                 </div>
             </div>
@@ -69,8 +69,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <i class="bi bi-calendar-week text-xl md:text-2xl"></i>
                     </div>
                     <div>
-                        <div class="text-[10px] md:text-xs font-black text-gray-500 uppercase tracking-widest mb-1">This Week</div>
-                        <div class="text-lg md:text-2xl font-black text-gray-900 dark:text-white"><?php echo number_format($stats['logs_this_week']); ?></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">This Week</div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-900 dark:text-white"><?php echo number_format($stats['logs_this_week']); ?></div>
                     </div>
                 </div>
             </div>
@@ -80,8 +80,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <i class="bi bi-person-fill text-xl md:text-2xl"></i>
                     </div>
                     <div class="min-w-0">
-                        <div class="text-[10px] md:text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Most Active</div>
-                        <div class="text-sm md:text-base font-black text-gray-900 dark:text-white truncate" title="<?php echo htmlspecialchars($stats['most_active_user']); ?>">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Most Active</div>
+                        <div class="text-sm md:text-base font-bold text-gray-900 dark:text-white truncate" title="<?php echo htmlspecialchars($stats['most_active_user']); ?>">
                             <?php echo htmlspecialchars($stats['most_active_user']); ?>
                         </div>
                     </div>
@@ -93,7 +93,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 md:p-6 mb-6 animate-fade-in-up">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <div class="lg:col-span-2">
-                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">User</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User</label>
                     <select name="user_id" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
                         <option value="">All Users</option>
                         <?php foreach ($data['users'] as $user): ?>
@@ -105,7 +105,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Action</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Action</label>
                     <select name="action" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
                         <option value="">All Actions</option>
                         <?php foreach ($data['actions'] as $action): ?>
@@ -117,7 +117,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Table</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Table</label>
                     <select name="table_name" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
                         <option value="">All Tables</option>
                         <?php foreach ($data['tables'] as $table): ?>
@@ -129,21 +129,21 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Date From</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date From</label>
                     <input type="date" name="date_from" 
                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" 
                            value="<?php echo htmlspecialchars($data['filters']['date_from'] ?? ''); ?>">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Date To</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date To</label>
                     <input type="date" name="date_to" 
                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" 
                            value="<?php echo htmlspecialchars($data['filters']['date_to'] ?? ''); ?>">
                 </div>
                 <div class="flex items-end">
                     <button type="submit" 
-                            class="w-full px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-red-600/30 transition-all flex items-center justify-center gap-2 transform active:scale-95">
-                        <i class="bi bi-funnel"></i> Filter Results
+                            class="w-full px-4 py-3.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                        <i class="bi bi-funnel"></i> Filter
                     </button>
                 </div>
             </form>
@@ -160,8 +160,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <div class="flex gap-2">
                         <button type="submit" 
-                                class="flex-1 sm:flex-none px-8 py-3 bg-gray-800 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 transform active:scale-95">
-                            Search Records
+                                class="flex-1 sm:flex-none px-6 py-3 bg-gray-800 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white font-semibold rounded-lg shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                            Search
                         </button>
                         <?php if (!empty($data['filters']['search'])): ?>
                             <a href="?" 
@@ -178,12 +178,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up">
             <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                    <h2 class="text-xl font-black text-gray-800 dark:text-white flex items-center gap-3">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
                         <i class="bi bi-list-ul text-red-600"></i>
                         <span>Activity Logs</span>
-                        <span class="px-3 py-1 bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-red-100 dark:border-red-900/50"><?php echo number_format($data['total']); ?> records</span>
+                        <span class="px-3 py-1 bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400 text-xs font-semibold rounded-full border border-red-100 dark:border-red-900/50"><?php echo number_format($data['total']); ?> records</span>
                     </h2>
-                    <div class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest bg-gray-50 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-600">
+                    <div class="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-600">
                         Showing <?php echo (($data['page'] - 1) * $data['perPage']) + 1; ?> to <?php echo min($data['page'] * $data['perPage'], $data['total']); ?>
                     </div>
                 </div>
@@ -192,11 +192,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
-                            <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Date/Time</th>
-                            <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Details</th>
-                            <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Action</th>
-                            <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Description</th>
-                            <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">IP Address</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date/Time</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User Details</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Action</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">IP Address</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
@@ -209,8 +209,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php else: ?>
                             <?php foreach ($data['logs'] as $log): ?>
-                                <tr class="hover:bg-red-50 transition-all duration-200 group">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 group-hover:text-red-700 transition-colors">
+                                <tr class="hover:bg-red-50 dark:hover:bg-red-900/10 transition-all duration-200 group">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors">
                                         <i class="bi bi-clock text-gray-400 mr-1 group-hover:text-red-500 transition-colors"></i>
                                         <?php echo date('Y-m-d H:i:s', strtotime($log['created_at'])); ?>
                                     </td>
@@ -220,20 +220,20 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                                 <?php echo strtoupper(substr($log['full_name'] ?? 'U', 0, 1)); ?>
                                             </div>
                                             <div>
-                                                <div class="font-medium text-gray-900 group-hover:text-red-700 transition-colors"><?php echo htmlspecialchars($log['full_name'] ?? 'Unknown'); ?></div>
-                                                <div class="text-sm text-gray-500"><?php echo htmlspecialchars($log['email'] ?? ''); ?></div>
+                                                <div class="font-medium text-gray-900 dark:text-gray-200 group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors"><?php echo htmlspecialchars($log['full_name'] ?? 'Unknown'); ?></div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400"><?php echo htmlspecialchars($log['email'] ?? ''); ?></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <?php
                                         $actionClass = match($log['action']) {
-                                            'create' => 'bg-green-100 text-green-800 hover:bg-green-200',
-                                            'update' => 'bg-blue-100 text-blue-800 hover:bg-blue-200',
-                                            'delete' => 'bg-red-100 text-red-800 hover:bg-red-200',
-                                            'login' => 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200',
-                                            'logout' => 'bg-gray-100 text-gray-800 hover:bg-gray-200',
-                                            default => 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                            'create' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-200',
+                                            'update' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-200',
+                                            'delete' => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 hover:bg-red-200',
+                                            'login' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400 hover:bg-indigo-200',
+                                            'logout' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200',
+                                            default => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200'
                                         };
                                         $actionIcon = match($log['action']) {
                                             'create' => 'bi-plus-circle',
@@ -259,14 +259,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         $cleanDescription = explode(' | Changes:', $cleanDescription)[0];
                                     }
                                     ?>
-                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs group-hover:text-red-700 transition-colors" title="<?php echo htmlspecialchars($cleanDescription); ?>">
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200 max-w-xs group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors" title="<?php echo htmlspecialchars($cleanDescription); ?>">
                                         <span class="block truncate"><?php echo htmlspecialchars($cleanDescription); ?></span>
                                         <?php if ($log['record_id']): ?>
                                             <span class="text-gray-400 text-xs ml-1">(ID: <?php echo $log['record_id']; ?>)</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono group-hover:text-gray-900 transition-colors">
-                                        <span class="px-2 py-1 bg-gray-50 rounded text-xs group-hover:bg-red-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400 font-mono group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                                        <span class="px-2 py-1 bg-gray-50 dark:bg-gray-700 rounded text-xs group-hover:bg-red-50 dark:group-hover:bg-red-900/20 transition-colors">
                                             <?php echo htmlspecialchars($log['ip_address'] ?? ''); ?>
                                         </span>
                                     </td>
