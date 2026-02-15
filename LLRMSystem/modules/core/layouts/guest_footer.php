@@ -28,7 +28,6 @@
                     <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-4">Navigate</h4>
                     <ul class="space-y-3 text-xs font-bold text-gray-500">
                         <li><a href="<?php echo BASE_URL; ?>/index.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Home</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>/index.php#updates" class="hover:text-red-600 transition-colors uppercase tracking-wider">News & Updates</a></li>
                         <li><a href="<?php echo HELP_URL; ?>/views/faq.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">FAQ</a></li>
                         <li><a href="<?php echo HELP_URL; ?>/views/contact.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Support</a></li>
                     </ul>
