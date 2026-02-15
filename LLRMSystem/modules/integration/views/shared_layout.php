@@ -141,7 +141,7 @@ $records = $controller->getRecords($currentModule);
             <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
                 <i class="bi bi-cpu mr-2 text-red-600"></i> Integration Simulator
             </h3>
-            <button onclick="closeSimulatorModal()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+            <button id="simulatorCloseBtn" onclick="closeSimulatorModal()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
