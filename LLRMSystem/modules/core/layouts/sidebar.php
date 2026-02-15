@@ -150,6 +150,16 @@
                 </div>
             </div>
             <?php endif; ?>
+            
+            <!-- Help & Support Section -->
+            <div class="pt-4 pb-2 sidebar-text">
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Support</p>
+            </div>
+            
+            <a href="<?php echo HELP_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'help' ? 'active' : ''; ?>">
+                <i class="bi bi-question-circle"></i>
+                <span class="sidebar-text">Help & Support</span>
+            </a>
         </div>
     </nav>
     

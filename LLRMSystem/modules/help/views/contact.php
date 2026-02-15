@@ -21,20 +21,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
 <?php else: ?>
     <div class="flex-1 flex flex-col min-h-screen bg-gray-50">
-        <!-- Minimal landing navbar for guests -->
-        <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" class="h-8 w-8">
-                <span class="font-black text-xl tracking-tighter text-gray-900 uppercase">VALENZUELA<span class="text-red-600">LRMS</span></span>
-            </div>
-            <a href="<?php echo BASE_URL; ?>/index.php#legal-footer" onclick="if(window.history.length > 1){ window.history.back(); return false; }" class="text-[10px] font-black text-gray-400 hover:text-red-600 uppercase tracking-[0.2em] transition-all">
-                <i class="bi bi-arrow-left mr-2"></i>BACK TO HOME
-            </a>
-        </nav>
+        <?php $currentGuestPage = 'contact'; include_once __DIR__ . '/../../core/layouts/guest_navbar.php'; ?>
 <?php endif; ?>
 
     
     <main class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6 pb-20">
+
+        <?php if (!isset($_SESSION['user_id'])): ?>
+            <?php $currentHelpPage = 'contact'; include_once __DIR__ . '/../../core/layouts/help_subnav.php'; ?>
+        <?php endif; ?>
 
         <div class="max-w-4xl mx-auto">
             
@@ -314,5 +309,9 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
 });
 </script>
 
-    <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+    <?php else: ?>
+        <?php include_once __DIR__ . '/../../core/layouts/guest_footer.php'; ?>
+    <?php endif; ?>
 
