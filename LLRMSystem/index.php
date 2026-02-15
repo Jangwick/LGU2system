@@ -15,6 +15,7 @@ $pageTitle = "Home";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<script>if(localStorage.getItem('darkMode')==='dark')document.documentElement.classList.add('dark');</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,6 +111,135 @@ $pageTitle = "Home";
             background: #fff;
             width: 40px;
         }
+
+        /* =============================================
+           GLOBAL DARK MODE THEME
+           ============================================= */
+        html.dark { color-scheme: dark; }
+        html.dark body { background: #0a0a0a; color: #d4d4d4; }
+
+        /* Smooth theme transitions */
+        body, section, footer, nav, .feature-card,
+        #mobile-landing-toggle, #mobile-landing-menu {
+            transition: background-color 0.5s ease, border-color 0.4s ease;
+        }
+
+        /* --- Navigation --- */
+        html.dark nav {
+            background: rgba(10, 10, 10, 0.9) !important;
+            border-bottom-color: #1a1a1a !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* --- Hero --- */
+        html.dark .hero-gradient {
+            background: radial-gradient(circle at 50% -20%, #1a0808 0%, #0a0a0a 60%, #0a0a0a 100%) !important;
+        }
+        html.dark .hero-gradient .inline-flex.rounded-full.bg-white {
+            background: rgba(255,255,255,0.05) !important;
+            border-color: rgba(220,38,38,0.2) !important;
+        }
+        html.dark .hero-gradient a.bg-white {
+            background: #1a1a1a !important;
+            border-color: #333 !important;
+            color: #d4d4d4 !important;
+        }
+
+        /* --- All Sections --- */
+        html.dark section { background: #0a0a0a !important; }
+        html.dark #landmarks { background: #0f0f0f !important; }
+        html.dark #search-showcase { background: linear-gradient(to bottom, #111, #0a0a0a) !important; }
+
+        /* --- Footer --- */
+        html.dark footer#legal-footer {
+            background: #0a0a0a !important;
+            border-top-color: #1a1a1a !important;
+        }
+
+        /* --- Mobile --- */
+        html.dark #mobile-landing-toggle {
+            background: rgba(15,15,15,0.95) !important;
+            border-color: #333 !important;
+            color: #d4d4d4 !important;
+        }
+        html.dark #mobile-landing-menu { background: #0a0a0a !important; }
+        html.dark #mobile-landing-menu > .fixed {
+            background: rgba(10,10,10,0.95) !important;
+            border-color: #222 !important;
+        }
+        html.dark #mobile-landing-menu .text-slate-800 { color: #e5e5e5 !important; }
+
+        /* --- Global Text Colors --- */
+        html.dark .text-gray-900 { color: #e5e5e5 !important; }
+        html.dark .text-\[\#002d72\] { color: #7eb3ff !important; }
+        html.dark .text-gray-500 { color: #888 !important; }
+        html.dark .text-gray-400 { color: #666 !important; }
+        html.dark .text-gray-600 { color: #999 !important; }
+        html.dark .text-slate-600 { color: #999 !important; }
+        html.dark .text-slate-800 { color: #d4d4d4 !important; }
+
+        /* CTA buttons inside red bg keep readable */
+        html.dark .bg-red-600 a.text-gray-900 { color: #111 !important; }
+
+        /* --- Feature Cards --- */
+        html.dark .feature-card {
+            background: #141414 !important;
+            border-color: #222 !important;
+            box-shadow: 0 10px 40px -15px rgba(0,0,0,0.5) !important;
+        }
+        html.dark .feature-card:hover {
+            box-shadow: 0 25px 50px -12px rgba(220,38,38,0.15) !important;
+        }
+        html.dark .feature-card .bg-red-50 { background: rgba(220,38,38,0.1) !important; }
+        html.dark .feature-card .bg-blue-50 { background: rgba(37,99,235,0.1) !important; }
+        html.dark .feature-card .bg-green-50 { background: rgba(22,163,74,0.1) !important; }
+
+        /* --- Section Cards --- */
+        html.dark #leadership .bg-white,
+        html.dark #governance .bg-white,
+        html.dark #recognition .bg-white,
+        html.dark #updates .bg-white {
+            background: #141414 !important;
+            border-color: #1a1a1a !important;
+            box-shadow: 0 10px 40px -15px rgba(0,0,0,0.4) !important;
+        }
+
+        /* Governance pillar icons */
+        html.dark #governance .bg-blue-50\/50 { background: rgba(37,99,235,0.08) !important; }
+        html.dark #governance .bg-red-50\/50 { background: rgba(220,38,38,0.08) !important; }
+        html.dark #governance .bg-green-50\/50 { background: rgba(22,163,74,0.08) !important; }
+        html.dark #governance .bg-orange-50\/50 { background: rgba(234,88,12,0.08) !important; }
+        html.dark #governance .bg-teal-50\/50 { background: rgba(20,184,166,0.08) !important; }
+
+        /* Our Roots */
+        html.dark #roots a.bg-gray-50 { background: #141414 !important; border-color: #222 !important; }
+        html.dark #roots .border-y { border-color: #1a1a1a !important; }
+        html.dark #roots .bg-red-50 { background: rgba(220,38,38,0.08) !important; }
+
+        /* Search Showcase (not the browser mockup) */
+        html.dark #search-showcase span.inline-flex { background: #141414 !important; border-color: #222 !important; }
+        html.dark #search-showcase div.inline-flex.rounded-full { background: #1a1a1a !important; border-color: #222 !important; }
+
+        /* Generic Borders */
+        html.dark .border-gray-100 { border-color: #1a1a1a; }
+        html.dark .border-gray-50 { border-color: #151515; }
+
+        /* Official Modal */
+        html.dark #officialModal .bg-white { background: #1a1a1a !important; }
+        html.dark #officialModal .bg-gray-50 { background: #111 !important; }
+        html.dark #officialModal .bg-white\/80 { background: rgba(26,26,26,0.8) !important; }
+        html.dark #officialModal .bg-red-50 { background: rgba(220,38,38,0.1) !important; }
+        html.dark #officialModal .bg-blue-50 { background: rgba(37,99,235,0.1) !important; }
+
+        /* Dark Mode Toggle Button */
+        .dark-toggle { transition: all 0.3s ease; }
+        html.dark .dark-toggle {
+            background: #1a1a1a !important;
+            border-color: #444 !important;
+            color: #fbbf24 !important;
+        }
+        html.dark .dark-toggle:hover { border-color: #fbbf24 !important; }
     </style>
 </head>
 <body class="bg-[#fcfdfd] text-gray-900 overflow-x-hidden">
@@ -149,6 +279,9 @@ $pageTitle = "Home";
                     <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
                         Get Started
                     </a>
+                    <button onclick="toggleDarkMode()" class="dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                        <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -188,6 +321,13 @@ $pageTitle = "Home";
             <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="mobile-nav-link text-lg font-bold text-gray-400 uppercase tracking-wider hover:text-red-600 transition-colors">Privacy</a>
             <a href="<?php echo HELP_URL; ?>/views/terms.php" class="mobile-nav-link text-lg font-bold text-gray-400 uppercase tracking-wider hover:text-red-600 transition-colors">Terms</a>
             
+            <div class="flex flex-col items-center space-y-3">
+                <button onclick="toggleDarkMode()" class="dark-toggle w-14 h-14 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-600 hover:border-red-200 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                    <i id="darkModeIconMobile" class="bi bi-moon-fill text-xl"></i>
+                </button>
+                <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Theme</span>
+            </div>
+
             <div class="pt-8 w-full border-t border-gray-50 flex flex-col space-y-6">
                 <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 font-black uppercase tracking-widest text-sm py-2">Sign In</a>
                 <a href="<?php echo REGISTER_URL; ?>" class="bg-red-600 text-white font-black uppercase tracking-widest text-sm py-4 rounded-xl shadow-xl shadow-red-200">Get Started</a>
@@ -1570,6 +1710,29 @@ $pageTitle = "Home";
         mobileLinks.forEach(link => {
             link.addEventListener('click', closeMobileMenu);
         });
+    </script>
+
+    <!-- Dark Mode Toggle Script -->
+    <script>
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark ? 'dark' : 'light');
+            updateDarkModeIcons(isDark);
+            document.querySelector('meta[name="theme-color"]').content = isDark ? '#0a0a0a' : '#dc2626';
+        }
+
+        function updateDarkModeIcons(isDark) {
+            const desktopIcon = document.getElementById('darkModeIcon');
+            const mobileIcon = document.getElementById('darkModeIconMobile');
+            if (desktopIcon) desktopIcon.className = isDark ? 'bi bi-sun-fill text-sm' : 'bi bi-moon-fill text-sm';
+            if (mobileIcon) mobileIcon.className = isDark ? 'bi bi-sun-fill text-xl' : 'bi bi-moon-fill text-xl';
+        }
+
+        // Initialize dark mode icons on load
+        (function() {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateDarkModeIcons(isDark);
+        })();
     </script>
 </body>
 </html>
