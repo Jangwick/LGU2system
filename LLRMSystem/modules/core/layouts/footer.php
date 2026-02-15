@@ -16,16 +16,16 @@
             </div>
             
             <!-- Mobile Layout -->
-            <div class="md:hidden flex flex-col items-center justify-center space-y-3">
-                <div class="flex items-center space-x-2">
-                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="h-5 w-5 object-contain">
-                    <span class="text-[9px] text-gray-400 font-black uppercase tracking-wider">&copy; <?php echo date('Y'); ?> LRMS. All rights reserved.</span>
+            <div class="md:hidden flex flex-col items-center justify-center py-6 px-4 space-y-6 text-center">
+                <div class="flex flex-col items-center space-y-2">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="h-8 w-8 object-contain opacity-70 mb-1">
+                    <span class="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em]">&copy; <?php echo date('Y'); ?> LRMS. ALL RIGHTS RESERVED.</span>
                 </div>
-                <div class="flex items-center space-x-6">
-                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">FAQ</a>
-                    <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Privacy</a>
-                    <a href="<?php echo HELP_URL; ?>/views/terms.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Terms</a>
-                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Support</a>
+                <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 px-4">
+                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">FAQ</a>
+                    <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Privacy</a>
+                    <a href="<?php echo HELP_URL; ?>/views/terms.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Terms</a>
+                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Support</a>
                 </div>
             </div>
         </div>
