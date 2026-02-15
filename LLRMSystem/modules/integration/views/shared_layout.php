@@ -32,7 +32,7 @@ $records = $controller->getRecords($currentModule);
                     <p class="text-red-100 mt-2 opacity-90">External data automatically synced from legislative partners.</p>
                 </div>
                 <div class="flex gap-3">
-                    <button onclick="openSimulatorModal()" class="bg-white text-red-700 px-5 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-all shadow-sm flex items-center transform hover:scale-105">
+                    <button id="simulateSyncBtn" onclick="openSimulatorModal()" class="bg-white text-red-700 px-5 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-all shadow-sm flex items-center transform hover:scale-105">
                         <i class="bi bi-cpu mr-2"></i> Simulate Sync
                     </button>
                 </div>

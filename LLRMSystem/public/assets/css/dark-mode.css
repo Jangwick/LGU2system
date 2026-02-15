@@ -297,3 +297,19 @@
     background-color: #444 !important;
 }
 
+/* Simulate Sync button - keep white in dark mode */
+.dark #simulateSyncBtn,
+.dark #simulateSyncBtn:active,
+.dark #simulateSyncBtn:focus {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #b91c1c !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+}
+.dark #simulateSyncBtn:hover {
+    background: #fef2f2 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+}
+
