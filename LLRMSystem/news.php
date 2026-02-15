@@ -43,6 +43,16 @@ $pageTitle = "City News & Updates";
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+        .news-full-article {
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.5s ease, opacity 0.4s ease;
+            overflow: hidden;
+        }
+        .news-full-article:not(.hidden) {
+            max-height: 2000px;
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-[#fcfdfd] text-gray-900 overflow-x-hidden">
@@ -96,10 +106,25 @@ $pageTitle = "City News & Updates";
                             <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-black uppercase tracking-wider">Awards</span>
                         </div>
                         <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-6 group-hover:text-red-600 transition-colors">Valenzuela City Receives Oro Inodoro Award</h2>
-                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-8">Acknowledged for its exceptional environmental sanitation management, Valenzuela City was honored as the grand champion in Maynilad's search for cities with best sanitation practices.</p>
-                        <div>
-                            <a href="#" class="inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
-                                Read Full Article
+                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-4">Acknowledged for its exceptional environmental sanitation management, Valenzuela City was honored as the grand champion in Maynilad's search for cities with best sanitation practices.</p>
+                        
+                        <!-- Full Article Content (Hidden by default) -->
+                        <div class="news-full-article hidden overflow-hidden transition-all duration-500">
+                            <div class="pt-4 border-t border-gray-100 mt-2 space-y-4 text-gray-600 text-base leading-relaxed">
+                                <p>Valenzuela City was named the grand champion of Maynilad's 2025 Oro Inodoro Awards, beating out dozens of other Metro Manila cities in the competition that recognizes communities with the best sanitation and environmental management practices.</p>
+                                <p>The award ceremony, held on November 12, 2025, highlighted the city's comprehensive approach to waste management, including its zero-waste programs, regular waterway cleanup drives, and community-based sanitation education initiatives led by barangay health workers.</p>
+                                <p>Mayor Wes Gatchalian credited the achievement to the collective effort of city employees and residents. "This award belongs to every Valenzuelano who takes pride in keeping our city clean and healthy," the mayor said in his acceptance speech.</p>
+                                <p>The Oro Inodoro program, run by Maynilad Water Services, evaluates participating cities based on criteria such as proper septic tank management, sewage disposal compliance, and community hygiene awareness campaigns. Valenzuela scored the highest marks across all categories.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap items-center gap-3">
+                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                                <span class="btn-text">Read Full Article</span>
+                                <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
+                            </button>
+                            <a href="https://www.google.com/search?q=Valenzuela+City+Oro+Inodoro+Award+Maynilad+2025" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:border-red-300 hover:text-red-600 transition-all">
+                                <i class="bi bi-google mr-2"></i>View Source
                             </a>
                         </div>
                     </div>
@@ -116,10 +141,24 @@ $pageTitle = "City News & Updates";
                             <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-[10px] font-black uppercase tracking-wider">Housing</span>
                         </div>
                         <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-6 group-hover:text-red-600 transition-colors">P14M Housing Assistance for Wawang Pulo</h2>
-                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-8">The SHFC has officially turned over checks amounting to Php 14,025,000 to members of the Wawang Pulo Homeowners' Association, marking a new chapter for 117 families.</p>
-                        <div>
-                            <a href="#" class="inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
-                                Read Full Article
+                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-4">The SHFC has officially turned over checks amounting to Php 14,025,000 to members of the Wawang Pulo Homeowners' Association, marking a new chapter for 117 families.</p>
+                        
+                        <div class="news-full-article hidden overflow-hidden transition-all duration-500">
+                            <div class="pt-4 border-t border-gray-100 mt-2 space-y-4 text-gray-600 text-base leading-relaxed">
+                                <p>In a ceremony held at the Valenzuela City Convention Center, the Social Housing Finance Corporation (SHFC) officially turned over checks amounting to Php 14,025,000 to the Wawang Pulo Homeowners' Association, benefiting 117 families who have long awaited secure housing.</p>
+                                <p>The housing assistance is part of the Community Mortgage Program (CMP), a government initiative that enables underprivileged communities to purchase the lots they have been occupying. The Wawang Pulo community had been residing on the land for over three decades.</p>
+                                <p>Mayor Wes Gatchalian expressed his commitment to ensuring that every Valenzuelano has access to affordable and dignified housing. "Secure land tenure gives families peace of mind and a foundation for building better futures," he stated.</p>
+                                <p>The SHFC representatives lauded the city government's proactive support in facilitating the documentation process, which typically takes years to complete. Valenzuela streamlined the procedure through its housing office, reducing the processing time significantly.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap items-center gap-3">
+                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                                <span class="btn-text">Read Full Article</span>
+                                <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
+                            </button>
+                            <a href="https://www.google.com/search?q=SHFC+14+million+housing+Wawang+Pulo+Valenzuela+2026" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:border-red-300 hover:text-red-600 transition-all">
+                                <i class="bi bi-google mr-2"></i>View Source
                             </a>
                         </div>
                     </div>
@@ -136,10 +175,24 @@ $pageTitle = "City News & Updates";
                             <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase tracking-wider">Safety</span>
                         </div>
                         <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-6 group-hover:text-red-600 transition-colors">PANATAG Flood Control Launch</h2>
-                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-8">The city government partners with UPRI to launch PANATAG, a digital flood monitoring and warning system designed to enhance disaster preparedness.</p>
-                        <div>
-                            <a href="#" class="inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
-                                Read Full Article
+                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-4">The city government partners with UPRI to launch PANATAG, a digital flood monitoring and warning system designed to enhance disaster preparedness.</p>
+                        
+                        <div class="news-full-article hidden overflow-hidden transition-all duration-500">
+                            <div class="pt-4 border-t border-gray-100 mt-2 space-y-4 text-gray-600 text-base leading-relaxed">
+                                <p>Valenzuela City has partnered with the University of the Philippines Resilience Institute (UPRI) to launch PANATAG — a state-of-the-art digital flood monitoring and early warning system aimed at protecting the city's most flood-vulnerable communities.</p>
+                                <p>PANATAG, which stands for "Pagbabantay at Agap na Tugon sa Baha," uses real-time rainfall data, river level sensors, and predictive modeling to issue flood warnings to barangay officials and residents through SMS and a dedicated mobile app.</p>
+                                <p>The launch event on August 28, 2025, was attended by city officials, UPRI researchers, and barangay captains from flood-prone areas including Barangay Marulas, Ugong, and Lingunan. Demonstration drills were conducted to familiarize participants with the system.</p>
+                                <p>"We cannot prevent floods, but we can ensure our residents are warned early and evacuated safely," Mayor Gatchalian emphasized. The city has allocated Php 15 million for the installation of 30 sensor stations across critical waterways.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap items-center gap-3">
+                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                                <span class="btn-text">Read Full Article</span>
+                                <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
+                            </button>
+                            <a href="https://www.google.com/search?q=PANATAG+flood+control+Valenzuela+UPRI+2025" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:border-red-300 hover:text-red-600 transition-all">
+                                <i class="bi bi-google mr-2"></i>View Source
                             </a>
                         </div>
                     </div>
@@ -156,10 +209,24 @@ $pageTitle = "City News & Updates";
                             <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-[10px] font-black uppercase tracking-wider">Economy</span>
                         </div>
                         <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-6 group-hover:text-red-600 transition-colors">Valenzuela Launches 2026 BOSS</h2>
-                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-8">City Government kicks off the 2026 Business One-Stop Shop (BOSS) to streamline permit renewals and encourage online transactions.</p>
-                        <div>
-                            <a href="#" class="inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
-                                Read Full Article
+                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-4">City Government kicks off the 2026 Business One-Stop Shop (BOSS) to streamline permit renewals and encourage online transactions.</p>
+                        
+                        <div class="news-full-article hidden overflow-hidden transition-all duration-500">
+                            <div class="pt-4 border-t border-gray-100 mt-2 space-y-4 text-gray-600 text-base leading-relaxed">
+                                <p>The City of Valenzuela officially launched the 2026 edition of its Business One-Stop Shop (BOSS) on January 5, consolidating all business permit processing services into one streamlined venue at the Valenzuela People's Park Convention Center.</p>
+                                <p>BOSS brings together representatives from the Business Permits and Licensing Office (BPLO), Bureau of Fire Protection (BFP), City Treasurer's Office, and other regulatory agencies under one roof — dramatically reducing the time it takes for business owners to complete their annual permit renewals.</p>
+                                <p>This year's BOSS introduces an enhanced online portal where business owners can pre-fill applications, upload documents, and schedule appointments, cutting average processing time from three days to just a few hours for compliant renewals.</p>
+                                <p>"We want to make Valenzuela the most business-friendly city in Metro Manila," said Mayor Gatchalian. The city reported a 12% increase in new business registrations in 2025, a trend officials attribute to the streamlined BOSS process.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap items-center gap-3">
+                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                                <span class="btn-text">Read Full Article</span>
+                                <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
+                            </button>
+                            <a href="https://www.google.com/search?q=Valenzuela+City+BOSS+Business+One+Stop+Shop+2026" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:border-red-300 hover:text-red-600 transition-all">
+                                <i class="bi bi-google mr-2"></i>View Source
                             </a>
                         </div>
                     </div>
@@ -176,10 +243,24 @@ $pageTitle = "City News & Updates";
                             <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-[10px] font-black uppercase tracking-wider">Education</span>
                         </div>
                         <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-6 group-hover:text-red-600 transition-colors">1st Inclusive Education Summit</h2>
-                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-8">Valenzuela holds its first Inclusive Summit, celebrating a decade of progress in providing accessible education for children with special needs.</p>
-                        <div>
-                            <a href="#" class="inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
-                                Read Full Article
+                        <p class="text-gray-500 text-lg font-medium leading-relaxed mb-4">Valenzuela holds its first Inclusive Summit, celebrating a decade of progress in providing accessible education for children with special needs.</p>
+                        
+                        <div class="news-full-article hidden overflow-hidden transition-all duration-500">
+                            <div class="pt-4 border-t border-gray-100 mt-2 space-y-4 text-gray-600 text-base leading-relaxed">
+                                <p>Valenzuela City marked a milestone in Philippine education with the 1st Inclusive Education Summit held on January 22, 2026. The event brought together educators, parents, therapists, and policymakers to celebrate a decade of inclusive learning programs in the city.</p>
+                                <p>Since 2016, the city has established Special Education (SPED) centers in 15 public schools, trained over 200 teachers in inclusive pedagogy, and enrolled more than 2,500 children with learning disabilities, autism, and other special needs into mainstream classrooms.</p>
+                                <p>The summit featured panel discussions, workshops, and success story presentations from families whose children have thrived under the program. Keynote speakers included representatives from UNICEF Philippines and the Department of Education's Bureau of Learner Support Services.</p>
+                                <p>"Every child in Valenzuela deserves to learn and grow — regardless of ability," said Mayor Gatchalian, who announced an additional Php 25 million allocation for building two new SPED resource centers in 2026.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap items-center gap-3">
+                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                                <span class="btn-text">Read Full Article</span>
+                                <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
+                            </button>
+                            <a href="https://www.google.com/search?q=Valenzuela+City+Inclusive+Education+Summit+2026" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:border-red-300 hover:text-red-600 transition-all">
+                                <i class="bi bi-google mr-2"></i>View Source
                             </a>
                         </div>
                     </div>
@@ -252,6 +333,45 @@ $pageTitle = "City News & Updates";
         });
 
         // Mobile menu toggle for news page
+
+        // Toggle full article content
+        function toggleArticle(btn) {
+            const card = btn.closest('.flex-grow');
+            const article = card.querySelector('.news-full-article');
+            const btnText = btn.querySelector('.btn-text');
+            const btnIcon = btn.querySelector('.btn-icon');
+            const isHidden = article.classList.contains('hidden');
+
+            if (isHidden) {
+                // Expand
+                article.classList.remove('hidden');
+                article.style.maxHeight = '0px';
+                article.style.opacity = '0';
+                requestAnimationFrame(() => {
+                    article.style.maxHeight = article.scrollHeight + 'px';
+                    article.style.opacity = '1';
+                });
+                btnText.textContent = 'Close Article';
+                btnIcon.classList.remove('bi-arrow-down');
+                btnIcon.classList.add('bi-arrow-up');
+                btn.classList.remove('bg-[#0a111a]', 'hover:bg-gray-800');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+            } else {
+                // Collapse
+                article.style.maxHeight = '0px';
+                article.style.opacity = '0';
+                setTimeout(() => {
+                    article.classList.add('hidden');
+                    article.style.maxHeight = '';
+                    article.style.opacity = '';
+                }, 500);
+                btnText.textContent = 'Read Full Article';
+                btnIcon.classList.remove('bi-arrow-up');
+                btnIcon.classList.add('bi-arrow-down');
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-[#0a111a]', 'hover:bg-gray-800');
+            }
+        }
     </script>
 </body>
 </html>
