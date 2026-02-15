@@ -196,6 +196,15 @@
                 <i class="bi bi-graph-up mr-3 text-lg"></i>
                 <span>Reports & Analytics</span>
             </a>
+
+            <div class="mt-4 mb-2 px-4">
+                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Research & Analysis</p>
+            </div>
+            
+            <a href="<?php echo RESEARCH_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'research-analysis' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-lightbulb mr-3 text-lg"></i>
+                <span>Legislative Analysis</span>
+            </a>
             <?php endif; ?>
             
             <!-- Administration - Admin only -->
@@ -213,6 +222,64 @@
                 <i class="bi bi-shield-check mr-3 text-lg"></i>
                 <span>Audit Log</span>
             </a>
+            <?php endif; ?>
+
+            <!-- Integration Section - Mobile -->
+            <?php if (in_array($userRole, ['officer', 'administrator', 'admin'])): ?>
+            <div class="mt-4 mb-2 px-4">
+                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Integration</p>
+            </div>
+            
+            <div class="px-2">
+                <button onclick="toggleMobileDropdown('integrationMobileDropdown')" 
+                        style="background-color: #991b1b !important;"
+                        class="w-full flex items-center justify-between px-4 py-3 text-white hover:brightness-125 rounded-lg transition-all duration-200 group">
+                    <div class="flex items-center">
+                        <i class="bi bi-plug mr-3 text-lg text-white"></i>
+                        <span class="font-semibold text-white">Integration Modules</span>
+                    </div>
+                    <i class="bi bi-chevron-down text-xs transition-transform duration-200 text-white" id="integrationMobileDropdown-icon"></i>
+                </button>
+                
+                <div id="integrationMobileDropdown" class="hidden overflow-hidden transition-all duration-300 max-h-0 bg-red-950/30 rounded-xl mt-1.5 border border-red-700/10">
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/ordinances.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-journal-text mr-3"></i>
+                        <span>Ordinances</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/sessions.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-calendar3 mr-3"></i>
+                        <span>Sessions</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/agendas.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-list-check mr-3"></i>
+                        <span>Agendas</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/committees.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-people mr-3"></i>
+                        <span>Committees</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/voting.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-hand-thumbs-up mr-3"></i>
+                        <span>Voting Records</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/hearings.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-megaphone mr-3"></i>
+                        <span>Public Hearings</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/archives.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-archive mr-3"></i>
+                        <span>Archives</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/consultations.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-chat-dots mr-3"></i>
+                        <span>Consultations</span>
+                    </a>
+                    <a href="<?php echo BASE_URL; ?>/modules/integration/views/research.php" class="flex items-center px-10 py-3 text-sm text-red-100 hover:text-white hover:bg-red-700/50 rounded-lg transition-all">
+                        <i class="bi bi-book mr-3"></i>
+                        <span>Research</span>
+                    </a>
+                </div>
+            </div>
             <?php endif; ?>
             
             <!-- Help -->
@@ -270,6 +337,25 @@
         const mobileSidebar = document.getElementById('mobile-sidebar');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
         const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
+        
+        function toggleMobileDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const icon = document.getElementById(dropdownId + '-icon');
+            
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                setTimeout(() => {
+                    dropdown.style.maxHeight = '600px';
+                }, 10);
+                if (icon) icon.classList.add('rotate-180');
+            } else {
+                dropdown.style.maxHeight = '0';
+                setTimeout(() => {
+                    dropdown.classList.add('hidden');
+                }, 300);
+                if (icon) icon.classList.remove('rotate-180');
+            }
+        }
         
         function openMobileSidebar() {
             // Show overlay with fade and blur
