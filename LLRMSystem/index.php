@@ -946,7 +946,7 @@ $pageTitle = "Home";
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white py-16 md:py-24 border-t border-gray-100">
+    <footer id="legal-footer" class="bg-white py-16 md:py-24 border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-12 md:gap-0">
                 <div class="w-full md:w-auto text-center md:text-left">
@@ -967,17 +967,15 @@ $pageTitle = "Home";
                             <li><a href="#leadership" class="hover:text-red-600 transition-colors uppercase tracking-wider">Officials</a></li>
                             <li><a href="#roots" class="hover:text-red-600 transition-colors uppercase tracking-wider">Our History</a></li>
                             <li><a href="#governance" class="hover:text-red-600 transition-colors uppercase tracking-wider">Governance</a></li>
-                            <li><a href="#recognition" class="hover:text-red-600 transition-colors uppercase tracking-wider">Awards</a></li>
-                            <li><a href="#infrastructure" class="hover:text-red-600 transition-colors uppercase tracking-wider">Infrastructure</a></li>
-                            <li><a href="#landmarks" class="hover:text-red-600 transition-colors uppercase tracking-wider">Landmarks</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/faq.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">FAQ</a></li>
                             <li><a href="#updates" class="hover:text-red-600 transition-colors uppercase tracking-wider">News & Updates</a></li>
                         </ul>
                     </div>
                     <div class="text-center md:text-left">
                         <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6 border-b border-gray-100 md:border-none pb-2 md:pb-0">Legal</h4>
                         <ul class="space-y-4 text-xs md:text-sm font-black text-slate-600">
-                            <li><a href="<?php echo HELP_URL; ?>/views/index.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Privacy</a></li>
-                            <li><a href="<?php echo HELP_URL; ?>/views/index.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Terms</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/privacy.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Privacy</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/terms.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Terms</a></li>
                         </ul>
                     </div>
                 </div>

@@ -1,33 +1,31 @@
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200">
+    <footer class="w-full bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 md:py-4">
             <!-- Desktop Layout -->
-            <div class="hidden md:flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="w-10 h-10 object-contain">
-                    <div class="text-sm text-gray-600">
-                        &copy; <?php echo date('Y'); ?> City Government of Valenzuela - LRMS. All rights reserved.
-                    </div>
+            <div class="hidden md:flex justify-between items-center gap-8">
+                <div class="flex items-center space-x-3 flex-shrink-0">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="h-6 w-6 object-contain">
+                    <div class="text-[10px] text-gray-400 font-black uppercase tracking-wider">&copy; <?php echo date('Y'); ?> LRMS. All rights reserved.</div>
                 </div>
-                <div class="flex items-center space-x-6">
-                    <a href="/modules/help/views/privacy.php" class="text-xs font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Privacy</a>
-                    <a href="/modules/help/views/terms.php" class="text-xs font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Terms</a>
-                    <a href="/modules/help/views/contact.php" class="text-xs font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Support</a>
+                <div class="flex items-center space-x-6 flex-shrink-0">
+                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">FAQ</a>
+                    <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Privacy</a>
+                    <a href="<?php echo HELP_URL; ?>/views/terms.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Terms</a>
+                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-[10px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Support</a>
                 </div>
             </div>
             
             <!-- Mobile Layout -->
-            <div class="md:hidden text-center">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px;">
-                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" style="width: 24px; height: 24px; object-fit: contain;">
-                    <span class="text-xs text-gray-600">&copy; <?php echo date('Y'); ?> LRMS</span>
+            <div class="md:hidden flex flex-col items-center justify-center space-y-3">
+                <div class="flex items-center space-x-2">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela" class="h-5 w-5 object-contain">
+                    <span class="text-[9px] text-gray-400 font-black uppercase tracking-wider">&copy; <?php echo date('Y'); ?> LRMS. All rights reserved.</span>
                 </div>
-                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <a href="/modules/help/views/privacy.php" class="text-[10px] font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Privacy</a>
-                    <span class="text-gray-300">•</span>
-                    <a href="/modules/help/views/terms.php" class="text-[10px] font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Terms</a>
-                    <span class="text-gray-300">•</span>
-                    <a href="/modules/help/views/contact.php" class="text-[10px] font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Support</a>
+                <div class="flex items-center space-x-6">
+                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">FAQ</a>
+                    <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Privacy</a>
+                    <a href="<?php echo HELP_URL; ?>/views/terms.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Terms</a>
+                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-[9px] font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors">Support</a>
                 </div>
             </div>
         </div>
@@ -738,6 +736,7 @@
     <!-- AI Chatbot Assistant -->
     <?php include_once __DIR__ . '/../../chatbot/views/chat_widget.php'; ?>
 
+    </div> <!-- Close COL-2/WRAPPER from view files -->
     </div> <!-- Close flex container from header -->
 </body>
 </html>

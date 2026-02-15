@@ -309,7 +309,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     </main>
 
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
-</div>
 
 <script>
 // Function to check if dark mode is active

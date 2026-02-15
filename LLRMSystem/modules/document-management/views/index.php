@@ -483,7 +483,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     </main>
 
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
-</div>
 
 <script src="<?php echo asset('js/documents.js'); ?>?v=<?php echo time(); ?>"></script>
 <script>
@@ -1365,3 +1364,4 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
     }
 });
 </script>
+
