@@ -63,64 +63,13 @@ $pageTitle = "City News & Updates";
                     </div>
                 </a>
 
-                <!-- Desktop Navigation Links -->
-                <div class="hidden lg:flex items-center space-x-1">
-                    <a href="<?php echo BASE_URL; ?>/index.php" class="px-3 py-2 rounded-lg text-sm font-bold text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-all">
-                        <i class="bi bi-house-door mr-1"></i>Home
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>/news.php" class="px-3 py-2 rounded-lg text-sm font-bold text-red-600 bg-red-50 transition-all">
-                        <i class="bi bi-newspaper mr-1"></i>News
-                    </a>
-                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="px-3 py-2 rounded-lg text-sm font-bold text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-all">
-                        <i class="bi bi-patch-question mr-1"></i>FAQ
-                    </a>
-                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="px-3 py-2 rounded-lg text-sm font-bold text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-all">
-                        <i class="bi bi-headset mr-1"></i>Support
-                    </a>
-                    <span class="h-6 w-px bg-gray-200 mx-2"></span>
-                    <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="px-3 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-red-600 hover:bg-gray-50 uppercase tracking-wider transition-all">Privacy</a>
-                    <a href="<?php echo HELP_URL; ?>/views/terms.php" class="px-3 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-red-600 hover:bg-gray-50 uppercase tracking-wider transition-all">Terms</a>
-                </div>
-
-                <div class="flex items-center space-x-2 md:space-x-3">
-                    <a href="<?php echo LOGIN_URL; ?>" class="hidden sm:inline-flex text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-sm transition-all whitespace-nowrap">Sign In</a>
-                    <a href="<?php echo REGISTER_URL; ?>" class="bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm shadow-lg shadow-red-200/50 transition-all hover:scale-105 whitespace-nowrap">
-                        Get Started
-                    </a>
-                    
-                    <!-- Mobile Menu Button -->
-                    <button id="news-mobile-toggle" class="lg:hidden p-2 text-gray-600 hover:text-red-600 hover:bg-gray-50 rounded-lg transition-all ml-1" aria-label="Open menu">
-                        <i class="bi bi-list text-xl"></i>
-                    </button>
-                </div>
+                <a href="<?php echo BASE_URL; ?>/index.php#updates" class="inline-flex items-center text-gray-500 hover:text-red-600 font-bold text-sm transition-all group">
+                    <i class="bi bi-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    Back to Home
+                </a>
             </div>
         </div>
     </nav>
-
-    <!-- Mobile Menu Overlay -->
-    <div id="news-mobile-menu" class="hidden fixed inset-0 z-[200] bg-white overflow-y-auto lg:hidden">
-        <div class="sticky top-0 w-full p-4 flex justify-between items-center border-b border-gray-100 bg-white/95 backdrop-blur-md z-10">
-            <span class="text-xl font-black text-gray-900 tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
-            <button id="news-mobile-close" class="p-2 text-gray-500 hover:text-red-600 transition-colors rounded-lg hover:bg-gray-50">
-                <i class="bi bi-x-lg text-2xl"></i>
-            </button>
-        </div>
-        <div class="pt-8 pb-12 px-8 flex flex-col items-center space-y-2 text-center">
-            <h3 class="text-gray-400 font-black uppercase tracking-widest text-[10px] mb-4">Navigate</h3>
-            <div class="h-px w-8 bg-red-600/20 mb-4"></div>
-            <a href="<?php echo BASE_URL; ?>/index.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-gray-800 uppercase tracking-tight hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-house-door mr-3"></i>Home</a>
-            <a href="<?php echo BASE_URL; ?>/news.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-red-600 bg-red-50 uppercase tracking-tight transition-all"><i class="bi bi-newspaper mr-3"></i>News & Updates</a>
-            <a href="<?php echo HELP_URL; ?>/views/faq.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-gray-800 uppercase tracking-tight hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-patch-question mr-3"></i>FAQ</a>
-            <a href="<?php echo HELP_URL; ?>/views/contact.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-gray-800 uppercase tracking-tight hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-headset mr-3"></i>Support</a>
-            <div class="w-full h-px bg-gray-100 my-4"></div>
-            <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="news-mobile-link w-full py-3 px-6 rounded-xl text-sm font-bold text-gray-500 uppercase tracking-wider hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-shield-lock mr-3"></i>Privacy Policy</a>
-            <a href="<?php echo HELP_URL; ?>/views/terms.php" class="news-mobile-link w-full py-3 px-6 rounded-xl text-sm font-bold text-gray-500 uppercase tracking-wider hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-file-earmark-ruled mr-3"></i>Terms of Service</a>
-            <div class="pt-6 w-full border-t border-gray-100 mt-4 flex flex-col space-y-3">
-                <a href="<?php echo LOGIN_URL; ?>" class="w-full py-3 text-center text-gray-600 font-black uppercase tracking-widest text-sm rounded-xl border border-gray-200 hover:border-red-200 hover:text-red-600 transition-all">Sign In</a>
-                <a href="<?php echo REGISTER_URL; ?>" class="w-full py-4 text-center bg-red-600 text-white font-black uppercase tracking-widest text-sm rounded-xl shadow-xl shadow-red-200 hover:bg-red-700 transition-all">Get Started</a>
-            </div>
-        </div>
-    </div>
 
     <!-- Header Section -->
     <section class="pt-32 pb-16 bg-white">
@@ -303,20 +252,6 @@ $pageTitle = "City News & Updates";
         });
 
         // Mobile menu toggle for news page
-        (function() {
-            var toggle = document.getElementById('news-mobile-toggle');
-            var close = document.getElementById('news-mobile-close');
-            var menu = document.getElementById('news-mobile-menu');
-            var links = document.querySelectorAll('.news-mobile-link');
-            
-            function openMenu() { menu.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-            function closeMenu() { menu.classList.add('hidden'); document.body.style.overflow = 'auto'; }
-            
-            if (toggle) toggle.addEventListener('click', openMenu);
-            if (close) close.addEventListener('click', closeMenu);
-            links.forEach(function(l) { l.addEventListener('click', closeMenu); });
-            window.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
-        })();
     </script>
 </body>
 </html>

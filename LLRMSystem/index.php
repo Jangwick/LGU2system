@@ -142,7 +142,7 @@ $pageTitle = "Home";
                     <a href="#recognition" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Awards</a>
                     <a href="#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Infrastructure</a>
                     <a href="#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Landmarks</a>
-                    <a href="<?php echo BASE_URL; ?>/news.php" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">News</a>
+                    <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">News</a>
                 </div>
                 <div class="flex items-center space-x-2 md:space-x-6">
                     <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-sm transition-all whitespace-nowrap">Sign In</a>
@@ -181,7 +181,7 @@ $pageTitle = "Home";
             <a href="#recognition" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Awards</a>
             <a href="#infrastructure" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Infrastructure</a>
             <a href="#landmarks" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Landmarks</a>
-            <a href="<?php echo BASE_URL; ?>/news.php" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">News & Updates</a>
+            <a href="#updates" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">News & Updates</a>
             
             <div class="h-px w-16 bg-gray-100 my-2"></div>
             <h3 class="text-gray-400 font-black uppercase tracking-widest text-[10px] mb-0">Help & Legal</h3>
@@ -1349,7 +1349,7 @@ $pageTitle = "Home";
                             <li><a href="#leadership" class="hover:text-red-600 transition-colors uppercase tracking-wider">Officials</a></li>
                             <li><a href="#roots" class="hover:text-red-600 transition-colors uppercase tracking-wider">Our History</a></li>
                             <li><a href="#governance" class="hover:text-red-600 transition-colors uppercase tracking-wider">Governance</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/news.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">News & Updates</a></li>
+                            <li><a href="#updates" class="hover:text-red-600 transition-colors uppercase tracking-wider">News & Updates</a></li>
                         </ul>
                     </div>
                     <div class="text-center md:text-left">
