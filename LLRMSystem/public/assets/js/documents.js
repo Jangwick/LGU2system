@@ -295,25 +295,72 @@ class DocumentManager {
     }
     
     selectAll(checked) {
-        document.querySelectorAll('table tbody input[type="checkbox"]').forEach(checkbox => {
+        // Target all document checkboxes (desktop and mobile)
+        document.querySelectorAll('.document-checkbox').forEach(checkbox => {
             checkbox.checked = checked;
-            this.toggleSelection(checkbox);
+            this.toggleSelection(checkbox, false); // Pass false to avoid redundant visibility updates
         });
         this.updateBulkActionsVisibility();
+        
+        // Update both "Select All" checkboxes if they exist
+        const topCheckbox = document.getElementById('select-all-top');
+        if (topCheckbox) topCheckbox.checked = checked;
     }
     
-    toggleSelection(checkbox) {
+    toggleSelection(checkbox, updateVisibility = true) {
         const documentId = checkbox.value;
+        const desktopRow = checkbox.closest('tr');
+        const mobileCard = checkbox.closest('.mobile-doc-card');
+        
         if (checkbox.checked) {
             this.selectedDocuments.add(documentId);
-            selectedDocuments.push(documentId);
-            checkbox.closest('tr')?.classList.add('bg-blue-50');
+            if (!selectedDocuments.includes(documentId)) {
+                selectedDocuments.push(documentId);
+            }
+            
+            // Visual indicators
+            if (desktopRow) {
+                desktopRow.classList.add('bg-blue-50', 'dark:bg-blue-900/10');
+            }
+            if (mobileCard) {
+                mobileCard.classList.add('bg-red-50/50', 'border-l-4', 'border-red-600');
+            }
         } else {
             this.selectedDocuments.delete(documentId);
             selectedDocuments = selectedDocuments.filter(id => id !== documentId);
-            checkbox.closest('tr')?.classList.remove('bg-blue-50');
+            
+            // Visual indicators
+            if (desktopRow) {
+                desktopRow.classList.remove('bg-blue-50', 'dark:bg-blue-900/10');
+            }
+            if (mobileCard) {
+                mobileCard.classList.remove('bg-red-50/50', 'border-l-4', 'border-red-600');
+            }
+            
+            // Uncheck "Select All" if any item is unchecked
+            const selectAllTop = document.getElementById('select-all-top');
+            if (selectAllTop) selectAllTop.checked = false;
         }
-        this.updateBulkActionsVisibility();
+        
+        if (updateVisibility) {
+            this.updateBulkActionsVisibility();
+        }
+        
+        // Update selection count text
+        const countText = document.getElementById('selected-count');
+        if (countText) {
+            const size = this.selectedDocuments.size;
+            if (size > 0) {
+                countText.innerHTML = `<span class="text-red-600 font-black">${size} selected</span> of ${document.querySelectorAll('.document-checkbox').length / (window.innerWidth < 768 ? 1 : 2)} documents`;
+                // Note: The denominator trick accounts for duplicate checkboxes if both desktop/mobile are rendered.
+                // Better approach:
+                const total = document.querySelectorAll('.md\\:hidden .document-checkbox').length || document.querySelectorAll('tbody .document-checkbox').length;
+                countText.innerHTML = `<span class="text-red-600 font-black">${size} selected</span> of ${total} documents`;
+            } else {
+                const total = document.querySelectorAll('.md\\:hidden .document-checkbox').length || document.querySelectorAll('tbody .document-checkbox').length;
+                countText.innerHTML = `<span id="total-docs">${total}</span> documents found`;
+            }
+        }
     }
     
     updateBulkActionsVisibility() {

@@ -95,9 +95,19 @@ main::-webkit-scrollbar-thumb:active {
     border-radius: 4px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb,
-.overflow-y-auto::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
+.mobile-doc-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-doc-card.bg-red-50\/50 {
+    background-color: rgba(254, 242, 242, 0.5);
+    box-shadow: inset 4px 0 0 0 #dc2626;
+}
+
+.document-checkbox:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
     border-radius: 4px;
     cursor: grab;
 }

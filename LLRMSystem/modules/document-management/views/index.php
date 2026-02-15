@@ -240,7 +240,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     
                     <!-- Center: Document Count -->
                     <span class="text-sm text-gray-600 order-3 sm:order-none w-full sm:w-auto text-center sm:text-left" id="selected-count">
-                        <span id="total-docs">0</span> documents found
+                        <span id="total-docs"><?php echo count($data['documents'] ?? []); ?></span> documents found
                     </span>
                     
                     <!-- Right: Bulk Actions -->
@@ -381,36 +381,39 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="md:hidden divide-y divide-gray-200">
                 <?php if (!empty($data['documents'])): ?>
                         <?php foreach ($data['documents'] as $doc): ?>
-                            <div class="p-4 hover:bg-gray-50" data-document-id="<?php echo $doc['id']; ?>">
+                            <div class="p-4 hover:bg-gray-50 transition-all duration-200 mobile-doc-card" data-document-id="<?php echo $doc['id']; ?>">
                                 <!-- Document Info Row -->
                                 <div class="flex items-start gap-3 mb-3">
+                                    <div class="flex items-center h-10 pt-1">
+                                        <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 rounded-md focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
+                                    </div>
                                     <div class="<?php echo getFileIconClass($doc['file_type']); ?> rounded-lg p-2.5 flex-shrink-0">
                                         <i class="<?php echo getFileIcon($doc['file_type']); ?> text-2xl"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <h4 class="text-sm font-semibold text-gray-900 mb-1"><?php echo htmlspecialchars($doc['title']); ?></h4>
+                                        <h4 class="text-sm font-semibold text-gray-900 mb-1 truncate"><?php echo htmlspecialchars($doc['title']); ?></h4>
                                         <p class="text-xs text-gray-500 truncate mb-2"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                         <div class="flex flex-wrap items-center gap-2">
                                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
                                                 <?php echo ucfirst($doc['document_type']); ?>
                                             </span>
-                                            <span class="text-xs text-gray-500">
-                                                <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
+                                            <span class="text-xs text-gray-500 font-medium">
+                                                <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Status and Actions Row -->
-                                <div class="flex items-center justify-between pl-12">
-                                    <div>
+                                <div class="flex items-center justify-between pl-[3.25rem]">
+                                    <div class="flex items-center gap-2">
                                         <?php echo getStatusBadge($doc['status']); ?>
                                     </div>
                                     <div class="flex items-center gap-1">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                             <i class="bi bi-eye text-lg"></i>
                                         </button>
-                                        <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="p-2 text-green-600 hover:bg-green-50 rounded-lg" title="Download">
+                                        <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Download">
                                             <i class="bi bi-download text-lg"></i>
                                         </a>
                                         <?php 
@@ -421,12 +424,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                         ?>
                                         <?php if ($canEdit): ?>
-                                        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                             <i class="bi bi-pencil text-lg"></i>
                                         </button>
                                         <?php endif; ?>
                                         <?php if ($canDelete): ?>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
                                             <i class="bi bi-trash text-lg"></i>
                                         </button>
                                         <?php endif; ?>
