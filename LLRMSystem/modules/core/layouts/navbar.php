@@ -89,21 +89,21 @@ if (isset($_SESSION['user_id'])) {
                     </button>
                     
                     <!-- Notifications Dropdown -->
-                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50" style="background-color: white;">
-                        <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                            <h3 class="text-sm font-semibold text-gray-800">Notifications</h3>
-                            <button id="mark-all-read-btn" class="text-xs text-blue-600 hover:text-blue-700 font-medium">Mark all as read</button>
+                    <div id="notifications-dropdown" class="hidden fixed md:absolute left-4 right-4 md:left-auto md:right-0 top-16 md:top-auto mt-2 w-auto md:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden" style="background-color: white;">
+                        <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50/50">
+                            <h3 class="text-sm font-bold text-gray-900">Notifications</h3>
+                            <button id="mark-all-read-btn" class="text-xs text-blue-600 hover:text-blue-700 font-bold uppercase tracking-wider">Mark all as read</button>
                         </div>
-                        <div id="notifications-list" class="max-h-96 overflow-y-auto">
+                        <div id="notifications-list" class="max-h-[60vh] md:max-h-96 overflow-y-auto">
                             <!-- Notifications will be loaded dynamically -->
                             <div class="p-8 text-center text-gray-500">
                                 <i class="bi bi-bell-slash text-3xl mb-2"></i>
                                 <p class="text-sm">No notifications</p>
                             </div>
                         </div>
-                        <div class="p-3 border-t border-gray-200 flex items-center justify-between">
-                            <a href="<?php echo BASE_URL; ?>/modules/notifications/views/index.php" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View all notifications</a>
-                            <span id="notification-count-text" class="text-xs text-gray-500">0 unread</span>
+                        <div class="p-3 border-t border-gray-200 flex items-center justify-between bg-gray-50/50">
+                            <a href="<?php echo BASE_URL; ?>/modules/notifications/views/index.php" class="text-sm text-blue-600 hover:text-blue-700 font-bold">View all notifications</a>
+                            <span id="notification-count-text" class="text-xs text-gray-500 font-medium">0 unread</span>
                         </div>
                     </div>
                 </div>
