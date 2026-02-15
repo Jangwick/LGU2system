@@ -1442,31 +1442,6 @@ $pageTitle = "Home";
         </div>
     </section>
 
-    <!-- CT section -->
-    <section class="py-32 bg-white relative overflow-hidden">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <div data-aos="fade-up" class="bg-red-600 rounded-[60px] p-12 md:p-24 relative overflow-hidden shadow-2xl shadow-red-200">
-                <!-- Background patterns -->
-                <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                    <div class="absolute top-0 left-0 w-64 h-64 border-[40px] border-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-                    <div class="absolute bottom-0 right-0 w-96 h-96 border-[60px] border-white rounded-full translate-x-1/3 translate-y-1/3"></div>
-                </div>
-                
-                <h2 class="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-none">Ready to shape <br>the future?</h2>
-                <p class="text-red-100 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-bold opacity-80">Secure your access to Valenzuela's official legislative portal and start managing records with precision.</p>
-                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-10">
-                    <a href="<?php echo LOGIN_URL; ?>" class="btn-modern bg-white text-gray-900 font-black px-12 py-5 rounded-2xl text-lg shadow-xl">
-                        <i class="bi bi-door-open-fill mr-2"></i>
-                        Portal Login
-                    </a>
-                    <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-900/40 text-white font-black px-12 py-5 rounded-2xl text-lg hover:bg-red-900 transition-all border border-red-400/30">
-                        Register Account
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer id="legal-footer" class="bg-white py-16 md:py-24 border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
