@@ -68,11 +68,11 @@ $pageTitle = "City News & Updates";
                     <a href="<?php echo BASE_URL; ?>/index.php" class="px-3 py-2 rounded-lg text-sm font-bold text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-all">
                         <i class="bi bi-house-door mr-1"></i>Home
                     </a>
-                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="px-3 py-2 rounded-lg text-sm font-bold text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-all">
-                        <i class="bi bi-patch-question mr-1"></i>FAQ
-                    </a>
                     <a href="<?php echo BASE_URL; ?>/news.php" class="px-3 py-2 rounded-lg text-sm font-bold text-red-600 bg-red-50 transition-all">
                         <i class="bi bi-newspaper mr-1"></i>News
+                    </a>
+                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="px-3 py-2 rounded-lg text-sm font-bold text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-all">
+                        <i class="bi bi-patch-question mr-1"></i>FAQ
                     </a>
                     <a href="<?php echo HELP_URL; ?>/views/contact.php" class="px-3 py-2 rounded-lg text-sm font-bold text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-all">
                         <i class="bi bi-headset mr-1"></i>Support
@@ -109,8 +109,8 @@ $pageTitle = "City News & Updates";
             <h3 class="text-gray-400 font-black uppercase tracking-widest text-[10px] mb-4">Navigate</h3>
             <div class="h-px w-8 bg-red-600/20 mb-4"></div>
             <a href="<?php echo BASE_URL; ?>/index.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-gray-800 uppercase tracking-tight hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-house-door mr-3"></i>Home</a>
-            <a href="<?php echo HELP_URL; ?>/views/faq.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-gray-800 uppercase tracking-tight hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-patch-question mr-3"></i>FAQ</a>
             <a href="<?php echo BASE_URL; ?>/news.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-red-600 bg-red-50 uppercase tracking-tight transition-all"><i class="bi bi-newspaper mr-3"></i>News & Updates</a>
+            <a href="<?php echo HELP_URL; ?>/views/faq.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-gray-800 uppercase tracking-tight hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-patch-question mr-3"></i>FAQ</a>
             <a href="<?php echo HELP_URL; ?>/views/contact.php" class="news-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black text-gray-800 uppercase tracking-tight hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-headset mr-3"></i>Support</a>
             <div class="w-full h-px bg-gray-100 my-4"></div>
             <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="news-mobile-link w-full py-3 px-6 rounded-xl text-sm font-bold text-gray-500 uppercase tracking-wider hover:text-red-600 hover:bg-gray-50 transition-all"><i class="bi bi-shield-lock mr-3"></i>Privacy Policy</a>
@@ -260,7 +260,6 @@ $pageTitle = "City News & Updates";
                         <ul class="space-y-4 text-xs md:text-sm font-black text-slate-600">
                             <li><a href="<?php echo BASE_URL; ?>/index.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Home</a></li>
                             <li><a href="<?php echo HELP_URL; ?>/views/faq.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">FAQ</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/news.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">News & Updates</a></li>
                             <li><a href="<?php echo HELP_URL; ?>/views/contact.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Support</a></li>
                         </ul>
                     </div>

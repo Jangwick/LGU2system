@@ -3,9 +3,13 @@
  * Root index file - Landing Page
  */
 require_once __DIR__ . '/modules/core/config/config.php';
+require_once __DIR__ . '/modules/dashboard/services/DashboardService.php';
 
 // Check if user is already logged in with a valid session
 checkAlreadyLoggedIn();
+
+$dashboardService = new DashboardService();
+$perfStats = $dashboardService->getSystemPerformanceStats();
 
 $pageTitle = "Home";
 ?>
@@ -139,9 +143,6 @@ $pageTitle = "Home";
                     <a href="#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Infrastructure</a>
                     <a href="#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Landmarks</a>
                     <a href="<?php echo BASE_URL; ?>/news.php" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">News</a>
-                    <span class="h-5 w-px bg-gray-200"></span>
-                    <a href="<?php echo HELP_URL; ?>/views/faq.php" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">FAQ</a>
-                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Support</a>
                 </div>
                 <div class="flex items-center space-x-2 md:space-x-6">
                     <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-sm transition-all whitespace-nowrap">Sign In</a>
@@ -184,8 +185,6 @@ $pageTitle = "Home";
             
             <div class="h-px w-16 bg-gray-100 my-2"></div>
             <h3 class="text-gray-400 font-black uppercase tracking-widest text-[10px] mb-0">Help & Legal</h3>
-            <a href="<?php echo HELP_URL; ?>/views/faq.php" class="mobile-nav-link text-xl font-black text-slate-600 uppercase tracking-tight hover:text-red-600 transition-colors">FAQ</a>
-            <a href="<?php echo HELP_URL; ?>/views/contact.php" class="mobile-nav-link text-xl font-black text-slate-600 uppercase tracking-tight hover:text-red-600 transition-colors">Support</a>
             <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="mobile-nav-link text-lg font-bold text-gray-400 uppercase tracking-wider hover:text-red-600 transition-colors">Privacy</a>
             <a href="<?php echo HELP_URL; ?>/views/terms.php" class="mobile-nav-link text-lg font-bold text-gray-400 uppercase tracking-wider hover:text-red-600 transition-colors">Terms</a>
             
@@ -504,6 +503,50 @@ $pageTitle = "Home";
         </div>
     </section>
 
+    <!-- System Performance Section -->
+    <section class="py-24 md:py-40 bg-[#0a0a0a] text-white overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20 md:mb-32" data-aos="fade-up">
+                <h2 class="text-red-600 font-black tracking-[0.3em] uppercase text-xs mb-6">System Performance</h2>
+                <h3 class="text-4xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-4">
+                    Scalable. Efficient.<br>
+                    Driven by Accuracy.
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+                <!-- Records -->
+                <div class="p-8 md:p-12 rounded-[40px] text-center border border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-500 hover:bg-white/[0.03] hover:border-white/10 group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-4xl md:text-6xl font-black mb-4 tracking-tighter group-hover:scale-110 transition-transform duration-500"><?php echo $perfStats['total_records']; ?></div>
+                    <div class="text-[10px] md:text-xs font-black text-red-600 uppercase tracking-[0.2em] opacity-80">Indexed Records</div>
+                </div>
+
+                <!-- Latency -->
+                <div class="p-8 md:p-12 rounded-[40px] text-center border border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-500 hover:bg-white/[0.03] hover:border-white/10 group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-4xl md:text-6xl font-black mb-4 tracking-tighter group-hover:scale-110 transition-transform duration-500"><?php echo $perfStats['latency']; ?></div>
+                    <div class="text-[10px] md:text-xs font-black text-red-600 uppercase tracking-[0.2em] opacity-80">Global Latency</div>
+                </div>
+
+                <!-- Reliability -->
+                <div class="p-8 md:p-12 rounded-[40px] text-center border border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-500 hover:bg-white/[0.03] hover:border-white/10 group" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-4xl md:text-6xl font-black mb-4 tracking-tighter group-hover:scale-110 transition-transform duration-500"><?php echo $perfStats['reliability']; ?></div>
+                    <div class="text-[10px] md:text-xs font-black text-red-600 uppercase tracking-[0.2em] opacity-80">Data Reliability</div>
+                </div>
+
+                <!-- Consults -->
+                <div class="p-8 md:p-12 rounded-[40px] text-center border border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-500 hover:bg-white/[0.03] hover:border-white/10 group" data-aos="fade-up" data-aos-delay="400">
+                    <div class="text-4xl md:text-6xl font-black mb-4 tracking-tighter group-hover:scale-110 transition-transform duration-500"><?php echo $perfStats['daily_consults']; ?></div>
+                    <div class="text-[10px] md:text-xs font-black text-red-600 uppercase tracking-[0.2em] opacity-80">Daily Consults</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Decoration -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#dc262610,transparent_70%)] pointer-events-none"></div>
+        <div class="absolute -bottom-48 -left-48 w-96 h-96 bg-red-600/20 blur-[120px] rounded-full opacity-50"></div>
+        <div class="absolute -top-48 -right-48 w-96 h-96 bg-red-900/20 blur-[120px] rounded-full opacity-50"></div>
+    </section>
+
     <script>
     function showSearchMode(mode) {
         const lightBtn = document.getElementById('search-light-btn');
@@ -632,37 +675,6 @@ $pageTitle = "Home";
         }
     }
     </script>
-
-    <!-- Detailed Stats Section -->
-    <section class="py-32 bg-[#0a0a0b] text-white relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div data-aos="zoom-out" class="max-w-4xl mx-auto text-center mb-24">
-                <h2 class="text-red-500 font-black tracking-[0.3em] uppercase text-xs mb-8">System performance</h2>
-                <p class="text-5xl md:text-7xl font-black tracking-tighter leading-none">Scalable. Efficient. <br>Driven by Accuracy.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-                <div data-aos="fade-up" data-aos-delay="100" class="stat-card p-8 rounded-3xl text-center">
-                    <div class="text-6xl font-black mb-4 tracking-tighter text-white">12,400+</div>
-                    <div class="text-red-500 font-black uppercase tracking-widest text-[10px]">Indexed Records</div>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="200" class="stat-card p-8 rounded-3xl text-center">
-                    <div class="text-6xl font-black mb-4 tracking-tighter text-white">0.4ms</div>
-                    <div class="text-red-500 font-black uppercase tracking-widest text-[10px]">Global Latency</div>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="300" class="stat-card p-8 rounded-3xl text-center">
-                    <div class="text-6xl font-black mb-4 tracking-tighter text-white">99.9%</div>
-                    <div class="text-red-500 font-black uppercase tracking-widest text-[10px]">Data Reliability</div>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="400" class="stat-card p-8 rounded-3xl text-center">
-                    <div class="text-6xl font-black mb-4 tracking-tighter text-white">2.5k</div>
-                    <div class="text-red-500 font-black uppercase tracking-widest text-[10px]">Daily Consults</div>
-                </div>
-            </div>
-        </div>
-        <!-- Decorative noise overlay -->
-        <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/p6.png');"></div>
-    </section>
 
     <!-- Leadership Section -->
     <section id="leadership" class="py-32 bg-white relative">
@@ -1337,16 +1349,16 @@ $pageTitle = "Home";
                             <li><a href="#leadership" class="hover:text-red-600 transition-colors uppercase tracking-wider">Officials</a></li>
                             <li><a href="#roots" class="hover:text-red-600 transition-colors uppercase tracking-wider">Our History</a></li>
                             <li><a href="#governance" class="hover:text-red-600 transition-colors uppercase tracking-wider">Governance</a></li>
-                            <li><a href="<?php echo HELP_URL; ?>/views/faq.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">FAQ</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/news.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">News & Updates</a></li>
-                            <li><a href="<?php echo HELP_URL; ?>/views/contact.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Support</a></li>
                         </ul>
                     </div>
                     <div class="text-center md:text-left">
                         <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6 border-b border-gray-100 md:border-none pb-2 md:pb-0">Legal</h4>
                         <ul class="space-y-4 text-xs md:text-sm font-black text-slate-600">
-                            <li><a href="<?php echo HELP_URL; ?>/views/privacy.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Privacy</a></li>
-                            <li><a href="<?php echo HELP_URL; ?>/views/terms.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Terms</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/faq.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">FAQ</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/contact.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Support</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/privacy.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Privacy Policy</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/terms.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Terms of Service</a></li>
                         </ul>
                     </div>
                 </div>

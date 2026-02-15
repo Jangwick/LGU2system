@@ -31,13 +31,13 @@ $currentGuestPage = $currentGuestPage ?? '';
                    class="px-3 py-2 rounded-lg text-sm font-bold transition-all duration-200 <?php echo $currentGuestPage === 'home' ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-gray-50'; ?>">
                     <i class="bi bi-house-door mr-1"></i>Home
                 </a>
-                <a href="<?php echo HELP_URL; ?>/views/faq.php" 
-                   class="px-3 py-2 rounded-lg text-sm font-bold transition-all duration-200 <?php echo $currentGuestPage === 'faq' ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-gray-50'; ?>">
-                    <i class="bi bi-patch-question mr-1"></i>FAQ
-                </a>
                 <a href="<?php echo BASE_URL; ?>/news.php" 
                    class="px-3 py-2 rounded-lg text-sm font-bold transition-all duration-200 <?php echo $currentGuestPage === 'news' ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-gray-50'; ?>">
                     <i class="bi bi-newspaper mr-1"></i>News
+                </a>
+                <a href="<?php echo HELP_URL; ?>/views/faq.php" 
+                   class="px-3 py-2 rounded-lg text-sm font-bold transition-all duration-200 <?php echo $currentGuestPage === 'faq' ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-gray-50'; ?>">
+                    <i class="bi bi-patch-question mr-1"></i>FAQ
                 </a>
                 <a href="<?php echo HELP_URL; ?>/views/contact.php" 
                    class="px-3 py-2 rounded-lg text-sm font-bold transition-all duration-200 <?php echo $currentGuestPage === 'contact' ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:text-red-600 hover:bg-gray-50'; ?>">
@@ -91,13 +91,13 @@ $currentGuestPage = $currentGuestPage ?? '';
            class="guest-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black uppercase tracking-tight transition-all <?php echo $currentGuestPage === 'home' ? 'text-red-600 bg-red-50' : 'text-gray-800 hover:text-red-600 hover:bg-gray-50'; ?>">
             <i class="bi bi-house-door mr-3"></i>Home
         </a>
-        <a href="<?php echo HELP_URL; ?>/views/faq.php" 
-           class="guest-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black uppercase tracking-tight transition-all <?php echo $currentGuestPage === 'faq' ? 'text-red-600 bg-red-50' : 'text-gray-800 hover:text-red-600 hover:bg-gray-50'; ?>">
-            <i class="bi bi-patch-question mr-3"></i>FAQ
-        </a>
         <a href="<?php echo BASE_URL; ?>/news.php" 
            class="guest-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black uppercase tracking-tight transition-all <?php echo $currentGuestPage === 'news' ? 'text-red-600 bg-red-50' : 'text-gray-800 hover:text-red-600 hover:bg-gray-50'; ?>">
             <i class="bi bi-newspaper mr-3"></i>News & Updates
+        </a>
+        <a href="<?php echo HELP_URL; ?>/views/faq.php" 
+           class="guest-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black uppercase tracking-tight transition-all <?php echo $currentGuestPage === 'faq' ? 'text-red-600 bg-red-50' : 'text-gray-800 hover:text-red-600 hover:bg-gray-50'; ?>">
+            <i class="bi bi-patch-question mr-3"></i>FAQ
         </a>
         <a href="<?php echo HELP_URL; ?>/views/contact.php" 
            class="guest-mobile-link w-full py-4 px-6 rounded-xl text-lg font-black uppercase tracking-tight transition-all <?php echo $currentGuestPage === 'contact' ? 'text-red-600 bg-red-50' : 'text-gray-800 hover:text-red-600 hover:bg-gray-50'; ?>">
