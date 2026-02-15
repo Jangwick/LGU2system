@@ -17,19 +17,41 @@ $breadcrumbs = [
 ];
 
 // Helper functions
-function getFileIcon($mimeType) {
+function getFileTypeByExt($fileName) {
+    $ext = strtolower(pathinfo($fileName ?: '', PATHINFO_EXTENSION));
+    $map = [
+        'pdf' => 'pdf', 'doc' => 'word', 'docx' => 'word',
+        'xls' => 'excel', 'xlsx' => 'excel', 'csv' => 'excel',
+        'ppt' => 'powerpoint', 'pptx' => 'powerpoint'
+    ];
+    return $map[$ext] ?? null;
+}
+
+function getFileIcon($mimeType, $fileName = '') {
     if (strpos($mimeType, 'pdf') !== false) return 'bi bi-file-pdf text-red-600';
     if (strpos($mimeType, 'word') !== false) return 'bi bi-file-word text-blue-600';
     if (strpos($mimeType, 'excel') !== false || strpos($mimeType, 'spreadsheet') !== false) return 'bi bi-file-excel text-green-600';
     if (strpos($mimeType, 'powerpoint') !== false || strpos($mimeType, 'presentation') !== false) return 'bi bi-file-ppt text-orange-600';
+    // Fallback: detect by file extension
+    $extType = getFileTypeByExt($fileName);
+    if ($extType === 'pdf') return 'bi bi-file-pdf text-red-600';
+    if ($extType === 'word') return 'bi bi-file-word text-blue-600';
+    if ($extType === 'excel') return 'bi bi-file-excel text-green-600';
+    if ($extType === 'powerpoint') return 'bi bi-file-ppt text-orange-600';
     return 'bi bi-file-earmark text-gray-600';
 }
 
-function getFileIconClass($mimeType) {
+function getFileIconClass($mimeType, $fileName = '') {
     if (strpos($mimeType, 'pdf') !== false) return 'bg-red-100';
     if (strpos($mimeType, 'word') !== false) return 'bg-blue-100';
     if (strpos($mimeType, 'excel') !== false || strpos($mimeType, 'spreadsheet') !== false) return 'bg-green-100';
     if (strpos($mimeType, 'powerpoint') !== false || strpos($mimeType, 'presentation') !== false) return 'bg-orange-100';
+    // Fallback: detect by file extension
+    $extType = getFileTypeByExt($fileName);
+    if ($extType === 'pdf') return 'bg-red-100';
+    if ($extType === 'word') return 'bg-blue-100';
+    if ($extType === 'excel') return 'bg-green-100';
+    if ($extType === 'powerpoint') return 'bg-orange-100';
     return 'bg-gray-100';
 }
 
@@ -319,8 +341,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-4 md:px-6 py-4">
                                         <div class="flex items-center">
-                                            <div class="<?php echo getFileIconClass($doc['file_type']); ?> rounded-lg p-2 mr-3 flex-shrink-0">
-                                                <i class="<?php echo getFileIcon($doc['file_type']); ?> text-xl"></i>
+                                            <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-2 mr-3 flex-shrink-0">
+                                                <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-xl"></i>
                                             </div>
                                             <div class="min-w-0 flex-1">
                                                 <p class="text-sm font-medium text-gray-900 truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
@@ -387,8 +409,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <div class="flex items-center h-10 pt-1">
                                         <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 rounded-md focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
                                     </div>
-                                    <div class="<?php echo getFileIconClass($doc['file_type']); ?> rounded-lg p-2.5 flex-shrink-0">
-                                        <i class="<?php echo getFileIcon($doc['file_type']); ?> text-2xl"></i>
+                                    <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-2.5 flex-shrink-0">
+                                        <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-2xl"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <h4 class="text-sm font-semibold text-gray-900 mb-1 truncate"><?php echo htmlspecialchars($doc['title']); ?></h4>

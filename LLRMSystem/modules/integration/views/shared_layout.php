@@ -15,6 +15,41 @@ $moduleTypes = [
 $config = $moduleTypes[$currentModule] ?? $moduleTypes['ordinances'];
 $controller = new IntegrationController();
 $records = $controller->getRecords($currentModule);
+
+// File icon helpers (with extension fallback)
+function getIntFileTypeByExt($fileName) {
+    $ext = strtolower(pathinfo($fileName ?: '', PATHINFO_EXTENSION));
+    $map = ['pdf'=>'pdf','doc'=>'word','docx'=>'word','xls'=>'excel','xlsx'=>'excel','csv'=>'excel','ppt'=>'powerpoint','pptx'=>'powerpoint'];
+    return $map[$ext] ?? null;
+}
+
+function getIntFileIcon($mimeType, $fileName = '') {
+    if (!$mimeType && !$fileName) return 'bi bi-file-earmark text-gray-400';
+    if ($mimeType && strpos($mimeType, 'pdf') !== false) return 'bi bi-file-pdf text-red-600';
+    if ($mimeType && strpos($mimeType, 'word') !== false) return 'bi bi-file-word text-blue-600';
+    if ($mimeType && (strpos($mimeType, 'excel') !== false || strpos($mimeType, 'spreadsheet') !== false)) return 'bi bi-file-excel text-green-600';
+    if ($mimeType && (strpos($mimeType, 'powerpoint') !== false || strpos($mimeType, 'presentation') !== false)) return 'bi bi-file-ppt text-orange-600';
+    $t = getIntFileTypeByExt($fileName);
+    if ($t === 'pdf') return 'bi bi-file-pdf text-red-600';
+    if ($t === 'word') return 'bi bi-file-word text-blue-600';
+    if ($t === 'excel') return 'bi bi-file-excel text-green-600';
+    if ($t === 'powerpoint') return 'bi bi-file-ppt text-orange-600';
+    return 'bi bi-file-earmark text-gray-400';
+}
+
+function getIntFileIconBg($mimeType, $fileName = '') {
+    if (!$mimeType && !$fileName) return 'bg-gray-100';
+    if ($mimeType && strpos($mimeType, 'pdf') !== false) return 'bg-red-100';
+    if ($mimeType && strpos($mimeType, 'word') !== false) return 'bg-blue-100';
+    if ($mimeType && (strpos($mimeType, 'excel') !== false || strpos($mimeType, 'spreadsheet') !== false)) return 'bg-green-100';
+    if ($mimeType && (strpos($mimeType, 'powerpoint') !== false || strpos($mimeType, 'presentation') !== false)) return 'bg-orange-100';
+    $t = getIntFileTypeByExt($fileName);
+    if ($t === 'pdf') return 'bg-red-100';
+    if ($t === 'word') return 'bg-blue-100';
+    if ($t === 'excel') return 'bg-green-100';
+    if ($t === 'powerpoint') return 'bg-orange-100';
+    return 'bg-gray-100';
+}
 ?>
 
 <div class="flex-1 flex flex-col overflow-hidden">
@@ -70,6 +105,7 @@ $records = $controller->getRecords($currentModule);
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Received At</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Source System</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">External Information</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Attachment</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Status</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-right">Actions</th>
                     </tr>
@@ -77,7 +113,7 @@ $records = $controller->getRecords($currentModule);
                 <tbody class="divide-y divide-gray-100">
                     <?php if (empty($records)): ?>
                     <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-400 italic">
+                        <td colspan="6" class="px-6 py-12 text-center text-gray-400 italic">
                             No integrated records found for this module yet.
                         </td>
                     </tr>
@@ -95,6 +131,33 @@ $records = $controller->getRecords($currentModule);
                             <td class="px-6 py-4">
                                 <div class="font-bold text-gray-900"><?php echo htmlspecialchars($record['title']); ?></div>
                                 <div class="text-xs text-gray-500 truncate max-w-xs"><?php echo htmlspecialchars($record['summary']); ?></div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <?php
+                                $payload = json_decode($record['data_payload'] ?? '{}', true) ?: [];
+                                $attachName = $payload['file_name'] ?? null;
+                                $attachType = $payload['file_type'] ?? null;
+                                ?>
+                                <?php if ($attachName): ?>
+                                <div class="flex items-center gap-2">
+                                    <div class="<?php echo getIntFileIconBg($attachType, $attachName); ?> rounded-lg p-1.5 flex-shrink-0">
+                                        <i class="<?php echo getIntFileIcon($attachType, $attachName); ?> text-lg"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-xs font-semibold text-gray-800 truncate max-w-[140px]" title="<?php echo htmlspecialchars($attachName); ?>">
+                                            <?php echo htmlspecialchars($attachName); ?>
+                                        </div>
+                                        <div class="text-[10px] text-gray-400">
+                                            <?php
+                                            $fSize = $payload['file_size'] ?? 0;
+                                            echo $fSize > 1048576 ? number_format($fSize / 1048576, 1) . ' MB' : number_format($fSize / 1024, 1) . ' KB';
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php else: ?>
+                                <span class="text-xs text-gray-400 italic">No file</span>
+                                <?php endif; ?>
                             </td>
                             <td class="px-6 py-4">
                                 <?php
@@ -148,7 +211,7 @@ $records = $controller->getRecords($currentModule);
         
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">This tool simulates an external system sending data to the LRMS via the Integration API.</p>
         
-        <form id="simulatorForm" class="space-y-4">
+        <form id="simulatorForm" enctype="multipart/form-data" class="space-y-4">
             <input type="hidden" name="module_type" value="<?php echo $currentModule; ?>">
             
             <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-600 mb-4">
@@ -194,6 +257,14 @@ $records = $controller->getRecords($currentModule);
             <div>
                 <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Brief Description</label>
                 <textarea name="summary" rows="3" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-500 rounded-lg text-sm" placeholder="Details of the record..."></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Attach Document <span class="text-red-500">*</span></label>
+                <div class="relative">
+                    <input type="file" name="document_file" id="simulatorFile" required accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg text-sm file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-red-50 file:text-red-700 dark:file:bg-gray-600 dark:file:text-gray-200 hover:file:bg-red-100 cursor-pointer">
+                </div>
+                <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">Accepted: PDF, Word (.doc/.docx), Excel (.xls/.xlsx), PowerPoint (.ppt/.pptx) — Max 10MB</p>
             </div>
 
             <button type="submit" id="simulateBtn" class="w-full bg-red-700 dark:bg-gray-700 text-white font-bold py-3 rounded-xl hover:bg-red-800 dark:hover:bg-gray-600 transition-all flex items-center justify-center">
@@ -255,31 +326,37 @@ document.getElementById('simulatorForm').addEventListener('submit', function(e) 
     e.preventDefault();
     const btn = document.getElementById('simulateBtn');
     const originalText = btn.innerHTML;
+    
+    // Validate file
+    const fileInput = document.getElementById('simulatorFile');
+    if (!fileInput.files.length) {
+        alert('Please attach a document file (PDF, Word, or Excel).');
+        return;
+    }
+    
+    const file = fileInput.files[0];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const allowedExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
+    const fileExt = file.name.split('.').pop().toLowerCase();
+    
+    if (file.size > maxSize) {
+        alert('File is too large. Maximum size is 10MB.');
+        return;
+    }
+    
+    if (!allowedExts.includes(fileExt)) {
+        alert('Invalid file type. Please upload a PDF, Word, Excel, or PowerPoint file.');
+        return;
+    }
+    
     btn.disabled = true;
-    btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-2"></i> Connecting to API...';
+    btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-2"></i> Uploading & Syncing...';
 
     const formData = new FormData(this);
-    const rawData = Object.fromEntries(formData.entries());
-    
-    // Structure data for API
-    const apiPayload = {
-        module_type: rawData.module_type,
-        source_system: rawData.source_system,
-        external_id: rawData.external_id,
-        title: rawData.title,
-        summary: rawData.summary,
-        payload: {
-            document_date: rawData.document_date,
-            tags: rawData.tags
-        }
-    };
 
     fetch('<?php echo INTEGRATION_URL; ?>/api/receive.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(apiPayload)
+        body: formData
     })
     .then(r => r.json())
     .then(res => {

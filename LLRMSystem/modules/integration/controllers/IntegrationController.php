@@ -35,12 +35,21 @@ class IntegrationController {
     /**
      * Receive data from external system
      */
-    public function receive($data) {
+    public function receive($data, $fileData = null) {
         $moduleType = $data['module_type'] ?? $data['type'] ?? null;
         $title = $data['title'] ?? null;
 
         if (empty($moduleType) || empty($title)) {
             return ['success' => false, 'error' => 'Missing required fields (module_type/type, title)'];
+        }
+
+        // Include file info in payload if uploaded
+        $payload = $data['payload'] ?? [];
+        if ($fileData) {
+            $payload['file_path'] = $fileData['file_path'];
+            $payload['file_name'] = $fileData['file_name'];
+            $payload['file_size'] = $fileData['file_size'];
+            $payload['file_type'] = $fileData['file_type'];
         }
 
         $stmt = $this->db->prepare("
@@ -53,7 +62,7 @@ class IntegrationController {
             ':ext_id' => $data['external_id'] ?? null,
             ':title' => $title,
             ':summary' => $data['summary'] ?? null,
-            ':payload' => json_encode($data['payload'] ?? []),
+            ':payload' => json_encode($payload),
             ':source' => $data['source_system'] ?? 'External Integration'
         ]);
 
@@ -97,6 +106,12 @@ class IntegrationController {
         $payload = json_decode($record['data_payload'], true) ?: [];
         $docDate = $payload['document_date'] ?? date('Y-m-d');
         $tags = $payload['tags'] ?? '';
+        
+        // Get file info from payload (uploaded during receive)
+        $filePath = $payload['file_path'] ?? 'external_sync';
+        $fileName = $payload['file_name'] ?? 'Synced Data';
+        $fileSize = $payload['file_size'] ?? 0;
+        $fileType = $payload['file_type'] ?? 'application/json';
 
         // Map module_type to document_type labels used in LRMS (Matches ENUM in documents table)
         $typeMap = [
@@ -126,7 +141,7 @@ class IntegrationController {
             ) VALUES (
                 :ref, :title, :type, :doc_date,
                 'draft', :desc, :tags, 'integration', :source_id,
-                :user_id, NOW(), 'external_sync', 'Synced Data', 0, 'application/json'
+                :user_id, NOW(), :file_path, :file_name, :file_size, :file_type
             )
         ");
 
@@ -138,7 +153,11 @@ class IntegrationController {
             ':desc' => $record['summary'],
             ':tags' => $tags,
             ':source_id' => $id,
-            ':user_id' => $_SESSION['user_id'] ?? 1
+            ':user_id' => $_SESSION['user_id'] ?? 1,
+            ':file_path' => $filePath,
+            ':file_name' => $fileName,
+            ':file_size' => $fileSize,
+            ':file_type' => $fileType
         ]);
 
         if ($result) {
