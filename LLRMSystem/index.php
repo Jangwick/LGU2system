@@ -273,6 +273,366 @@ $pageTitle = "Home";
         </div>
     </section>
 
+    <!-- Advanced Search Showcase Section -->
+    <section id="search-showcase" class="py-24 md:py-40 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+        <!-- Subtle background decoration -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-red-600/[0.03] blur-[120px] rounded-full pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Section Header -->
+            <div class="text-center mb-16 md:mb-24" data-aos="fade-up">
+                <h2 class="text-red-600 font-black tracking-[0.3em] uppercase text-xs mb-4">Search Intelligence</h2>
+                <p class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-none mb-6">Find any record<br>in milliseconds.</p>
+                <p class="max-w-2xl mx-auto text-gray-500 font-medium text-lg leading-relaxed">AI-powered hybrid search combining keywords with semantic understanding. Filter by type, status, and time period — all in one interface.</p>
+                <div class="h-2 w-20 bg-red-600 mx-auto rounded-full mt-8"></div>
+            </div>
+            
+            <!-- Browser Mockup with Light/Dark Toggle -->
+            <div class="max-w-6xl mx-auto" data-aos="zoom-in" data-aos-duration="1200">
+                <!-- Toggle Buttons -->
+                <div class="flex justify-center mb-6 md:mb-8">
+                    <div class="inline-flex bg-white rounded-full p-1.5 shadow-lg border border-gray-100">
+                        <button onclick="showSearchMode('light')" id="search-light-btn" class="px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-gray-900 text-white shadow-md">
+                            <i class="bi bi-sun-fill mr-1.5"></i>Light
+                        </button>
+                        <button onclick="showSearchMode('dark')" id="search-dark-btn" class="px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 text-gray-500 hover:text-gray-900">
+                            <i class="bi bi-moon-fill mr-1.5"></i>Dark
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Browser Chrome -->
+                <div class="rounded-2xl md:rounded-[28px] overflow-hidden shadow-[0_50px_100px_-30px_rgba(0,0,0,0.25)] border border-gray-200/60 transition-all duration-700" id="search-browser-frame">
+                    <!-- Title Bar -->
+                    <div class="h-10 md:h-12 flex items-center px-4 md:px-5 space-x-2 transition-colors duration-700 bg-gray-100 border-b border-gray-200" id="search-titlebar">
+                        <div class="flex items-center space-x-1.5 md:space-x-2">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-400"></div>
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-400"></div>
+                        </div>
+                        <div class="flex-1 mx-4 md:mx-8">
+                            <div class="h-6 md:h-7 rounded-lg flex items-center px-3 md:px-4 text-[10px] md:text-xs font-medium transition-colors duration-700 bg-white text-gray-400 border border-gray-200" id="search-urlbar">
+                                <i class="bi bi-lock-fill mr-1.5 text-green-500"></i>
+                                <span class="truncate">valenzuela-lrms.gov.ph/modules/search</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Screen Content -->
+                    <div class="transition-colors duration-700 bg-white" id="search-screen-bg">
+                        <!-- Hero Banner -->
+                        <div class="bg-gradient-to-r from-red-700 to-red-900 px-6 md:px-10 py-6 md:py-8">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div>
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <div class="h-px w-6 bg-white/40"></div>
+                                        <span class="text-white/70 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">AI-Powered Intelligence</span>
+                                    </div>
+                                    <h3 class="text-xl md:text-3xl font-black text-white italic tracking-tight">Advanced Search</h3>
+                                    <p class="text-red-200 text-[10px] md:text-xs font-medium mt-1">Hybrid engine combining keywords with semantic understanding.</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider border-2 border-white text-white bg-white/10">Documents</span>
+                                    <span class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider text-white/70 border border-white/20 hover:border-white/40 transition-colors">Legislations</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content Area -->
+                        <div class="flex">
+                            <!-- Sidebar Filters -->
+                            <div class="hidden md:block w-64 flex-shrink-0 p-6 border-r transition-colors duration-700 border-gray-100" id="search-sidebar">
+                                <div class="flex items-center justify-between mb-5">
+                                    <h4 class="text-sm font-black flex items-center transition-colors duration-700 text-gray-900" id="search-refine-title">
+                                        <i class="bi bi-sliders2 text-red-600 mr-2"></i>Refine Results
+                                    </h4>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider transition-colors duration-700 text-gray-400 cursor-pointer hover:text-red-600">Clear All</span>
+                                </div>
+                                
+                                <div class="space-y-5">
+                                    <div>
+                                        <p class="text-[10px] font-black uppercase tracking-widest mb-3 transition-colors duration-700 text-gray-500" id="search-label-type">Document Type</p>
+                                        <div class="space-y-2.5" id="search-filter-list">
+                                            <label class="flex items-center justify-between cursor-pointer group">
+                                                <div class="flex items-center"><div class="w-3.5 h-3.5 rounded-full border-2 mr-2.5 transition-colors duration-700 border-gray-300"></div><span class="text-xs font-semibold transition-colors duration-700 text-gray-700 group-hover:text-red-600">Ordinance</span></div>
+                                                <span class="text-[10px] font-bold transition-colors duration-700 text-gray-400">2</span>
+                                            </label>
+                                            <label class="flex items-center justify-between cursor-pointer group">
+                                                <div class="flex items-center"><div class="w-3.5 h-3.5 rounded-full border-2 mr-2.5 border-red-500 bg-red-500"></div><span class="text-xs font-bold text-red-600">Resolution</span></div>
+                                                <span class="text-[10px] font-bold transition-colors duration-700 text-gray-400">2</span>
+                                            </label>
+                                            <label class="flex items-center justify-between cursor-pointer group">
+                                                <div class="flex items-center"><div class="w-3.5 h-3.5 rounded-full border-2 mr-2.5 transition-colors duration-700 border-gray-300"></div><span class="text-xs font-semibold transition-colors duration-700 text-gray-700 group-hover:text-red-600">Session</span></div>
+                                                <span class="text-[10px] font-bold transition-colors duration-700 text-gray-400">4</span>
+                                            </label>
+                                            <label class="flex items-center justify-between cursor-pointer group">
+                                                <div class="flex items-center"><div class="w-3.5 h-3.5 rounded-full border-2 mr-2.5 transition-colors duration-700 border-gray-300"></div><span class="text-xs font-semibold transition-colors duration-700 text-gray-700 group-hover:text-red-600">Agenda</span></div>
+                                                <span class="text-[10px] font-bold transition-colors duration-700 text-gray-400">1</span>
+                                            </label>
+                                            <label class="flex items-center justify-between cursor-pointer group">
+                                                <div class="flex items-center"><div class="w-3.5 h-3.5 rounded-full border-2 mr-2.5 transition-colors duration-700 border-gray-300"></div><span class="text-xs font-semibold transition-colors duration-700 text-gray-700 group-hover:text-red-600">Committee</span></div>
+                                                <span class="text-[10px] font-bold transition-colors duration-700 text-gray-400">0</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <p class="text-[10px] font-black uppercase tracking-widest mb-3 transition-colors duration-700 text-gray-500">Status</p>
+                                        <div class="h-9 rounded-lg border text-xs font-medium flex items-center px-3 transition-colors duration-700 bg-white border-gray-200 text-gray-600" id="search-status-select">All Statuses</div>
+                                    </div>
+                                    
+                                    <div>
+                                        <p class="text-[10px] font-black uppercase tracking-widest mb-3 transition-colors duration-700 text-gray-500">Time Period</p>
+                                        <div class="space-y-2">
+                                            <div class="h-9 rounded-lg border text-xs font-medium flex items-center px-3 transition-colors duration-700 bg-white border-gray-200 text-gray-400" id="search-date-from"><i class="bi bi-calendar3 mr-2"></i>mm/dd/yyyy</div>
+                                            <div class="h-9 rounded-lg border text-xs font-medium flex items-center px-3 transition-colors duration-700 bg-white border-gray-200 text-gray-400" id="search-date-to"><i class="bi bi-calendar3 mr-2"></i>mm/dd/yyyy</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="w-full py-2.5 bg-red-600 text-white text-xs font-black uppercase tracking-wider rounded-lg shadow-md shadow-red-200/50 hover:bg-red-700 transition-all">
+                                        <i class="bi bi-funnel-fill mr-1.5"></i>Apply Filters
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Results Area -->
+                            <div class="flex-1 p-4 md:p-6">
+                                <!-- Search Bar -->
+                                <div class="flex items-center gap-3 mb-5">
+                                    <div class="flex-1 flex items-center h-12 rounded-xl border px-4 transition-colors duration-700 bg-white border-gray-200" id="search-input-bar">
+                                        <i class="bi bi-search mr-3 transition-colors duration-700 text-gray-400"></i>
+                                        <span class="text-sm transition-colors duration-700 text-gray-400">Search documents or intent...</span>
+                                        <div class="ml-auto flex space-x-1">
+                                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold transition-colors duration-700 bg-emerald-100 text-emerald-700 border border-emerald-200">Hybrid</span>
+                                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold transition-colors duration-700 bg-gray-100 text-gray-500">Semantic</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200/40 hover:bg-red-700 transition-all cursor-pointer">
+                                        <i class="bi bi-arrow-right text-lg"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Results Header -->
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-xs font-bold transition-colors duration-700 text-gray-600" id="search-found-text">Found <strong>9</strong> matches</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5"></span>Hybrid Engine</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors duration-700 border-gray-200 text-gray-500 cursor-pointer hover:border-red-200 hover:text-red-600"><i class="bi bi-download mr-1"></i>Export CSV</span>
+                                    </div>
+                                    <div class="hidden md:flex space-x-1">
+                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-700 border border-gray-200 text-gray-400 cursor-pointer"><i class="bi bi-grid-3x3-gap-fill text-xs"></i></div>
+                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-900 text-white cursor-pointer"><i class="bi bi-list-ul text-xs"></i></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Result Card 1 -->
+                                <div class="rounded-xl border p-4 md:p-5 mb-3 transition-all duration-700 hover:shadow-md bg-white border-gray-100" id="search-result-1">
+                                    <div class="flex items-start gap-4">
+                                        <div class="hidden md:flex w-12 h-12 rounded-xl items-center justify-center flex-shrink-0 bg-emerald-50 text-emerald-600">
+                                            <i class="bi bi-people text-xl"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2 mb-1.5">
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase transition-colors duration-700 bg-gray-100 text-gray-700">Draft</span>
+                                                <span class="text-[10px] font-bold transition-colors duration-700 text-gray-400 uppercase tracking-wider">Ref: 23123123</span>
+                                            </div>
+                                            <h4 class="text-sm font-black mb-1 transition-colors duration-700 text-gray-900" id="search-result-title-1">Resolution No. 2025-001</h4>
+                                            <p class="text-xs mb-3 transition-colors duration-700 text-gray-500" id="search-result-desc-1">Committee Management resolution submitted for review and approval by the legislative body.</p>
+                                            <div class="h-px transition-colors duration-700 bg-gray-100 mb-3"></div>
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center gap-4 text-[10px] transition-colors duration-700 text-gray-400">
+                                                    <span><i class="bi bi-calendar3 text-red-400 mr-1"></i>Feb 15, 2026</span>
+                                                    <span><i class="bi bi-person-circle mr-1"></i>Admin User</span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="hidden md:inline-flex items-center px-3 py-1.5 rounded-lg text-[10px] font-bold bg-gray-900 text-white cursor-pointer hover:bg-gray-800 transition-colors"><i class="bi bi-eye mr-1"></i>Preview</span>
+                                                    <span class="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center cursor-pointer hover:bg-red-700 transition-colors shadow-sm"><i class="bi bi-download text-xs"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Result Card 2 -->
+                                <div class="rounded-xl border p-4 md:p-5 transition-all duration-700 hover:shadow-md bg-white border-gray-100" id="search-result-2">
+                                    <div class="flex items-start gap-4">
+                                        <div class="hidden md:flex w-12 h-12 rounded-xl items-center justify-center flex-shrink-0 bg-blue-50 text-blue-600">
+                                            <i class="bi bi-file-earmark-check text-xl"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2 mb-1.5">
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-yellow-200 bg-yellow-100 text-yellow-700">Pending</span>
+                                                <span class="text-[10px] font-bold transition-colors duration-700 text-gray-400 uppercase tracking-wider">Ref: SDASDASD</span>
+                                            </div>
+                                            <h4 class="text-sm font-black mb-1 transition-colors duration-700 text-gray-900" id="search-result-title-2">Ordinance No. 2025-044</h4>
+                                            <p class="text-xs mb-3 transition-colors duration-700 text-gray-500" id="search-result-desc-2">Environmental protection and urban greening ordinance for District 2 implementation.</p>
+                                            <div class="h-px transition-colors duration-700 bg-gray-100 mb-3"></div>
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center gap-4 text-[10px] transition-colors duration-700 text-gray-400">
+                                                    <span><i class="bi bi-calendar3 text-red-400 mr-1"></i>Feb 14, 2026</span>
+                                                    <span><i class="bi bi-person-circle mr-1"></i>Admin User</span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="hidden md:inline-flex items-center px-3 py-1.5 rounded-lg text-[10px] font-bold bg-gray-900 text-white cursor-pointer hover:bg-gray-800 transition-colors"><i class="bi bi-eye mr-1"></i>Preview</span>
+                                                    <span class="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center cursor-pointer hover:bg-red-700 transition-colors shadow-sm"><i class="bi bi-download text-xs"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feature Pills -->
+                <div class="flex flex-wrap justify-center gap-3 mt-8 md:mt-12" data-aos="fade-up" data-aos-delay="200">
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-gray-100 shadow-sm text-xs font-bold text-gray-600"><i class="bi bi-lightning-charge-fill text-yellow-500 mr-2"></i>Hybrid + Semantic Engine</span>
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-gray-100 shadow-sm text-xs font-bold text-gray-600"><i class="bi bi-funnel-fill text-red-500 mr-2"></i>Multi-Filter System</span>
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-gray-100 shadow-sm text-xs font-bold text-gray-600"><i class="bi bi-moon-fill text-indigo-500 mr-2"></i>Dark Mode Support</span>
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-gray-100 shadow-sm text-xs font-bold text-gray-600"><i class="bi bi-download text-emerald-500 mr-2"></i>CSV Export</span>
+                </div>
+                
+                <!-- CTA -->
+                <div class="text-center mt-10 md:mt-14" data-aos="fade-up" data-aos-delay="300">
+                    <a href="<?php echo LOGIN_URL; ?>" class="inline-flex items-center px-8 md:px-10 py-4 md:py-5 bg-gray-900 hover:bg-black text-white font-black rounded-2xl text-sm md:text-base shadow-2xl shadow-gray-900/20 transition-all hover:scale-105">
+                        Try Advanced Search
+                        <i class="bi bi-arrow-right-short ml-1 text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    function showSearchMode(mode) {
+        const lightBtn = document.getElementById('search-light-btn');
+        const darkBtn = document.getElementById('search-dark-btn');
+        const frame = document.getElementById('search-browser-frame');
+        const titlebar = document.getElementById('search-titlebar');
+        const urlbar = document.getElementById('search-urlbar');
+        const screenBg = document.getElementById('search-screen-bg');
+        const sidebar = document.getElementById('search-sidebar');
+        
+        // Dark color classes
+        const darkBg = '#1a1a1a';
+        const darkCard = '#242424';
+        const darkBorder = '#333';
+        const darkText = '#e5e5e5';
+        const darkMuted = '#999';
+        
+        if (mode === 'dark') {
+            // Toggle buttons
+            lightBtn.className = 'px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 text-gray-500 hover:text-gray-900';
+            darkBtn.className = 'px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-gray-900 text-white shadow-md';
+            
+            // Frame
+            frame.style.borderColor = '#333';
+            
+            // Title bar
+            titlebar.style.backgroundColor = '#1e1e1e';
+            titlebar.style.borderColor = '#333';
+            
+            // URL bar
+            urlbar.style.backgroundColor = '#2a2a2a';
+            urlbar.style.borderColor = '#444';
+            urlbar.style.color = '#888';
+            
+            // Screen
+            screenBg.style.backgroundColor = darkBg;
+            
+            // Sidebar
+            if (sidebar) {
+                sidebar.style.borderColor = darkBorder;
+                sidebar.style.backgroundColor = darkBg;
+            }
+            
+            // Filter labels
+            document.querySelectorAll('#search-filter-list .text-gray-700').forEach(el => { el.style.color = darkText; });
+            document.querySelectorAll('#search-label-type, #search-sidebar .text-gray-500').forEach(el => { el.style.color = darkMuted; });
+            document.getElementById('search-refine-title').style.color = darkText;
+            
+            // Input fields
+            ['search-status-select', 'search-date-from', 'search-date-to'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.style.backgroundColor = darkCard; el.style.borderColor = darkBorder; el.style.color = darkMuted; }
+            });
+            
+            // Search bar
+            const inputBar = document.getElementById('search-input-bar');
+            if (inputBar) { inputBar.style.backgroundColor = darkCard; inputBar.style.borderColor = darkBorder; }
+            
+            // Found text
+            const foundText = document.getElementById('search-found-text');
+            if (foundText) foundText.style.color = darkMuted;
+            
+            // Result cards
+            ['search-result-1', 'search-result-2'].forEach(id => {
+                const card = document.getElementById(id);
+                if (card) { card.style.backgroundColor = darkCard; card.style.borderColor = darkBorder; }
+            });
+            
+            // Result titles & descriptions
+            ['search-result-title-1', 'search-result-title-2'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.color = darkText;
+            });
+            ['search-result-desc-1', 'search-result-desc-2'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.color = darkMuted;
+            });
+            
+        } else {
+            // Toggle buttons
+            lightBtn.className = 'px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-gray-900 text-white shadow-md';
+            darkBtn.className = 'px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 text-gray-500 hover:text-gray-900';
+            
+            // Reset all inline styles
+            frame.style.borderColor = '';
+            titlebar.style.backgroundColor = '';
+            titlebar.style.borderColor = '';
+            urlbar.style.backgroundColor = '';
+            urlbar.style.borderColor = '';
+            urlbar.style.color = '';
+            screenBg.style.backgroundColor = '';
+            
+            if (sidebar) {
+                sidebar.style.borderColor = '';
+                sidebar.style.backgroundColor = '';
+            }
+            
+            document.querySelectorAll('#search-filter-list .text-gray-700').forEach(el => { el.style.color = ''; });
+            document.querySelectorAll('#search-label-type, #search-sidebar .text-gray-500').forEach(el => { el.style.color = ''; });
+            document.getElementById('search-refine-title').style.color = '';
+            
+            ['search-status-select', 'search-date-from', 'search-date-to'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.style.backgroundColor = ''; el.style.borderColor = ''; el.style.color = ''; }
+            });
+            
+            const inputBar = document.getElementById('search-input-bar');
+            if (inputBar) { inputBar.style.backgroundColor = ''; inputBar.style.borderColor = ''; }
+            
+            const foundText = document.getElementById('search-found-text');
+            if (foundText) foundText.style.color = '';
+            
+            ['search-result-1', 'search-result-2'].forEach(id => {
+                const card = document.getElementById(id);
+                if (card) { card.style.backgroundColor = ''; card.style.borderColor = ''; }
+            });
+            
+            ['search-result-title-1', 'search-result-title-2'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.color = '';
+            });
+            ['search-result-desc-1', 'search-result-desc-2'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.color = '';
+            });
+        }
+    }
+    </script>
+
     <!-- Detailed Stats Section -->
     <section class="py-32 bg-[#0a0a0b] text-white relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
