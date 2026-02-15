@@ -74,36 +74,49 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6 custom-scrollbar">
-        <div class="max-w-7xl mx-auto space-y-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-2 md:p-6 custom-scrollbar">
+        <div class="max-w-7xl mx-auto space-y-4 md:space-y-6">
                 
                 <!-- Search Hero/Header -->
-                <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-6 md:p-10 text-white relative overflow-hidden mb-6 animate-fade-in">
+                <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-xl md:rounded-2xl shadow-xl p-5 md:p-10 text-white relative overflow-hidden mb-4 md:mb-6 animate-fade-in">
                     <!-- Background Decor -->
                     <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                     <div class="absolute -left-10 -top-10 w-48 h-48 bg-red-400/20 rounded-full blur-2xl"></div>
 
-                    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
                         <div>
-                            <div class="flex items-center gap-2 text-red-100 font-bold tracking-wider text-xs uppercase mb-3">
-                                <span class="w-8 h-0.5 bg-red-100/50"></span>
+                            <div class="flex items-center gap-2 text-red-100 font-bold tracking-wider text-[10px] md:text-xs uppercase mb-2 md:mb-3">
+                                <span class="w-6 md:w-8 h-0.5 bg-red-100/50"></span>
                                 AI-Powered Intelligence
                             </div>
-                            <h1 class="text-3xl md:text-4xl font-black mb-2">Advanced Search</h1>
-                            <p class="text-red-50 text-sm md:text-base max-w-xl opacity-90">Intelligent hybrid engine combining traditional keyword matching with semantic AI understanding.</p>
+                            <h1 class="text-2xl md:text-4xl font-black mb-1 md:mb-2 italic">Advanced Search</h1>
+                            <p class="text-red-50 text-xs md:text-base max-w-xl opacity-90 font-medium">Hybrid engine combining keywords with semantic understanding.</p>
                         </div>
-                        <div class="flex items-center gap-2 bg-black/10 p-1.5 rounded-xl backdrop-blur-md border border-white/10">
-                            <button style="background-color: #ffffff !important; color: #dc2626 !important;" class="px-5 py-2.5 rounded-lg bg-white text-red-700 font-bold text-sm shadow-lg whitespace-nowrap">Documents</button>
-                            <button style="background: transparent !important; color: #ffffff !important;" class="px-5 py-2.5 rounded-lg text-white hover:bg-white/10 font-bold text-sm transition-all whitespace-nowrap">Legislations</button>
+                        <div class="flex items-center gap-1.5 bg-black/10 p-1 rounded-lg md:rounded-xl backdrop-blur-md border border-white/10 w-fit">
+                            <button style="background-color: #ffffff !important; color: #dc2626 !important;" class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg bg-white text-red-700 font-black text-[10px] md:text-sm shadow-lg whitespace-nowrap uppercase tracking-tight">Documents</button>
+                            <button style="background: transparent !important; color: #ffffff !important;" class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg text-white hover:bg-white/10 font-black text-[10px] md:text-sm transition-all whitespace-nowrap uppercase tracking-tight">Legislations</button>
                         </div>
                     </div>
                 </div>
 
+                <!-- Mobile Filter Toggle -->
+                <div class="lg:hidden mb-4">
+                    <button onclick="toggleMobileFilters()" class="w-full bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+                                <i class="bi bi-sliders2"></i>
+                            </div>
+                            <span class="font-bold text-gray-700">Refine Search</span>
+                        </div>
+                        <i id="filter-chevron" class="bi bi-chevron-down text-gray-400 transition-transform"></i>
+                    </button>
+                </div>
+
                 <!-- Main Layout Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
                     
-                    <!-- Left Sidebar Filters (Static to prevent flicker on reload) -->
-                    <aside class="space-y-6 lg:sticky lg:top-0 h-fit animate-slide-in-left">
+                    <!-- Left Sidebar Filters -->
+                    <aside id="filters-sidebar" class="hidden lg:block space-y-4 md:space-y-6 lg:sticky lg:top-0 h-fit animate-slide-in-left">
                         <!-- Filters Card -->
                         <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100">
                             <div class="flex items-center justify-between mb-6">
@@ -219,11 +232,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         
                         <!-- Top Search Bar -->
                         <div class="relative group" data-aos="fade-up">
-                            <div class="bg-white border border-gray-200 rounded-2xl p-2 pl-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50 animate-fade-in-up">
-                                <i class="bi bi-search text-gray-300 text-xl"></i>
+                            <div class="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-1.5 md:p-2 pl-4 md:pl-6 flex items-center gap-3 md:gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50 animate-fade-in-up">
+                                <i class="bi bi-search text-gray-400 text-lg md:text-xl shrink-0"></i>
                                 <form id="search-main-form" action="" method="GET" class="flex-1 flex items-center gap-2">
                                     <input type="hidden" name="mode" id="search-mode" value="<?= htmlspecialchars($mode) ?>">
-                                    <input type="text" name="q" id="search-input" value="<?= htmlspecialchars($query) ?>" placeholder="Search by keywords, reference numbers, or intent..." class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 py-4 text-base md:text-lg font-medium" autocomplete="off">
+                                    <input type="text" name="q" id="search-input" value="<?= htmlspecialchars($query) ?>" 
+                                           placeholder="Search documents or intent..." 
+                                           class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 py-3 md:py-4 text-sm md:text-lg font-bold" autocomplete="off">
                                     
                                     <!-- Search Mode Toggle -->
                                     <div class="hidden md:flex items-center gap-1 bg-gray-100 p-1 rounded-xl border border-gray-200 mr-2">
@@ -237,8 +252,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </button>
                                     </div>
 
-                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white w-14 h-14 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30 transition-all active:scale-95 group">
-                                        <i class="bi bi-arrow-right text-2xl group-hover:translate-x-0.5 transition-transform"></i>
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg shadow-red-600/30 transition-all active:scale-95 group shrink-0">
+                                        <i class="bi bi-arrow-right text-xl md:text-2xl group-hover:translate-x-0.5 transition-transform"></i>
                                     </button>
                                 </form>
                             </div>
@@ -252,25 +267,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
 
                         <!-- Results Meta -->
-                        <div id="search-meta" class="flex items-center justify-between px-2 animate-fade-in-up animation-delay-100">
-                            <div class="flex items-center gap-4">
-                                <span class="text-sm text-gray-500 font-medium">
+                        <div id="search-meta" class="flex flex-col sm:flex-row sm:items-center justify-between px-2 gap-4 animate-fade-in-up animation-delay-100">
+                            <div class="flex flex-wrap items-center gap-3 md:gap-4">
+                                <span class="text-xs md:text-sm text-gray-500 font-medium w-full sm:w-auto mb-1 sm:mb-0">
                                     Found <span class="text-gray-900 font-black"><?= number_format($total) ?></span> matches 
                                     <?php if($query): ?> for "<span class="text-red-600 italic font-bold"><?= htmlspecialchars($query) ?></span>"<?php endif; ?>
                                 </span>
-                                <div class="flex items-center gap-2 bg-white px-4 py-1.5 rounded-full border border-gray-200 text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest">
+                                <div class="flex items-center gap-2 bg-white px-3 md:px-4 py-1.5 rounded-full border border-gray-200 text-[9px] md:text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
                                     <?= ucfirst($mode) ?> Engine
                                 </div>
-                                <button onclick="exportResults()" class="flex items-center gap-2 bg-white hover:bg-gray-50 px-4 py-1.5 rounded-full border border-gray-200 text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest transition-all">
+                                <button onclick="exportResults()" class="flex items-center gap-2 bg-white hover:bg-gray-50 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 text-[9px] md:text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest transition-all">
                                     <i class="bi bi-download text-red-600"></i> Export CSV
                                 </button>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="setView('grid')" id="view-grid" class="w-9 h-9 flex items-center justify-center transition-all bg-white border border-gray-200 text-gray-400 hover:text-red-600 rounded-lg shadow-sm">
+                            <div class="flex items-center gap-2 self-end sm:self-auto">
+                                <button onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white border border-gray-200 text-gray-400 hover:text-red-600 rounded-lg shadow-sm">
                                     <i class="bi bi-grid-fill"></i>
                                 </button>
-                                <button onclick="setView('list')" id="view-list" class="w-9 h-9 flex items-center justify-center transition-all bg-red-50 border border-red-200 text-red-600 rounded-lg shadow-sm">
+                                <button onclick="setView('list')" id="view-list" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 border border-red-200 text-red-600 rounded-lg shadow-sm">
                                     <i class="bi bi-list-task"></i>
                                 </button>
                             </div>
@@ -505,6 +520,20 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             let queryTimer;
             let currentView = localStorage.getItem('searchView') || 'list';
             
+            function toggleMobileFilters() {
+                const aside = document.getElementById('filters-sidebar');
+                const chevron = document.getElementById('filter-chevron');
+                if (aside.classList.contains('hidden')) {
+                    aside.classList.remove('hidden');
+                    aside.classList.add('block', 'animate-fade-in');
+                    chevron.style.transform = 'rotate(180deg)';
+                } else {
+                    aside.classList.add('hidden');
+                    aside.classList.remove('block', 'animate-fade-in');
+                    chevron.style.transform = 'rotate(0deg)';
+                }
+            }
+
             // Set View (Grid/List)
             function setView(view) {
                 currentView = view;
