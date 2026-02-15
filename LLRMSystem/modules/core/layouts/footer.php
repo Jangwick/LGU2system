@@ -10,9 +10,9 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-6">
-                    <a href="/modules/help/views/privacy.php" class="text-sm text-gray-600 hover:text-red-600">Privacy</a>
-                    <a href="/modules/help/views/terms.php" class="text-sm text-gray-600 hover:text-red-600">Terms</a>
-                    <a href="/modules/help/views/contact.php" class="text-sm text-gray-600 hover:text-red-600">Support</a>
+                    <a href="/modules/help/views/privacy.php" class="text-xs font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Privacy</a>
+                    <a href="/modules/help/views/terms.php" class="text-xs font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Terms</a>
+                    <a href="/modules/help/views/contact.php" class="text-xs font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Support</a>
                 </div>
             </div>
             
@@ -23,11 +23,11 @@
                     <span class="text-xs text-gray-600">&copy; <?php echo date('Y'); ?> LRMS</span>
                 </div>
                 <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <a href="/modules/help/views/privacy.php" class="text-xs text-gray-500 hover:text-red-600">Privacy</a>
+                    <a href="/modules/help/views/privacy.php" class="text-[10px] font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Privacy</a>
                     <span class="text-gray-300">•</span>
-                    <a href="/modules/help/views/terms.php" class="text-xs text-gray-500 hover:text-red-600">Terms</a>
+                    <a href="/modules/help/views/terms.php" class="text-[10px] font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Terms</a>
                     <span class="text-gray-300">•</span>
-                    <a href="/modules/help/views/contact.php" class="text-xs text-gray-500 hover:text-red-600">Support</a>
+                    <a href="/modules/help/views/contact.php" class="text-[10px] font-black text-slate-600 hover:text-red-600 uppercase tracking-wider">Support</a>
                 </div>
             </div>
         </div>

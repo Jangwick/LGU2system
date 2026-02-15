@@ -113,7 +113,7 @@ $pageTitle = "Home";
     <nav class="fixed top-0 w-full z-50 glass-nav border-b border-gray-100/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
-                <div class="flex items-center group cursor-pointer flex-shrink-0">
+                <a href="<?php echo BASE_URL; ?>" class="flex items-center group cursor-pointer flex-shrink-0">
                     <div class="relative">
                         <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 md:h-12 md:w-12 mr-2 md:mr-3 transition-transform duration-500 group-hover:rotate-12 shadow-sm rounded-full" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
                     </div>
@@ -124,7 +124,13 @@ $pageTitle = "Home";
                             <span class="text-[9px] text-gray-400 font-bold uppercase tracking-[0.2em] leading-none">Legislative Office</span>
                         </div>
                     </div>
+                </a>
+
+                <!-- Mobile Header: Sign In -->
+                <div class="flex lg:hidden flex-1 justify-center px-2">
+                    <a href="<?php echo LOGIN_URL; ?>" class="text-slate-600 hover:text-red-600 font-black uppercase tracking-widest text-[10px] sm:text-xs transition-all whitespace-nowrap">Sign In</a>
                 </div>
+
                 <div class="hidden lg:flex items-center space-x-8">
                     <a href="#leadership" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Officials</a>
                     <a href="#roots" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">History</a>
@@ -134,8 +140,8 @@ $pageTitle = "Home";
                     <a href="#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Landmarks</a>
                     <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">News</a>
                 </div>
-                <div class="flex items-center space-x-1 md:space-x-6">
-                    <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[12px] md:text-sm transition-all whitespace-nowrap">Sign In</a>
+                <div class="flex items-center space-x-2 md:space-x-6">
+                    <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-sm transition-all whitespace-nowrap">Sign In</a>
                     <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
                         Get Started
                     </a>
@@ -143,6 +149,42 @@ $pageTitle = "Home";
             </div>
         </div>
     </nav>
+
+    <!-- Floating Mobile Toggle -->
+    <button id="mobile-landing-toggle" class="lg:hidden fixed top-[70px] left-1/2 -translate-x-1/2 z-40 p-2 text-gray-900 bg-white/90 backdrop-blur-md border border-gray-100 rounded-xl shadow-xl hover:bg-gray-50 transition-all flex items-center justify-center animate-bounce-in min-w-[60px]">
+        <div class="flex flex-col items-center">
+            <i class="bi bi-list text-lg leading-none mb-1"></i>
+            <span class="text-[8px] font-black uppercase tracking-tighter leading-none">Menu</span>
+        </div>
+    </button>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-landing-menu" class="hidden fixed inset-0 z-[200] bg-white overflow-y-auto animate-fade-in lg:hidden">
+        <div class="fixed top-0 w-full p-4 flex justify-between items-center border-b border-gray-100 bg-white/80 backdrop-blur-md z-10">
+            <span class="text-xl font-black text-[#002d72] tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
+            <button id="mobile-landing-close" class="p-2 text-gray-500 hover:text-red-600 transition-colors">
+                <i class="bi bi-x-lg text-2xl"></i>
+            </button>
+        </div>
+        
+        <div class="pt-24 pb-12 px-8 flex flex-col items-center space-y-8 text-center animate-slide-in-top">
+            <h3 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-2 opacity-50">Quick Links</h3>
+            <div class="h-px w-8 bg-red-600/20"></div>
+            
+            <a href="#leadership" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Officials</a>
+            <a href="#roots" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Our History</a>
+            <a href="#governance" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Governance</a>
+            <a href="#recognition" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Awards</a>
+            <a href="#infrastructure" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Infrastructure</a>
+            <a href="#landmarks" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Landmarks</a>
+            <a href="#updates" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">News & Updates</a>
+            
+            <div class="pt-8 w-full border-t border-gray-50 flex flex-col space-y-6">
+                <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 font-black uppercase tracking-widest text-sm py-2">Sign In</a>
+                <a href="<?php echo REGISTER_URL; ?>" class="bg-red-600 text-white font-black uppercase tracking-widest text-sm py-4 rounded-xl shadow-xl shadow-red-200">Get Started</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <div class="relative overflow-hidden hero-gradient pt-24 pb-16 md:pt-48 md:pb-40">
@@ -164,7 +206,7 @@ $pageTitle = "Home";
                         Start Your Journey
                         <i class="bi bi-arrow-right-short ml-1 text-2xl align-middle"></i>
                     </a>
-                    <a href="#features" class="w-full sm:w-auto btn-modern bg-white hover:bg-gray-50 text-gray-900 font-bold px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg border border-gray-200 shadow-sm">
+                    <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="w-full sm:w-auto btn-modern bg-white hover:bg-gray-50 text-gray-900 font-bold px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg border border-gray-200 shadow-sm">
                         View Dashboard
                     </a>
                 </div>
@@ -921,21 +963,21 @@ $pageTitle = "Home";
                 <div class="w-full md:w-auto grid grid-cols-2 gap-8 sm:gap-12 md:gap-24">
                     <div class="text-center md:text-left">
                         <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6 border-b border-gray-100 md:border-none pb-2 md:pb-0">Quick Links</h4>
-                        <ul class="space-y-4 text-xs md:text-sm font-black md:font-bold text-gray-500">
-                            <li><a href="#leadership" class="hover:text-red-600 transition-colors uppercase md:capitalize">Officials</a></li>
-                            <li><a href="#roots" class="hover:text-red-600 transition-colors uppercase md:capitalize">Our History</a></li>
-                            <li><a href="#governance" class="hover:text-red-600 transition-colors uppercase md:capitalize">Governance</a></li>
-                            <li><a href="#recognition" class="hover:text-red-600 transition-colors uppercase md:capitalize">Awards</a></li>
-                            <li><a href="#infrastructure" class="hover:text-red-600 transition-colors uppercase md:capitalize">Infrastructure</a></li>
-                            <li><a href="#landmarks" class="hover:text-red-600 transition-colors uppercase md:capitalize">Landmarks</a></li>
-                            <li><a href="#updates" class="hover:text-red-600 transition-colors uppercase md:capitalize">News & Updates</a></li>
+                        <ul class="space-y-4 text-xs md:text-sm font-black text-slate-600">
+                            <li><a href="#leadership" class="hover:text-red-600 transition-colors uppercase tracking-wider">Officials</a></li>
+                            <li><a href="#roots" class="hover:text-red-600 transition-colors uppercase tracking-wider">Our History</a></li>
+                            <li><a href="#governance" class="hover:text-red-600 transition-colors uppercase tracking-wider">Governance</a></li>
+                            <li><a href="#recognition" class="hover:text-red-600 transition-colors uppercase tracking-wider">Awards</a></li>
+                            <li><a href="#infrastructure" class="hover:text-red-600 transition-colors uppercase tracking-wider">Infrastructure</a></li>
+                            <li><a href="#landmarks" class="hover:text-red-600 transition-colors uppercase tracking-wider">Landmarks</a></li>
+                            <li><a href="#updates" class="hover:text-red-600 transition-colors uppercase tracking-wider">News & Updates</a></li>
                         </ul>
                     </div>
                     <div class="text-center md:text-left">
                         <h4 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-6 border-b border-gray-100 md:border-none pb-2 md:pb-0">Legal</h4>
-                        <ul class="space-y-4 text-xs md:text-sm font-black md:font-bold text-gray-500">
-                            <li><a href="#" class="hover:text-red-600 transition-colors uppercase md:capitalize">Privacy</a></li>
-                            <li><a href="#" class="hover:text-red-600 transition-colors uppercase md:capitalize">Terms</a></li>
+                        <ul class="space-y-4 text-xs md:text-sm font-black text-slate-600">
+                            <li><a href="<?php echo HELP_URL; ?>/views/index.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Privacy</a></li>
+                            <li><a href="<?php echo HELP_URL; ?>/views/index.php" class="hover:text-red-600 transition-colors uppercase tracking-wider">Terms</a></li>
                         </ul>
                     </div>
                 </div>
@@ -1068,8 +1110,31 @@ $pageTitle = "Home";
             from { opacity: 0; transform: translateY(20px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slide-in-top {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce-in {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
         .animate-modal-up {
             animation: modal-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out forwards;
+        }
+        .animate-slide-in-top {
+            animation: slide-in-top 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-bounce-in {
+            animation: bounce-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 
@@ -1095,7 +1160,34 @@ $pageTitle = "Home";
 
         // Close on ESC
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeOfficialModal();
+            if (e.key === 'Escape') {
+                closeOfficialModal();
+                closeMobileMenu();
+            }
+        });
+
+        // Mobile Menu Logic
+        const mobileToggle = document.getElementById('mobile-landing-toggle');
+        const mobileClose = document.getElementById('mobile-landing-close');
+        const mobileMenu = document.getElementById('mobile-landing-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        mobileToggle.addEventListener('click', openMobileMenu);
+        mobileClose.addEventListener('click', closeMobileMenu);
+        
+        // Close menu when clicking links
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
         });
     </script>
 </body>
