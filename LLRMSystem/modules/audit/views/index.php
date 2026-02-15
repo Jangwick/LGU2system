@@ -27,15 +27,19 @@ require_once __DIR__ . '/../../core/layouts/header.php';
     <div class="max-w-7xl mx-auto px-2 md:px-6 lg:px-8 py-4 md:py-8">
         <!-- Page Header -->
         <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-6 md:p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex flex-col items-center text-center md:flex-row md:items-center md:justify-between md:text-left gap-6">
                 <div class="animate-slide-in-left">
-                    <h1 class="text-2xl font-bold mb-2">Audit Logs</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2">Audit Logs</h1>
                     <p class="text-red-100 font-medium opacity-90">System activity and security audit trail</p>
                 </div>
-                <a href="?export=csv&<?php echo http_build_query($data['filters']); ?>" 
-                   class="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center justify-center transform hover:scale-105 active:scale-95 animate-slide-in-right">
-                    <i class="bi bi-download mr-2"></i> Export CSV
-                </a>
+                <div class="animate-slide-in-right w-full md:w-auto">
+                    <a href="?export=csv&<?php echo http_build_query($data['filters']); ?>" 
+                       style="background-color: #ffffff !important; color: #dc2626 !important;"
+                       class="inline-flex items-center justify-center gap-2 px-8 py-3.5 font-bold rounded-xl shadow-lg hover:opacity-95 transition-all transform hover:-translate-y-1 active:scale-95 w-full md:w-auto">
+                        <i class="bi bi-download text-xl !text-red-600"></i>
+                        <span class="!text-red-600">Export CSV</span>
+                    </a>
+                </div>
             </div>
         </div>
 
