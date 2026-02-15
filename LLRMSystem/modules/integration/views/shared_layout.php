@@ -136,25 +136,25 @@ $records = $controller->getRecords($currentModule);
 
 <!-- Simulator Modal -->
 <div id="simulatorModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-50 items-center justify-center p-4">
-    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-white/20">
+    <div class="bg-white/90 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-white/20 dark:border-gray-700/50">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-gray-900 flex items-center">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
                 <i class="bi bi-cpu mr-2 text-red-600"></i> Integration Simulator
             </h3>
-            <button onclick="closeSimulatorModal()" class="text-gray-400 hover:text-gray-900">
+            <button onclick="closeSimulatorModal()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
         
-        <p class="text-sm text-gray-600 mb-6">This tool simulates an external system sending data to the LRMS via the Integration API.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">This tool simulates an external system sending data to the LRMS via the Integration API.</p>
         
         <form id="simulatorForm" class="space-y-4">
             <input type="hidden" name="module_type" value="<?php echo $currentModule; ?>">
             
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-4">
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-600 mb-4">
                 <div class="flex justify-between items-center text-xs">
-                    <span class="text-gray-500 font-bold uppercase">Target Module:</span>
-                    <span class="text-red-600 font-bold px-2 py-0.5 bg-red-50 rounded italic">
+                    <span class="text-gray-500 dark:text-gray-400 font-bold uppercase">Target Module:</span>
+                    <span class="text-red-600 dark:text-red-400 font-bold px-2 py-0.5 bg-red-50 dark:bg-red-900/30 rounded italic">
                         <?php echo $config['title']; ?> (<?php echo $currentModule; ?>)
                     </span>
                 </div>
@@ -162,41 +162,41 @@ $records = $controller->getRecords($currentModule);
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Source System</label>
-                    <select name="source_system" class="w-full border-gray-200 rounded-lg text-sm">
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Source System</label>
+                    <select name="source_system" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg text-sm">
                         <option>Sangguniang Office App</option>
                         <option>Public Records Portal</option>
                         <option>External Research DB</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">External Ref #</label>
-                    <input type="text" name="external_id" placeholder="EXT-2024-001" class="w-full border-gray-200 rounded-lg text-sm">
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">External Ref #</label>
+                    <input type="text" name="external_id" placeholder="EXT-2024-001" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-500 rounded-lg text-sm">
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title / Subject</label>
-                <input type="text" name="title" required placeholder="e.g. Resolution for Green Initiatives" class="w-full border-gray-200 rounded-lg text-sm">
+                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Title / Subject</label>
+                <input type="text" name="title" required placeholder="e.g. Resolution for Green Initiatives" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-500 rounded-lg text-sm">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Document Date</label>
-                    <input type="date" name="document_date" value="<?php echo date('Y-m-d'); ?>" class="w-full border-gray-200 rounded-lg text-sm">
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Document Date</label>
+                    <input type="date" name="document_date" value="<?php echo date('Y-m-d'); ?>" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tags (Comma separated)</label>
-                    <input type="text" name="tags" placeholder="Environment, Budget" class="w-full border-gray-200 rounded-lg text-sm">
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Tags (Comma separated)</label>
+                    <input type="text" name="tags" placeholder="Environment, Budget" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-500 rounded-lg text-sm">
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Brief Description</label>
-                <textarea name="summary" rows="3" class="w-full border-gray-200 rounded-lg text-sm" placeholder="Details of the record..."></textarea>
+                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Brief Description</label>
+                <textarea name="summary" rows="3" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-500 rounded-lg text-sm" placeholder="Details of the record..."></textarea>
             </div>
 
-            <button type="submit" id="simulateBtn" class="w-full bg-red-700 text-white font-bold py-3 rounded-xl hover:bg-red-800 transition-all flex items-center justify-center">
+            <button type="submit" id="simulateBtn" class="w-full bg-red-700 dark:bg-gray-700 text-white font-bold py-3 rounded-xl hover:bg-red-800 dark:hover:bg-gray-600 transition-all flex items-center justify-center">
                 <i class="bi bi-send mr-2"></i> Send to LRMS API
             </button>
         </form>
