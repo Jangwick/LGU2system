@@ -645,7 +645,7 @@
             function renderNotifications(notifications) {
                 if (!notifications || notifications.length === 0) {
                     notificationsList.innerHTML = `
-                        <div class="p-8 text-center text-gray-500">
+                        <div class="p-8 text-center text-gray-500 dark:text-gray-400">
                             <i class="bi bi-bell-slash text-3xl mb-2"></i>
                             <p class="text-sm">No notifications</p>
                         </div>`;
@@ -655,7 +655,7 @@
                 notificationsList.innerHTML = notifications.map(n => {
                     const link = (n.data && n.data.link) ? n.data.link : '';
                     return `
-                    <div class="p-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer notification-item ${n.is_read ? 'opacity-60' : ''}" 
+                    <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-800 cursor-pointer notification-item ${n.is_read ? 'opacity-60' : ''}" 
                          data-id="${n.id}" onclick="handleNotificationClick(${n.id}, '${link}')">
                         <div class="flex items-start space-x-3">
                             <div class="${getNotificationIconBg(n.type)} rounded-full p-2 flex-shrink-0">
@@ -663,12 +663,12 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between">
-                                    <p class="text-sm font-medium text-gray-800 truncate">${escapeHtml(n.title)}</p>
+                                    <p class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">${escapeHtml(n.title)}</p>
                                     ${n.priority === 'urgent' || n.priority === 'high' ? 
-                                        `<span class="ml-2 px-1.5 py-0.5 text-xs rounded ${n.priority === 'urgent' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}">${n.priority}</span>` : ''}
+                                        `<span class="ml-2 px-1.5 py-0.5 text-xs rounded ${n.priority === 'urgent' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'}">${n.priority}</span>` : ''}
                                 </div>
-                                <p class="text-xs text-gray-600 mt-0.5 line-clamp-2">${escapeHtml(n.message)}</p>
-                                <div class="flex items-center mt-1 text-xs text-gray-400">
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-2">${escapeHtml(n.message)}</p>
+                                <div class="flex items-center mt-1 text-xs text-gray-400 dark:text-gray-500">
                                     <span>${timeAgo(n.created_at)}</span>
                                     ${n.source_module ? `<span class="mx-1">•</span><span>${escapeHtml(n.source_module)}</span>` : ''}
                                 </div>
