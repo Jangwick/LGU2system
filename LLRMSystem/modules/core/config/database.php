@@ -8,7 +8,7 @@ function getDatabase() {
     static $db = null;
     
     if ($db === null) {
-        $host = 'localhost';
+        $host = '127.0.0.1';
         $dbname = 'lrms_db';
         $username = 'root';
         $password = '';
