@@ -76,7 +76,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="flex items-center flex-shrink-0 space-x-0.5 md:space-x-4">
                 
                 <!-- Dark/Light Mode Toggle -->
-                <button id="theme-toggle" class="hidden md:flex w-10 h-10 items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
+                <button id="theme-toggle" class="flex w-7 h-7 md:w-10 md:h-10 items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
                     <i class="bi bi-moon-fill text-base md:text-xl dark-mode-icon"></i>
                     <i class="bi bi-sun-fill text-lg light-mode-icon hidden"></i>
                 </button>
@@ -191,23 +191,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dark/Light Mode Toggle
     const themeToggle = document.getElementById('theme-toggle');
     const htmlElement = document.documentElement;
-    const darkModeIcon = document.querySelector('.dark-mode-icon');
-    const lightModeIcon = document.querySelector('.light-mode-icon');
+    const darkModeIcons = document.querySelectorAll('.dark-mode-icon');
+    const lightModeIcons = document.querySelectorAll('.light-mode-icon');
     
+    function updateIcons(isDark) {
+        darkModeIcons.forEach(icon => {
+            if (isDark) icon.classList.add('hidden');
+            else icon.classList.remove('hidden');
+        });
+        lightModeIcons.forEach(icon => {
+            if (isDark) icon.classList.remove('hidden');
+            else icon.classList.add('hidden');
+        });
+    }
+
     // Toggle theme on button click
     if (themeToggle) {
         themeToggle.addEventListener('click', function() {
             htmlElement.classList.toggle('dark');
+            const isDark = htmlElement.classList.contains('dark');
             
-            if (htmlElement.classList.contains('dark')) {
+            if (isDark) {
                 localStorage.setItem('theme', 'dark');
-                if (darkModeIcon) darkModeIcon.classList.add('hidden');
-                if (lightModeIcon) lightModeIcon.classList.remove('hidden');
             } else {
                 localStorage.setItem('theme', 'light');
-                if (darkModeIcon) darkModeIcon.classList.remove('hidden');
-                if (lightModeIcon) lightModeIcon.classList.add('hidden');
             }
+            updateIcons(isDark);
         });
     }
 });

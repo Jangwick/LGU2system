@@ -42,15 +42,15 @@
             
             // Set icon visibility after DOM loads to prevent flicker
             document.addEventListener('DOMContentLoaded', function() {
-                const darkModeIcon = document.querySelector('.dark-mode-icon');
-                const lightModeIcon = document.querySelector('.light-mode-icon');
+                const darkModeIcons = document.querySelectorAll('.dark-mode-icon');
+                const lightModeIcons = document.querySelectorAll('.light-mode-icon');
                 
                 if (theme === 'dark') {
-                    if (darkModeIcon) darkModeIcon.classList.add('hidden');
-                    if (lightModeIcon) lightModeIcon.classList.remove('hidden');
+                    darkModeIcons.forEach(icon => icon.classList.add('hidden'));
+                    lightModeIcons.forEach(icon => icon.classList.remove('hidden'));
                 } else {
-                    if (darkModeIcon) darkModeIcon.classList.remove('hidden');
-                    if (lightModeIcon) lightModeIcon.classList.add('hidden');
+                    darkModeIcons.forEach(icon => icon.classList.remove('hidden'));
+                    lightModeIcons.forEach(icon => icon.classList.add('hidden'));
                 }
             });
         })();
