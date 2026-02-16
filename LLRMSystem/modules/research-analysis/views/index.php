@@ -17,16 +17,17 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php require_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-6 transition-colors duration-300">
         <!-- Page Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 dark:from-red-800 dark:to-red-950 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in relative overflow-hidden">
+            <div class="absolute top-0 right-0 -tr-y-1/2 translate-x-1/2 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="transform transition-all duration-300">
                     <h1 class="text-2xl font-bold mb-2 animate-slide-in-left text-white">Legislative Research & Analysis</h1>
                     <p class="text-red-100 dark:text-red-200 animate-slide-in-left animation-delay-100">Intelligent trends, comparisons, and topical insights</p>
                 </div>
                 <div class="flex gap-3 animate-slide-in-right">
-                    <a href="compare.php" style="background-color: #ffffff !important; color: #b91c1c !important;" class="!bg-white !text-red-700 hover:!bg-red-50 font-bold py-2 px-6 rounded-lg transition-all duration-200 flex items-center shadow-md">
+                    <a href="compare.php" class="!bg-white !text-red-700 hover:!bg-red-50 font-bold py-2 px-6 rounded-lg transition-all duration-200 flex items-center shadow-md">
                         <i class="bi bi-layout-split mr-2"></i> Comparison Tool
                     </a>
                 </div>
@@ -35,9 +36,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Topic Trends Chart -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-lg transition-all duration-300">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-tags-fill text-red-600 mr-2"></i> Top Legislative Topics
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:shadow-lg transition-all duration-300">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="bi bi-tags-fill text-red-600 dark:text-red-400 mr-2"></i> Top Legislative Topics
                 </h3>
                 <div class="h-80">
                     <canvas id="topicTrendsChart"></canvas>
@@ -45,9 +46,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Volume Growth Chart -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-lg transition-all duration-300">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-graph-up-arrow text-red-600 mr-2"></i> Record Volume Trends
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:shadow-lg transition-all duration-300">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="bi bi-graph-up-arrow text-red-600 dark:text-red-400 mr-2"></i> Record Volume Trends
                 </h3>
                 <div class="h-80">
                     <canvas id="volumeTrendChart"></canvas>
@@ -91,6 +92,21 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+// Function to check if dark mode is active
+function isDarkMode() {
+    return document.documentElement.classList.contains('dark');
+}
+
+// Function to get label color based on theme
+function getLabelColor() {
+    return isDarkMode() ? '#ffffff' : '#374151';
+}
+
+// Function to get grid color based on theme
+function getGridColor() {
+    return isDarkMode() ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Topic Trends Chart
     const topicCtx = document.getElementById('topicTrendsChart').getContext('2d');
@@ -110,8 +126,21 @@ document.addEventListener('DOMContentLoaded', function() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: getLabelColor() }
+                }
+            },
             scales: {
-                y: { beginAtZero: true }
+                y: { 
+                    beginAtZero: true,
+                    ticks: { color: getLabelColor() },
+                    grid: { color: getGridColor() }
+                },
+                x: {
+                    ticks: { color: getLabelColor() },
+                    grid: { display: false }
+                }
             }
         }
     });
@@ -130,19 +159,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 borderColor: 'rgb(220, 38, 38)',
                 tension: 0.4,
                 pointRadius: 4,
-                pointBackgroundColor: '#fff'
+                pointBackgroundColor: isDarkMode() ? '#1f2937' : '#fff'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'top' }
+                legend: { 
+                    position: 'top',
+                    labels: { color: getLabelColor() }
+                }
             },
             scales: {
-                y: { beginAtZero: true }
+                y: { 
+                    beginAtZero: true,
+                    ticks: { color: getLabelColor() },
+                    grid: { color: getGridColor() }
+                },
+                x: {
+                    ticks: { color: getLabelColor() },
+                    grid: { color: getGridColor() }
+                }
             }
         }
+    });
+
+    // Handle theme toggle for charts
+    window.addEventListener('themeChanged', function() {
+        location.reload(); // Simplest way to re-render charts with new theme
     });
 });
 </script>

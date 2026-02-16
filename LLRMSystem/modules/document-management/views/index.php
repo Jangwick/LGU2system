@@ -42,17 +42,17 @@ function getFileIcon($mimeType, $fileName = '') {
 }
 
 function getFileIconClass($mimeType, $fileName = '') {
-    if (strpos($mimeType, 'pdf') !== false) return 'bg-red-100';
-    if (strpos($mimeType, 'word') !== false) return 'bg-blue-100';
-    if (strpos($mimeType, 'excel') !== false || strpos($mimeType, 'spreadsheet') !== false) return 'bg-green-100';
-    if (strpos($mimeType, 'powerpoint') !== false || strpos($mimeType, 'presentation') !== false) return 'bg-orange-100';
+    if (strpos($mimeType, 'pdf') !== false) return 'bg-red-100 dark:bg-red-900/30';
+    if (strpos($mimeType, 'word') !== false) return 'bg-blue-100 dark:bg-blue-900/30';
+    if (strpos($mimeType, 'excel') !== false || strpos($mimeType, 'spreadsheet') !== false) return 'bg-green-100 dark:bg-green-900/30';
+    if (strpos($mimeType, 'powerpoint') !== false || strpos($mimeType, 'presentation') !== false) return 'bg-orange-100 dark:bg-orange-900/30';
     // Fallback: detect by file extension
     $extType = getFileTypeByExt($fileName);
-    if ($extType === 'pdf') return 'bg-red-100';
-    if ($extType === 'word') return 'bg-blue-100';
-    if ($extType === 'excel') return 'bg-green-100';
-    if ($extType === 'powerpoint') return 'bg-orange-100';
-    return 'bg-gray-100';
+    if ($extType === 'pdf') return 'bg-red-100 dark:bg-red-900/30';
+    if ($extType === 'word') return 'bg-blue-100 dark:bg-blue-900/30';
+    if ($extType === 'excel') return 'bg-green-100 dark:bg-green-900/30';
+    if ($extType === 'powerpoint') return 'bg-orange-100 dark:bg-orange-900/30';
+    return 'bg-gray-100 dark:bg-gray-800';
 }
 
 function getStatusBadge($status) {
@@ -236,11 +236,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
                 
-                <div class="mt-4 flex justify-end gap-3">
-                    <button type="button" onclick="clearAdvancedFilters()" style="background:transparent !important;" class="px-4 py-2 text-sm text-gray-900 dark:text-gray-400 hover:text-black dark:hover:text-gray-200 transition-colors">
+                <div class="mt-4 flex flex-col sm:flex-row justify-end gap-3">
+                    <button type="button" onclick="clearAdvancedFilters()" class="w-full sm:w-auto px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors bg-transparent border-0 font-medium">
                         Clear All
                     </button>
-                    <button type="button" onclick="applyAdvancedFilters()" style="background-color: #dc2626 !important;" class="px-6 py-2 text-white rounded-lg hover:bg-red-700 transition-all shadow-sm font-medium">
+                    <button type="button" onclick="applyAdvancedFilters()" class="w-full sm:w-auto px-6 py-2.5 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all shadow-sm font-bold flex items-center justify-center gap-2">
+                        <i class="bi bi-check2-circle"></i>
                         Apply Advanced Filters
                     </button>
                 </div>
@@ -250,33 +251,36 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Documents Table -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200 border border-transparent dark:border-gray-700">
             <!-- Table Header Actions -->
-            <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                    <!-- Left: Select All & Count -->
-                    <div class="flex items-center gap-3 sm:gap-4">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" id="select-all-top" class="w-5 h-5 text-red-600 dark:text-red-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded focus:ring-red-500" onchange="toggleSelectAll(this)">
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">Select All</span>
+            <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
+                <div class="flex flex-wrap items-center justify-between gap-y-4">
+                    <!-- Left: Select All -->
+                    <div class="flex items-center">
+                        <label class="flex items-center cursor-pointer group">
+                            <div class="relative flex items-center justify-center">
+                                <input type="checkbox" id="select-all-top" class="peer h-6 w-6 cursor-pointer appearance-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 checked:bg-red-600 checked:border-red-600 transition-all focus:ring-0 focus:ring-offset-0" onchange="toggleSelectAll(this)">
+                                <i class="bi bi-check absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity text-xl"></i>
+                            </div>
+                            <span class="ml-3 text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-red-600 transition-colors">Select All</span>
                         </label>
                     </div>
                     
-                    <!-- Center: Document Count -->
-                    <span class="text-sm text-gray-600 dark:text-gray-400 order-3 sm:order-none w-full sm:w-auto text-center sm:text-left" id="selected-count">
-                        <span id="total-docs"><?php echo count($data['documents'] ?? []); ?></span> documents found
-                    </span>
-                    
                     <!-- Right: Bulk Actions -->
                     <div class="flex items-center gap-2">
-                        <button class="px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg flex items-center gap-1 transition-colors">
-                            <i class="bi bi-download"></i>
-                            <span class="hidden xs:inline">Download</span>
+                        <button class="w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl transition-all" title="Download Selected">
+                            <i class="bi bi-download text-lg"></i>
                         </button>
                         <?php if (in_array($userRole, ['administrator', 'officer'])): ?>
-                        <button class="px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg flex items-center gap-1 transition-colors" onclick="bulkDelete()" title="Delete Selected">
-                            <i class="bi bi-trash"></i>
-                            <span class="hidden xs:inline">Selected</span>
+                        <button class="w-10 h-10 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl transition-all" onclick="bulkDelete()" title="Delete Selected">
+                            <i class="bi bi-trash text-lg"></i>
                         </button>
                         <?php endif; ?>
+                    </div>
+
+                    <!-- Bottom: Document Count (Full width on mobile) -->
+                    <div class="w-full flex items-center justify-center pt-2 sm:pt-0 sm:w-auto sm:absolute sm:left-1/2 sm:-translate-x-1/2">
+                        <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
+                            <span id="total-docs" class="text-gray-900 dark:text-white mr-1"><?php echo count($data['documents'] ?? []); ?></span> documents found
+                        </div>
                     </div>
                 </div>
             </div>
@@ -284,8 +288,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Table -->
             <!-- Desktop Table View -->
             <div class="hidden md:block drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50 dark:bg-gray-900">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
                             <th class="px-4 md:px-6 py-3 text-left w-12">
                                 <!-- Redundant checkbox removed -->
@@ -335,9 +339,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php else: ?>
                             <?php foreach ($data['documents'] as $doc): ?>
                                 <!-- Table Row -->
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" data-document-id="<?php echo $doc['id']; ?>">
-                                    <td class="px-4 md:px-6 py-4 w-12">
-                                        <input type="checkbox" class="document-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded" value="<?php echo $doc['id']; ?>">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors" data-document-id="<?php echo $doc['id']; ?>">
+                                    <td class="px-4 md:px-6 py-4 w-12 text-center">
+                                        <input type="checkbox" class="document-checkbox w-4 h-4 text-red-600 dark:text-red-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
                                     </td>
                                     <td class="px-4 md:px-6 py-4">
                                         <div class="flex items-center">
@@ -400,104 +404,114 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
                 
             <!-- Mobile Card View -->
-            <div class="md:hidden divide-y divide-gray-200">
+            <div class="md:hidden space-y-4 p-2">
                 <?php if (!empty($data['documents'])): ?>
-                        <?php foreach ($data['documents'] as $doc): ?>
-                            <div class="p-4 hover:bg-gray-50 transition-all duration-200 mobile-doc-card" data-document-id="<?php echo $doc['id']; ?>">
-                                <!-- Document Info Row -->
-                                <div class="flex items-start gap-3 mb-3">
-                                    <div class="flex items-center h-10 pt-1">
-                                        <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 rounded-md focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
-                                    </div>
-                                    <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-2.5 flex-shrink-0">
-                                        <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-2xl"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="text-sm font-semibold text-gray-900 mb-1 truncate"><?php echo htmlspecialchars($doc['title']); ?></h4>
-                                        <p class="text-xs text-gray-500 truncate mb-2"><?php echo htmlspecialchars($doc['file_name']); ?></p>
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                                <?php echo ucfirst($doc['document_type']); ?>
-                                            </span>
-                                            <span class="text-xs text-gray-500 font-medium">
-                                                <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
-                                            </span>
-                                        </div>
-                                    </div>
+                    <?php foreach ($data['documents'] as $doc): ?>
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mobile-doc-card transition-all active:scale-[0.98]" data-document-id="<?php echo $doc['id']; ?>">
+                            <!-- Top: Type & Date -->
+                            <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
+                                    <span class="badge badge-primary !text-[10px] !py-0.5">
+                                        <?php echo ucfirst($doc['document_type']); ?>
+                                    </span>
                                 </div>
-                                
-                                <!-- Status and Actions Row -->
-                                <div class="flex items-center justify-between pl-[3.25rem]">
-                                    <div class="flex items-center gap-2">
-                                        <?php echo getStatusBadge($doc['status']); ?>
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
-                                            <i class="bi bi-eye text-lg"></i>
-                                        </button>
-                                        <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Download">
-                                            <i class="bi bi-download text-lg"></i>
-                                        </a>
-                                        <?php 
-                                        $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-                                        $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
-                                        $isApproved = ($doc['status'] ?? '') === 'approved';
-                                        $canEdit = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                                        $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                                        ?>
-                                        <?php if ($canEdit): ?>
-                                        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
-                                            <i class="bi bi-pencil text-lg"></i>
-                                        </button>
-                                        <?php endif; ?>
-                                        <?php if ($canDelete): ?>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
-                                            <i class="bi bi-trash text-lg"></i>
-                                        </button>
-                                        <?php endif; ?>
-                                    </div>
+                                <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
+                                    <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
+                                </span>
+                            </div>
+
+                            <!-- Middle: Icon & Title -->
+                            <div class="p-4 flex gap-4">
+                                <div class="w-16 h-16 rounded-2xl <?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> flex items-center justify-center flex-shrink-0 shadow-sm">
+                                    <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-3xl"></i>
+                                </div>
+                                <div class="flex-1 min-w-0 flex flex-col justify-center">
+                                    <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2"><?php echo htmlspecialchars($doc['title']); ?></h4>
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
+
+                            <!-- Bottom: Status & Actions -->
+                            <div class="px-4 py-3 bg-white dark:bg-gray-800 flex items-center justify-between border-t border-gray-50 dark:border-gray-700/50">
+                                <div class="flex items-center">
+                                    <?php echo getStatusBadge($doc['status']); ?>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-9 h-9 flex items-center justify-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl transition-all active:scale-90" title="Download">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    <?php 
+                                    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                                    $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
+                                    $isApproved = ($doc['status'] ?? '') === 'approved';
+                                    $canEdit = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                    $canDelete = $canEdit; // Same policy for mobile
+                                    ?>
+                                    <?php if ($canEdit): ?>
+                                    <button class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <?php endif; ?>
+                                    <?php if (isset($canDelete) && $canDelete): ?>
+                                    <button class="w-9 h-9 flex items-center justify-center text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl transition-all active:scale-90" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="p-12 text-center">
+                        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                            <i class="bi bi-file-earmark-text text-4xl text-gray-300"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">No documents found</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your filters or search keywords</p>
+                    </div>
+                <?php endif; ?>
+            </div>
             
             <!-- Pagination -->
             <?php if (isset($data['pagination']) && $data['pagination']['total_pages'] > 1): ?>
-                <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                    <div class="text-sm text-gray-600">
-                        Showing <span class="font-medium"><?php echo (($data['pagination']['current_page'] - 1) * $data['pagination']['per_page']) + 1; ?></span> 
-                        to <span class="font-medium"><?php echo min($data['pagination']['current_page'] * $data['pagination']['per_page'], $data['pagination']['total']); ?></span> 
-                        of <span class="font-medium"><?php echo number_format($data['pagination']['total']); ?></span> results
+                <div class="px-4 md:px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1">
+                        Showing <span class="font-medium text-gray-900 dark:text-white"><?php echo (($data['pagination']['current_page'] - 1) * $data['pagination']['per_page']) + 1; ?></span> 
+                        to <span class="font-medium text-gray-900 dark:text-white"><?php echo min($data['pagination']['current_page'] * $data['pagination']['per_page'], $data['pagination']['total']); ?></span> 
+                        of <span class="font-medium text-gray-900 dark:text-white"><?php echo number_format($data['pagination']['total']); ?></span> results
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5 order-1 sm:order-2">
                         <?php if ($data['pagination']['current_page'] > 1): ?>
                             <a href="?page=<?php echo $data['pagination']['current_page'] - 1; ?><?php echo http_build_query(array_diff_key($_GET, ['page' => ''])); ?>" 
-                               class="px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                               class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <i class="bi bi-chevron-left"></i>
                             </a>
                         <?php else: ?>
-                            <button class="px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg opacity-50 cursor-not-allowed" disabled>
+                            <button class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-400 dark:text-gray-600 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg opacity-50 cursor-not-allowed" disabled>
                                 <i class="bi bi-chevron-left"></i>
                             </button>
                         <?php endif; ?>
                         
                         <?php for ($i = max(1, $data['pagination']['current_page'] - 2); $i <= min($data['pagination']['total_pages'], $data['pagination']['current_page'] + 2); $i++): ?>
                             <?php if ($i == $data['pagination']['current_page']): ?>
-                                <button class="px-3 py-1.5 text-sm text-white bg-red-600 rounded-lg"><?php echo $i; ?></button>
+                                <button class="inline-flex items-center justify-center w-9 h-9 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-sm"><?php echo $i; ?></button>
                             <?php else: ?>
                                 <a href="?page=<?php echo $i; ?><?php echo http_build_query(array_diff_key($_GET, ['page' => ''])); ?>" 
-                                   class="px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"><?php echo $i; ?></a>
+                                   class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"><?php echo $i; ?></a>
                             <?php endif; ?>
                         <?php endfor; ?>
                         
                         <?php if ($data['pagination']['current_page'] < $data['pagination']['total_pages']): ?>
                             <a href="?page=<?php echo $data['pagination']['current_page'] + 1; ?><?php echo http_build_query(array_diff_key($_GET, ['page' => ''])); ?>" 
-                               class="px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                               class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <i class="bi bi-chevron-right"></i>
                             </a>
                         <?php else: ?>
-                            <button class="px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg opacity-50 cursor-not-allowed" disabled>
+                            <button class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-400 dark:text-gray-600 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg opacity-50 cursor-not-allowed" disabled>
                                 <i class="bi bi-chevron-right"></i>
                             </button>
                         <?php endif; ?>
@@ -701,13 +715,13 @@ function closePreviewModal() {
 // Helper functions for modal
 function getStatusBadgeHTML(status) {
     const badges = {
-        'draft': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-yellow-50 text-yellow-700 border border-yellow-200"><i class="bi bi-pencil-fill mr-1.5"></i>Draft</span>',
-        'pending': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-blue-50 text-blue-700 border border-blue-200"><i class="bi bi-clock-history mr-1.5"></i>Pending</span>',
-        'approved': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-green-50 text-green-700 border border-green-200"><i class="bi bi-check-circle-fill mr-1.5"></i>Approved</span>',
-        'rejected': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-red-50 text-red-700 border border-red-200"><i class="bi bi-x-circle-fill mr-1.5"></i>Rejected</span>',
-        'archived': '<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-gray-50 text-gray-700 border border-gray-200"><i class="bi bi-archive-fill mr-1.5"></i>Archived</span>'
+        'draft': '<span class="badge badge-warning"><i class="bi bi-pencil-fill mr-1.5"></i>Draft</span>',
+        'pending': '<span class="badge badge-info"><i class="bi bi-clock-history mr-1.5"></i>Pending</span>',
+        'approved': '<span class="badge badge-success"><i class="bi bi-check-circle-fill mr-1.5"></i>Approved</span>',
+        'rejected': '<span class="badge badge-danger"><i class="bi bi-x-circle-fill mr-1.5"></i>Rejected</span>',
+        'archived': '<span class="badge badge-secondary"><i class="bi bi-archive-fill mr-1.5"></i>Archived</span>'
     };
-    return badges[status] || `<span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest bg-gray-50 text-gray-700 border border-gray-200">${status}</span>`;
+    return badges[status] || `<span class="badge badge-secondary">${status}</span>`;
 }
 
 function formatDate(dateStr) {

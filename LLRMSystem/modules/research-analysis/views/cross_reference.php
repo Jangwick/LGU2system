@@ -17,46 +17,46 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php require_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-6 transition-colors duration-300">
         <div class="mb-4">
-            <a href="index.php" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
+            <a href="index.php" class="inline-flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                 <i class="bi bi-arrow-left mr-2"></i> Back to Analysis Dashboard
             </a>
         </div>
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">Legislative Cross-Reference Map</h1>
-            <p class="text-gray-600">Visualizing relationships and dependencies between ordinances and resolutions.</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Legislative Cross-Reference Map</h1>
+            <p class="text-gray-600 dark:text-gray-400">Visualizing relationships and dependencies between ordinances and resolutions.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-250px)]">
             <!-- Sidebar: Stats & Info -->
             <div class="lg:col-span-1 space-y-6">
-                <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
-                    <h3 class="font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                         <i class="bi bi-info-circle mr-2 text-red-600"></i> Map Statistics
                     </h3>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center text-sm">
-                            <span class="text-gray-500">Total Nodes (Docs)</span>
-                            <span class="font-bold text-gray-900"><?= count($data['nodes']) ?></span>
+                            <span class="text-gray-500 dark:text-gray-400">Total Nodes (Docs)</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100"><?= count($data['nodes']) ?></span>
                         </div>
                         <div class="flex justify-between items-center text-sm">
-                            <span class="text-gray-500">Detected Links</span>
-                            <span class="font-bold text-gray-900"><?= count($data['links']) ?></span>
+                            <span class="text-gray-500 dark:text-gray-400">Detected Links</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100"><?= count($data['links']) ?></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
-                    <h3 class="font-bold text-gray-900 mb-4">Legend</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-gray-900 dark:text-gray-100 mb-4">Legend</h3>
                     <div class="space-y-2">
                         <div class="flex items-center text-sm">
                             <span class="w-3 h-3 rounded-full bg-red-600 mr-2"></span>
-                            <span>Ordinance</span>
+                            <span class="dark:text-gray-300">Ordinance</span>
                         </div>
                         <div class="flex items-center text-sm">
                             <span class="w-3 h-3 rounded-full bg-blue-600 mr-2"></span>
-                            <span>Resolution</span>
+                            <span class="dark:text-gray-300">Resolution</span>
                         </div>
                     </div>
                 </div>

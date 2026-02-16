@@ -15,7 +15,7 @@ $pageTitle = "Home";
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<script>if(localStorage.getItem('darkMode')==='dark')document.documentElement.classList.add('dark');</script>
+<script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1691,7 +1691,7 @@ $pageTitle = "Home";
     <script>
         function toggleDarkMode() {
             const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('darkMode', isDark ? 'dark' : 'light');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
             updateDarkModeIcons(isDark);
             document.querySelector('meta[name="theme-color"]').content = isDark ? '#0a0a0a' : '#dc2626';
         }

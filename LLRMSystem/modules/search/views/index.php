@@ -38,13 +38,13 @@ $currentPage = 'search';
  */
 function getStatusBadgeClass($status) {
     $badges = [
-        'approved' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
-        'pending' => 'bg-yellow-100 text-yellow-700 border-yellow-200',
-        'draft' => 'bg-gray-100 text-gray-700 border-gray-200',
-        'rejected' => 'bg-red-100 text-red-700 border-red-200',
-        'archived' => 'bg-blue-100 text-blue-700 border-blue-200'
+        'approved' => 'badge-success',
+        'pending' => 'badge-warning',
+        'draft' => 'badge-secondary',
+        'rejected' => 'badge-danger',
+        'archived' => 'badge-gray'
     ];
-    return $badges[strtolower($status)] ?? 'bg-gray-100 text-gray-700 border-gray-200';
+    return 'badge ' . ($badges[strtolower($status)] ?? 'badge-info');
 }
 
 /**
@@ -52,14 +52,14 @@ function getStatusBadgeClass($status) {
  */
 function getTypeIcon($type) {
     $icons = [
-        'ordinance' => 'bi-journal-text text-amber-600',
-        'resolution' => 'bi-file-earmark-check text-blue-600',
-        'session' => 'bi-people text-emerald-600',
-        'agenda' => 'bi-list-ul text-rose-600',
-        'committee' => 'bi-shield-check text-indigo-600',
-        'research' => 'bi-search text-purple-600'
+        'ordinance' => 'bi-journal-text text-amber-600 dark:text-amber-500',
+        'resolution' => 'bi-file-earmark-check text-blue-600 dark:text-blue-500',
+        'session' => 'bi-people text-emerald-600 dark:text-emerald-500',
+        'agenda' => 'bi-list-ul text-rose-600 dark:text-rose-500',
+        'committee' => 'bi-shield-check text-indigo-600 dark:text-indigo-500',
+        'research' => 'bi-search text-purple-600 dark:text-purple-500'
     ];
-    return $icons[strtolower($type)] ?? 'bi-file-earmark text-gray-600';
+    return $icons[strtolower($type)] ?? 'bi-file-earmark text-gray-600 dark:text-gray-400';
 }
 
 include_once __DIR__ . '/../../core/layouts/header.php';
@@ -74,7 +74,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-2 md:p-6 custom-scrollbar">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-2 md:p-6 custom-scrollbar">
         <div class="max-w-7xl mx-auto space-y-4 md:space-y-6">
                 
                 <!-- Search Hero/Header -->
@@ -93,22 +93,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <p class="text-red-50 text-xs md:text-base max-w-xl opacity-90 font-medium">Hybrid engine combining keywords with semantic understanding.</p>
                         </div>
                         <div class="flex items-center gap-1.5 bg-black/10 p-1 rounded-lg md:rounded-xl backdrop-blur-md border border-white/10 w-fit">
-                            <button style="background-color: #ffffff !important; color: #dc2626 !important;" class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg bg-white text-red-700 font-black text-[10px] md:text-sm shadow-lg whitespace-nowrap uppercase tracking-tight">Documents</button>
-                            <button style="background: transparent !important; color: #ffffff !important;" class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg text-white hover:bg-white/10 font-black text-[10px] md:text-sm transition-all whitespace-nowrap uppercase tracking-tight">Legislations</button>
+                            <button class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg bg-white !text-red-700 font-black text-[10px] md:text-sm shadow-lg whitespace-nowrap uppercase tracking-tight">Documents</button>
+                            <button class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg text-white hover:bg-white/10 font-black text-[10px] md:text-sm transition-all whitespace-nowrap uppercase tracking-tight">Legislations</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Mobile Filter Toggle -->
                 <div class="lg:hidden mb-4">
-                    <button onclick="toggleMobileFilters()" class="w-full bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
+                    <button onclick="toggleMobileFilters()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+                            <div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-500">
                                 <i class="bi bi-sliders2"></i>
                             </div>
-                            <span class="font-bold text-gray-700">Refine Search</span>
+                            <span class="font-bold text-gray-700 dark:text-gray-200">Refine Search</span>
                         </div>
-                        <i id="filter-chevron" class="bi bi-chevron-down text-gray-400 transition-transform"></i>
+                        <i id="filter-chevron" class="bi bi-chevron-down text-gray-400 dark:text-gray-500 transition-transform"></i>
                     </button>
                 </div>
 
@@ -118,12 +118,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- Left Sidebar Filters -->
                     <aside id="filters-sidebar" class="hidden lg:block space-y-4 md:space-y-6 lg:sticky lg:top-0 h-fit animate-slide-in-left">
                         <!-- Filters Card -->
-                        <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-gray-700">
                             <div class="flex items-center justify-between mb-6">
-                                <h3 class="font-bold text-gray-800 flex items-center gap-2">
-                                    <i class="bi bi-sliders2 text-red-600"></i> Refine Results
+                                <h3 class="font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                                    <i class="bi bi-sliders2 text-red-600 dark:text-red-500"></i> Refine Results
                                 </h3>
-                                <a href="?" class="text-[10px] text-gray-400 hover:text-red-600 transition-colors uppercase font-black tracking-widest">Clear All</a>
+                                <a href="?" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors uppercase font-black tracking-widest">Clear All</a>
                             </div>
 
                             <form id="filter-form" action="" method="GET" class="space-y-6">
@@ -131,7 +131,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                                 <!-- Category Filter -->
                                 <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Document Type</label>
+                                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">Document Type</label>
                                     <div class="space-y-1">
                                         <?php 
                                         $types = [
@@ -155,12 +155,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $checked = ($filters['type'] ?? '') === $value ? 'checked' : '';
                                             $count = $getFacetCount($value);
                                         ?>
-                                        <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 cursor-pointer group transition-all <?= $checked ? 'bg-red-50 ring-1 ring-red-100' : '' ?>">
+                                        <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer group transition-all <?= $checked ? 'bg-red-50 dark:bg-red-900/10 ring-1 ring-red-100 dark:ring-red-900/30' : '' ?>">
                                             <div class="flex items-center gap-3">
-                                                <input type="radio" name="type" value="<?= $value ?>" <?= $checked ?> class="w-4 h-4 rounded-full border-gray-300 text-red-600 focus:ring-red-500/20">
-                                                <span class="text-sm font-bold <?= $checked ? 'text-red-700' : 'text-gray-600' ?> group-hover:text-red-600"><?= $label ?></span>
+                                                <input type="radio" name="type" value="<?= $value ?>" <?= $checked ?> class="w-4 h-4 rounded-full border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500/20 bg-white dark:bg-gray-700">
+                                                <span class="text-sm font-bold <?= $checked ? 'text-red-700 dark:text-red-400' : 'text-gray-600 dark:text-gray-400' ?> group-hover:text-red-600 dark:group-hover:text-red-400"><?= $label ?></span>
                                             </div>
-                                            <span class="text-[10px] font-black <?= $checked ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-400' ?> px-2 py-0.5 rounded-full transition-all">
+                                            <span class="text-[10px] font-black <?= $checked ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500' ?> px-2 py-0.5 rounded-full transition-all">
                                                 <?= number_format($count) ?>
                                             </span>
                                         </label>
@@ -170,8 +170,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                                 <!-- Status Filter -->
                                 <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Status</label>
-                                    <select name="status" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
+                                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">Status</label>
+                                    <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
                                         <option value="">All Statuses</option>
                                         <option value="approved" <?= ($filters['status'] ?? '') === 'approved' ? 'selected' : '' ?>>Approved</option>
                                         <option value="pending" <?= ($filters['status'] ?? '') === 'pending' ? 'selected' : '' ?>>Pending</option>
@@ -182,15 +182,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                                 <!-- Date Range -->
                                 <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Time Period</label>
+                                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">Time Period</label>
                                     <div class="space-y-2">
                                         <div class="relative group">
-                                            <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs group-focus-within:text-red-500 transition-colors"></i>
-                                            <input type="date" name="date_from" value="<?= $filters['date_from'] ?? '' ?>" class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 focus:ring-2 focus:ring-red-500/20 outline-none">
+                                            <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs group-focus-within:text-red-500 transition-colors"></i>
+                                            <input type="date" name="date_from" value="<?= $filters['date_from'] ?? '' ?>" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 dark:text-gray-300 focus:ring-2 focus:ring-red-500/20 outline-none">
                                         </div>
                                         <div class="relative group">
-                                            <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs group-focus-within:text-red-500 transition-colors"></i>
-                                            <input type="date" name="date_to" value="<?= $filters['date_to'] ?? '' ?>" class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 focus:ring-2 focus:ring-red-500/20 outline-none">
+                                            <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs group-focus-within:text-red-500 transition-colors"></i>
+                                            <input type="date" name="date_to" value="<?= $filters['date_to'] ?? '' ?>" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 dark:text-gray-300 focus:ring-2 focus:ring-red-500/20 outline-none">
                                         </div>
                                     </div>
                                 </div>
@@ -202,25 +202,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
 
                         <!-- Quick Stats -->
-                        <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-                            <h4 class="text-[10px] font-black text-gray-400 uppercase mb-4 tracking-widest">System Insights</h4>
+                        <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 shadow-sm">
+                            <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase mb-4 tracking-widest">System Insights</h4>
                             <div class="space-y-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600 shadow-sm">
+                                    <div class="w-9 h-9 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600 dark:text-red-500 shadow-sm">
                                         <i class="bi bi-database"></i>
                                     </div>
                                     <div>
-                                        <div class="text-[10px] text-gray-400 font-bold uppercase">Total Records</div>
-                                        <div class="text-sm font-black text-gray-800"><?= number_format($total) ?></div>
+                                        <div class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">Total Records</div>
+                                        <div class="text-sm font-black text-gray-800 dark:text-gray-200"><?= number_format($total) ?></div>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm">
+                                    <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-500 shadow-sm">
                                         <i class="bi bi-lightning-charge-fill"></i>
                                     </div>
                                     <div>
-                                        <div class="text-[10px] text-gray-400 font-bold uppercase">AI Status</div>
-                                        <div class="text-sm font-black text-emerald-600"><?= defined('GEMINI_API_KEY') && !empty(GEMINI_API_KEY) ? 'Online' : 'Offline' ?></div>
+                                        <div class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">AI Status</div>
+                                        <div class="text-sm font-black text-emerald-600 dark:text-emerald-500"><?= defined('GEMINI_API_KEY') && !empty(GEMINI_API_KEY) ? 'Online' : 'Offline' ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -232,22 +232,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         
                         <!-- Top Search Bar -->
                         <div class="relative group" data-aos="fade-up">
-                            <div class="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-1.5 md:p-2 pl-4 md:pl-6 flex items-center gap-3 md:gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50 animate-fade-in-up">
-                                <i class="bi bi-search text-gray-400 text-lg md:text-xl shrink-0"></i>
+                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl md:rounded-3xl p-1.5 md:p-2 pl-4 md:pl-6 flex items-center gap-3 md:gap-4 focus-within:ring-4 focus-within:ring-red-500/10 focus-within:border-red-500/40 transition-all shadow-xl shadow-gray-200/50 dark:shadow-none animate-fade-in-up">
+                                <i class="bi bi-search text-gray-400 dark:text-gray-500 text-lg md:text-xl shrink-0"></i>
                                 <form id="search-main-form" action="" method="GET" class="flex-1 flex items-center gap-2">
                                     <input type="hidden" name="mode" id="search-mode" value="<?= htmlspecialchars($mode) ?>">
                                     <input type="text" name="q" id="search-input" value="<?= htmlspecialchars($query) ?>" 
                                            placeholder="Search documents or intent..." 
-                                           class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 py-3 md:py-4 text-sm md:text-lg font-bold" autocomplete="off">
+                                           class="flex-1 bg-transparent border-none outline-none text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 py-3 md:py-4 text-sm md:text-lg font-bold" autocomplete="off">
                                     
                                     <!-- Search Mode Toggle -->
-                                    <div class="hidden md:flex items-center gap-1 bg-gray-100 p-1 rounded-xl border border-gray-200 mr-2">
+                                    <div class="hidden md:flex items-center gap-1 bg-gray-100 dark:bg-gray-950 p-1 rounded-xl border border-gray-200 dark:border-gray-700 mr-2">
                                         <button type="button" onclick="setSearchMode('hybrid')" 
-                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'hybrid' ? 'text-red-600 bg-white shadow-sm border border-gray-200' : 'text-gray-400 hover:text-gray-600' ?>">
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'hybrid' ? 'text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700' : 'text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400' ?>">
                                             Hybrid
                                         </button>
                                         <button type="button" onclick="setSearchMode('semantic')" 
-                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'semantic' ? 'text-red-600 bg-white shadow-sm border border-gray-200' : 'text-gray-400 hover:text-gray-600' ?>">
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'semantic' ? 'text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700' : 'text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400' ?>">
                                             Semantic
                                         </button>
                                     </div>
@@ -259,7 +259,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                             
                             <!-- Suggestions Dropdown -->
-                            <div id="suggestions-box" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 hidden transition-all duration-200 opacity-0 transform translate-y-2">
+                            <div id="suggestions-box" class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50 hidden transition-all duration-200 opacity-0 transform translate-y-2">
                                 <div id="suggestions-content" class="max-h-80 overflow-y-auto p-2">
                                     <!-- Suggestions will be injected here -->
                                 </div>
@@ -269,23 +269,23 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <!-- Results Meta -->
                         <div id="search-meta" class="flex flex-col sm:flex-row sm:items-center justify-between px-2 gap-4 animate-fade-in-up animation-delay-100">
                             <div class="flex flex-wrap items-center gap-3 md:gap-4">
-                                <span class="text-xs md:text-sm text-gray-500 font-medium w-full sm:w-auto mb-1 sm:mb-0">
-                                    Found <span class="text-gray-900 font-black"><?= number_format($total) ?></span> matches 
-                                    <?php if($query): ?> for "<span class="text-red-600 italic font-bold"><?= htmlspecialchars($query) ?></span>"<?php endif; ?>
+                                <span class="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium w-full sm:w-auto mb-1 sm:mb-0">
+                                    Found <span class="text-gray-900 dark:text-white font-black"><?= number_format($total) ?></span> matches 
+                                    <?php if($query): ?> for "<span class="text-red-600 dark:text-red-500 italic font-bold"><?= htmlspecialchars($query) ?></span>"<?php endif; ?>
                                 </span>
-                                <div class="flex items-center gap-2 bg-white px-3 md:px-4 py-1.5 rounded-full border border-gray-200 text-[9px] md:text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest">
+                                <div class="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
                                     <?= ucfirst($mode) ?> Engine
                                 </div>
-                                <button onclick="exportResults()" class="flex items-center gap-2 bg-white hover:bg-gray-50 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 text-[9px] md:text-[10px] font-black text-gray-500 shadow-sm uppercase tracking-widest transition-all">
-                                    <i class="bi bi-download text-red-600"></i> Export CSV
+                                <button onclick="exportResults()" class="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest transition-all">
+                                    <i class="bi bi-download text-red-600 dark:text-red-500"></i> Export CSV
                                 </button>
                             </div>
                             <div class="flex items-center gap-2 self-end sm:self-auto">
-                                <button onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white border border-gray-200 text-gray-400 hover:text-red-600 rounded-lg shadow-sm">
+                                <button onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
                                     <i class="bi bi-grid-fill"></i>
                                 </button>
-                                <button onclick="setView('list')" id="view-list" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 border border-red-200 text-red-600 rounded-lg shadow-sm">
+                                <button onclick="setView('list')" id="view-list" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm">
                                     <i class="bi bi-list-task"></i>
                                 </button>
                             </div>
@@ -295,21 +295,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div id="results-list" class="space-y-4">
                             <?php if (empty($results)): ?>
                                 <!-- Empty State -->
-                                <div class="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-16 md:p-24 text-center shadow-sm animate-bounce-in">
-                                    <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300 shadow-inner">
+                                <div class="bg-white dark:bg-gray-800 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-3xl p-16 md:p-24 text-center shadow-sm animate-bounce-in">
+                                    <div class="w-24 h-24 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300 dark:text-gray-600 shadow-inner">
                                         <i class="bi bi-search text-5xl"></i>
                                     </div>
-                                    <h3 class="text-2xl font-black text-gray-800 mb-2">No documents found</h3>
-                                    <p class="text-gray-500 max-w-sm mx-auto font-medium">Try adjusting your filters or use more specific keywords like "Ordinance 2024".</p>
+                                    <h3 class="text-2xl font-black text-gray-800 dark:text-white mb-2">No documents found</h3>
+                                    <p class="text-gray-500 dark:text-gray-400 max-w-sm mx-auto font-medium">Try adjusting your filters or use more specific keywords like "Ordinance 2024".</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($results as $index => $doc): 
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
-                                <div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
+                                <div class="group bg-white dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900/50 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
                                     <div class="flex flex-col md:flex-row gap-6">
                                         <!-- Doc Icon -->
-                                        <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 group-hover:border-red-100 transition-all duration-300">
+                                        <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-700 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 group-hover:border-red-100 dark:group-hover:border-red-900 transition-all duration-300">
                                             <i class="bi <?= getTypeIcon($doc['document_type']) ?>"></i>
                                         </div>
 
@@ -319,48 +319,48 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest <?= getStatusBadgeClass($doc['status']) ?>">
                                                     <?= $doc['status'] ?>
                                                 </span>
-                                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">REF: <?= $doc['reference_number'] ?? 'N/A' ?></span>
+                                                <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest bg-gray-50 dark:bg-gray-950 px-2 py-1 rounded-lg border border-gray-100 dark:border-gray-700">REF: <?= $doc['reference_number'] ?? 'N/A' ?></span>
                                                 
                                                 <?php if(isset($doc['relevance_score'])): ?>
-                                                <div class="relevance-bar ml-auto flex items-center gap-2 bg-red-50/50 px-3 py-1.5 rounded-xl border border-red-100">
-                                                    <div class="text-[9px] font-black uppercase text-red-600 tracking-tighter">AI Relevance</div>
-                                                    <div class="h-1.5 w-14 bg-gray-200 rounded-full overflow-hidden">
+                                                <div class="relevance-bar ml-auto flex items-center gap-2 bg-red-50/50 dark:bg-red-900/10 px-3 py-1.5 rounded-xl border border-red-100 dark:border-red-900/30">
+                                                    <div class="text-[9px] font-black uppercase text-red-600 dark:text-red-400 tracking-tighter">AI Relevance</div>
+                                                    <div class="h-1.5 w-14 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                                                         <div class="h-full bg-red-500 shadow-sm shadow-red-500/50" style="width: <?= $doc['relevance_score'] * 100 ?>%"></div>
                                                     </div>
                                                 </div>
                                                 <?php endif; ?>
                                             </div>
 
-                                            <h3 class="text-xl font-black text-gray-800 group-hover:text-red-600 transition-colors line-clamp-1 mb-2">
+                                            <h3 class="text-xl font-black text-gray-800 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-1 mb-2">
                                                 <?= htmlspecialchars($doc['title']) ?>
                                             </h3>
 
-                                            <p class="text-gray-500 text-sm line-clamp-2 mb-6 leading-relaxed font-medium">
+                                            <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-6 leading-relaxed font-medium">
                                                 <?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?>
                                             </p>
 
-                                            <div class="flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 pt-5">
-                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400">
-                                                    <i class="bi bi-calendar-event text-red-500 text-sm"></i>
+                                            <div class="flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 dark:border-gray-700 pt-5">
+                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
+                                                    <i class="bi bi-calendar-event text-red-500 dark:text-red-400 text-sm"></i>
                                                     <?= date('M d, Y', strtotime($doc['created_at'])) ?>
                                                 </div>
-                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400">
-                                                    <i class="bi bi-person-circle text-gray-300 text-sm"></i>
-                                                    <span class="hover:text-red-500 transition-colors cursor-default"><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
+                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
+                                                    <i class="bi bi-person-circle text-gray-300 dark:text-gray-600 text-sm"></i>
+                                                    <span class="hover:text-red-500 dark:hover:text-red-400 transition-colors cursor-default"><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
                                                 </div>
                                                 <div class="flex items-center gap-1.5">
                                                     <?php 
                                                     $tags = explode(',', $doc['tags'] ?? '');
                                                     foreach(array_slice($tags, 0, 3) as $tag): if(empty($tag)) continue; ?>
-                                                    <span class="px-2.5 py-1 rounded-lg bg-gray-50 text-[10px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer">#<?= trim($tag) ?></span>
+                                                    <span class="px-2.5 py-1 rounded-lg bg-gray-50 dark:bg-gray-950 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 border border-gray-100 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900 hover:text-red-600 dark:hover:text-red-400 transition-all cursor-pointer">#<?= trim($tag) ?></span>
                                                     <?php endforeach; ?>
                                                 </div>
 
                                                 <div class="card-actions ml-auto flex items-center gap-3">
-                                                    <button onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
+                                                    <button onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 dark:bg-black hover:bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn">
                                                         <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
                                                     </button>
-                                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
+                                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-10 h-10 rounded-xl bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
                                                         <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
                                                     </a>
                                                 </div>
@@ -369,24 +369,24 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
-                                
+
                                 <!-- Pagination -->
                                 <?php if ($totalPages > 1): ?>
                                 <div id="pagination" class="flex items-center justify-center gap-2 pt-8">
                                     <?php if ($page > 1): ?>
-                                        <button onclick="changePage(<?= $page - 1 ?>)" class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:border-red-600 hover:text-red-600 transition-all shadow-sm">
+                                        <button onclick="changePage(<?= $page - 1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all shadow-sm">
                                             <i class="bi bi-chevron-left"></i>
                                         </button>
                                     <?php endif; ?>
 
                                     <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                                        <button onclick="changePage(<?= $i ?>)" class="w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm <?= $i === $page ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border border-gray-200 hover:border-red-600 hover:text-red-600' ?>">
+                                        <button onclick="changePage(<?= $i ?>)" class="w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm <?= $i === $page ? 'bg-red-600 text-white border-red-600' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400' ?>">
                                             <?= $i ?>
                                         </button>
                                     <?php endfor; ?>
 
                                     <?php if ($page < $totalPages): ?>
-                                        <button onclick="changePage(<?= $page + 1 ?>)" class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:border-red-600 hover:text-red-600 transition-all shadow-sm">
+                                        <button onclick="changePage(<?= $page + 1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all shadow-sm">
                                             <i class="bi bi-chevron-right"></i>
                                         </button>
                                     <?php endif; ?>
@@ -406,9 +406,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
 
                 <!-- Modal Content -->
-                <div id="preview-content" class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <div id="preview-content" class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                     <!-- Modal Header -->
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-center justify-between text-white">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-center justify-between text-white border-b border-white/10">
                         <div class="flex items-center gap-4">
                             <div id="modal-icon-bg" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
                                 <i id="modal-icon" class="bi bi-file-earmark-text"></i>
@@ -424,55 +424,55 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="bg-white px-6 py-8 md:px-8">
+                    <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <!-- Left: Details -->
                             <div class="md:col-span-2 space-y-6">
                                 <div>
-                                    <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Document Title</h4>
-                                    <h2 id="preview-title" class="text-2xl font-black text-gray-800 leading-tight">---</h2>
+                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Document Title</h4>
+                                    <h2 id="preview-title" class="text-2xl font-black text-gray-800 dark:text-white leading-tight">---</h2>
                                 </div>
 
                                 <div>
-                                    <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Description</h4>
-                                    <p id="preview-desc" class="text-gray-600 leading-relaxed font-medium">---</p>
+                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Description</h4>
+                                    <p id="preview-desc" class="text-gray-600 dark:text-gray-400 leading-relaxed font-medium">---</p>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                                        <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</h4>
+                                    <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
+                                        <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Status</h4>
                                         <div id="preview-status" class="inline-flex mt-1">
-                                            <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-gray-100 text-gray-600">---</span>
+                                            <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">---</span>
                                         </div>
                                     </div>
-                                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                                        <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Date Created</h4>
-                                        <p id="preview-date" class="text-sm font-bold text-gray-800 mt-1">---</p>
+                                    <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
+                                        <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Date Created</h4>
+                                        <p id="preview-date" class="text-sm font-bold text-gray-800 dark:text-gray-200 mt-1">---</p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Right: Metadata & Actions -->
                             <div class="space-y-6">
-                                <div class="bg-gray-50 rounded-3xl p-6 border border-gray-100">
-                                    <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">File Information</h4>
+                                <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-6 border border-gray-100 dark:border-gray-700">
+                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">File Information</h4>
                                     <div class="space-y-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-red-600 shadow-sm border border-gray-100">
+                                            <div class="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center text-red-600 dark:text-red-500 shadow-sm border border-gray-100 dark:border-gray-700">
                                                 <i class="bi bi-file-earmark-pdf"></i>
                                             </div>
                                             <div class="min-w-0">
-                                                <p id="preview-filename" class="text-xs font-bold text-gray-800 truncate">filename.pdf</p>
-                                                <p id="preview-filesize" class="text-[10px] text-gray-400">0.0 MB</p>
+                                                <p id="preview-filename" class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">filename.pdf</p>
+                                                <p id="preview-filesize" class="text-[10px] text-gray-400 dark:text-gray-500">0.0 MB</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-gray-400 shadow-sm border border-gray-100">
+                                            <div class="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 shadow-sm border border-gray-100 dark:border-gray-700">
                                                 <i class="bi bi-person-circle"></i>
                                             </div>
                                             <div>
-                                                <p id="preview-uploader" class="text-sm font-bold text-gray-800">Uploader</p>
-                                                <p class="text-[10px] text-gray-400">Uploaded By</p>
+                                                <p id="preview-uploader" class="text-sm font-bold text-gray-800 dark:text-gray-200">Uploader</p>
+                                                <p class="text-[10px] text-gray-400 dark:text-gray-500">Uploaded By</p>
                                             </div>
                                         </div>
                                     </div>
@@ -486,7 +486,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <a id="preview-download-btn" href="#" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
                                         <i class="bi bi-download"></i> Download Document
                                     </a>
-                                    <a id="preview-full-view" href="#" class="w-full py-3.5 bg-gray-800 hover:bg-gray-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg shadow-gray-200 transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                    <a id="preview-full-view" href="#" class="w-full py-3.5 bg-gray-800 dark:bg-black hover:bg-gray-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg shadow-gray-200 dark:shadow-none transition-all flex items-center justify-center gap-2 transform active:scale-95">
                                         <i class="bi bi-fullscreen"></i> Detailed View
                                     </a>
                                 </div>
@@ -809,14 +809,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     
                     if (suggestions.length > 0) {
                         suggestionsContent.innerHTML = suggestions.map(s => `
-                            <div class="p-4 hover:bg-red-50 cursor-pointer border-b border-gray-50 flex items-center justify-between group" onclick="selectSuggestion('${s.title}')">
+                            <div class="p-4 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer border-b border-gray-50 dark:border-gray-700 flex items-center justify-between group" onclick="selectSuggestion('${s.title}')">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-red-600 transition-all">
+                                    <div class="w-10 h-10 rounded-xl bg-gray-50 dark:bg-gray-900 flex items-center justify-center text-gray-400 group-hover:bg-white dark:group-hover:bg-gray-800 group-hover:text-red-600 transition-all shadow-sm">
                                         <i class="bi bi-clock-history"></i>
                                     </div>
                                     <div>
-                                        <div class="text-sm font-bold text-gray-800 group-hover:text-red-700 transition-colors">${s.title}</div>
-                                        <div class="text-[10px] text-gray-400 font-black uppercase tracking-widest">${s.reference_number || s.document_type}</div>
+                                        <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors">${s.title}</div>
+                                        <div class="text-[10px] text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest">${s.reference_number || s.document_type}</div>
                                     </div>
                                 </div>
                                 <i class="bi bi-arrow-up-left text-gray-300 group-hover:text-red-400 transition-all opacity-0 group-hover:opacity-100"></i>

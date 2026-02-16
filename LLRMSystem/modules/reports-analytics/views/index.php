@@ -25,19 +25,21 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php require_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-6">
         <!-- Page Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
                 <div class="transform transition-all duration-300">
-                    <h1 class="text-2xl font-bold mb-2 animate-slide-in-left">Reports & Analytics</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2 animate-slide-in-left">Reports & Analytics</h1>
                     <p class="text-red-100 animate-slide-in-left animation-delay-100">Comprehensive insights and statistical analysis</p>
                 </div>
-                <div class="flex gap-3 animate-slide-in-right">
-                    <button onclick="showExportModal()" style="background-color: #22c55e !important; color: #ffffff !important;" class="btn-success flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
-                        <i class="bi bi-download mr-2 transition-transform group-hover:animate-bounce"></i> Export Reports
+                <div class="flex flex-wrap gap-3 animate-slide-in-right">
+                    <button onclick="showExportModal()" class="flex items-center px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/10">
+                        <i class="bi bi-download mr-2 group-hover:animate-bounce"></i> Export Reports
                     </button>
-                    <button onclick="window.print()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="bg-white text-red-600 hover:bg-red-50 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95">
+                    <button onclick="window.print()" class="flex items-center px-6 py-2.5 !bg-white hover:!bg-red-50 !text-red-600 rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-transparent">
                         <i class="bi bi-printer mr-2 transition-transform"></i> Print
                     </button>
                 </div>
@@ -45,48 +47,48 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Key Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-100 group cursor-pointer">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-100 group cursor-pointer">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <i class="bi bi-file-earmark-text-fill text-blue-600 text-4xl"></i>
+                        <i class="bi bi-file-earmark-text-fill text-blue-600 dark:text-blue-400 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-blue-600">Total Documents</div>
-                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['total_documents']); ?></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">Total Documents</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['total_documents']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-200 group cursor-pointer">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-200 group cursor-pointer">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <i class="bi bi-check-circle-fill text-green-600 text-4xl"></i>
+                        <i class="bi bi-check-circle-fill text-green-600 dark:text-green-400 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-green-600">Approved</div>
-                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['approved_documents']); ?></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-green-600 dark:group-hover:text-green-400">Approved</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['approved_documents']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-300 group cursor-pointer">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-300 group cursor-pointer">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <i class="bi bi-people-fill text-indigo-600 text-4xl"></i>
+                        <i class="bi bi-people-fill text-indigo-600 dark:text-indigo-400 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-indigo-600">Active Users</div>
-                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['active_users']); ?></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">Active Users</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['active_users']); ?></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-400 group cursor-pointer">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-400 group cursor-pointer">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <i class="bi bi-hdd-fill text-amber-600 text-4xl"></i>
+                        <i class="bi bi-hdd-fill text-amber-600 dark:text-amber-400 text-4xl"></i>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm text-gray-600 transition-colors duration-200 group-hover:text-amber-600">Storage Used</div>
-                        <div class="text-2xl font-bold text-gray-900 transform transition-all duration-300 group-hover:scale-110">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">Storage Used</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110">
                             <?php 
                             $storage = $stats['total_storage'];
                             if ($storage >= 1073741824) {
@@ -106,16 +108,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Charts Row 1 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Documents by Type -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-500 group">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Type</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-500 group">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Type</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="documentsByTypeChart"></canvas>
                 </div>
             </div>
 
             <!-- Documents by Status -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-600 group">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Status</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-600 group">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Status</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="documentsByStatusChart"></canvas>
                 </div>
@@ -123,8 +125,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Timeline Chart -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-700 group">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Document Upload Timeline (Last 12 Months)</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-700 group">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Document Upload Timeline (Last 12 Months)</h3>
             <div class="relative" style="height: 300px;">
                 <canvas id="timelineChart"></canvas>
             </div>
@@ -133,16 +135,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Charts Row 2 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Activity by Action -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-800 group">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Activity by Action (30 Days)</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-800 group">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Activity by Action (30 Days)</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="activityChart"></canvas>
                 </div>
             </div>
 
             <!-- Documents by Department -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-900 group">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Department</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-900 group">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Documents by Department</h3>
                 <div class="relative" style="height: 280px;">
                     <canvas id="departmentChart"></canvas>
                 </div>
@@ -152,33 +154,33 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Tables Row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Top Uploaders -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-900">Top Uploaders</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Top Uploaders</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-900/50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Documents</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">User</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Documents</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <?php foreach ($topUploaders as $uploader): ?>
-                                <tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                                <i class="bi bi-person-fill text-blue-600"></i>
+                                            <div class="h-8 w-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                                                <i class="bi bi-person-fill text-blue-600 dark:text-blue-400"></i>
                                             </div>
                                             <div class="ml-3">
-                                                <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($uploader['full_name'] ?? $uploader['name']); ?></div>
-                                                <div class="text-xs text-gray-500"><?php echo htmlspecialchars($uploader['department'] ?? 'N/A'); ?></div>
+                                                <div class="text-sm font-bold text-gray-900 dark:text-gray-100"><?php echo htmlspecialchars($uploader['full_name'] ?? $uploader['name']); ?></div>
+                                                <div class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold"><?php echo htmlspecialchars($uploader['department'] ?? 'N/A'); ?></div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-black text-red-600 dark:text-red-400">
                                         <?php echo number_format($uploader['document_count']); ?>
                                     </td>
                                 </tr>
@@ -189,25 +191,25 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Storage by Type -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-900">Storage Usage by Type</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Storage Usage by Type</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-900/50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Size</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Type</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Size</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <?php foreach ($storageByType as $type): ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700 dark:text-gray-300">
                                         <?php echo ucfirst(str_replace('_', ' ', $type['document_type'])); ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-black text-blue-600 dark:text-blue-400">
                                         <?php 
                                         $size = $type['total_size'];
                                         if ($size >= 1073741824) {
@@ -283,6 +285,17 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                             <input type="date" name="end_date" class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-sm shadow-sm hover:border-red-400 dark:hover:border-gray-600 [color-scheme:light] dark:[color-scheme:dark]">
                         </div>
                     </div>
+                </div>
+
+                <!-- Modal Footer Buttons -->
+                <div class="pt-4 flex gap-3">
+                    <button type="button" onclick="closeExportModal()" class="flex-1 px-4 py-3 border-2 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all active:scale-95">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-200 dark:shadow-none transform transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
+                        <i class="bi bi-download"></i>
+                        Generate
+                    </button>
                 </div>
             </div>
         </form>
