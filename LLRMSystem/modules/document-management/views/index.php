@@ -57,11 +57,11 @@ function getFileIconClass($mimeType, $fileName = '') {
 
 function getStatusBadge($status) {
     $badges = [
-        'draft' => '<span class="badge badge-warning"><i class="bi bi-pencil mr-1"></i>Draft</span>',
+        'draft' => '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
         'pending' => '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
         'approved' => '<span class="badge badge-success"><i class="bi bi-check-circle mr-1"></i>Approved</span>',
         'rejected' => '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>',
-        'archived' => '<span class="badge bg-gray-100 text-gray-800"><i class="bi bi-archive mr-1"></i>Archived</span>'
+        'archived' => '<span class="badge badge-gray"><i class="bi bi-archive mr-1"></i>Archived</span>'
     ];
     return $badges[$status] ?? '<span class="badge badge-info">' . ucfirst($status) . '</span>';
 }

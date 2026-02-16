@@ -112,27 +112,55 @@
             }
             
             .badge {
-                @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+                @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
             }
             
             .badge-primary {
-                @apply bg-red-100 text-red-800;
+                @apply bg-red-50 text-red-700 border border-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/30;
+            }
+            
+            .badge-secondary {
+                @apply bg-gray-100 text-gray-700 border border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700;
             }
             
             .badge-success {
-                @apply bg-green-100 text-green-800;
+                @apply bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-900/30;
             }
             
             .badge-warning {
-                @apply bg-yellow-100 text-yellow-800;
+                @apply bg-yellow-50 text-yellow-700 border border-yellow-100 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-900/30;
             }
             
             .badge-danger {
-                @apply bg-red-100 text-red-800;
+                @apply bg-red-50 text-red-700 border border-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/30;
             }
             
             .badge-info {
-                @apply bg-indigo-100 text-indigo-800;
+                @apply bg-blue-50 text-blue-700 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-900/30;
+            }
+
+            .badge-indigo {
+                @apply bg-indigo-50 text-indigo-700 border border-indigo-100 dark:bg-indigo-900/20 dark:text-indigo-400 dark:border-indigo-900/30;
+            }
+
+            .badge-purple {
+                @apply bg-purple-50 text-purple-700 border border-purple-100 dark:bg-purple-900/20 dark:text-purple-400 dark:border-purple-900/30;
+            }
+
+            .badge-pink {
+                @apply bg-pink-50 text-pink-700 border border-pink-100 dark:bg-pink-900/20 dark:text-pink-400 dark:border-pink-900/30;
+            }
+
+            .badge-orange {
+                @apply bg-orange-50 text-orange-700 border border-orange-100 dark:bg-orange-900/20 dark:text-orange-400 dark:border-orange-900/30;
+            }
+
+            .badge-teal {
+                @apply bg-teal-50 text-teal-700 border border-teal-100 dark:bg-teal-900/20 dark:text-teal-400 dark:border-teal-900/30;
+            }
+
+            .badge-gray {
+                @apply bg-gray-50 text-gray-700 border border-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700;
             }
             
             .table-container {
