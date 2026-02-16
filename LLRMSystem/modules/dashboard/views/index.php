@@ -46,19 +46,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         Legislative records status for today.
                     </p>
                 </div>
-                <div class="flex gap-2 animate-slide-in-right">
+                <div class="flex w-full md:w-auto gap-2 md:gap-3 animate-slide-in-right mt-3 md:mt-0">
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="bg-white dark:bg-gray-100 text-red-600 px-3 py-2 rounded-lg font-semibold hover:bg-red-50 dark:hover:bg-white transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-[10px] md:text-base border-none">
-                        <i class="bi bi-upload mr-1 md:mr-2"></i>
+                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="flex-1 md:flex-none justify-center !bg-white text-red-600 px-4 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-[1.02] active:scale-95 text-sm border-none">
+                        <i class="bi bi-upload mr-2"></i>
                         <span>Upload</span>
                     </a>
                     <?php endif; ?>
-                    <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="bg-red-700 dark:bg-red-900 text-white px-3 py-2 rounded-lg font-semibold hover:bg-red-800 dark:hover:bg-red-950 transition-all flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-[10px] md:text-base border-none">
-                        <i class="bi bi-search mr-1 md:mr-2"></i>
-                        Search
+                    <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="flex-1 md:flex-none justify-center bg-red-600 dark:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold hover:bg-red-700 dark:hover:bg-red-800 border border-white/10 shadow-lg transition-all flex items-center transform hover:scale-[1.02] active:scale-95 text-sm">
+                        <i class="bi bi-search mr-2"></i>
+                        <span>Search</span>
                     </a>
                 </div>
             </div>
