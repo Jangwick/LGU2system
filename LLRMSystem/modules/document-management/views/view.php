@@ -99,6 +99,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
+        <!-- Back Button -->
+        <div class="mb-4 flex animate-fade-in">
+            <a href="<?= DOCUMENTS_INDEX_URL ?>" class="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:text-red-600 hover:border-red-100 hover:bg-red-50 transition-all shadow-sm group">
+                <i class="bi bi-arrow-left mr-2 group-hover:-translate-x-1 transition-transform text-red-600"></i>
+                Back to List
+            </a>
+        </div>
+
         <!-- Header Section -->
         <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
             <div class="flex flex-col gap-4">

@@ -67,6 +67,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
         <div class="max-w-4xl mx-auto">
+            <!-- Back Button -->
+            <div class="mb-4 flex animate-fade-in">
+                <a href="<?= DOCUMENTS_INDEX_URL ?>/views/view.php?id=<?= $document['id'] ?>" class="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:text-red-600 hover:border-red-100 hover:bg-red-50 transition-all shadow-sm group">
+                    <i class="bi bi-arrow-left mr-2 group-hover:-translate-x-1 transition-transform text-red-600"></i>
+                    Back to Document
+                </a>
+            </div>
+
             <!-- Header -->
             <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6">
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">Edit Document</h1>
