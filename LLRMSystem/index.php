@@ -460,19 +460,19 @@ $pageTitle = "Home";
                     <!-- Screen Content -->
                     <div class="transition-colors duration-700 bg-white" id="search-screen-bg">
                         <!-- Hero Banner -->
-                        <div class="bg-gradient-to-r from-red-700 to-red-900 px-6 md:px-10 py-6 md:py-8">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="bg-gradient-to-r from-red-700 to-red-900 px-4 md:px-10 py-6 md:py-8">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-8">
                                 <div>
                                     <div class="flex items-center space-x-2 mb-2">
                                         <div class="h-px w-6 bg-white/40"></div>
-                                        <span class="text-white/70 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">AI-Powered Intelligence</span>
+                                        <span class="text-white/70 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em]">AI-Powered Intelligence</span>
                                     </div>
-                                    <h3 class="text-xl md:text-3xl font-black text-white italic tracking-tight">Advanced Search</h3>
-                                    <p class="text-red-200 text-[10px] md:text-xs font-medium mt-1">Hybrid engine combining keywords with semantic understanding.</p>
+                                    <h3 class="text-lg md:text-3xl font-black text-white italic tracking-tight uppercase">Advanced Search</h3>
+                                    <p class="text-red-200 text-[9px] md:text-xs font-medium mt-1 max-w-[250px] md:max-w-none">Hybrid engine combining keywords with semantic understanding.</p>
                                 </div>
-                                <div class="flex space-x-2">
-                                    <span class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider border-2 border-white text-white bg-white/10">Documents</span>
-                                    <span class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider text-white/70 border border-white/20 hover:border-white/40 transition-colors">Legislations</span>
+                                <div class="flex space-x-2 flex-shrink-0">
+                                    <span class="px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg text-[9px] md:text-xs font-black uppercase tracking-wider border-2 border-white text-white bg-white/10 whitespace-nowrap">Documents</span>
+                                    <span class="px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg text-[9px] md:text-xs font-black uppercase tracking-wider text-white/70 border border-white/20 hover:border-white/40 transition-colors whitespace-nowrap">Legislations</span>
                                 </div>
                             </div>
                         </div>
@@ -535,28 +535,28 @@ $pageTitle = "Home";
                             </div>
                             
                             <!-- Results Area -->
-                            <div class="flex-1 p-4 md:p-6">
+                            <div class="flex-1 p-3 md:p-6 overflow-hidden">
                                 <!-- Search Bar -->
-                                <div class="flex items-center gap-3 mb-5">
-                                    <div class="flex-1 flex items-center h-12 rounded-xl border px-4 transition-colors duration-700 bg-white border-gray-200" id="search-input-bar">
-                                        <i class="bi bi-search mr-3 transition-colors duration-700 text-gray-400"></i>
-                                        <span class="text-sm transition-colors duration-700 text-gray-400">Search documents or intent...</span>
-                                        <div class="ml-auto flex space-x-1">
-                                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold transition-colors duration-700 bg-emerald-100 text-emerald-700 border border-emerald-200">Hybrid</span>
-                                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold transition-colors duration-700 bg-gray-100 text-gray-500">Semantic</span>
+                                <div class="flex items-center gap-2 md:gap-3 mb-5">
+                                    <div class="flex-1 flex items-center h-12 rounded-xl border px-3 md:px-4 transition-colors duration-700 bg-white border-gray-200 min-w-0 shadow-sm" id="search-input-bar">
+                                        <i class="bi bi-search mr-2 md:mr-3 transition-colors duration-700 text-gray-400 flex-shrink-0"></i>
+                                        <span class="text-[11px] md:text-sm transition-colors duration-700 text-gray-400 truncate mr-1">Search documents or intent...</span>
+                                        <div class="ml-auto flex space-x-1 flex-shrink-0">
+                                            <span class="px-2 py-0.5 md:px-2.5 md:py-1 rounded-md text-[9px] md:text-[10px] font-bold transition-colors duration-700 bg-emerald-100 text-emerald-700 border border-emerald-200">Hybrid</span>
+                                            <span class="hidden sm:inline-block px-2.5 py-1 rounded-md text-[10px] font-bold transition-colors duration-700 bg-gray-100 text-gray-500">Semantic</span>
                                         </div>
                                     </div>
-                                    <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200/40 hover:bg-red-700 transition-all cursor-pointer">
+                                    <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200/40 hover:bg-red-700 transition-all cursor-pointer flex-shrink-0">
                                         <i class="bi bi-arrow-right text-lg"></i>
                                     </div>
                                 </div>
                                 
                                 <!-- Results Header -->
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="flex items-center space-x-3">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3 sm:gap-0">
+                                    <div class="flex flex-wrap items-center gap-2 md:gap-3">
                                         <span class="text-xs font-bold transition-colors duration-700 text-gray-600" id="search-found-text">Found <strong>9</strong> matches</span>
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5"></span>Hybrid Engine</span>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors duration-700 border-gray-200 text-gray-500 cursor-pointer hover:border-red-200 hover:text-red-600"><i class="bi bi-download mr-1"></i>Export CSV</span>
+                                        <span class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors duration-700 border-gray-200 text-gray-500 cursor-pointer hover:border-red-200 hover:text-red-600"><i class="bi bi-download mr-1"></i>Export CSV</span>
                                     </div>
                                     <div class="hidden md:flex space-x-1">
                                         <div class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-700 border border-gray-200 text-gray-400 cursor-pointer"><i class="bi bi-grid-3x3-gap-fill text-xs"></i></div>
