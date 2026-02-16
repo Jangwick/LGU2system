@@ -48,7 +48,10 @@ if (isset($_SESSION['user_id'])) {
                             'Reports & Analytics' => 'Reports',
                             'User Management' => 'Users',
                             'Activity Logs' => 'Logs',
-                            'Research & Analysis' => 'Analysis'
+                            'Research & Analysis' => 'Analysis',
+                            'Legislative Research & Analysis' => 'Research',
+                            'Legislative Cross-Reference Map' => 'Cross-Ref',
+                            'Law Comparison Tool' => 'Compare'
                         ];
                         echo $titleMap[$mobTitle] ?? $mobTitle; 
                     ?></span>
