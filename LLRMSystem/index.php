@@ -471,7 +471,7 @@ $pageTitle = "Home";
                                     <p class="text-red-200 text-[9px] md:text-xs font-medium mt-1 max-w-[250px] md:max-w-none">Hybrid engine combining keywords with semantic understanding.</p>
                                 </div>
                                 <div class="flex space-x-2 flex-shrink-0">
-                                    <span class="px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg text-[9px] md:text-xs font-black uppercase tracking-wider border-2 border-white text-white bg-white/10 whitespace-nowrap">Documents</span>
+                                    <span class="hero-toggle-btn px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg text-[9px] md:text-xs font-black uppercase tracking-wider border-2 border-white text-red-700 bg-white shadow-lg whitespace-nowrap">Documents</span>
                                     <span class="px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg text-[9px] md:text-xs font-black uppercase tracking-wider text-white/70 border border-white/20 hover:border-white/40 transition-colors whitespace-nowrap">Legislations</span>
                                 </div>
                             </div>

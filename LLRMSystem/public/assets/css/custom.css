@@ -754,8 +754,14 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Dark Mode - Cards & Containers */
-.dark .bg-white {
+.dark .bg-white:not(.hero-toggle-btn) {
     background-color: #2d2d2d !important;
+}
+
+/* Hero toggle buttons - preserve original colors in dark mode */
+.dark .hero-toggle-btn.bg-white {
+    background-color: #ffffff !important;
+    color: #b91c1c !important;
 }
 
 /* Dark Mode - Danger Zone Exception */
@@ -948,7 +954,7 @@ table tbody tr:hover {
 }
 
 /* Dark Mode - Buttons */
-.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600):not(td button) {
+.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600):not(td button):not(.hero-toggle-btn) {
     background-color: #404040 !important;
     color: #e5e5e5 !important;
 }
