@@ -7,25 +7,17 @@ $currentPage = 'help';
 include_once __DIR__ . '/../../core/layouts/header.php';
 ?>
 
-<script>
-    // Force light mode for legal/help pages when viewed as guest
-    if (!<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.style.colorScheme = 'light';
-    }
-</script>
-
 <?php if (isset($_SESSION['user_id'])): ?>
     <?php include_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
     <div class="flex-1 flex flex-col overflow-hidden bg-white">
         <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
 <?php else: ?>
-    <div class="flex-1 flex flex-col min-h-screen bg-gray-50">
+    <div class="flex-1 flex flex-col min-h-screen bg-gray-50 dark:bg-[#121212]">
         <?php $currentGuestPage = 'privacy'; include_once __DIR__ . '/../../core/layouts/guest_navbar.php'; ?>
 <?php endif; ?>
 
     
-    <main class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6 pb-20">
+    <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#121212] p-4 md:p-6 pb-20">
 
         <?php if (!isset($_SESSION['user_id'])): ?>
             <?php $currentHelpPage = 'privacy'; include_once __DIR__ . '/../../core/layouts/help_subnav.php'; ?>
