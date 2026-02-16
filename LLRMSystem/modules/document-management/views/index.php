@@ -99,7 +99,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button onclick="openUploadModal()" class="flex items-center px-4 py-2 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 border border-red-600 dark:border-red-400 rounded-lg font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm">
+                    <button onclick="openUploadModal()" class="flex items-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm">
                         <i class="bi bi-plus-circle mr-2"></i>
                         Upload Document
                     </button>
