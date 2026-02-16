@@ -193,9 +193,7 @@
 .dark div.flex.justify-end.gap-3 button,
 .dark div.flex.justify-end.gap-3 a,
 .dark button.p-2,
-.dark a.p-2,
-.dark button.rounded-lg,
-.dark a.rounded-lg {
+.dark a.p-2 {
     background-color: transparent !important;
     background-image: none !important;
     background: none !important;
@@ -227,25 +225,21 @@
 .dark button.text-blue-600,
 .dark a.text-blue-600 {
     color: #60a5fa !important;
-    background: transparent !important;
 }
 
 .dark .text-green-600,
 .dark a.text-green-600 {
     color: #4ade80 !important;
-    background: transparent !important;
 }
 
 .dark .text-gray-600,
 .dark button.text-gray-600 {
     color: #9ca3af !important;
-    background: transparent !important;
 }
 
 .dark .text-red-600,
 .dark button.text-red-600 {
     color: #f87171 !important;
-    background: transparent !important;
 }
 
 /* ----------------------------------------

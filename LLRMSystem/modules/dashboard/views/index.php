@@ -34,7 +34,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-2 md:p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-2 md:p-6">
         <!-- Welcome Banner -->
         <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg md:rounded-2xl shadow-xl p-4 md:p-8 mb-3 md:mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -51,12 +51,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" style="background-color: #ffffff !important; color: #dc2626 !important;" class="bg-white text-red-600 px-3 py-2 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-[10px] md:text-base">
+                    <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="bg-white dark:bg-gray-100 text-red-600 px-3 py-2 rounded-lg font-semibold hover:bg-red-50 dark:hover:bg-white transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-[10px] md:text-base border-none">
                         <i class="bi bi-upload mr-1 md:mr-2"></i>
                         <span>Upload</span>
                     </a>
                     <?php endif; ?>
-                    <a href="<?php echo SEARCH_URL; ?>/views/index.php" style="background-color: #b91c1c !important; color: #ffffff !important;" class="bg-red-700 text-white px-3 py-2 rounded-lg font-semibold hover:bg-red-800 transition-all flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-[10px] md:text-base">
+                    <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="bg-red-700 dark:bg-red-900 text-white px-3 py-2 rounded-lg font-semibold hover:bg-red-800 dark:hover:bg-red-950 transition-all flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 text-[10px] md:text-base border-none">
                         <i class="bi bi-search mr-1 md:mr-2"></i>
                         Search
                     </a>
@@ -67,66 +67,66 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Statistics Cards -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mb-6">
             <!-- Total Documents -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-100 group cursor-pointer">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-100 group cursor-pointer border border-transparent dark:border-gray-700">
                 <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-red-600">Total Documents</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['total_documents']); ?></h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-red-600 dark:group-hover:text-red-400">Total Documents</p>
+                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 dark:text-white transform transition-all group-hover:scale-110"><?php echo number_format($stats['total_documents']); ?></h3>
                         <p class="<?php echo $stats['growth_percentage'] >= 0 ? 'text-green-600' : 'text-red-600'; ?> text-[10px] md:text-sm mt-1 hidden sm:block">
                             <i class="bi bi-arrow-<?php echo $stats['growth_percentage'] >= 0 ? 'up' : 'down'; ?>"></i> 
                             <?php echo abs($stats['growth_percentage']); ?>%
                         </p>
                     </div>
-                    <div class="bg-red-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-file-earmark-text text-red-600 text-sm md:text-2xl"></i>
+                    <div class="bg-red-100 dark:bg-red-900/30 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
+                        <i class="bi bi-file-earmark-text text-red-600 dark:text-red-500 text-sm md:text-2xl"></i>
                     </div>
                 </div>
             </div>
             
             <!-- Pending Review -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-200 group cursor-pointer">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-200 group cursor-pointer border border-transparent dark:border-gray-700">
                 <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-yellow-600">Pending Review</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['pending_documents']); ?></h3>
-                        <p class="text-yellow-600 text-[10px] md:text-sm mt-1 hidden sm:block">
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-yellow-600 dark:group-hover:text-yellow-400">Pending Review</p>
+                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 dark:text-white transform transition-all group-hover:scale-110"><?php echo number_format($stats['pending_documents']); ?></h3>
+                        <p class="text-yellow-600 dark:text-yellow-500 text-[10px] md:text-sm mt-1 hidden sm:block">
                             <i class="bi bi-clock"></i> <?php echo $stats['urgent_pending']; ?> urgent
                         </p>
                     </div>
-                    <div class="bg-yellow-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-hourglass-split text-yellow-600 text-sm md:text-2xl"></i>
+                    <div class="bg-yellow-100 dark:bg-yellow-900/30 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
+                        <i class="bi bi-hourglass-split text-yellow-600 dark:text-yellow-500 text-sm md:text-2xl"></i>
                     </div>
                 </div>
             </div>
             
             <!-- Approved Today -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-300 group cursor-pointer">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-300 group cursor-pointer border border-transparent dark:border-gray-700">
                 <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-green-600">Approved Today</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['approved_today']); ?></h3>
-                        <p class="text-green-600 text-[10px] md:text-sm mt-1 hidden sm:block">
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-green-600 dark:group-hover:text-green-400">Approved Today</p>
+                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 dark:text-white transform transition-all group-hover:scale-110"><?php echo number_format($stats['approved_today']); ?></h3>
+                        <p class="text-green-600 dark:text-green-500 text-[10px] md:text-sm mt-1 hidden sm:block">
                             <i class="bi bi-check-circle"></i> <?php echo $stats['approved_today'] > 0 ? 'On track' : 'No approvals'; ?>
                         </p>
                     </div>
-                    <div class="bg-green-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-check-circle text-green-600 text-sm md:text-2xl"></i>
+                    <div class="bg-green-100 dark:bg-green-900/30 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
+                        <i class="bi bi-check-circle text-green-600 dark:text-green-500 text-sm md:text-2xl"></i>
                     </div>
                 </div>
             </div>
             
             <!-- Storage Used -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-400 group cursor-pointer">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-400 group cursor-pointer border border-transparent dark:border-gray-700">
                 <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-purple-600">Storage Used</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo $stats['storage_used_gb']; ?> <span class="text-sm md:text-lg">GB</span></h3>
-                        <p class="text-gray-600 text-[10px] md:text-sm mt-1 hidden sm:block">
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-purple-600 dark:group-hover:text-purple-400">Storage Used</p>
+                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 dark:text-white transform transition-all group-hover:scale-110"><?php echo $stats['storage_used_gb']; ?> <span class="text-sm md:text-lg">GB</span></h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-[10px] md:text-sm mt-1 hidden sm:block">
                             <i class="bi bi-hdd"></i> <?php echo $stats['storage_percentage']; ?>%
                         </p>
                     </div>
-                    <div class="bg-purple-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-hdd-stack text-purple-600 text-sm md:text-2xl"></i>
+                    <div class="bg-purple-100 dark:bg-purple-900/30 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
+                        <i class="bi bi-hdd-stack text-purple-600 dark:text-purple-500 text-sm md:text-2xl"></i>
                     </div>
                 </div>
             </div>
@@ -243,60 +243,60 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Quick Links & Activity -->
             <div class="space-y-6">
                 <!-- Quick Actions -->
-                <div class="quick-actions-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-800">
-                    <h2 class="quick-actions-title text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+                <div class="quick-actions-card bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-800">
+                    <h2 class="quick-actions-title text-lg font-bold text-gray-800 dark:text-white mb-4">Quick Actions</h2>
                     <div class="space-y-2">
                         <?php if (!in_array($userRole, ['viewer'])): ?>
-                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="quick-action-btn flex items-center p-3 hover:bg-red-50 rounded-lg transition-all duration-200">
-                            <div class="icon-red bg-red-100 rounded-lg p-2 mr-3">
-                                <i class="bi bi-upload text-red-600"></i>
+                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>?upload=true" class="quick-action-btn flex items-center p-3 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-all duration-200">
+                            <div class="icon-red bg-red-100 dark:bg-red-900/30 rounded-lg p-2 mr-3">
+                                <i class="bi bi-upload text-red-600 dark:text-red-400"></i>
                             </div>
-                            <span class="quick-action-label text-sm font-medium text-gray-700">Upload New Document</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700 dark:text-gray-300">Upload New Document</span>
                         </a>
                         <?php endif; ?>
-                        <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="quick-action-btn flex items-center p-3 hover:bg-green-50 rounded-lg transition-all duration-200">
-                            <div class="icon-green bg-green-100 rounded-lg p-2 mr-3">
-                                <i class="bi bi-search text-green-600"></i>
+                        <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="quick-action-btn flex items-center p-3 hover:bg-green-50 dark:hover:bg-green-900/10 rounded-lg transition-all duration-200">
+                            <div class="icon-green bg-green-100 dark:bg-green-900/30 rounded-lg p-2 mr-3">
+                                <i class="bi bi-search text-green-600 dark:text-green-500"></i>
                             </div>
-                            <span class="quick-action-label text-sm font-medium text-gray-700">Advanced Search</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700 dark:text-gray-300">Advanced Search</span>
                         </a>
                         <?php if (in_array($userRole, ['administrator', 'admin', 'officer'])): ?>
-                        <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="quick-action-btn flex items-center p-3 hover:bg-purple-50 rounded-lg transition-all duration-200">
-                            <div class="icon-purple bg-purple-100 rounded-lg p-2 mr-3">
-                                <i class="bi bi-graph-up text-purple-600"></i>
+                        <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="quick-action-btn flex items-center p-3 hover:bg-purple-50 dark:hover:bg-purple-900/10 rounded-lg transition-all duration-200">
+                            <div class="icon-purple bg-purple-100 dark:bg-purple-900/30 rounded-lg p-2 mr-3">
+                                <i class="bi bi-graph-up text-purple-600 dark:text-purple-400"></i>
                             </div>
-                            <span class="quick-action-label text-sm font-medium text-gray-700">Generate Report</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700 dark:text-gray-300">Generate Report</span>
                         </a>
                         <?php endif; ?>
-                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="quick-action-btn flex items-center p-3 hover:bg-orange-50 rounded-lg transition-all duration-200">
-                            <div class="icon-orange bg-orange-100 rounded-lg p-2 mr-3">
-                                <i class="bi bi-folder text-orange-600"></i>
+                        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="quick-action-btn flex items-center p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-lg transition-all duration-200">
+                            <div class="icon-orange bg-orange-100 dark:bg-orange-900/30 rounded-lg p-2 mr-3">
+                                <i class="bi bi-folder text-orange-600 dark:text-orange-400"></i>
                             </div>
-                            <span class="quick-action-label text-sm font-medium text-gray-700">Browse Documents</span>
+                            <span class="quick-action-label text-sm font-medium text-gray-700 dark:text-gray-300">Browse Documents</span>
                         </a>
                     </div>
                 </div>
                 
                 <!-- System Status -->
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-900">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">System Status</h2>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-900">
+                    <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-4">System Status</h2>
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">API Integration</span>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">API Integration</span>
                             <span class="badge badge-<?php echo $systemStatus['api']['class']; ?>">
                                 <i class="bi bi-<?php echo $systemStatus['api']['status'] === 'online' ? 'check-circle' : 'x-circle'; ?> mr-1"></i>
                                 <?php echo ucfirst($systemStatus['api']['status']); ?>
                             </span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Database</span>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Database</span>
                             <span class="badge badge-<?php echo $systemStatus['database']['class']; ?>">
                                 <i class="bi bi-<?php echo $systemStatus['database']['status'] === 'healthy' ? 'check-circle' : 'exclamation-circle'; ?> mr-1"></i>
                                 <?php echo ucfirst($systemStatus['database']['status']); ?>
                             </span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Storage</span>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Storage</span>
                             <span class="badge badge-<?php echo $systemStatus['storage']['class']; ?>">
                                 <i class="bi bi-<?php echo $systemStatus['storage']['class'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?> mr-1"></i>
                                 <?php echo $systemStatus['storage']['status']; ?>

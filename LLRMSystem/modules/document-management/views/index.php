@@ -86,52 +86,52 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-6">
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Document Management</h1>
-                    <p class="text-gray-600">Manage all legislative documents in one place</p>
+                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">Document Management</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Manage all legislative documents in one place</p>
                 </div>
                 <div class="flex gap-3 relative">
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button onclick="openUploadModal()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="btn-primary flex items-center transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <button onclick="openUploadModal()" class="flex items-center px-4 py-2 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 border border-red-600 dark:border-red-400 rounded-lg font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm">
                         <i class="bi bi-plus-circle mr-2"></i>
                         Upload Document
                     </button>
                     <?php endif; ?>
                     <div class="relative" id="export-dropdown">
-                        <button onclick="toggleExportMenu()" style="background-color: #dc2626 !important; color: #ffffff !important;" class="btn-outline flex items-center transform hover:scale-105 transition-all duration-200 active:scale-95">
+                        <button onclick="toggleExportMenu()" class="flex items-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm">
                             <i class="bi bi-download mr-2"></i>
                             Export
                             <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>
                         </button>
-                        <div id="export-menu" class="hidden bg-white rounded-lg shadow-2xl border border-gray-200" style="position: fixed; width: 224px; z-index: 99999;">
-                            <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide bg-gray-50 border-b">Export List</div>
+                        <div id="export-menu" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700" style="position: fixed; width: 224px; z-index: 99999;">
+                            <div class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">Export List</div>
                             <button onclick="exportList('csv')" 
-                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
-                                <i class="bi bi-filetype-csv mr-3 text-green-600 text-lg"></i>
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
+                                <i class="bi bi-filetype-csv mr-3 text-green-600 dark:text-green-500 text-lg"></i>
                                 Export as CSV
                             </button>
                             <button onclick="exportList('excel')" 
-                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
-                                <i class="bi bi-file-earmark-excel mr-3 text-green-600 text-lg"></i>
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
+                                <i class="bi bi-file-earmark-excel mr-3 text-green-600 dark:text-green-500 text-lg"></i>
                                 Export as Excel
                             </button>
-                            <div class="border-t border-gray-200"></div>
-                            <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide bg-gray-50 border-b">Export Files</div>
+                            <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                            <div class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">Export Files</div>
                             <button onclick="exportSelectedFiles()" 
-                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
-                                <i class="bi bi-file-earmark-zip mr-3 text-blue-600 text-lg"></i>
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
+                                <i class="bi bi-file-earmark-zip mr-3 text-blue-600 dark:text-blue-500 text-lg"></i>
                                 Selected Files (ZIP)
                             </button>
                             <button onclick="exportAllFiles()" 
-                               class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center transition-colors duration-150">
-                                <i class="bi bi-archive mr-3 text-purple-600 text-lg"></i>
+                               class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
+                                <i class="bi bi-archive mr-3 text-purple-600 dark:text-purple-500 text-lg"></i>
                                 All Files (ZIP)
                             </button>
                         </div>
@@ -141,9 +141,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Mobile Filter Toggle Button -->
-        <button id="mobile-filter-toggle" class="md:hidden w-full bg-white rounded-xl shadow-md p-4 mb-4 flex items-center justify-between text-gray-700 hover:bg-gray-50 transition-all duration-200">
+        <button id="mobile-filter-toggle" class="md:hidden w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-4 flex items-center justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
             <span class="flex items-center">
-                <i class="bi bi-funnel mr-2 text-red-600"></i>
+                <i class="bi bi-funnel mr-2 text-red-600 dark:text-red-500"></i>
                 <span class="font-medium">Filters & Search</span>
             </span>
             <i class="bi bi-chevron-down transition-transform" id="filter-toggle-icon"></i>
@@ -248,31 +248,31 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Documents Table -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200 border border-transparent dark:border-gray-700">
             <!-- Table Header Actions -->
-            <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+            <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <!-- Left: Select All & Count -->
                     <div class="flex items-center gap-3 sm:gap-4">
                         <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" id="select-all-top" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500" onchange="toggleSelectAll(this)">
-                            <span class="ml-2 text-sm text-gray-700 whitespace-nowrap">Select All</span>
+                            <input type="checkbox" id="select-all-top" class="w-5 h-5 text-red-600 dark:text-red-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded focus:ring-red-500" onchange="toggleSelectAll(this)">
+                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">Select All</span>
                         </label>
                     </div>
                     
                     <!-- Center: Document Count -->
-                    <span class="text-sm text-gray-600 order-3 sm:order-none w-full sm:w-auto text-center sm:text-left" id="selected-count">
+                    <span class="text-sm text-gray-600 dark:text-gray-400 order-3 sm:order-none w-full sm:w-auto text-center sm:text-left" id="selected-count">
                         <span id="total-docs"><?php echo count($data['documents'] ?? []); ?></span> documents found
                     </span>
                     
                     <!-- Right: Bulk Actions -->
                     <div class="flex items-center gap-2">
-                        <button class="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-1 transition-colors">
+                        <button class="px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg flex items-center gap-1 transition-colors">
                             <i class="bi bi-download"></i>
                             <span class="hidden xs:inline">Download</span>
                         </button>
                         <?php if (in_array($userRole, ['administrator', 'officer'])): ?>
-                        <button class="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-1 transition-colors" onclick="bulkDelete()" title="Delete Selected">
+                        <button class="px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg flex items-center gap-1 transition-colors" onclick="bulkDelete()" title="Delete Selected">
                             <i class="bi bi-trash"></i>
                             <span class="hidden xs:inline">Selected</span>
                         </button>
@@ -345,32 +345,32 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-xl"></i>
                                             </div>
                                             <div class="min-w-0 flex-1">
-                                                <p class="text-sm font-medium text-gray-900 truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
-                                                <p class="text-xs text-gray-500 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
                                         <span class="badge badge-primary"><?php echo ucfirst($doc['document_type']); ?></span>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo htmlspecialchars($doc['reference_number']); ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
                                         <?php echo getStatusBadge($doc['status']); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
-                                            <button class="text-blue-600 hover:text-blue-700 dark:!bg-transparent" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 hover:text-green-700 dark:!bg-transparent" title="Download">
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors" title="Download">
                                                 <i class="bi bi-download"></i>
                                             </a>
                                             <?php 
@@ -381,12 +381,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button class="text-gray-600 hover:text-gray-700 dark:!bg-transparent" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                            <button class="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <?php endif; ?>
                                             <?php if ($canDelete): ?>
-                                            <button class="text-red-600 hover:text-red-700 dark:!bg-transparent" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                            <button class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                             <?php endif; ?>

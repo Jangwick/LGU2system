@@ -98,34 +98,34 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 sm:p-4 md:p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 md:p-6">
         <!-- Back Button -->
         <div class="mb-4 flex animate-fade-in">
-            <a href="<?= DOCUMENTS_INDEX_URL ?>" class="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:text-red-600 hover:border-red-100 hover:bg-red-50 transition-all shadow-sm group">
-                <i class="bi bi-arrow-left mr-2 group-hover:-translate-x-1 transition-transform text-red-600"></i>
+            <a href="<?= DOCUMENTS_INDEX_URL ?>" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:border-red-100 dark:hover:border-red-900/40 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all shadow-sm group">
+                <i class="bi bi-arrow-left mr-2 group-hover:-translate-x-1 transition-transform text-red-600 dark:text-red-500"></i>
                 Back to List
             </a>
         </div>
 
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 mb-4 md:mb-6 hover:shadow-xl dark:hover:shadow-blue-900/10 transition-all duration-300 animate-fade-in">
             <div class="flex flex-col gap-4">
                 <div class="flex-1 animate-slide-in-left">
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
-                        <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800"><?= htmlspecialchars($document['title']) ?></h1>
+                        <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-white"><?= htmlspecialchars($document['title']) ?></h1>
                         <span class="px-2 sm:px-3 py-1 rounded-full text-xs font-semibold <?= getStatusBadge($document['status']) ?>">
                             <?= ucfirst($document['status']) ?>
                         </span>
                     </div>
-                    <p class="text-sm sm:text-base text-gray-600 mb-1">Reference: <span class="font-mono font-semibold"><?= $document['reference_number'] ?></span></p>
-                    <p class="text-xs sm:text-sm text-gray-500">
+                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1">Reference: <span class="font-mono font-semibold"><?= $document['reference_number'] ?></span></p>
+                    <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         Type: <?= ucfirst(str_replace('_', ' ', $document['document_type'])) ?> • 
                         Date: <?= date('F d, Y', strtotime($document['document_date'])) ?>
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-2 sm:gap-3">
                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>" 
-                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center text-sm sm:text-base">
+                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-download mr-1 sm:mr-2"></i><span class="hidden xs:inline">Download</span><span class="xs:hidden">DL</span>
                     </a>
                     <?php 
@@ -136,7 +136,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     if ($canEdit): 
                     ?>
                     <a href="<?php echo DOCUMENTS_URL; ?>/views/edit.php?id=<?= $document['id'] ?>" 
-                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-center text-sm sm:text-base">
+                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-600 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-pencil mr-1 sm:mr-2"></i><span class="hidden xs:inline">Edit</span>
                     </a>
                     <?php endif; ?>
@@ -148,49 +148,49 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-4 md:space-y-6">
                 <!-- Document Details -->
-                <div class="bg-white rounded-xl shadow-md p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
-                    <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Document Information</h2>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">Document Information</h2>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label class="text-sm font-medium text-gray-500">File Name</label>
-                            <p class="text-gray-800"><?= htmlspecialchars($document['file_name']) ?></p>
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400">File Name</label>
+                            <p class="text-gray-800 dark:text-gray-300"><?= htmlspecialchars($document['file_name']) ?></p>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-gray-500">File Size</label>
-                            <p class="text-gray-800"><?= formatFileSize($document['file_size']) ?></p>
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400">File Size</label>
+                            <p class="text-gray-800 dark:text-gray-300"><?= formatFileSize($document['file_size']) ?></p>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-gray-500">File Type</label>
-                            <p class="text-gray-800"><?= htmlspecialchars($document['file_type']) ?></p>
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400">File Type</label>
+                            <p class="text-gray-800 dark:text-gray-300"><?= htmlspecialchars($document['file_type']) ?></p>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-gray-500">Uploaded By</label>
-                            <p class="text-gray-800"><?= htmlspecialchars($document['uploaded_by_name']) ?></p>
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Uploaded By</label>
+                            <p class="text-gray-800 dark:text-gray-300"><?= htmlspecialchars($document['uploaded_by_name']) ?></p>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-gray-500">Created At</label>
-                            <p class="text-gray-800"><?= date('F d, Y g:i A', strtotime($document['created_at'])) ?></p>
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</label>
+                            <p class="text-gray-800 dark:text-gray-300"><?= date('F d, Y g:i A', strtotime($document['created_at'])) ?></p>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-gray-500">Last Updated</label>
-                            <p class="text-gray-800"><?= date('F d, Y g:i A', strtotime($document['updated_at'])) ?></p>
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</label>
+                            <p class="text-gray-800 dark:text-gray-300"><?= date('F d, Y g:i A', strtotime($document['updated_at'])) ?></p>
                         </div>
                     </div>
 
                     <?php if ($document['description']): ?>
                     <div class="mt-4">
-                        <label class="text-sm font-medium text-gray-500">Description</label>
-                        <p class="text-gray-800 mt-1"><?= nl2br(htmlspecialchars($document['description'])) ?></p>
+                        <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</label>
+                        <p class="text-gray-800 dark:text-gray-300 mt-1"><?= nl2br(htmlspecialchars($document['description'])) ?></p>
                     </div>
                     <?php endif; ?>
 
                     <?php if (!empty($tags)): ?>
                     <div class="mt-4">
-                        <label class="text-sm font-medium text-gray-500 mb-2 block">Tags</label>
+                        <label class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 block">Tags</label>
                         <div class="flex flex-wrap gap-2">
                             <?php foreach ($tags as $tag): ?>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-sm">
                                 <i class="bi bi-tag mr-1"></i><?= htmlspecialchars($tag['name']) ?>
                             </span>
                             <?php endforeach; ?>
@@ -200,39 +200,39 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
 
                 <!-- Version History -->
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Version History</h2>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
+                    <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Version History</h2>
                     
                     <?php if (empty($versions)): ?>
                     <p class="text-gray-500 text-center py-8">No previous versions</p>
                     <?php else: ?>
                     <div class="space-y-3">
                         <?php foreach ($versions as $version): ?>
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border border-gray-200 rounded-lg hover:bg-gray-50 gap-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 gap-3">
                             <div class="flex items-center gap-3 sm:gap-4">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span class="text-blue-600 font-bold text-sm sm:text-base">v<?= $version['version_number'] ?></span>
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span class="text-blue-600 dark:text-blue-400 font-bold text-sm sm:text-base">v<?= $version['version_number'] ?></span>
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <p class="font-medium text-gray-800 text-sm sm:text-base truncate"><?= htmlspecialchars($version['file_name']) ?></p>
-                                    <p class="text-xs sm:text-sm text-gray-500">
+                                    <p class="font-medium text-gray-800 dark:text-gray-200 text-sm sm:text-base truncate"><?= htmlspecialchars($version['file_name']) ?></p>
+                                    <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                                         <?= formatFileSize($version['file_size']) ?> • 
                                         <?= date('M d, Y', strtotime($version['created_at'])) ?>
                                         <span class="hidden sm:inline">• by <?= htmlspecialchars($version['created_by_name']) ?></span>
                                     </p>
                                     <?php if ($version['change_description']): ?>
-                                    <p class="text-sm text-gray-600 mt-1"><?= htmlspecialchars($version['change_description']) ?></p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1"><?= htmlspecialchars($version['change_description']) ?></p>
                                     <?php endif; ?>
                                 </div>
                             </div>
                             <div class="flex gap-2">
                                 <button onclick="downloadVersion(<?= $version['id'] ?>)" 
-                                        class="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded">
+                                        class="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded">
                                     <i class="bi bi-download"></i>
                                 </button>
                                 <?php if (in_array($userRole, ['administrator', 'admin', 'officer'])): ?>
                                 <button onclick="revertVersion(<?= $document['id'] ?>, <?= $version['version_number'] ?>)" 
-                                        class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded">
+                                        class="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                                     <i class="bi bi-arrow-counterclockwise"></i> Revert
                                 </button>
                                 <?php endif; ?>
