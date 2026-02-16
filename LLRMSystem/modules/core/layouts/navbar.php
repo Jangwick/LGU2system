@@ -76,7 +76,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="flex items-center flex-shrink-0 space-x-0.5 md:space-x-4">
                 
                 <!-- Dark/Light Mode Toggle -->
-                <button id="theme-toggle" class="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
+                <button id="theme-toggle" class="hidden md:flex w-10 h-10 items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
                     <i class="bi bi-moon-fill text-base md:text-xl dark-mode-icon"></i>
                     <i class="bi bi-sun-fill text-lg light-mode-icon hidden"></i>
                 </button>

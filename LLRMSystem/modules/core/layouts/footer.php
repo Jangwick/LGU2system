@@ -291,6 +291,18 @@
                 <i class="bi bi-question-circle mr-3 text-lg"></i>
                 <span>Help & Support</span>
             </a>
+
+            <!-- Theme Toggle for Mobile -->
+            <div class="mt-6 px-4 pt-6 border-t border-red-700/30">
+                <button onclick="document.getElementById('theme-toggle').click();" class="w-full flex items-center justify-between px-4 py-3 bg-red-900/40 text-white rounded-xl border border-red-700/30 hover:bg-red-700/50 transition-all group">
+                    <div class="flex items-center">
+                        <i class="bi bi-moon-fill mr-3 text-lg dark-mode-icon"></i>
+                        <i class="bi bi-sun-fill mr-3 text-lg light-mode-icon hidden"></i>
+                        <span class="font-bold">Display Mode</span>
+                    </div>
+                    <span class="text-[10px] font-black bg-red-700/50 px-2 py-1 rounded-md uppercase tracking-widest group-hover:bg-red-600">Switch</span>
+                </button>
+            </div>
         </nav>
         
         <!-- Mobile User Profile Section - Fixed at Bottom -->
