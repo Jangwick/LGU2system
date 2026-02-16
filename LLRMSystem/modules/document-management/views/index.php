@@ -553,6 +553,7 @@ function clearAdvancedFilters() {
 function viewDocument(id) {
     const modal = document.getElementById('preview-modal');
     const content = document.getElementById('preview-content');
+    const modalContainer = modal.querySelector('div');
     
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -562,6 +563,12 @@ function viewDocument(id) {
         </div>
     `;
 
+    // Animation classes
+    setTimeout(() => {
+        modalContainer.classList.remove('translate-y-full', 'opacity-0');
+        modalContainer.classList.add('translate-y-0', 'opacity-100');
+    }, 10);
+
     fetch(App.apiUrl('documents', `get_details.php?id=${id}`))
         .then(r => r.json())
         .then(res => {
@@ -570,37 +577,37 @@ function viewDocument(id) {
                 const statusBadge = getStatusBadgeHTML(doc.status);
                 
                 content.innerHTML = `
-                    <div class="p-6">
+                    <div class="p-4 md:p-8">
                         <!-- Top Header Area -->
-                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8 pb-6 border-b border-gray-100">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8 pb-6 border-b border-gray-100 dark:border-gray-800">
                             <div>
-                                <div class="flex items-center gap-3 mb-2">
-                                    <h2 class="text-3xl font-extrabold text-gray-900">${doc.title}</h2>
-                                    ${statusBadge}
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+                                    <h2 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-tight">${doc.title}</h2>
+                                    <div class="flex">${statusBadge}</div>
                                 </div>
-                                <div class="flex flex-wrap items-center gap-y-2 text-sm text-gray-500">
-                                    <span class="flex items-center">
+                                <div class="flex flex-wrap items-center gap-y-3 text-xs md:text-sm text-gray-500 dark:text-gray-400">
+                                    <span class="flex items-center bg-gray-50 dark:bg-gray-800/50 px-2 py-1 rounded-lg border border-gray-100 dark:border-gray-700">
                                         <i class="bi bi-hash mr-1.5 text-red-500"></i>
-                                        Reference: <span class="font-bold text-gray-800 ml-1">${doc.reference_number}</span>
+                                        REF: <span class="font-black text-gray-800 dark:text-gray-200 ml-1 uppercase">${doc.reference_number}</span>
                                     </span>
-                                    <span class="mx-3 text-gray-300">|</span>
+                                    <span class="hidden md:inline mx-3 text-gray-300 dark:text-gray-700">|</span>
                                     <span class="flex items-center">
                                         <i class="bi bi-file-earmark-text mr-1.5 text-blue-500"></i>
-                                        Type: <span class="capitalize ml-1">${doc.document_type}</span>
+                                        Type: <span class="capitalize ml-1 font-bold text-gray-700 dark:text-gray-300">${doc.document_type}</span>
                                     </span>
-                                    <span class="mx-3 text-gray-300">|</span>
+                                    <span class="mx-3 text-gray-300 dark:text-gray-700">|</span>
                                     <span class="flex items-center">
                                         <i class="bi bi-calendar3 mr-1.5 text-green-500"></i>
-                                        Date: <span class="ml-1">${formatDate(doc.document_date)}</span>
+                                        Date: <span class="ml-1 font-bold text-gray-700 dark:text-gray-300">${formatDate(doc.document_date)}</span>
                                     </span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <a href="${App.apiUrl('documents', `download.php?id=${doc.id}`)}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center shadow-lg transform hover:scale-105 active:scale-95 transition-all">
-                                    <i class="bi bi-download mr-2"></i> Download
+                            <div class="flex flex-row md:flex-row items-center gap-3">
+                                <a href="${App.apiUrl('documents', `download.php?id=${doc.id}`)}" class="flex-1 sm:flex-none justify-center bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[11px] flex items-center shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
+                                    <i class="bi bi-download mr-2 text-base"></i> Download
                                 </a>
-                                <button onclick="editDocument(${doc.id})" class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold flex items-center shadow-lg transform hover:scale-105 active:scale-95 transition-all">
-                                    <i class="bi bi-pencil-square mr-2"></i> Edit
+                                <button onclick="editDocument(${doc.id})" class="flex-1 sm:flex-none justify-center bg-gray-900 dark:bg-black hover:bg-black text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[11px] flex items-center shadow-lg transition-all active:scale-95">
+                                    <i class="bi bi-pencil-square mr-2 text-base"></i> Edit
                                 </button>
                             </div>
                         </div>
@@ -609,45 +616,45 @@ function viewDocument(id) {
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <!-- Left: Primary Information -->
                             <div class="lg:col-span-2 space-y-8">
-                                <section class="bg-white rounded-2xl border border-gray-100 p-6">
-                                    <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center">
-                                        <span class="w-1.5 h-6 bg-red-600 rounded-full mr-3"></span>
-                                        Document Information
+                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 md:p-6">
+                                    <h3 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-6 flex items-center uppercase tracking-widest">
+                                        <span class="w-1 h-5 bg-red-600 rounded-full mr-3"></span>
+                                        Document Details
                                     </h3>
-                                    <div class="grid md:grid-cols-2 gap-y-6 gap-x-8">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">File Name</label>
-                                            <p class="text-gray-700 font-semibold break-all">${doc.file_name}</p>
+                                            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">File Name</label>
+                                            <p class="text-sm text-gray-800 dark:text-gray-200 font-bold break-all">${doc.file_name}</p>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">File Size</label>
-                                            <p class="text-gray-700 font-semibold">${formatSize(doc.file_size)}</p>
+                                            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">File Size</label>
+                                            <p class="text-sm text-gray-800 dark:text-gray-200 font-bold">${formatSize(doc.file_size)}</p>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">File Type</label>
-                                            <p class="text-gray-700 font-semibold uppercase">${doc.file_type}</p>
+                                            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Category</label>
+                                            <p class="text-sm text-gray-800 dark:text-gray-200 font-bold uppercase">${doc.file_type}</p>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Uploaded By</label>
-                                            <p class="text-gray-700 font-semibold">${doc.uploader_name || 'Admin User'}</p>
+                                            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Uploaded By</label>
+                                            <p class="text-sm text-gray-800 dark:text-gray-200 font-bold">${doc.uploader_name || 'System Admin'}</p>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Created At</label>
-                                            <p class="text-gray-700 font-semibold">${formatDateTime(doc.created_at)}</p>
+                                            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Registered On</label>
+                                            <p class="text-sm text-gray-800 dark:text-gray-200 font-bold">${formatDateTime(doc.created_at)}</p>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Last Updated</label>
-                                            <p class="text-gray-700 font-semibold">${formatDateTime(doc.updated_at)}</p>
+                                            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Last Interaction</label>
+                                            <p class="text-sm text-gray-800 dark:text-gray-200 font-bold">${formatDateTime(doc.updated_at)}</p>
                                         </div>
                                     </div>
                                     
-                                    <div class="mt-8 pt-6 border-t border-gray-50">
-                                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2.5">Description</label>
-                                        <p class="text-gray-600 leading-relaxed">${doc.description || 'No description provided.'}</p>
+                                    <div class="mt-8 pt-6 border-t border-gray-50 dark:border-gray-800">
+                                        <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">Description / Annotations</label>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">${doc.description || 'No additional notes provided for this record.'}</p>
                                     </div>
                                 </section>
 
-                                <section class="bg-white rounded-2xl border border-gray-100 p-6">
+                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 md:p-6">
                                     <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center">
                                         <span class="w-1.5 h-6 bg-blue-600 rounded-full mr-3"></span>
                                         Version History
@@ -708,20 +715,30 @@ function viewDocument(id) {
 }
 
 function closePreviewModal() {
-    document.getElementById('preview-modal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
+    const modal = document.getElementById('preview-modal');
+    const modalContainer = modal.querySelector('div');
+    
+    modalContainer.classList.add('translate-y-full', 'opacity-0');
+    modalContainer.classList.remove('translate-y-0', 'opacity-100');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }, 300);
 }
 
 // Helper functions for modal
 function getStatusBadgeHTML(status) {
+    if (!status) return '';
+    const s = status.toLowerCase();
     const badges = {
-        'draft': '<span class="badge badge-warning"><i class="bi bi-pencil-fill mr-1.5"></i>Draft</span>',
-        'pending': '<span class="badge badge-info"><i class="bi bi-clock-history mr-1.5"></i>Pending</span>',
-        'approved': '<span class="badge badge-success"><i class="bi bi-check-circle-fill mr-1.5"></i>Approved</span>',
-        'rejected': '<span class="badge badge-danger"><i class="bi bi-x-circle-fill mr-1.5"></i>Rejected</span>',
-        'archived': '<span class="badge badge-secondary"><i class="bi bi-archive-fill mr-1.5"></i>Archived</span>'
+        'draft': '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
+        'pending': '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
+        'approved': '<span class="badge badge-success"><i class="bi bi-check-circle mr-1"></i>Approved</span>',
+        'rejected': '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>',
+        'archived': '<span class="badge badge-gray"><i class="bi bi-archive mr-1"></i>Archived</span>'
     };
-    return badges[status] || `<span class="badge badge-secondary">${status}</span>`;
+    return badges[s] || `<span class="badge badge-info">${status}</span>`;
 }
 
 function formatDate(dateStr) {
@@ -748,10 +765,16 @@ function formatSize(bytes) {
 function editDocument(id) {
     const modal = document.getElementById('edit-modal');
     const form = document.getElementById('edit-form-modal');
+    const modalContainer = modal.querySelector('div');
     
-    // Show loading state or at least the modal
+    // Show modal and start transition
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    
+    setTimeout(() => {
+        modalContainer.classList.remove('translate-y-full', 'opacity-0');
+        modalContainer.classList.add('translate-y-0', 'opacity-100');
+    }, 10);
 
     // Fetch details to populate form
     fetch(App.apiUrl('documents', `get_details.php?id=${id}`))
@@ -780,9 +803,17 @@ function editDocument(id) {
 }
 
 function closeEditModal() {
-    document.getElementById('edit-modal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-    document.getElementById('edit-form-modal').reset();
+    const modal = document.getElementById('edit-modal');
+    const modalContainer = modal.querySelector('div');
+    
+    modalContainer.classList.add('translate-y-full', 'opacity-0');
+    modalContainer.classList.remove('translate-y-0', 'opacity-100');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        document.getElementById('edit-form-modal').reset();
+    }, 300);
 }
 
 function deleteDocument(id) {
@@ -946,17 +977,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Upload Modal Functions
 function openUploadModal() {
-    document.getElementById('upload-modal').classList.remove('hidden');
+    const modal = document.getElementById('upload-modal');
+    const modalContainer = modal.querySelector('div');
+    
+    modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    
+    setTimeout(() => {
+        modalContainer.classList.remove('translate-y-full', 'opacity-0');
+        modalContainer.classList.add('translate-y-0', 'opacity-100');
+    }, 10);
 }
 
 function closeUploadModal() {
-    document.getElementById('upload-modal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-    // Reset form
-    document.getElementById('upload-form-modal').reset();
-    document.getElementById('file-preview-modal').classList.add('hidden');
-    document.getElementById('drop-zone-modal').classList.remove('hidden');
+    const modal = document.getElementById('upload-modal');
+    const modalContainer = modal.querySelector('div');
+    
+    modalContainer.classList.add('translate-y-full', 'opacity-0');
+    modalContainer.classList.remove('translate-y-0', 'opacity-100');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        // Reset form
+        document.getElementById('upload-form-modal').reset();
+        document.getElementById('file-preview-modal').classList.add('hidden');
+        document.getElementById('drop-zone-modal').classList.remove('hidden');
+    }, 300);
 }
 
 // Close modal on escape key
@@ -970,115 +1017,148 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 <!-- Edit Document Modal -->
-<div id="edit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:bg-gray-900 dark:border-gray-800 transition-colors duration-300">
+<div id="edit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <!-- Mobile Drag Handle -->
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+            <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        </div>
+        
         <!-- Modal Header -->
-        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10 rounded-t-2xl">
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Edit Document</h2>
-            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
-                <i class="bi bi-x-lg text-2xl"></i>
+        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+            <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white flex items-center tracking-tight uppercase">
+                <i class="bi bi-pencil-square mr-3 text-red-600"></i>
+                Edit Document
+            </h2>
+            <button onclick="closeEditModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all">
+                <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <form id="edit-form-modal" class="p-6 bg-white dark:bg-gray-900">
-            <input type="hidden" name="document_id">
-            
-            <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                    <i class="bi bi-info-circle mr-2 text-red-600"></i>
-                    Update Information
-                </h3>
+        <div class="overflow-y-auto flex-1 custom-scrollbar">
+            <form id="edit-form-modal" class="p-4 md:p-8 bg-white dark:bg-gray-900">
+                <input type="hidden" name="document_id">
                 
-                <div class="grid md:grid-cols-2 gap-4">
-                    <!-- Document Type -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Document Type <span class="text-red-500">*</span>
-                        </label>
-                        <select name="document_type" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                            <option value="ordinance">Ordinance</option>
-                            <option value="resolution">Resolution</option>
-                            <option value="session">Session Minutes</option>
-                            <option value="agenda">Agenda</option>
-                            <option value="committee">Committee Report</option>
-                            <option value="hearing">Public Hearing</option>
-                            <option value="consultation">Public Consultation</option>
-                            <option value="research">Research Document</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
+                <div class="mb-8">
+                    <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 mb-6 flex items-center uppercase tracking-[0.2em]">
+                        <span class="w-1 h-4 bg-red-600 rounded-full mr-3"></span>
+                        Key Information
+                    </h3>
                     
-                    <!-- Reference Number -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Reference Number <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="reference_number" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    
-                    <!-- Document Title -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Document Title <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="title" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    
-                    <!-- Description -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Description
-                        </label>
-                        <textarea name="description" rows="3" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"></textarea>
-                    </div>
-                    
-                    <!-- Document Date -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Document Date <span class="text-red-500">*</span>
-                        </label>
-                        <input type="date" name="document_date" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    
-                    <!-- Status -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Status <span class="text-red-500">*</span>
-                        </label>
-                        <select name="status" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                            <option value="draft">Draft</option>
-                            <option value="pending">Pending Review</option>
-                            <option value="approved">Approved</option>
-                        </select>
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                        <!-- Document Type -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Document Type <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-tag absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <select name="document_type" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
+                                    <option value="ordinance">Ordinance</option>
+                                    <option value="resolution">Resolution</option>
+                                    <option value="session">Session Minutes</option>
+                                    <option value="agenda">Agenda</option>
+                                    <option value="committee">Committee Report</option>
+                                    <option value="hearing">Public Hearing</option>
+                                    <option value="consultation">Public Consultation</option>
+                                    <option value="research">Research Document</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Reference Number -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Reference Number <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-hash absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <input type="text" name="reference_number" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm" placeholder="e.g. ORD-2024-001">
+                            </div>
+                        </div>
+                        
+                        <!-- Document Title -->
+                        <div class="md:col-span-2 space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Document Title <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="title" required class="w-full px-5 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm" placeholder="Enter the full legislative title">
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="md:col-span-2 space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Summary / Description
+                            </label>
+                            <textarea name="description" rows="4" class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-medium text-sm leading-relaxed" placeholder="Provide a brief overview of the document's content..."></textarea>
+                        </div>
+                        
+                        <!-- Document Date -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Document Date <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <input type="date" name="document_date" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm">
+                            </div>
+                        </div>
+                        
+                        <!-- Status -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Publication Status <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-shield-check absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <select name="status" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
+                                    <option value="draft">Draft (Working Paper)</option>
+                                    <option value="pending">For Review</option>
+                                    <option value="approved">Approved / Official</option>
+                                </select>
+                                <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                            </div>
+                        </div>
 
-                    <!-- Tags -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Tags (comma-separated)
-                        </label>
-                        <input type="text" name="tags" placeholder="e.g., budget, taxation, public works" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
+                        <!-- Tags -->
+                        <div class="md:col-span-2 space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Search Metadata (Tags)
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-bookmarks absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <input type="text" name="tags" placeholder="e.g. budget, taxation, land-use" class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-medium text-sm">
+                            </div>
+                            <p class="text-[10px] text-gray-400 pl-1 mt-1 italic">Separate tags with commas to improve search relevance.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Modal Footer -->
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
-                <button type="button" onclick="closeEditModal()" class="px-6 py-2 border-2 border-gray-400 dark:border-gray-700 rounded-lg text-gray-800 dark:text-gray-300 font-bold hover:!bg-gray-100 dark:hover:bg-gray-800 transition">
-                    Cancel
-                </button>
-                <button type="submit" style="background-color: #dc2626 !important;" class="px-8 py-2 text-white rounded-lg font-bold hover:bg-red-700 shadow-lg shadow-red-200 dark:shadow-none transition transform active:scale-95">
-                    Update Document
-                </button>
-            </div>
-        </form>
+                <!-- Sticky Footer within Scroll Area for Forms -->
+                <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-800 mt-4">
+                    <button type="button" onclick="closeEditModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
+                        Discard Changes
+                    </button>
+                    <button type="submit" class="w-full sm:w-auto order-1 sm:order-2 px-10 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
+                        Update Record
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <!-- Document Preview Modal -->
-<div id="preview-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up border border-gray-200 dark:bg-gray-900 dark:border-gray-800 transition-colors duration-300">
+<div id="preview-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-end sm:items-center justify-center sm:p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <!-- Mobile Drag Handle -->
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+            <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        </div>
+
         <!-- Sticky Modal Header -->
         <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
             <div class="flex items-center">
@@ -1086,11 +1166,11 @@ document.addEventListener('keydown', function(e) {
                     <i class="bi bi-file-earmark-pdf text-red-600 text-xl"></i>
                 </div>
                 <div>
-                    <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Document Preview</span>
+                    <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest">Document Preview</h3>
                 </div>
             </div>
-            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all">
-                <i class="bi bi-x-lg text-lg"></i>
+            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all">
+                <i class="bi bi-x-lg"></i>
             </button>
         </div>
 
@@ -1102,141 +1182,170 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <!-- Upload Document Modal -->
-<div id="upload-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:bg-gray-900 dark:border-gray-800 transition-all duration-300">
+<div id="upload-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <!-- Mobile Drag Handle -->
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+            <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        </div>
+
         <!-- Modal Header -->
-        <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl dark:bg-gray-900 dark:border-gray-800 z-10">
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Upload New Document</h2>
-            <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
-                <i class="bi bi-x-lg text-2xl"></i>
+        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+            <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white flex items-center tracking-tight uppercase">
+                <i class="bi bi-cloud-arrow-up mr-3 text-red-600"></i>
+                Upload Repository
+            </h2>
+            <button onclick="closeUploadModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all">
+                <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <form id="upload-form-modal" class="p-6 bg-white dark:bg-gray-900">
-            <!-- File Upload Section -->
-            <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                    <i class="bi bi-cloud-upload mr-2 text-red-600"></i>
-                    Document File
-                </h3>
-                
-                <!-- Drag & Drop Area -->
-                <div id="drop-zone-modal" class="bg-white dark:bg-gray-800/50 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-10 text-center hover:border-red-500 transition-all duration-300 cursor-pointer group">
-                    <div class="mb-4 relative">
-                        <i class="bi bi-cloud-arrow-up text-6xl text-gray-400 group-hover:text-red-500 transition-colors duration-300"></i>
+        <div class="overflow-y-auto flex-1 custom-scrollbar">
+            <form id="upload-form-modal" class="p-4 md:p-8 bg-white dark:bg-gray-900">
+                <!-- File Upload Section -->
+                <div class="mb-10">
+                    <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 mb-6 flex items-center uppercase tracking-[0.2em]">
+                        <span class="w-1 h-4 bg-red-600 rounded-full mr-3"></span>
+                        Document Binary
+                    </h3>
+                    
+                    <!-- Drag & Drop Area -->
+                    <div id="drop-zone-modal" class="bg-gray-50/50 dark:bg-gray-800/30 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 text-center hover:border-red-500/50 hover:bg-red-50/30 dark:hover:bg-red-900/5 transition-all duration-300 cursor-pointer group relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="w-20 h-20 bg-white dark:bg-gray-800 rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                                <i class="bi bi-clipboard2-plus text-4xl text-gray-400 group-hover:text-red-500 transition-colors"></i>
+                            </div>
+                            <p class="text-lg font-black text-gray-900 dark:text-gray-100 mb-2">Ingest New Document</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 max-w-xs mx-auto">Drop your legislative files here or browse for local records.</p>
+                            <input type="file" id="file-input-modal" name="document_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="hidden" required>
+                            <button type="button" onclick="document.getElementById('file-input-modal').click()" class="bg-gray-900 dark:bg-black text-white px-10 py-3.5 rounded-xl font-black uppercase tracking-[0.15em] text-[11px] shadow-xl transition transform active:scale-95 inline-flex items-center">
+                                <i class="bi bi-plus-lg mr-2 font-black"></i> Choose File
+                            </button>
+                            <p class="text-[10px] text-gray-400 mt-8 uppercase tracking-widest font-bold">
+                                PDF, DOCX, XLSX (Max 50MB) 
+                            </p>
+                        </div>
                     </div>
-                    <p class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-1">Drag and drop your file here</p>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6">or click to browse from your computer</p>
-                    <input type="file" id="file-input-modal" name="document_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="hidden" required>
-                    <button type="button" onclick="document.getElementById('file-input-modal').click()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-200 dark:shadow-none flex items-center mx-auto">
-                        <i class="bi bi-folder2-open mr-2"></i>
-                        Browse Files
-                    </button>
-                    <p class="text-xs text-gray-400 mt-6 uppercase tracking-widest font-semibold italic">
-                        Supported: PDF, DOC, XLS, PPT (Max 50MB)
-                    </p>
+                    
+                    <!-- File Preview -->
+                    <div id="file-preview-modal" class="hidden mt-6 p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm animate-in fade-in slide-in-from-top-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="bi bi-file-earmark-pdf text-red-600 text-xl"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <p id="file-name-modal" class="text-sm font-bold text-gray-900 dark:text-gray-100 truncate"></p>
+                                    <p id="file-size-modal" class="text-[11px] font-medium text-gray-500 dark:text-gray-400 uppercase"></p>
+                                </div>
+                            </div>
+                            <button type="button" id="remove-file-modal" class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-red-600 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i class="bi bi-trash text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- File Preview -->
-                <div id="file-preview-modal" class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <i class="bi bi-file-earmark text-red-600 text-2xl mr-3"></i>
-                            <div>
-                                <p id="file-name-modal" class="text-sm font-medium text-gray-800 dark:text-gray-200"></p>
-                                <p id="file-size-modal" class="text-xs text-gray-600 dark:text-gray-400"></p>
+
+                <!-- Document Information -->
+                <div class="mb-8">
+                    <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 mb-6 flex items-center uppercase tracking-[0.2em]">
+                        <span class="w-1 h-4 bg-red-600 rounded-full mr-3"></span>
+                        Legislative Metadata
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                        <!-- Document Type -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Document Type <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-bookmark-plus absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <select name="document_type" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
+                                    <option value="">Select Category</option>
+                                    <option value="ordinance">Ordinance</option>
+                                    <option value="resolution">Resolution</option>
+                                    <option value="session">Session Minutes</option>
+                                    <option value="agenda">Agenda</option>
+                                    <option value="committee">Committee Report</option>
+                                    <option value="hearing">Public Hearing</option>
+                                    <option value="consultation">Public Consultation</option>
+                                    <option value="research">Research Document</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                             </div>
                         </div>
-                        <button type="button" id="remove-file-modal" class="text-red-600 hover:text-red-700">
-                            <i class="bi bi-x-circle text-xl"></i>
-                        </button>
+                        
+                        <!-- Reference Number -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Reference Number <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-hash absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <input type="text" name="reference_number" required placeholder="e.g. ORD-2025-042" class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm">
+                            </div>
+                        </div>
+                        
+                        <!-- Document Title -->
+                        <div class="md:col-span-2 space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Legislative Title <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="title" required placeholder="Enter the official title of the record" class="w-full px-5 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm">
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="md:col-span-2 space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Summary / Description
+                            </label>
+                            <textarea name="description" rows="3" placeholder="Briefly describe the purpose or content of this document..." class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-medium text-sm"></textarea>
+                        </div>
+                        
+                        <!-- Document Date -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Official Date <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <input type="date" name="document_date" id="document-date-modal" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm">
+                            </div>
+                        </div>
+                        
+                        <!-- Status -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                Initial Status <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative group">
+                                <i class="bi bi-activity absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
+                                <select name="status" id="status-modal" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
+                                    <option value="Draft">Draft</option>
+                                    <option value="Published">Published</option>
+                                    <option value="Archived">Archived</option>
+                                </select>
+                                <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Document Information -->
-            <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                    <i class="bi bi-info-circle mr-2 text-red-600"></i>
-                    Document Information
-                </h3>
-                
-                <div class="grid md:grid-cols-2 gap-4">
-                    <!-- Document Type -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Document Type <span class="text-red-500">*</span>
-                        </label>
-                        <select name="document_type" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                            <option value="">Select Type</option>
-                            <option value="ordinance">Ordinance</option>
-                            <option value="resolution">Resolution</option>
-                            <option value="session">Session Minutes</option>
-                            <option value="agenda">Agenda</option>
-                            <option value="committee">Committee Report</option>
-                            <option value="hearing">Public Hearing</option>
-                            <option value="consultation">Public Consultation</option>
-                            <option value="research">Research Document</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Reference Number -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Reference Number <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="reference_number" required placeholder="e.g., ORD-2025-042" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    
-                    <!-- Document Title -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Document Title <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="title" required placeholder="Enter document title" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    
-                    <!-- Description -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Description
-                        </label>
-                        <textarea name="description" rows="3" placeholder="Brief description of the document" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"></textarea>
-                    </div>
-                    
-                    <!-- Document Date -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Document Date <span class="text-red-500">*</span>
-                        </label>
-                        <input type="date" name="document_date" id="document-date-modal" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    
-                    <!-- Status -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Status <span class="text-red-500">*</span>
-                        </label>
-                        <select name="status" id="status-modal" required class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                            <option value="Draft">Draft</option>
-                            <option value="Published">Published</option>
-                            <option value="Archived">Archived</option>
-                        </select>
-                    </div>
+                <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-800 mt-4">
+                    <button type="button" onclick="closeUploadModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
+                        Cancel Upload
+                    </button>
+                    <button type="submit" id="upload-submit-btn" class="w-full sm:w-auto order-1 sm:order-2 px-10 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
+                        Submit Repository
+                    </button>
                 </div>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-gray-900 py-4 border-t border-gray-200 dark:border-gray-800 z-10">
-                <button type="button" onclick="closeUploadModal()" class="px-6 py-2 border-2 border-gray-400 dark:border-gray-700 rounded-lg text-gray-800 dark:text-gray-300 font-bold hover:!bg-gray-100 dark:hover:bg-gray-800 transition">
-                    Cancel
-                </button>
-                <button type="submit" id="upload-submit-btn" style="background-color: #dc2626 !important;" class="px-8 py-2 text-white rounded-lg font-bold hover:!bg-red-700 shadow-lg shadow-red-200 dark:shadow-none transition transform active:scale-95 flex items-center">
-                    <span class="text-white">Upload Document</span>
-                </button>
-            </div>
+            </form>
+        </div>
+    </div>
+</div>
         </form>
     </div>
 </div>

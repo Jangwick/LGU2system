@@ -401,41 +401,46 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Document Preview Modal -->
         <div id="preview-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="flex items-end justify-center min-h-screen sm:items-center sm:p-4">
                 <!-- Overlay -->
                 <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
 
                 <!-- Modal Content -->
-                <div id="preview-content" class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 duration-300">
+                    <!-- Mobile Drag Handle -->
+                    <div class="md:hidden w-full flex justify-center pt-3 pb-1 bg-gradient-to-r from-red-600 to-red-700">
+                        <div class="w-12 h-1.5 bg-white/30 rounded-full"></div>
+                    </div>
+
                     <!-- Modal Header -->
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-center justify-between text-white border-b border-white/10">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-start justify-between text-white border-b border-white/10">
                         <div class="flex items-center gap-4">
-                            <div id="modal-icon-bg" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                            <div id="modal-icon-bg" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl flex-shrink-0">
                                 <i id="modal-icon" class="bi bi-file-earmark-text"></i>
                             </div>
-                            <div>
-                                <h3 class="text-xl font-black leading-6" id="modal-title">Document Preview</h3>
-                                <p id="modal-subtitle" class="text-red-100 text-xs font-bold uppercase tracking-widest mt-1 opacity-80">Reference ID: ---</p>
+                            <div class="min-w-0">
+                                <h3 class="text-xl font-black leading-none mb-1" id="modal-title">Document Preview</h3>
+                                <p id="modal-subtitle" class="text-red-100 text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">Reference ID: ---</p>
                             </div>
                         </div>
-                        <button onclick="closePreview()" class="w-10 h-10 rounded-xl hover:bg-white/10 flex items-center justify-center transition-all">
-                            <i class="bi bi-x-lg text-xl"></i>
+                        <button onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all flex-shrink-0 -mt-1 md:mt-0">
+                            <i class="bi bi-x-lg text-lg text-white"></i>
                         </button>
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8">
+                    <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 max-h-[75vh] sm:max-h-none overflow-y-auto sm:overflow-visible">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <!-- Left: Details -->
                             <div class="md:col-span-2 space-y-6">
                                 <div>
-                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Document Title</h4>
-                                    <h2 id="preview-title" class="text-2xl font-black text-gray-800 dark:text-white leading-tight">---</h2>
+                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Document Title</h4>
+                                    <h2 id="preview-title" class="text-xl md:text-2xl font-black text-gray-800 dark:text-white leading-tight">---</h2>
                                 </div>
 
                                 <div>
-                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Description</h4>
-                                    <p id="preview-desc" class="text-gray-600 dark:text-gray-400 leading-relaxed font-medium">---</p>
+                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Description</h4>
+                                    <p id="preview-desc" class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed font-medium">---</p>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-4">
@@ -447,7 +452,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </div>
                                     <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
                                         <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Date Created</h4>
-                                        <p id="preview-date" class="text-sm font-bold text-gray-800 dark:text-gray-200 mt-1">---</p>
+                                        <p id="preview-date" class="text-xs md:text-sm font-bold text-gray-800 dark:text-gray-200 mt-1">---</p>
                                     </div>
                                 </div>
                             </div>
@@ -458,21 +463,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">File Information</h4>
                                     <div class="space-y-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center text-red-600 dark:text-red-500 shadow-sm border border-gray-100 dark:border-gray-700">
-                                                <i class="bi bi-file-earmark-pdf"></i>
+                                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-red-600 dark:text-red-500 shadow-sm border border-gray-100 dark:border-gray-700 flex-shrink-0">
+                                                <i class="bi bi-file-earmark-pdf text-xl"></i>
                                             </div>
                                             <div class="min-w-0">
-                                                <p id="preview-filename" class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">filename.pdf</p>
-                                                <p id="preview-filesize" class="text-[10px] text-gray-400 dark:text-gray-500">0.0 MB</p>
+                                                <p id="preview-filename" class="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate">filename.pdf</p>
+                                                <p id="preview-filesize" class="text-[9px] text-gray-400 dark:text-gray-500 font-bold">0.0 MB</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 shadow-sm border border-gray-100 dark:border-gray-700">
-                                                <i class="bi bi-person-circle"></i>
+                                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 shadow-sm border border-gray-100 dark:border-gray-700 flex-shrink-0">
+                                                <i class="bi bi-person-circle text-lg"></i>
                                             </div>
-                                            <div>
-                                                <p id="preview-uploader" class="text-sm font-bold text-gray-800 dark:text-gray-200">Uploader</p>
-                                                <p class="text-[10px] text-gray-400 dark:text-gray-500">Uploaded By</p>
+                                            <div class="min-w-0">
+                                                <p id="preview-uploader" class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">Uploader</p>
+                                                <p class="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider">Uploaded By</p>
                                             </div>
                                         </div>
                                     </div>
@@ -482,12 +487,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </div>
                                 </div>
 
-                                <div class="space-y-3">
-                                    <a id="preview-download-btn" href="#" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
-                                        <i class="bi bi-download"></i> Download Document
+                                <div class="space-y-3 pb-6 md:pb-0">
+                                    <a id="preview-download-btn" href="#" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                        <i class="bi bi-download text-base"></i> Download Document
                                     </a>
-                                    <a id="preview-full-view" href="#" class="w-full py-3.5 bg-gray-800 dark:bg-black hover:bg-gray-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg shadow-gray-200 dark:shadow-none transition-all flex items-center justify-center gap-2 transform active:scale-95">
-                                        <i class="bi bi-fullscreen"></i> Detailed View
+                                    <a id="preview-full-view" href="#" class="w-full py-4 bg-gray-900 dark:bg-black hover:bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-gray-200 dark:shadow-none transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                        <i class="bi bi-fullscreen text-base"></i> Detailed View
                                     </a>
                                 </div>
                             </div>
@@ -655,8 +660,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 setTimeout(() => {
                     overlay.classList.remove('opacity-0', 'pointer-events-none');
                     overlay.classList.add('opacity-100', 'pointer-events-auto');
-                    content.classList.remove('opacity-0', 'translate-y-4', 'scale-95');
-                    content.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+                    content.classList.remove('translate-y-full', 'sm:scale-95', 'opacity-0');
+                    content.classList.add('translate-y-0', 'sm:scale-100', 'opacity-100');
                 }, 10);
 
                 try {
@@ -732,8 +737,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 overlay.classList.add('opacity-0', 'pointer-events-none');
                 overlay.classList.remove('opacity-100', 'pointer-events-auto');
-                content.classList.add('opacity-0', 'translate-y-4', 'scale-95');
-                content.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+                content.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
+                content.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
 
                 setTimeout(() => {
                     modal.classList.add('hidden');
