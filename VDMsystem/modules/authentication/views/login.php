@@ -1,6 +1,14 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
+
+// If already logged in with a valid session, redirect to dashboard
+if (function_exists('checkAlreadyLoggedIn')) {
+    checkAlreadyLoggedIn();
+} else if (isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL . "/modules/dashboard/views/index.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,17 +18,15 @@ require_once __DIR__ . '/../../core/config/config.php';
     <meta name="theme-color" content="#dc2626">
     <title>Login - <?php echo APP_NAME; ?></title>
     
-    <!-- Tailwind CSS v4 -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?php echo BASE_URL; ?>/public/assets/images/logo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body class="bg-gradient-to-br from-red-50 via-white to-red-50 min-h-screen flex items-center justify-center p-3 md:p-4">
     <style>
+        /* Animation Keyframes */
         @keyframes fade-in {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -30,43 +36,77 @@ require_once __DIR__ . '/../../core/config/config.php';
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes bounce-in {
-            0% { transform: scale(0.5); }
-            50% { transform: scale(1.1); }
-            70% { transform: scale(0.95); }
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
             100% { transform: scale(1); }
         }
-        .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
-        .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
-        .animate-bounce-in { animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
+        .animate-fade-in { opacity: 0; animation: fade-in 0.6s ease-out forwards; }
+        .animate-fade-in-up { opacity: 0; transform: translateY(20px); animation: fade-in-up 0.6s ease-out forwards; }
+        .animate-bounce-in { opacity: 0; transform: scale(0.3); animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
         .animation-delay-100 { animation-delay: 100ms; }
         .animation-delay-200 { animation-delay: 200ms; }
         .animation-delay-300 { animation-delay: 300ms; }
         .animation-delay-400 { animation-delay: 400ms; }
         
+        /* Ensure logo is always visible */
         .login-logo-container {
             width: 120px !important;
             height: 120px !important;
             display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         .login-logo-img {
             width: 100% !important;
             height: 100% !important;
             object-fit: contain !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        .logo-bounce {
+            animation: logo-bounce-anim 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+        @keyframes logo-bounce-anim {
+            0% { transform: scale(0.5); }
+            50% { transform: scale(1.1); }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        .text-slide-up {
+            animation: text-slide-anim 0.5s ease-out forwards;
+        }
+        @keyframes text-slide-anim {
+            from { transform: translateY(10px); opacity: 0.5; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Prevent zoom on input focus in iOS */
+        @media screen and (max-width: 767px) {
+            input, select, textarea { font-size: 16px !important; }
         }
     </style>
     
+    <!-- Back to Landing Page -->
+    <a href="<?php echo BASE_URL; ?>/index.php" class="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-gray-600 hover:text-red-600 font-medium transition-all duration-300 z-50 group bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg shadow-sm hover:shadow-md">
+        <i class="bi bi-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform"></i>
+        <span class="hidden sm:inline">Back to Home</span>
+        <span class="sm:hidden">Back</span>
+    </a>
+
     <div class="w-full max-w-md">
         <!-- Logo Section -->
-        <div class="text-center mb-6 md:mb-8 animate-fade-in">
-            <div class="inline-flex items-center justify-center mb-3 md:mb-4 animate-bounce-in">
+        <div class="text-center mb-6 md:mb-8">
+            <div class="inline-flex items-center justify-center mb-3 md:mb-4 logo-bounce">
                 <div class="login-logo-container bg-white rounded-full shadow-xl items-center justify-center p-3 transform hover:scale-105 transition-all duration-300">
-                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" class="login-logo-img">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="City Government of Valenzuela" class="login-logo-img" onerror="this.onerror=null; this.src='https://valenzuela.gov.ph/images/valenzuela-logo.webp';">
                 </div>
             </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fade-in-up animation-delay-100">VDM System</h1>
-            <p class="text-sm md:text-base text-gray-600 mt-1 md:mt-2 animate-fade-in-up animation-delay-200">Voting and Decision-Making System</p>
-            <p class="text-xs md:text-sm text-red-600 font-semibold mt-1 animate-fade-in-up animation-delay-300">City Government of Valenzuela</p>
-            <p class="text-xs text-gray-500 animate-fade-in-up animation-delay-400">Metropolitan Manila</p>
+            <h1 class="text-2xl md:text-3xl font-black text-red-600 text-slide-up" style="animation-delay: 0.1s;">VDMS</h1>
+            <p class="text-sm md:text-base text-gray-600 mt-1 md:mt-2 text-slide-up" style="animation-delay: 0.2s;">Voting & Decision-Making System</p>
+            <p class="text-xs md:text-sm text-[#002d72] font-semibold mt-1 text-slide-up" style="animation-delay: 0.3s;">City Government of Valenzuela</p>
+            <p class="text-xs text-gray-500 text-slide-up" style="animation-delay: 0.4s;">Metropolitan Manila</p>
         </div>
         
         <!-- Login Card -->
@@ -76,104 +116,59 @@ require_once __DIR__ . '/../../core/config/config.php';
                 <p class="text-sm md:text-base text-gray-600 mt-1">Sign in to access your account</p>
             </div>
             
-            <!-- Alert Messages -->
+            <!-- Alert Container -->
             <div id="alert-container" class="mb-4">
+                <?php if (isset($_SESSION['login_error'])): ?>
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">
+                        <i class="bi bi-exclamation-circle mr-2"></i>
+                        <span><?php echo htmlspecialchars($_SESSION['login_error']); unset($_SESSION['login_error']); ?></span>
+                    </div>
+                <?php endif; ?>
                 <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success'): ?>
-                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center text-sm">
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">
                         <i class="bi bi-check-circle mr-2"></i>
                         <span>You have been logged out successfully.</span>
                     </div>
-                <?php endif; ?>
-                
-                <?php if (isset($_SESSION['login_error'])): ?>
-                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center text-sm">
-                        <i class="bi bi-exclamation-circle mr-2"></i>
-                        <span><?php echo htmlspecialchars($_SESSION['login_error']); ?></span>
-                    </div>
-                    <?php unset($_SESSION['login_error']); ?>
                 <?php endif; ?>
             </div>
             
             <!-- Login Form -->
             <form id="login-form" action="<?php echo AUTH_URL; ?>/controllers/LoginController.php" method="POST" class="space-y-4 md:space-y-5">
-                <!-- Email Field -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                         <i class="bi bi-envelope mr-1"></i>Email Address
                     </label>
-                    <input type="email" 
-                           id="email" 
-                           name="email" 
-                           required
-                           placeholder="your.email@lgu.gov.ph"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition text-base">
+                    <input type="email" id="email" name="email" required placeholder="your.email@lgu.gov.ph"
+                           class="w-full px-3 md:px-4 py-2.5 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition text-base">
                 </div>
                 
-                <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="bi bi-lock mr-1"></i>Password
-                    </label>
-                    <div class="relative">
-                        <input type="password" 
-                               id="password" 
-                               name="password" 
-                               required
-                               placeholder="Enter your password"
-                               class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
-                        <button type="button" 
-                                id="toggle-password" 
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                            <i class="bi bi-eye" id="eye-icon"></i>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="password" class="block text-sm font-medium text-gray-700">
+                            <i class="bi bi-lock mr-1"></i>Password
+                        </label>
+                        <a href="forgot-password.php" class="text-xs md:text-sm font-semibold text-red-600 hover:text-red-700 transition">Forgot?</a>
+                    </div>
+                    <div class="relative group">
+                        <input type="password" id="password" name="password" required placeholder="Enter your password"
+                               class="w-full pl-3 md:pl-4 pr-10 py-2.5 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition text-base">
+                        <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition">
+                            <i class="bi bi-eye" id="password-icon"></i>
                         </button>
                     </div>
                 </div>
-                
-                <!-- Remember Me & Forgot Password -->
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center">
-                        <input type="checkbox" 
-                               name="remember" 
-                               id="remember"
-                               class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-2 focus:ring-red-500">
-                        <span class="ml-2 text-sm text-gray-700">Remember me</span>
-                    </label>
-                    <a href="<?php echo AUTH_URL; ?>/views/forgot-password.php" class="text-sm text-red-600 hover:text-red-700 font-medium">
-                        Forgot password?
-                    </a>
+
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" name="remember" class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
+                    <label for="remember" class="ml-2 text-xs md:text-sm text-gray-600 cursor-pointer">Remember this device</label>
                 </div>
-                
-                <!-- Submit Button -->
-                <button type="submit" 
-                        id="login-btn"
-                        class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-200 ease-in-out shadow-md hover:shadow-lg flex items-center justify-center">
+
+                <button type="submit" id="submit-btn" class="w-full bg-red-600 text-white font-bold py-3 md:py-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transform transition-all active:scale-95 shadow-lg flex items-center justify-center">
                     <span>Sign In</span>
-                    <i class="bi bi-arrow-right ml-2"></i>
+                    <i class="bi bi-arrow-right-short ml-2 text-xl"></i>
                 </button>
             </form>
-            
-            <!-- Divider -->
-            <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
-                </div>
-                <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
-                </div>
-            </div>
-            
-            <!-- Alternative Login Options -->
-            <div class="grid grid-cols-2 gap-3">
-                <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                    <i class="bi bi-microsoft text-lg mr-2"></i>
-                    <span class="text-sm font-medium text-gray-700">Microsoft</span>
-                </button>
-                <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                    <i class="bi bi-google text-lg mr-2 text-red-500"></i>
-                    <span class="text-sm font-medium text-gray-700">Google</span>
-                </button>
-            </div>
-            
+
             <!-- Register Link -->
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
@@ -183,20 +178,9 @@ require_once __DIR__ . '/../../core/config/config.php';
             </div>
         </div>
         
-        <!-- Demo Credentials (Same as LLRMSystem) -->
-        <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200 animate-fade-in-up animation-delay-400">
-            <p class="text-xs font-semibold text-red-800 mb-2"><i class="bi bi-info-circle mr-1"></i> Demo Credentials (Same as LLRM):</p>
-            <div class="text-xs text-red-700 space-y-1">
-                <p><strong>Admin:</strong> admin@lgu.gov.ph / admin123</p>
-                <p><strong>Officer:</strong> officer@lgu.gov.ph / admin123</p>
-                <p><strong>Staff:</strong> staff@lgu.gov.ph / admin123</p>
-                <p><strong>Viewer:</strong> viewer@lgu.gov.ph / admin123</p>
-            </div>
-        </div>
-        
         <!-- Footer Info -->
-        <div class="mt-6 text-center text-sm text-gray-600">
-            <p>&copy; <?php echo date('Y'); ?> City Government of Valenzuela. All rights reserved.</p>
+        <div class="mt-8 text-center text-sm text-gray-600">
+            <p>&copy; <?php echo date('Y'); ?> LGU Legislative Office. All rights reserved.</p>
             <div class="mt-2 space-x-4">
                 <a href="#" class="hover:text-red-600">Privacy Policy</a>
                 <span>•</span>
@@ -208,19 +192,31 @@ require_once __DIR__ . '/../../core/config/config.php';
     </div>
     
     <script>
-        // Toggle password visibility
-        document.getElementById('toggle-password')?.addEventListener('click', function() {
-            const passwordField = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                eyeIcon.classList.remove('bi-eye');
-                eyeIcon.classList.add('bi-eye-slash');
-            } else {
-                passwordField.type = 'password';
-                eyeIcon.classList.remove('bi-eye-slash');
-                eyeIcon.classList.add('bi-eye');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle password functionality
+            document.getElementById('toggle-password')?.addEventListener('click', function() {
+                const passwordField = document.getElementById('password');
+                const passwordIcon = document.getElementById('password-icon');
+                
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    passwordIcon.classList.replace('bi-eye', 'bi-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    passwordIcon.classList.replace('bi-eye-slash', 'bi-eye');
+                }
+            });
+
+            // Modern form handling
+            const loginForm = document.getElementById('login-form');
+            if (loginForm && window.fetch) {
+                loginForm.addEventListener('submit', async function(e) {
+                    // We allow the direct POST for VDM if AJAX isn't strictly required by the controller,
+                    // but we'll add a subtle loading state.
+                    const submitBtn = document.getElementById('submit-btn');
+                    submitBtn.disabled = true;
+                    submitBtn.querySelector('span').innerText = 'Signing In...';
+                });
             }
         });
     </script>
