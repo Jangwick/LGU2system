@@ -1138,3 +1138,112 @@ main::-webkit-scrollbar-thumb:active {
     background-color: #991b1b;
     color: #fee2e2;
 }
+
+/* ========================================
+   Voting Module - Separated Light/Dark Paths
+   Prevents color bleeding between themes.
+   Uses CSS custom properties so light/dark
+   text colors never interfere with each other.
+   ======================================== */
+
+/* Light Mode Colors (default - no .dark class) */
+:root {
+    --vdm-heading: #0f172a;
+    --vdm-label: #1e293b;
+    --vdm-input: #0f172a;
+    --vdm-sub: #475569;
+    --vdm-muted: #64748b;
+    --vdm-placeholder: #94a3b8;
+    --vdm-card-bg: #ffffff;
+    --vdm-input-bg: #ffffff;
+    --vdm-card-border: #f1f5f9;
+    --vdm-input-border: #e2e8f0;
+    --vdm-page-bg: #ffffff;
+    --vdm-hover-bg: #f8fafc;
+    --vdm-footer-bg: rgba(255, 255, 255, 0.8);
+    --vdm-footer-border: #f1f5f9;
+}
+
+/* Dark Mode Colors - completely separate path via .dark class */
+html.dark {
+    --vdm-heading: #f1f5f9;
+    --vdm-label: #94a3b8;
+    --vdm-input: #e2e8f0;
+    --vdm-sub: #94a3b8;
+    --vdm-muted: #64748b;
+    --vdm-placeholder: #475569;
+    --vdm-card-bg: #0f172a;
+    --vdm-input-bg: #1e293b;
+    --vdm-card-border: #1e293b;
+    --vdm-input-border: #334155;
+    --vdm-page-bg: #020617;
+    --vdm-hover-bg: #1e293b;
+    --vdm-footer-bg: rgba(2, 6, 23, 0.8);
+    --vdm-footer-border: #1e293b;
+}
+
+/* --- Text Color Utilities (use !important to prevent bleed) --- */
+.vdm-heading { color: var(--vdm-heading) !important; }
+.vdm-label { color: var(--vdm-label) !important; }
+.vdm-input { color: var(--vdm-input) !important; }
+.vdm-sub { color: var(--vdm-sub) !important; }
+.vdm-muted { color: var(--vdm-muted) !important; }
+
+/* --- Placeholder --- */
+.vdm-input::placeholder { color: var(--vdm-placeholder) !important; }
+.vdm-input::-webkit-input-placeholder { color: var(--vdm-placeholder) !important; }
+
+/* --- Container Utilities --- */
+.vdm-card {
+    background-color: var(--vdm-card-bg);
+    border-color: var(--vdm-card-border);
+}
+
+.vdm-input-field {
+    background-color: var(--vdm-input-bg);
+    border-color: var(--vdm-input-border);
+}
+
+.vdm-input-field:focus {
+    background-color: var(--vdm-card-bg);
+}
+
+.vdm-page-bg {
+    background-color: var(--vdm-page-bg);
+}
+
+.vdm-footer {
+    background-color: var(--vdm-footer-bg);
+    border-color: var(--vdm-footer-border);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+.vdm-badge {
+    color: var(--vdm-sub);
+    background-color: var(--vdm-hover-bg);
+    border-color: var(--vdm-card-border);
+}
+
+/* --- Form-Level Auto-Targeting ---
+   Adding .vdm-form to any container auto-fixes
+   text colors for all descendants via CSS variables.
+   This prevents Tailwind dark: text from bleeding. */
+.vdm-form h1, .vdm-form h2, .vdm-form h3, .vdm-form h4 {
+    color: var(--vdm-heading) !important;
+}
+
+.vdm-form label:not(.flex) {
+    color: var(--vdm-label) !important;
+}
+
+.vdm-form input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
+.vdm-form select,
+.vdm-form textarea {
+    color: var(--vdm-input) !important;
+}
+
+.vdm-form input::placeholder,
+.vdm-form textarea::placeholder {
+    color: var(--vdm-placeholder) !important;
+}

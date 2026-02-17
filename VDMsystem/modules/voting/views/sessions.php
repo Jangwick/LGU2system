@@ -39,7 +39,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
+    <main class="flex-1 overflow-y-auto bg-slate-50 p-3 md:p-6 custom-scrollbar">
         <!-- Flash Messages -->
         <?php if (isset($_SESSION['flash_success'])): ?>
             <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4 animate-fade-in">
@@ -320,75 +320,75 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <!-- Modal Body -->
-                    <form id="sessionForm" action="create-session.php" method="POST" class="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar bg-gray-50/50 dark:bg-slate-900/40">
+                    <form id="sessionForm" action="create-session.php" method="POST" class="vdm-form flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar vdm-page-bg">
                         <input type="hidden" name="session_id" id="modalSessionId" value="">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             
                             <!-- Left Section (Basic Info & Documents) -->
                             <div class="lg:col-span-2 space-y-8">
                                 <!-- Basic Information -->
-                                <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-8 shadow-sm border border-gray-100 dark:border-slate-700/50">
+                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
                                     <div class="flex items-center gap-4 mb-8">
                                         <div class="w-11 h-11 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center text-lg">
                                             <i class="bi bi-info-circle-fill"></i>
                                         </div>
-                                        <h3 class="text-xl font-black text-gray-800 dark:text-white tracking-tight">Basic Information</h3>
+                                        <h3 class="text-xl font-black vdm-heading tracking-tight">Basic Information</h3>
                                     </div>
                                     <div class="space-y-6">
                                         <div>
-                                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">Session Title <span class="text-red-500">*</span></label>
-                                            <input type="text" name="title" required class="w-full px-5 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600" placeholder="e.g. Regular Session - Resolution Planning">
+                                            <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Session Title <span class="text-red-500">*</span></label>
+                                            <input type="text" name="title" required class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input" placeholder="e.g. Regular Session - Resolution Planning">
                                         </div>
                                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                             <div>
-                                                <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">Date <span class="text-red-500">*</span></label>
-                                                <input type="date" name="session_date" value="<?php echo date('Y-m-d'); ?>" required class="w-full px-5 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-bold text-gray-700 dark:text-slate-200">
+                                                <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Date <span class="text-red-500">*</span></label>
+                                                <input type="date" name="session_date" value="<?php echo date('Y-m-d'); ?>" required class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input">
                                             </div>
                                             <div>
-                                                <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">Start <span class="text-red-500">*</span></label>
-                                                <input type="time" name="start_time" value="14:00" required class="w-full px-5 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-bold text-gray-700 dark:text-slate-200">
+                                                <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Start <span class="text-red-500">*</span></label>
+                                                <input type="time" name="start_time" value="14:00" required class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input">
                                             </div>
                                             <div>
-                                                <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">End</label>
-                                                <input type="time" name="end_time" class="w-full px-5 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-bold text-gray-700 dark:text-slate-200">
+                                                <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">End</label>
+                                                <input type="time" name="end_time" class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input">
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">Description</label>
-                                            <textarea name="description" rows="3" class="w-full px-5 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none" placeholder="Briefly describe the session agenda..."></textarea>
+                                            <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Description</label>
+                                            <textarea name="description" rows="3" class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input resize-none" placeholder="Briefly describe the session agenda..."></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Legislative Items -->
-                                <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-8 shadow-sm border border-gray-100 dark:border-slate-700/50">
+                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
                                     <div class="flex items-center justify-between mb-8">
                                         <div class="flex items-center gap-4">
                                             <div class="w-11 h-11 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-lg">
                                                 <i class="bi bi-file-earmark-text-fill"></i>
                                             </div>
-                                            <h3 class="text-xl font-black text-gray-800 dark:text-white tracking-tight">Legislative Items</h3>
+                                            <h3 class="text-xl font-black vdm-heading tracking-tight">Legislative Items</h3>
                                         </div>
                                         <span class="text-[10px] font-black bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-1.5 rounded-xl border border-blue-100 dark:border-blue-800 uppercase tracking-widest">Pending Vote</span>
                                     </div>
                                     <div class="grid grid-cols-1 gap-3 max-h-[300px] overflow-y-auto pr-3 custom-scrollbar">
                                         <?php if (empty($pendingDocuments)): ?>
-                                            <div class="text-center py-12 bg-gray-50/50 dark:bg-slate-900/50 rounded-[1.5rem] border-2 border-dashed border-gray-100 dark:border-slate-700">
+                                            <div class="text-center py-12 vdm-card rounded-[1.5rem] border-2 border-dashed">
                                                 <i class="bi bi-inbox text-4xl text-slate-200 dark:text-slate-700 block mb-3"></i>
-                                                <p class="text-sm font-bold text-slate-400 dark:text-slate-500">No pending legislative items found.</p>
+                                                <p class="text-sm font-black vdm-muted">No pending legislative items found.</p>
                                             </div>
                                         <?php else: ?>
                                             <?php foreach ($pendingDocuments as $doc): ?>
-                                            <label class="flex items-center p-4 rounded-[1.25rem] border border-gray-50 dark:border-slate-700/30 bg-white dark:bg-slate-800/50 hover:border-red-200 dark:hover:border-red-900/50 hover:bg-red-50/30 dark:hover:bg-red-900/10 transition-all cursor-pointer group">
+                                            <label class="flex items-center p-4 rounded-[1.25rem] vdm-card hover:border-red-200 dark:hover:border-red-900/50 transition-all cursor-pointer group border">
                                                 <div class="mr-4">
                                                     <input type="checkbox" name="documents[]" value="<?php echo $doc['id']; ?>" class="w-5 h-5 text-red-600 rounded-lg border-slate-200 focus:ring-red-500/20 cursor-pointer">
                                                 </div>
                                                 <div class="flex-1">
                                                     <div class="flex items-center justify-between mb-1">
-                                                        <span class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-tighter"><?php echo e($doc['doc_number']); ?></span>
-                                                        <span class="text-[8px] bg-white dark:bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-100 dark:border-slate-700 text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest"><?php echo e($doc['type']); ?></span>
+                                                        <span class="text-[9px] font-black vdm-muted uppercase tracking-tighter"><?php echo e($doc['doc_number']); ?></span>
+                                                        <span class="text-[8px] vdm-badge px-2 py-0.5 rounded-lg border font-black uppercase tracking-widest"><?php echo e($doc['type']); ?></span>
                                                     </div>
-                                                    <h4 class="text-sm font-black text-slate-700 dark:text-slate-300 leading-tight group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo e($doc['title']); ?></h4>
+                                                    <h4 class="text-sm font-black vdm-heading leading-tight group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo e($doc['title']); ?></h4>
                                                 </div>
                                             </label>
                                             <?php endforeach; ?>
@@ -400,12 +400,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <!-- Right Section (Settings & Attendees) -->
                             <div class="space-y-8">
                                 <!-- Settings -->
-                                <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-8 shadow-sm border border-gray-100 dark:border-slate-700/50">
-                                    <h3 class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-6 border-b border-gray-50 dark:border-slate-700/50 pb-3">Settings</h3>
+                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
+                                    <div class="flex items-center gap-4 mb-8">
+                                        <div class="w-11 h-11 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl flex items-center justify-center text-lg">
+                                            <i class="bi bi-gear-fill"></i>
+                                        </div>
+                                        <h3 class="text-xl font-black vdm-heading tracking-tight">Session Settings</h3>
+                                    </div>
                                     <div class="space-y-6">
                                         <div>
-                                            <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Committee</label>
-                                            <select name="committee_id" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] text-sm font-bold text-gray-700 dark:text-slate-200 outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-red-500/10 transition-all cursor-pointer">
+                                            <label class="block text-[10px] font-black vdm-label uppercase tracking-widest mb-2 ml-1">Committee</label>
+                                            <select name="committee_id" class="w-full px-4 py-3 vdm-input-field rounded-[1.25rem] border text-sm font-black vdm-input outline-none focus:ring-4 focus:ring-red-500/10 cursor-pointer">
                                                 <option value="">-- Plenary Session --</option>
                                                 <?php foreach ($committees as $c): ?>
                                                     <option value="<?php echo $c['id']; ?>"><?php echo e($c['name']); ?></option>
@@ -413,32 +418,37 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             </select>
                                         </div>
                                         <div>
-                                            <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Vote Method</label>
-                                            <select name="vote_type" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] text-sm font-bold text-gray-700 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-900 outline-none focus:ring-4 focus:ring-red-500/10 cursor-pointer">
+                                            <label class="block text-[10px] font-black vdm-label uppercase tracking-widest mb-2 ml-1">Vote Method</label>
+                                            <select name="vote_type" class="w-full px-4 py-3 vdm-input-field rounded-[1.25rem] border text-sm font-black vdm-input outline-none focus:ring-4 focus:ring-red-500/10 cursor-pointer">
                                                 <option value="roll_call">Roll Call Vote</option>
                                                 <option value="voice">Voice Vote</option>
                                                 <option value="ballot">Secret Ballot</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Quorum</label>
-                                            <input type="number" name="quorum_required" value="5" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-transparent dark:border-slate-700/50 rounded-[1.25rem] text-sm font-bold text-gray-700 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-900 outline-none focus:ring-4 focus:ring-red-500/10">
+                                            <label class="block text-[10px] font-black vdm-label uppercase tracking-widest mb-2 ml-1">Quorum</label>
+                                            <input type="number" name="quorum_required" value="5" class="w-full px-4 py-3 vdm-input-field rounded-[1.25rem] border text-sm font-black vdm-input outline-none focus:ring-4 focus:ring-red-500/10">
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Attendees -->
-                                <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-8 shadow-sm border border-gray-100 dark:border-slate-700/50 min-h-[300px] flex flex-col">
-                                    <h3 class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-6 border-b border-gray-50 dark:border-slate-700/50 pb-3">Attendees</h3>
-                                    <div class="overflow-y-auto space-y-3 flex-1 custom-scrollbar pr-2">
+                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border min-h-[400px] flex flex-col">
+                                    <div class="flex items-center gap-4 mb-8">
+                                        <div class="w-11 h-11 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-lg">
+                                            <i class="bi bi-people-fill"></i>
+                                        </div>
+                                        <h3 class="text-xl font-black vdm-heading tracking-tight">Attendees</h3>
+                                    </div>
+                                    <div class="overflow-y-auto space-y-2 flex-1 custom-scrollbar pr-2">
                                         <?php foreach ($councilors as $user): ?>
-                                        <label class="flex items-center p-3 rounded-[1.1rem] hover:bg-gray-50 dark:hover:bg-slate-900/50 cursor-pointer transition-all border border-transparent hover:border-gray-100 dark:hover:border-slate-700/50 group">
-                                            <div class="mr-3">
-                                                <input type="checkbox" name="attendees[]" value="<?php echo $user['id']; ?>" checked class="w-4.5 h-4.5 text-red-600 rounded-lg border-slate-200 dark:border-slate-700 focus:ring-red-500/20 cursor-pointer">
+                                        <label class="flex items-center p-3.5 rounded-[1.25rem] vdm-card cursor-pointer hover:border-red-200 dark:hover:border-red-900/50 transition-all border group">
+                                            <div class="mr-4">
+                                                <input type="checkbox" name="attendees[]" value="<?php echo $user['id']; ?>" checked class="w-5 h-5 text-red-600 rounded-lg border-slate-200 dark:border-slate-700 focus:ring-red-500/20 cursor-pointer">
                                             </div>
-                                            <div>
-                                                <p class="text-[11px] font-black text-slate-700 dark:text-slate-200 leading-none group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo e($user['full_name']); ?></p>
-                                                <p class="text-[9px] text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase opacity-70"><?php echo e($user['position']); ?></p>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-black vdm-heading leading-none group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo e($user['full_name']); ?></p>
+                                                <p class="text-[9px] vdm-sub font-black mt-1 uppercase tracking-widest"><?php echo e($user['position']); ?></p>
                                             </div>
                                         </label>
                                         <?php endforeach; ?>
@@ -448,8 +458,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
 
                         <!-- Footer Actions -->
-                        <div class="flex items-center justify-between mt-10 pt-8 border-t border-gray-100 dark:border-slate-800 shrink-0">
-                            <button type="button" onclick="closeCreateSessionModal()" class="px-8 py-3.5 text-sm font-black text-slate-400 dark:text-slate-500 hover:text-red-600 transition-all uppercase tracking-widest">Discard</button>
+                        <div class="flex items-center justify-between mt-10 pt-8 border-t shrink-0" style="border-color: var(--vdm-card-border)">
+                            <button type="button" onclick="closeCreateSessionModal()" class="px-8 py-3.5 text-sm font-black vdm-muted hover:text-red-600 transition-all uppercase tracking-widest">Discard</button>
                             <button type="submit" class="bg-[#dc2626] text-white px-10 py-4 rounded-[1.5rem] font-black shadow-xl shadow-red-200 hover:bg-red-700 hover:-translate-y-1 transition-all flex items-center gap-3 text-sm uppercase tracking-tight">
                                 Create Session <i class="bi bi-check2-circle"></i>
                             </button>
@@ -466,7 +476,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeSessionDetailsModal()"></div>
                 
                 <!-- Modal Box -->
-                <div class="relative bg-gray-50 dark:bg-slate-900 w-full max-w-7xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border border-gray-100 dark:border-slate-800">
+                <div class="relative bg-white dark:bg-slate-950 w-full max-w-7xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border border-gray-100 dark:border-slate-800">
                     <div class="bg-white dark:bg-slate-800 p-6 md:p-8 flex items-center justify-between shrink-0 border-b border-gray-100 dark:border-slate-700">
                         <div class="flex items-center gap-4">
                             <button onclick="closeSessionDetailsModal()" class="text-red-600 hover:text-red-700 font-black text-sm flex items-center group transition-all">
@@ -659,42 +669,42 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </h3>
                                 <div class="grid grid-cols-2 gap-y-12 gap-x-10">
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500"><i class="bi bi-calendar2-event text-lg"></i></div>
+                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-calendar2-event text-lg"></i></div>
                                         <div>
                                             <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Date</p>
                                             <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.session_date}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500"><i class="bi bi-clock text-lg"></i></div>
+                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-clock text-lg"></i></div>
                                         <div>
                                             <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Time</p>
                                             <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.start_time} - ${s.end_time || '05:00 PM'}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500"><i class="bi bi-geo-alt text-lg"></i></div>
+                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-geo-alt text-lg"></i></div>
                                         <div>
                                             <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Location</p>
                                             <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.location || 'Session Hall'}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500"><i class="bi bi-diagram-3 text-lg"></i></div>
+                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-diagram-3 text-lg"></i></div>
                                         <div>
                                             <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Vote Type</p>
                                             <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.vote_type}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500"><i class="bi bi-people text-lg"></i></div>
+                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-people text-lg"></i></div>
                                         <div>
                                             <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Quorum Required</p>
                                             <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.quorum_required} members</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500"><i class="bi bi-building text-lg"></i></div>
+                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-building text-lg"></i></div>
                                         <div>
                                             <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Committee</p>
                                             <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.committee_name || 'Finance and Budget'}</p>
@@ -734,7 +744,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <h3 class="text-xl font-black text-slate-800 dark:text-slate-200">Documents for Voting</h3>
                             </div>
                             <div class="p-16 text-center">
-                                <div class="w-20 h-20 bg-gray-50 dark:bg-slate-900/50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-slate-200 dark:text-slate-700 text-3xl">
+                                <div class="w-20 h-20 bg-white dark:bg-slate-900/50 rounded-[2rem] border border-slate-100 dark:border-slate-800 flex items-center justify-center mx-auto mb-6 text-slate-200 dark:text-slate-700 text-3xl">
                                     <i class="bi bi-inbox"></i>
                                 </div>
                                 <h4 class="text-xl font-black text-slate-800 dark:text-slate-200 mb-2">No Documents</h4>
