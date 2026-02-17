@@ -69,10 +69,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Right Side: Action Button -->
                 <div class="shrink-0">
                     <?php if (hasRole(['admin', 'secretary'])): ?>
-                    <a href="create-session.php" class="bg-white text-red-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center group">
+                    <button type="button" onclick="openCreateSessionModal()" class="bg-white text-red-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center group">
                         <i class="bi bi-plus-lg mr-2 transition-transform group-hover:rotate-90"></i>
                         New Voting Session
-                    </a>
+                    </button>
                     <?php endif; ?>
                 </div>
             </div>
@@ -86,6 +86,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         $sComp = (int)($stats['completed_sessions'] ?? 0);
         $sSched = $sTotal - $sActive - $sComp;
         if ($sSched < 0) $sSched = 0;
+
+        // Fetch data for modal
+        $committees = dbFetchAll("SELECT id, name FROM committees WHERE is_active = 1 ORDER BY name");
+        $pendingDocuments = dbFetchAll("SELECT id, doc_number, title, type FROM documents WHERE status = 'pending_vote' ORDER BY created_at DESC");
+        $councilors = dbFetchAll("SELECT id, full_name, position FROM users WHERE role IN ('councilor', 'admin') AND is_active = 1 ORDER BY full_name");
         ?>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
             <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
@@ -279,11 +284,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <?php endif; ?>
                                             
                                             <?php if ($session['status'] === 'scheduled' && hasRole(['admin', 'secretary'])): ?>
-                                                <a href="edit-session.php?id=<?php echo $session['id']; ?>" 
+                                                <button type="button" onclick="openEditSessionModal(<?php echo $session['id']; ?>)" 
                                                    class="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition-all shadow-sm hover:shadow-md" 
                                                    title="Edit Session">
                                                     <i class="bi bi-pencil-fill"></i>
-                                                </a>
+                                                </button>
                                             <?php endif; ?>
                                         </div>
                                     </td>
@@ -294,8 +299,204 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </table>
             </div>
         </div>
+
+        <!-- Create Session Modal -->
+        <div id="createSessionModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <!-- Backdrop - Transparent with Blur -->
+                <div class="fixed inset-0 bg-white/20 backdrop-blur-md transition-all duration-300" onclick="closeCreateSessionModal()"></div>
+                
+                <!-- Modal Box - Reverted to Solid White -->
+                <div class="relative bg-white w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[90vh] border border-gray-200">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 p-6 text-white flex items-center justify-between shrink-0 shadow-lg">
+                        <div>
+                            <h2 class="text-2xl font-black tracking-tight">Configure New Session</h2>
+                            <p class="text-red-100 text-xs opacity-90">Set up legislative sessions, documents, and expected attendees.</p>
+                        </div>
+                        <button onclick="closeCreateSessionModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Form -->
+                    <form action="create-session.php" method="POST" class="overflow-y-auto p-6 md:p-8 custom-scrollbar bg-gray-50/50">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Left: Basic Info & Documents -->
+                            <div class="lg:col-span-2 space-y-6">
+                                <!-- Basic Info -->
+                                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                                    <div class="flex items-center gap-3 mb-6">
+                                        <div class="w-9 h-9 bg-red-100 text-red-600 rounded-lg flex items-center justify-center">
+                                            <i class="bi bi-info-circle-fill"></i>
+                                        </div>
+                                        <h3 class="font-bold text-gray-800">Basic Information</h3>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Session Title <span class="text-red-500">*</span></label>
+                                            <input type="text" name="title" required class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm" placeholder="e.g. Regular Session - Resolution Planning">
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Date <span class="text-red-500">*</span></label>
+                                                <input type="date" name="session_date" value="<?php echo date('Y-m-d'); ?>" required class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-sm">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-2">
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Start <span class="text-red-500">*</span></label>
+                                                    <input type="time" name="start_time" value="14:00" required class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-sm">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">End</label>
+                                                    <input type="time" name="end_time" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Description</label>
+                                            <textarea name="description" rows="2" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-sm" placeholder="Briefly describe the session agenda..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Documents -->
+                                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                                    <div class="flex items-center justify-between mb-6">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                                                <i class="bi bi-file-earmark-check-fill"></i>
+                                            </div>
+                                            <h3 class="font-bold text-gray-800">Legislative Items</h3>
+                                        </div>
+                                        <span class="text-[10px] font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full border border-blue-100 uppercase">Pending Vote</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
+                                        <?php if (empty($pendingDocuments)): ?>
+                                            <div class="text-center py-8 text-gray-400">
+                                                <i class="bi bi-file-earmark-text text-3xl opacity-20 block mb-2"></i>
+                                                <p class="text-xs">No pending documents found.</p>
+                                            </div>
+                                        <?php else: ?>
+                                            <?php foreach ($pendingDocuments as $doc): ?>
+                                            <label class="flex items-center p-3 rounded-xl border border-gray-100 bg-white hover:bg-red-50 transition-all cursor-pointer group">
+                                                <input type="checkbox" name="documents[]" value="<?php echo $doc['id']; ?>" class="w-4 h-4 text-red-600 rounded border-gray-300 focus:ring-red-500 mr-3">
+                                                <div class="flex-1">
+                                                    <div class="flex items-center justify-between mb-0.5">
+                                                        <span class="text-[9px] font-black text-gray-400 tracking-tighter"><?php echo e($doc['doc_number']); ?></span>
+                                                        <span class="text-[9px] bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100 text-gray-500 font-bold"><?php echo e($doc['type']); ?></span>
+                                                    </div>
+                                                    <h4 class="text-xs font-bold text-gray-700 leading-tight"><?php echo e($doc['title']); ?></h4>
+                                                </div>
+                                            </label>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Config & Attendees -->
+                            <div class="space-y-6">
+                                <!-- Settings -->
+                                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Settings</h3>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-gray-500 mb-1">Committee</label>
+                                            <select name="committee_id" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-red-500 transition-all">
+                                                <option value="">-- Plenary Session --</option>
+                                                <?php foreach ($committees as $c): ?>
+                                                    <option value="<?php echo $c['id']; ?>"><?php echo e($c['name']); ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-gray-500 mb-1">Vote Method</label>
+                                            <select name="vote_type" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs">
+                                                <option value="roll_call">Roll Call Vote</option>
+                                                <option value="voice">Voice Vote</option>
+                                                <option value="ballot">Secret Ballot</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-gray-500 mb-1">Quorum</label>
+                                            <input type="number" name="quorum_required" value="5" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-red-500">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Attendees -->
+                                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 flex-1 flex flex-col max-h-[280px]">
+                                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Attendees</h3>
+                                    <div class="overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                                        <?php foreach ($councilors as $user): ?>
+                                        <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-all border border-transparent hover:border-gray-200">
+                                            <input type="checkbox" name="attendees[]" value="<?php echo $user['id']; ?>" checked class="w-3.5 h-3.5 text-red-600 rounded border-gray-300 mr-2">
+                                            <div>
+                                                <p class="text-[11px] font-bold text-gray-700 leading-none"><?php echo e($user['full_name']); ?></p>
+                                                <p class="text-[9px] text-gray-400 mt-0.5"><?php echo e($user['position']); ?></p>
+                                            </div>
+                                        </label>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Actions -->
+                        <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 shrink-0">
+                            <button type="button" onclick="closeCreateSessionModal()" class="px-6 py-2.5 text-sm font-bold text-gray-500 hover:text-gray-800 transition-colors">Discard</button>
+                            <div class="flex gap-3">
+                                <button type="submit" class="bg-red-700 text-white px-8 py-2.5 rounded-xl font-bold shadow-lg shadow-red-200 hover:bg-red-800 transition-all flex items-center gap-2 text-sm">
+                                    Create Session <i class="bi bi-check2-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+
     </main>
     
     <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
+
+<script>
+    function openCreateSessionModal() {
+        const modal = document.getElementById('createSessionModal');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCreateSessionModal() {
+        const modal = document.getElementById('createSessionModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close on escape key
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeCreateSessionModal();
+    });
+</script>
+
+<style>
+    .animate-fade-in { animation: fadeIn 0.6s ease-out; }
+    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    @keyframes modalIn {
+        from { opacity: 0; transform: scale(0.95) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-modal-in { animation: modalIn 0.3s ease-out forwards; }
+
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 20px; }
+</style>
 <?php ?>
