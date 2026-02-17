@@ -120,8 +120,10 @@ class SettingsController
 
             $existing = dbFetchOne("SELECT setting_key, setting_value FROM system_settings WHERE setting_key = ?", [$key]);
             if ($existing && $existing['setting_value'] !== $value) {
-                $stmt->execute([$value, $key]);
-                $updated[$key] = ['old' => $existing['setting_value'], 'new' => $value];
+                // Ensure value is a string for database storage
+                $stringValue = is_array($value) ? json_encode($value) : (string)$value;
+                $stmt->execute([$stringValue, $key]);
+                $updated[$key] = ['old' => $existing['setting_value'], 'new' => $stringValue];
             }
         }
 

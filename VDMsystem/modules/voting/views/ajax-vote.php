@@ -51,7 +51,7 @@ try {
     foreach ($documents as &$doc) {
         $v = dbFetchOne(
             "SELECT vote FROM votes WHERE document_id = ? AND session_id = ? AND councilor_id = ?",
-            [$doc['document_id'], $sessionId, $userId]
+            [(string)$doc['document_id'], (string)$sessionId, (string)$userId]
         );
         $doc['my_vote'] = $v['vote'] ?? null;
     }

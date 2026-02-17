@@ -50,6 +50,17 @@ function getDatabase() {
 function dbQuery($sql, $params = []) {
     $db = getDatabase();
     $stmt = $db->prepare($sql);
+    
+    // Safety check: Ensure no nested arrays are passed to execute
+    if (is_array($params)) {
+        foreach ($params as $key => $value) {
+            if (is_array($value)) {
+                error_log("Array to string conversion detected in dbQuery for SQL: $sql. Parameter index/key: $key");
+                $params[$key] = json_encode($value);
+            }
+        }
+    }
+    
     $stmt->execute($params);
     return $stmt;
 }
@@ -73,6 +84,14 @@ function dbFetchOne($sql, $params = []) {
  */
 function dbInsert($table, $data) {
     $db = getDatabase();
+    
+    // Safety check: json_encode any arrays in the data
+    foreach ($data as $key => $value) {
+        if (is_array($value)) {
+            $data[$key] = json_encode($value);
+        }
+    }
+    
     $columns = implode(', ', array_keys($data));
     $placeholders = implode(', ', array_fill(0, count($data), '?'));
     
@@ -88,6 +107,21 @@ function dbInsert($table, $data) {
  */
 function dbUpdate($table, $data, $where, $whereParams = []) {
     $db = getDatabase();
+    
+    // Safety check: json_encode any arrays in the data
+    foreach ($data as $key => $value) {
+        if (is_array($value)) {
+            $data[$key] = json_encode($value);
+        }
+    }
+    
+    // Safety check: ensure whereParams are not nested arrays
+    foreach ($whereParams as $key => $value) {
+        if (is_array($value)) {
+            $whereParams[$key] = json_encode($value);
+        }
+    }
+    
     $set = implode(' = ?, ', array_keys($data)) . ' = ?';
     
     $sql = "UPDATE $table SET $set WHERE $where";
