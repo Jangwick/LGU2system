@@ -122,6 +122,7 @@ main::-webkit-scrollbar-thumb:active {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -133,6 +134,7 @@ main::-webkit-scrollbar-thumb:active {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -144,6 +146,7 @@ main::-webkit-scrollbar-thumb:active {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -154,6 +157,7 @@ main::-webkit-scrollbar-thumb:active {
     from {
         opacity: 1;
     }
+
     to {
         opacity: 0;
     }
@@ -164,6 +168,7 @@ main::-webkit-scrollbar-thumb:active {
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -175,6 +180,7 @@ main::-webkit-scrollbar-thumb:active {
         opacity: 0;
         transform: translateX(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -186,6 +192,7 @@ main::-webkit-scrollbar-thumb:active {
         opacity: 0;
         transform: translateX(20px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -197,9 +204,11 @@ main::-webkit-scrollbar-thumb:active {
         opacity: 0;
         transform: scale(0.8);
     }
+
     50% {
         transform: scale(1.05);
     }
+
     100% {
         opacity: 1;
         transform: scale(1);
@@ -207,11 +216,7 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Set initial hidden state BEFORE animation starts */
-.animate-fade-in,
-.animate-slide-in,
-.animate-fade-in-up {
-    opacity: 0;
-}
+/* Base animations defined below without initial opacity: 0 to prevent content loss */
 
 .animate-fade-in {
     transform: translateY(-10px);
@@ -251,21 +256,48 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Animation Delay Utilities */
-.animation-delay-100 { animation-delay: 100ms; }
-.animation-delay-200 { animation-delay: 200ms; }
-.animation-delay-300 { animation-delay: 300ms; }
-.animation-delay-400 { animation-delay: 400ms; }
-.animation-delay-500 { animation-delay: 500ms; }
-.animation-delay-600 { animation-delay: 600ms; }
-.animation-delay-700 { animation-delay: 700ms; }
-.animation-delay-800 { animation-delay: 800ms; }
-.animation-delay-900 { animation-delay: 900ms; }
+.animation-delay-100 {
+    animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+    animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+    animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+    animation-delay: 500ms;
+}
+
+.animation-delay-600 {
+    animation-delay: 600ms;
+}
+
+.animation-delay-700 {
+    animation-delay: 700ms;
+}
+
+.animation-delay-800 {
+    animation-delay: 800ms;
+}
+
+.animation-delay-900 {
+    animation-delay: 900ms;
+}
 
 /* Loading Spinner */
 @keyframes spin {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -277,9 +309,12 @@ main::-webkit-scrollbar-thumb:active {
 
 /* Pulse Animation */
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
@@ -300,6 +335,7 @@ main::-webkit-scrollbar-thumb:active {
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: -200% 0;
     }
@@ -353,6 +389,7 @@ main::-webkit-scrollbar-thumb:active {
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -360,6 +397,7 @@ main::-webkit-scrollbar-thumb:active {
 .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -376,11 +414,11 @@ main::-webkit-scrollbar-thumb:active {
     .no-print {
         display: none !important;
     }
-    
+
     body {
         background: white;
     }
-    
+
     .print-full-width {
         width: 100% !important;
         max-width: none !important;
@@ -710,7 +748,7 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Dark Mode - Toast Notifications */
-.dark #toast-container > div {
+.dark #toast-container>div {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
 }
 
@@ -727,60 +765,63 @@ main::-webkit-scrollbar-thumb:active {
     transform: translateX(0);
 }
 
-/* Sidebar Collapsed State - Completely Hidden with Animation */
+/* Sidebar Collapsed State - Narrow with icons visible */
 #sidebar.sidebar-collapsed {
-    width: 0 !important;
-    min-width: 0 !important;
-    padding: 0 !important;
+    width: 70px !important;
+    min-width: 70px !important;
     overflow: hidden !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transform: translateX(-100%) !important;
+    transition: width 0.3s ease;
 }
 
 #sidebar.sidebar-collapsed .sidebar-text {
-    opacity: 0 !important;
-    width: 0 !important;
-    visibility: hidden !important;
-    overflow: hidden !important;
-    position: absolute !important;
+    display: none !important;
 }
 
 #sidebar.sidebar-collapsed .sidebar-logo {
-    padding: 0;
-    display: none;
+    padding: 1.25rem 0.5rem;
+    display: flex;
+    justify-content: center;
 }
 
-#sidebar.sidebar-collapsed .sidebar-logo > a {
-    display: none;
+#sidebar.sidebar-collapsed .sidebar-logo>a {
+    justify-content: center;
 }
 
-#sidebar.sidebar-collapsed .sidebar-logo > a > div:last-child {
+#sidebar.sidebar-collapsed .sidebar-logo>a>div:first-child {
+    width: 45px !important;
+    height: 45px !important;
+}
+
+#sidebar.sidebar-collapsed .sidebar-logo>a>div:last-child {
     display: none;
 }
 
 #sidebar.sidebar-collapsed .nav-item {
-    display: none;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
 }
 
 #sidebar.sidebar-collapsed .nav-item i {
-    display: none;
+    margin-right: 0;
+    font-size: 1.25rem;
 }
 
-#sidebar.sidebar-collapsed .nav-item span {
-    display: none;
-}
-
-#sidebar.sidebar-collapsed .dropdown-section {
-    display: none;
-}
-
-#sidebar.sidebar-collapsed .nav-item-sub {
+#sidebar.sidebar-collapsed .dropdown-section,
+#sidebar.sidebar-collapsed nav p.uppercase {
     display: none;
 }
 
 /* User profile section in collapsed state */
-#sidebar.sidebar-collapsed > .p-4:last-child {
+#sidebar.sidebar-collapsed .sidebar-user {
+    padding: 1rem 0.5rem;
+    justify-content: center;
+}
+
+#sidebar.sidebar-collapsed .sidebar-user>div {
+    justify-content: center;
+}
+
+#sidebar.sidebar-collapsed .sidebar-user .flex-1 {
     display: none;
 }
 
@@ -810,7 +851,7 @@ main::-webkit-scrollbar-thumb:active {
 
 #sidebar-toggle i {
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.3s ease;
+        color 0.3s ease;
     position: relative;
     z-index: 1;
 }
@@ -824,8 +865,8 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Main content expands to full width when sidebar is collapsed */
-#sidebar.sidebar-collapsed + .flex-1,
-#sidebar.sidebar-collapsed ~ .flex-1 {
+#sidebar.sidebar-collapsed+.flex-1,
+#sidebar.sidebar-collapsed~.flex-1 {
     width: 100% !important;
     max-width: 100% !important;
 }
@@ -838,11 +879,11 @@ main::-webkit-scrollbar-thumb:active {
 /* Sidebar base transition */
 #sidebar {
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ========================================

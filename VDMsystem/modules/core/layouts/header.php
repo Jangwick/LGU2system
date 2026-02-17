@@ -265,40 +265,16 @@
                 }
             }
             
-            /* Set initial hidden state BEFORE animation starts */
+            /* Set initial hidden state handled by custom.css keyframes only */
             .animate-fade-in,
             .animate-fade-in-up,
             .animate-slide-in-left,
             .animate-slide-in-right,
             .animate-bounce-in {
-                opacity: 0;
+                /* Opacity 0 removed to prevent invisible elements on slow JS execution */
             }
             
-            .animate-fade-in {
-                animation: fade-in 0.6s ease-out forwards;
-            }
-            
-            .animate-fade-in-up {
-                transform: translateY(20px);
-                animation: fade-in-up 0.6s ease-out forwards;
-            }
-            
-            .animate-slide-in-left {
-                transform: translateX(-30px);
-                animation: slide-in-left 0.6s ease-out forwards;
-            }
-            
-            .animate-slide-in-right {
-                transform: translateX(30px);
-                animation: slide-in-right 0.6s ease-out forwards;
-            }
-            
-            .animate-bounce-in {
-                transform: scale(0.3);
-                animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-            }
-            
-            /* Animation delays - elements stay hidden until their animation starts */
+            /* Delays preserved */
             .animation-delay-100 { animation-delay: 100ms; }
             .animation-delay-200 { animation-delay: 200ms; }
             .animation-delay-300 { animation-delay: 300ms; }

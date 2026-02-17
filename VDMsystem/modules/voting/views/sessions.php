@@ -51,15 +51,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <?php endif; ?>
         
         <!-- Welcome/Header Banner -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg md:rounded-2xl shadow-xl p-4 md:p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white transform transition-all duration-300 animate-fade-in relative overflow-hidden">
+            <!-- Subtle decorative background element -->
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            
+            <div class="relative flex items-center justify-between gap-4">
+                <!-- Left Side: Title & Context -->
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold mb-2">Voting Sessions</h1>
-                    <p class="text-red-100 opacity-90">Manage, monitor, and conduct legislative voting sessions effectively.</p>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">
+                        Voting Sessions
+                    </h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">
+                        Manage, monitor, and conduct legislative voting sessions effectively.
+                    </p>
                 </div>
-                <div>
+
+                <!-- Right Side: Action Button -->
+                <div class="shrink-0">
                     <?php if (hasRole(['admin', 'secretary'])): ?>
-                    <a href="create-session.php" class="bg-white text-red-700 hover:bg-red-50 px-6 py-2.5 rounded-full font-bold shadow-lg transition-all transform hover:-translate-y-1 inline-flex items-center group">
+                    <a href="create-session.php" class="bg-white text-red-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center group">
                         <i class="bi bi-plus-lg mr-2 transition-transform group-hover:rotate-90"></i>
                         New Voting Session
                     </a>
@@ -69,12 +79,20 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Statistics Quick View -->
+        <?php 
+        // Ensure stats has default values to prevent calculation errors
+        $sTotal = (int)($stats['total_sessions'] ?? 0);
+        $sActive = (int)($stats['active_sessions'] ?? 0);
+        $sComp = (int)($stats['completed_sessions'] ?? 0);
+        $sSched = $sTotal - $sActive - $sComp;
+        if ($sSched < 0) $sSched = 0;
+        ?>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
             <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Total Sessions</p>
-                        <p class="text-2xl font-bold text-gray-800"><?php echo $stats['total_sessions'] ?? 0; ?></p>
+                        <p class="text-2xl font-bold text-gray-800"><?php echo $sTotal; ?></p>
                     </div>
                     <div class="bg-red-50 rounded-full p-2.5">
                         <i class="bi bi-calendar-event text-red-600 text-xl"></i>
@@ -86,7 +104,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">In Progress</p>
-                        <p class="text-2xl font-bold text-green-600"><?php echo $stats['active_sessions'] ?? 0; ?></p>
+                        <p class="text-2xl font-bold text-green-600"><?php echo $sActive; ?></p>
                     </div>
                     <div class="bg-green-50 rounded-full p-2.5">
                         <i class="bi bi-play-circle text-green-600 text-xl animate-pulse"></i>
@@ -98,7 +116,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Scheduled</p>
-                        <p class="text-2xl font-bold text-indigo-600"><?php echo $stats['scheduled'] ?? ($stats['total_sessions'] - $stats['active_sessions'] - $stats['completed_sessions']); ?></p>
+                        <p class="text-2xl font-bold text-indigo-600"><?php echo $sSched; ?></p>
                     </div>
                     <div class="bg-indigo-50 rounded-full p-2.5">
                         <i class="bi bi-clock-history text-indigo-600 text-xl"></i>
@@ -110,7 +128,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Completed</p>
-                        <p class="text-2xl font-bold text-purple-600"><?php echo $stats['completed_sessions'] ?? 0; ?></p>
+                        <p class="text-2xl font-bold text-purple-600"><?php echo $sComp; ?></p>
                     </div>
                     <div class="bg-purple-50 rounded-full p-2.5">
                         <i class="bi bi-check2-all text-purple-600 text-xl"></i>
@@ -280,19 +298,4 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 </div>
-
-<style>
-    .animate-fade-in { animation: fadeIn 0.6s ease-out; }
-    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    
-    .pulse-effect {
-        animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
-    }
-</style>
+<?php ?>
