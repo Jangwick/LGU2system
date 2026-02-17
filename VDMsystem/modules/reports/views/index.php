@@ -78,20 +78,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
-        <!-- Dashboard Header -->
-        <div class="bg-gradient-to-r from-red-800 to-gray-900 rounded-2xl shadow-xl p-8 mb-8 text-white animate-fade-in relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-32 -mt-32"></div>
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <!-- Page Header -->
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative flex items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold mb-2 italic tracking-tight">System Intelligence Dashboard</h1>
-                    <p class="text-gray-400 font-medium">Legislative performance, voting trends, and document analytics.</p>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Reports & Analytics</h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">Legislative performance, voting trends, and document analytics.</p>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="window.print()" class="bg-white bg-opacity-10 hover:bg-opacity-20 border border-white border-opacity-20 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 backdrop-blur-md">
-                        <i class="bi bi-printer"></i> Generate Report
-                    </button>
-                    <button class="bg-red-600 hover:bg-red-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg transition-all flex items-center gap-2 transform active:scale-95">
-                        <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                <div class="shrink-0 flex gap-2">
+                    <button onclick="window.print()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-printer mr-2"></i>
+                        Print Report
                     </button>
                 </div>
             </div>

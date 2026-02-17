@@ -115,33 +115,31 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         <?php endif; ?>
 
-        <!-- Breadcrumbs & Navigation -->
-        <div class="mb-8">
-            <nav class="text-xs font-black uppercase tracking-widest mb-4" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 vdm-text-muted">
-                    <li><a href="#" class="hover:text-red-500 transition-colors">Voting</a></li>
-                    <li><i class="bi bi-chevron-right text-[10px]"></i></li>
-                    <li><a href="sessions.php" class="hover:text-red-500 transition-colors font-black">Sessions</a></li>
-                    <li><i class="bi bi-chevron-right text-[10px]"></i></li>
-                    <li class="vdm-heading font-black"><?php echo e($session['session_number']); ?></li>
-                </ol>
-            </nav>
-            <a href="sessions.php" class="text-red-500 hover:text-red-600 text-xs font-black flex items-center group transition-all uppercase tracking-widest">
-                <i class="bi bi-arrow-left mr-2 transition-transform group-hover:-translate-x-1 font-black"></i> Back to Sessions
-            </a>
+        <!-- Page Header -->
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative flex items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight"><?php echo e($session['title']); ?></h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium"><?php echo e($session['session_number']); ?> — Created by <?php echo e($session['created_by_name'] ?? 'Admin User'); ?></p>
+                </div>
+                <div class="shrink-0">
+                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-arrow-left mr-2"></i>
+                        Back to Sessions
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <!-- Session Header Title Section -->
+        <!-- Session Header Actions -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-                <h1 class="text-3xl md:text-5xl font-black vdm-heading tracking-tighter leading-none uppercase mb-2">
-                    <?php echo e($session['title']); ?>
-                </h1>
                 <div class="flex items-center gap-3">
                     <span class="vdm-text-muted font-bold tracking-widest uppercase text-xs">Administrative Terminal</span>
                     <span class="w-1.5 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
                     <p class="vdm-text-muted text-xs font-medium">
-                        Created by <span class="text-red-500 font-black uppercase"><?php echo e($session['created_by_name'] ?? 'Admin User'); ?></span>
+                        Session #<?php echo e($session['session_number']); ?>
                     </p>
                 </div>
                 

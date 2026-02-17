@@ -60,16 +60,26 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         <?php endif; ?>
 
+        <!-- Page Header -->
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative flex items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Voting Results</h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">Review outcomes, analytics, and historical data of all voting sessions.</p>
+                </div>
+                <div class="shrink-0">
+                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-list-ul mr-2"></i>
+                        All Sessions
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <?php if (!$sessionId): ?>
             <!-- Results List View -->
             <div class="animate-fade-in">
-                <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-3xl shadow-xl p-8 mb-10 text-white relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-                    <div class="relative z-10">
-                        <h1 class="text-3xl md:text-4xl font-black mb-2 uppercase tracking-tight">Legislative <span class="text-red-200">Dashboards</span></h1>
-                        <p class="text-red-100/80 font-medium max-w-2xl">Review outcomes, analytics, and historical data of all voting sessions from the legislative assembly.</p>
-                    </div>
-                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <?php if (empty($sessions)): ?>

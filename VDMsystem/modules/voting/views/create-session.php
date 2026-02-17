@@ -104,17 +104,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto vdm-page-bg p-3 md:p-6 custom-scrollbar">
         <!-- Page Header -->
-        <div class="bg-[#dc2626] rounded-[2.5rem] shadow-xl p-8 mb-8 text-white animate-fade-in relative overflow-hidden">
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative flex items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Configure New Session</h1>
-                    <p class="text-red-100 font-medium opacity-90">Set up legislative sessions, documents, and expected attendees.</p>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Create Voting Session</h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">Set up legislative sessions, documents, and expected attendees.</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
-                        <span class="block text-[10px] font-black uppercase tracking-widest text-red-100 opacity-70 mb-1">Status</span>
-                        <span class="text-sm font-black uppercase tracking-tighter">Draft Mode</span>
-                    </div>
+                <div class="shrink-0">
+                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-arrow-left mr-2"></i>
+                        Back to Sessions
+                    </a>
                 </div>
             </div>
         </div>

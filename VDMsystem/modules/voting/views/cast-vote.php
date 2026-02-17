@@ -112,13 +112,26 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         <?php endif; ?>
 
+        <!-- Page Header -->
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative flex items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Cast Your Vote</h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">Select an active session and cast your vote on legislative documents.</p>
+                </div>
+                <div class="shrink-0">
+                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-list-ul mr-2"></i>
+                        All Sessions
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <?php if (!$sessionId): ?>
             <!-- Session Selection View -->
             <div class="max-w-4xl mx-auto">
-                <div class="text-center mb-8 animate-fade-in">
-                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Active Voting Sessions</h1>
-                    <p class="text-gray-600">Select an ongoing session to view documents and cast your vote.</p>
-                </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up">
                     <?php if (empty($activeSessions)): ?>

@@ -68,17 +68,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
         <!-- Page Header -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Document Management</h1>
-                <p class="text-gray-600 text-sm mt-1">Manage legislative documents, resolutions, and ordinances</p>
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative flex items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Document Management</h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">Manage legislative documents, resolutions, and ordinances.</p>
+                </div>
+                <div class="shrink-0">
+                    <?php if (hasRole(['admin', 'secretary', 'encoder'])): ?>
+                    <button onclick="openUploadModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-cloud-arrow-up mr-2"></i>
+                        Upload Repository
+                    </button>
+                    <?php endif; ?>
+                </div>
             </div>
-            <?php if (hasRole(['admin', 'secretary', 'encoder'])): ?>
-            <button onclick="openUploadModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center shadow-lg hover:shadow-red-200 active:scale-95 transition-all">
-                <i class="bi bi-cloud-arrow-up mr-2"></i>
-                Upload Repository
-            </button>
-            <?php endif; ?>
         </div>
         
         <!-- Filters -->

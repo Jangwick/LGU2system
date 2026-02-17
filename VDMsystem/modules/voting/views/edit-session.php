@@ -141,23 +141,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto vdm-page-bg p-3 md:p-6 custom-scrollbar">
         <!-- Page Header -->
-        <div class="bg-[#dc2626] rounded-[2.5rem] shadow-xl p-8 mb-8 text-white animate-fade-in relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative flex items-center justify-between gap-4">
                 <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <a href="session-details.php?id=<?php echo $sessionId; ?>" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl transition-all">
-                            <i class="bi bi-arrow-left"></i>
-                        </a>
-                        <h1 class="text-3xl md:text-4xl font-black tracking-tight">Modify Session</h1>
-                    </div>
-                    <p class="text-red-100 font-medium opacity-90"><?php echo e($session['session_number']); ?> • <?php echo e($session['title']); ?></p>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Edit Voting Session</h1>
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium"><?php echo e($session['session_number']); ?> — <?php echo e($session['title']); ?></p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10 text-center">
-                        <span class="block text-[10px] font-black uppercase tracking-widest text-red-100 opacity-70 mb-1">Status</span>
-                        <span class="text-sm font-black uppercase tracking-tighter"><?php echo e($session['status']); ?></span>
-                    </div>
+                <div class="shrink-0">
+                    <a href="session-details.php?id=<?php echo $sessionId; ?>" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-arrow-left mr-2"></i>
+                        Back to Details
+                    </a>
                 </div>
             </div>
         </div>
