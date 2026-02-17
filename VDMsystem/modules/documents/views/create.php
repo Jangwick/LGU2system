@@ -83,9 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 
                 // Log audit
-                logAudit($_SESSION['user_id'], 'create', 'documents', $docId, null, [
+                logAudit('document_created', $_SESSION['user_id'], 'documents', 'documents', $docId, 'Created document: ' . $title, [
                     'doc_number' => $docNumber,
-                    'title' => $title,
                     'type' => $type,
                     'status' => $status
                 ]);

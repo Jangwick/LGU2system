@@ -7,7 +7,7 @@ require_once __DIR__ . '/../controllers/IntegrationController.php';
 if (!isset($_SESSION['user_id'])) {
     redirectToLogin();
 }
-if (!isAdmin() && $_SESSION['role'] !== 'secretary') {
+if (!isAdmin() && ($_SESSION['user_role'] ?? '') !== 'secretary') {
     $_SESSION['flash_error'] = 'Access denied.';
     redirectToDashboard();
 }
