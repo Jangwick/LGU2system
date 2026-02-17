@@ -96,8 +96,8 @@
                 <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Integration</p>
             </div>
             
-            <div class="dropdown-section">
-                <button onclick="toggleDropdown('integrationDropdown')" class="nav-item w-full text-left">
+            <div class="dropdown-section integration-section dark:bg-red-900/40">
+                <button onclick="toggleDropdown('integrationDropdown')" class="nav-item integration-btn w-full text-left dark:bg-red-700!">
                     <i class="bi bi-plug"></i>
                     <span class="flex-1 sidebar-text">Integration Modules</span>
                     <i class="bi bi-chevron-down dropdown-icon sidebar-text" id="integrationDropdown-icon"></i>
@@ -271,6 +271,55 @@
     
     .sidebar-collapsed .pt-4.pb-2 {
         display: none;
+    }
+
+    /* Dark mode specific for Integration Modules Button and Section */
+    html.dark .integration-section,
+    .dark .integration-section {
+        background-color: #7f1d1d !important;
+        background: #7f1d1d !important;
+        overflow: hidden;
+        position: relative !important;
+        border-radius: 0.75rem !important;
+    }
+
+    html.dark .integration-btn,
+    .dark .integration-btn, 
+    html.dark button.integration-btn,
+    .dark button.integration-btn {
+        background-color: #991b1b !important;
+        background: #991b1b !important;
+        color: white !important;
+        font-weight: 600 !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    html.dark .integration-section::before,
+    .dark .integration-section::before,
+    html.dark .integration-btn::before,
+    .dark .integration-btn::before {
+        content: '' !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        height: 100% !important;
+        width: 4px !important;
+        background: white !important;
+        transform: scaleY(1) !important;
+        opacity: 1 !important;
+        z-index: 20 !important;
+        display: block !important;
+    }
+    
+    html.dark .integration-btn:hover,
+    .dark .integration-btn:hover {
+        background-color: #7f1d1d !important;
+        background: #7f1d1d !important;
     }
 </style>
 

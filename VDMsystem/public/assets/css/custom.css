@@ -504,6 +504,18 @@ main::-webkit-scrollbar-thumb:active {
     margin: 0.5rem 1rem;
 }
 
+.dark .dropdown-section.integration-section {
+    background-color: #7f1d1d !important;
+    background: #7f1d1d !important;
+}
+
+.dark .integration-btn,
+.dark button.integration-btn {
+    background-color: #991b1b !important;
+    background: #991b1b !important;
+    color: white !important;
+}
+
 .dark aside a,
 .dark .sidebar a,
 .dark aside button,
