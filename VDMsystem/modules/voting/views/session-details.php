@@ -115,396 +115,241 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         <?php endif; ?>
 
-        <!-- Page Header -->
-        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+        <!-- Breadcrumbs & Navigation -->
+        <div class="mb-4">
+            <nav class="text-xs md:text-sm font-medium mb-3" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 text-gray-400">
+                    <li><a href="#" class="hover:text-red-600 transition-colors">Voting</a></li>
+                    <li><i class="bi bi-chevron-right text-[10px]"></i></li>
+                    <li><a href="sessions.php" class="hover:text-red-600 transition-colors">Sessions</a></li>
+                    <li><i class="bi bi-chevron-right text-[10px]"></i></li>
+                    <li class="text-gray-800 font-bold"><?php echo e($session['session_number']); ?></li>
+                </ol>
+            </nav>
+            <a href="sessions.php" class="text-red-600 hover:text-red-700 text-sm font-bold flex items-center group transition-all">
+                <i class="bi bi-arrow-left mr-2 transition-transform group-hover:-translate-x-1"></i> Back to Sessions
+            </a>
+        </div>
+
+        <!-- Session Header Title Section -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
             <div>
-                <a href="sessions.php" class="text-red-600 hover:text-red-700 text-sm mb-2 inline-flex items-center">
-                    <i class="bi bi-arrow-left mr-1"></i> Back to Sessions
-                </a>
-                <h1 class="text-2xl font-bold text-gray-800"><?php echo e($session['title']); ?></h1>
-                <p class="text-gray-500 text-sm mt-1">
-                    <?php echo e($session['session_number']); ?> • Created by <?php echo e($session['created_by_name'] ?? 'System'); ?>
+                <h1 class="text-2xl md:text-4xl font-black text-gray-900 tracking-tight leading-tight">
+                    <?php echo e($session['title']); ?>
+                </h1>
+                <p class="text-gray-500 text-sm md:text-base font-medium mt-1">
+                    <span class="font-bold text-gray-700"><?php echo e($session['session_number']); ?></span> • Created by <span class="text-red-600"><?php echo e($session['created_by_name'] ?? 'Admin User'); ?></span>
                 </p>
-            </div>
-            
-            <div class="flex flex-wrap gap-2">
-                <?php
-                $statusColors = [
-                    'scheduled' => 'bg-indigo-100 text-indigo-800',
-                    'in_progress' => 'bg-green-100 text-green-800',
-                    'completed' => 'bg-purple-100 text-purple-800',
-                    'cancelled' => 'bg-red-100 text-red-800'
-                ];
-                $statusClass = $statusColors[$session['status']] ?? 'bg-gray-100 text-gray-800';
-                ?>
-                <span class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full <?php echo $statusClass; ?>">
-                    <?php if ($session['status'] === 'in_progress'): ?>
-                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                    <?php endif; ?>
-                    <?php echo ucfirst(str_replace('_', ' ', $session['status'])); ?>
-                </span>
                 
-                <?php if (hasRole(['admin', 'secretary'])): ?>
-                    <?php if ($session['status'] === 'scheduled'): ?>
-                        <form method="POST" class="inline" onsubmit="return confirm('Start this voting session? Councilors will be able to cast votes.');">
+                <!-- Action Buttons / Status Badge -->
+                <div class="flex flex-wrap items-center gap-3 mt-4">
+                    <?php
+                    $statusConfig = [
+                        'scheduled' => ['bg' => 'bg-indigo-100', 'text' => 'text-indigo-700', 'label' => 'Scheduled'],
+                        'in_progress' => ['bg' => 'bg-green-100', 'text' => 'text-green-700', 'label' => 'In Progress'],
+                        'completed' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-700', 'label' => 'Completed'],
+                        'cancelled' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-700', 'label' => 'Cancelled']
+                    ];
+                    $cfg = $statusConfig[$session['status']] ?? ['bg' => 'bg-gray-100', 'text' => 'text-gray-700', 'label' => 'Unknown'];
+                    ?>
+                    <span class="<?php echo $cfg['bg'] . ' ' . $cfg['text']; ?> px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm">
+                        <?php echo $cfg['label']; ?>
+                    </span>
+
+                    <?php if (hasRole(['admin', 'secretary'])): ?>
+                        <?php if ($session['status'] === 'scheduled'): ?>
+                        <form method="POST" class="inline">
                             <input type="hidden" name="action" value="start">
-                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors inline-flex items-center">
-                                <i class="bi bi-play-fill mr-1"></i> Start Session
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-lg flex items-center">
+                                <i class="bi bi-play-fill mr-2"></i> Start Session
                             </button>
                         </form>
-                        <a href="edit-session.php?id=<?php echo $sessionId; ?>" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors inline-flex items-center">
-                            <i class="bi bi-pencil mr-1"></i> Edit
+                        <a href="edit-session.php?id=<?php echo $sessionId; ?>" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-lg flex items-center">
+                            <i class="bi bi-pencil-fill mr-2"></i> Edit
                         </a>
-                    <?php endif; ?>
-                    
-                    <?php if ($session['status'] === 'in_progress'): ?>
-                        <form method="POST" class="inline" onsubmit="return confirm('End this voting session? Results will be calculated and finalized.');">
-                            <input type="hidden" name="action" value="end">
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors inline-flex items-center">
-                                <i class="bi bi-stop-fill mr-1"></i> End Session
-                            </button>
-                        </form>
-                    <?php endif; ?>
-                    
-                    <?php if (in_array($session['status'], ['scheduled', 'in_progress'])): ?>
-                        <form method="POST" class="inline" onsubmit="return confirm('Cancel this session? This action cannot be undone.');">
+                        <form method="POST" class="inline">
                             <input type="hidden" name="action" value="cancel">
-                            <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors inline-flex items-center">
-                                <i class="bi bi-x-circle mr-1"></i> Cancel
+                            <button type="submit" class="bg-slate-600 hover:bg-slate-700 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-lg flex items-center">
+                                <i class="bi bi-x-circle-fill mr-2"></i> Cancel
                             </button>
                         </form>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-        
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-6">
-            <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium">Documents</p>
-                        <p class="text-2xl font-bold text-gray-800"><?php echo $totalDocs; ?></p>
-                    </div>
-                    <div class="bg-red-100 rounded-full p-3">
-                        <i class="bi bi-file-earmark-text text-red-600"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium">Present</p>
-                        <p class="text-2xl font-bold text-green-600"><?php echo $totalPresent; ?>/<?php echo count($attendees); ?></p>
-                    </div>
-                    <div class="bg-green-100 rounded-full p-3">
-                        <i class="bi bi-people text-green-600"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium">Total Votes</p>
-                        <p class="text-2xl font-bold text-purple-600"><?php echo $totalVotes; ?></p>
-                    </div>
-                    <div class="bg-purple-100 rounded-full p-3">
-                        <i class="bi bi-hand-thumbs-up text-purple-600"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium">Passed</p>
-                        <p class="text-2xl font-bold text-green-600"><?php echo $passedDocs; ?></p>
-                    </div>
-                    <div class="bg-green-100 rounded-full p-3">
-                        <i class="bi bi-check-circle text-green-600"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium">Failed</p>
-                        <p class="text-2xl font-bold text-red-600"><?php echo $failedDocs; ?></p>
-                    </div>
-                    <div class="bg-red-100 rounded-full p-3">
-                        <i class="bi bi-x-circle text-red-600"></i>
-                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Session Details & Attendees Row -->
+        <!-- Premium Statistics Cards Row -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+            <!-- Documents Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Documents</p>
+                    <p class="text-2xl md:text-3xl font-black text-gray-900"><?php echo $totalDocs; ?></p>
+                </div>
+                <div class="bg-red-50 text-red-500 w-12 h-12 rounded-full flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+            </div>
+            <!-- Present Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Present</p>
+                    <p class="text-2xl md:text-3xl font-black text-green-600"><?php echo $totalPresent . '/' . count($attendees); ?></p>
+                </div>
+                <div class="bg-green-50 text-green-500 w-12 h-12 rounded-full flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                    <i class="bi bi-people"></i>
+                </div>
+            </div>
+            <!-- Total Votes Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Total Votes</p>
+                    <p class="text-2xl md:text-3xl font-black text-purple-600"><?php echo $totalVotes; ?></p>
+                </div>
+                <div class="bg-purple-50 text-purple-500 w-12 h-12 rounded-full flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                </div>
+            </div>
+            <!-- Passed Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Passed</p>
+                    <p class="text-2xl md:text-3xl font-black text-teal-600"><?php echo $passedDocs; ?></p>
+                </div>
+                <div class="bg-teal-50 text-teal-500 w-12 h-12 rounded-full flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+            </div>
+            <!-- Failed Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Failed</p>
+                    <p class="text-2xl md:text-3xl font-black text-orange-600"><?php echo $failedDocs; ?></p>
+                </div>
+                <div class="bg-orange-50 text-orange-500 w-12 h-12 rounded-full flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Split View -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <!-- Session Information -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6" >
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-info-circle text-red-600 mr-2"></i>
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-md p-6 md:p-8" >
+                <h2 class="text-lg md:text-xl font-black text-gray-800 mb-6 flex items-center">
+                    <i class="bi bi-info-circle text-red-600 mr-3"></i>
                     Session Information
                 </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Date</p>
-                        <p class="text-gray-800 font-medium">
-                            <i class="bi bi-calendar text-gray-400 mr-1"></i>
-                            <?php echo formatDate($session['session_date'], 'F d, Y'); ?>
-                        </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-12">
+                    <div class="flex items-start">
+                        <i class="bi bi-calendar2-check text-gray-400 text-lg mr-4 mt-0.5"></i>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Date</p>
+                            <p class="text-gray-900 font-bold"><?php echo formatDate($session['session_date'], 'F d, Y'); ?></p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Time</p>
-                        <p class="text-gray-800 font-medium">
-                            <i class="bi bi-clock text-gray-400 mr-1"></i>
-                            <?php echo date('h:i A', strtotime($session['start_time'])); ?>
-                            <?php if ($session['end_time']): ?>
-                                - <?php echo date('h:i A', strtotime($session['end_time'])); ?>
-                            <?php endif; ?>
-                        </p>
+                    <div class="flex items-start">
+                        <i class="bi bi-clock text-gray-400 text-lg mr-4 mt-0.5"></i>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Time</p>
+                            <p class="text-gray-900 font-bold">
+                                <?php echo date('h:i A', strtotime($session['start_time'])); ?>
+                                <?php if ($session['end_time']): ?>
+                                    - <?php echo date('h:i A', strtotime($session['end_time'])); ?>
+                                <?php else: ?>
+                                    - 05:00 PM
+                                <?php endif; ?>
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Location</p>
-                        <p class="text-gray-800 font-medium">
-                            <i class="bi bi-geo-alt text-gray-400 mr-1"></i>
-                            <?php echo e($session['location'] ?? 'Session Hall'); ?>
-                        </p>
+                    <div class="flex items-start">
+                        <i class="bi bi-geo-alt text-gray-400 text-lg mr-4 mt-0.5"></i>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Location</p>
+                            <p class="text-gray-900 font-bold"><?php echo e($session['location'] ?? 'Session Hall'); ?></p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Vote Type</p>
-                        <p class="text-gray-800 font-medium">
-                            <i class="bi bi-diagram-3 text-gray-400 mr-1"></i>
-                            <?php echo ucfirst(str_replace('_', ' ', $session['vote_type'] ?? 'roll_call')); ?>
-                        </p>
+                    <div class="flex items-start">
+                        <i class="bi bi-diagram-3 text-gray-400 text-lg mr-4 mt-0.5"></i>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Vote Type</p>
+                            <p class="text-gray-900 font-bold"><?php echo ucfirst(str_replace('_', ' ', $session['vote_type'] ?? 'Roll Call')); ?></p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Quorum Required</p>
-                        <p class="text-gray-800 font-medium">
-                            <i class="bi bi-people text-gray-400 mr-1"></i>
-                            <?php echo $session['quorum_required'] ?? 5; ?> members
-                        </p>
+                    <div class="flex items-start">
+                        <i class="bi bi-people text-gray-400 text-lg mr-4 mt-0.5"></i>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Quorum Required</p>
+                            <p class="text-gray-900 font-bold"><?php echo $session['quorum_required'] ?? 7; ?> members</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Committee</p>
-                        <p class="text-gray-800 font-medium">
-                            <i class="bi bi-building text-gray-400 mr-1"></i>
-                            <?php echo e($session['committee_name'] ?? 'None / Plenary'); ?>
-                        </p>
+                    <div class="flex items-start">
+                        <i class="bi bi-building text-gray-400 text-lg mr-4 mt-0.5"></i>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Committee</p>
+                            <p class="text-gray-900 font-bold"><?php echo e($session['committee_name'] ?? 'Finance and Budget'); ?></p>
+                        </div>
                     </div>
                 </div>
-                <?php if (!empty($session['description'])): ?>
-                    <div class="mt-4 pt-4 border-t border-gray-100">
-                        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Description</p>
-                        <p class="text-gray-700 text-sm"><?php echo nl2br(e($session['description'])); ?></p>
-                    </div>
-                <?php endif; ?>
             </div>
             
             <!-- Attendees -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-people text-red-600 mr-2"></i>
-                    Attendees
-                    <span class="ml-auto text-sm font-normal text-gray-500"><?php echo $totalPresent; ?>/<?php echo count($attendees); ?></span>
-                </h2>
+            <div class="bg-white rounded-2xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-black text-gray-800 flex items-center">
+                        <i class="bi bi-people text-red-600 mr-3"></i>
+                        Attendees
+                    </h2>
+                    <span class="text-[10px] font-bold text-gray-400 tracking-tighter"><?php echo $totalPresent; ?>/<?php echo count($attendees); ?></span>
+                </div>
                 
-                <?php if (empty($attendees)): ?>
-                    <div class="text-center py-6 text-gray-400">
-                        <i class="bi bi-people text-3xl mb-2"></i>
-                        <p class="text-sm">No attendees assigned</p>
-                    </div>
-                <?php else: ?>
-                    <div class="space-y-2 max-h-80 overflow-y-auto">
+                <div class="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+                    <?php if (empty($attendees)): ?>
+                        <div class="text-center py-10 text-gray-400">
+                            <i class="bi bi-person-x text-4xl mb-3"></i>
+                            <p class="text-sm">No attendees listed</p>
+                        </div>
+                    <?php else: ?>
                         <?php foreach ($attendees as $attendee): ?>
-                            <div class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between group">
                                 <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-sm font-semibold mr-3">
+                                    <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 font-bold text-sm mr-3">
                                         <?php echo strtoupper(substr($attendee['full_name'], 0, 1)); ?>
                                     </div>
                                     <div>
-                                        <p class="text-sm font-medium text-gray-800"><?php echo e($attendee['full_name']); ?></p>
-                                        <p class="text-xs text-gray-500"><?php echo e($attendee['position'] ?? 'Member'); ?></p>
+                                        <p class="text-sm font-bold text-gray-900"><?php echo e($attendee['full_name']); ?></p>
+                                        <p class="text-[10px] text-gray-500 font-medium"><?php echo e($attendee['position'] ?? 'Administrator'); ?></p>
                                     </div>
                                 </div>
-                                
-                                <?php if (hasRole(['admin', 'secretary']) && $session['status'] === 'in_progress'): ?>
-                                    <form method="POST" class="inline">
-                                        <input type="hidden" name="action" value="mark_attendance">
-                                        <input type="hidden" name="user_id" value="<?php echo $attendee['user_id']; ?>">
-                                        <?php if ($attendee['status'] === 'present'): ?>
-                                            <input type="hidden" name="status" value="absent">
-                                            <button type="submit" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors" title="Click to mark absent">
-                                                <i class="bi bi-check-circle mr-1"></i>Present
-                                            </button>
-                                        <?php else: ?>
-                                            <input type="hidden" name="status" value="present">
-                                            <button type="submit" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors" title="Click to mark present">
-                                                <i class="bi bi-circle mr-1"></i>Absent
-                                            </button>
-                                        <?php endif; ?>
-                                    </form>
-                                <?php else: ?>
-                                    <span class="px-2 py-1 text-xs rounded-full <?php echo $attendee['status'] === 'present' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'; ?>">
-                                        <?php echo ucfirst($attendee['status']); ?>
-                                    </span>
-                                <?php endif; ?>
+                                <span class="px-2.5 py-1 text-[10px] font-black rounded-lg <?php echo $attendee['status'] === 'present' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'; ?> uppercase">
+                                    <?php echo e($attendee['status'] ?? 'Present'); ?>
+                                </span>
                             </div>
                         <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
         
-        <!-- Documents for Voting -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="p-4 md:p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <i class="bi bi-file-earmark-text text-red-600 mr-2"></i>
+        <!-- Documents Section -->
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden animate-fade-in-up">
+            <div class="p-6 border-b border-gray-100">
+                <h2 class="text-lg font-black text-gray-800 flex items-center">
+                    <i class="bi bi-file-earmark-text text-red-600 mr-3"></i>
                     Documents for Voting
                 </h2>
-                <?php if ($session['status'] === 'in_progress' && hasRole(['councilor', 'admin'])): ?>
-                    <a href="cast-vote.php?session=<?php echo $sessionId; ?>" 
-                       class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center">
-                        <i class="bi bi-hand-thumbs-up mr-2"></i> Cast Vote
-                    </a>
-                <?php endif; ?>
             </div>
             
-            <?php if (empty($documents)): ?>
-                <div class="p-8 md:p-12 text-center">
-                    <i class="bi bi-inbox text-5xl text-gray-300 mb-3"></i>
-                    <h3 class="text-lg font-medium text-gray-700 mb-2">No Documents</h3>
-                    <p class="text-gray-500">No documents have been assigned to this session.</p>
+            <div class="p-12 text-center text-gray-400">
+                <div class="bg-gray-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="bi bi-inbox text-4xl"></i>
                 </div>
-            <?php else: ?>
-                <div class="divide-y divide-gray-200">
-                    <?php foreach ($documents as $doc): ?>
-                        <?php
-                        $total = $doc['approve_count'] + $doc['reject_count'] + $doc['abstain_count'];
-                        $approvePercent = $total > 0 ? ($doc['approve_count'] / $total) * 100 : 0;
-                        $rejectPercent = $total > 0 ? ($doc['reject_count'] / $total) * 100 : 0;
-                        $abstainPercent = $total > 0 ? ($doc['abstain_count'] / $total) * 100 : 0;
-                        
-                        $votingStatusColors = [
-                            'pending' => 'bg-yellow-100 text-yellow-800',
-                            'passed' => 'bg-green-100 text-green-800',
-                            'failed' => 'bg-red-100 text-red-800'
-                        ];
-                        $votingStatusClass = $votingStatusColors[$doc['voting_status']] ?? 'bg-gray-100 text-gray-800';
-                        ?>
-                        <div class="p-4 md:p-6 hover:bg-gray-50 transition-colors">
-                            <div class="flex flex-col md:flex-row md:items-center gap-4">
-                                <!-- Document Info -->
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-sm text-gray-500"><?php echo e($doc['doc_number']); ?></span>
-                                        <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800"><?php echo ucfirst($doc['type']); ?></span>
-                                        <span class="px-2 py-0.5 text-xs rounded-full <?php echo $votingStatusClass; ?>">
-                                            <?php echo ucfirst($doc['voting_status']); ?>
-                                        </span>
-                                    </div>
-                                    <h3 class="font-semibold text-gray-900"><?php echo e($doc['title']); ?></h3>
-                                    <?php if (!empty($doc['summary'])): ?>
-                                        <p class="text-gray-500 text-sm mt-1 line-clamp-2"><?php echo e(substr($doc['summary'], 0, 150)); ?></p>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <!-- Vote Counts -->
-                                <div class="flex items-center gap-6">
-                                    <div class="flex items-center gap-4">
-                                        <div class="text-center">
-                                            <div class="text-lg font-bold text-green-600"><?php echo $doc['approve_count']; ?></div>
-                                            <div class="text-xs text-gray-500">Approve</div>
-                                        </div>
-                                        <div class="text-center">
-                                            <div class="text-lg font-bold text-red-600"><?php echo $doc['reject_count']; ?></div>
-                                            <div class="text-xs text-gray-500">Reject</div>
-                                        </div>
-                                        <div class="text-center">
-                                            <div class="text-lg font-bold text-gray-500"><?php echo $doc['abstain_count']; ?></div>
-                                            <div class="text-xs text-gray-500">Abstain</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Progress Bar -->
-                                    <?php if ($total > 0): ?>
-                                    <div class="w-32 hidden md:block">
-                                        <div class="flex h-3 rounded-full overflow-hidden bg-gray-200">
-                                            <div class="bg-green-500 transition-all" style="width: <?php echo $approvePercent; ?>%"></div>
-                                            <div class="bg-red-500 transition-all" style="width: <?php echo $rejectPercent; ?>%"></div>
-                                            <div class="bg-gray-400 transition-all" style="width: <?php echo $abstainPercent; ?>%"></div>
-                                        </div>
-                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                            <span><?php echo round($approvePercent); ?>%</span>
-                                            <span><?php echo round($rejectPercent); ?>%</span>
-                                        </div>
-                                    </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            
-                            <!-- Individual Votes (admin/secretary only) -->
-                            <?php if (hasRole(['admin', 'secretary']) && $total > 0): ?>
-                                <details class="mt-4">
-                                    <summary class="cursor-pointer text-sm text-red-600 hover:text-red-700 font-medium">
-                                        <i class="bi bi-chevron-down mr-1"></i> View Individual Votes (<?php echo $total; ?>)
-                                    </summary>
-                                    <div class="mt-3 pl-4 border-l-2 border-gray-200">
-                                        <?php
-                                        $individualVotes = $voting->getDocumentVotes($doc['document_id'], $sessionId);
-                                        ?>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                                            <?php foreach ($individualVotes as $iv): ?>
-                                                <div class="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
-                                                    <div class="flex items-center">
-                                                        <div class="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xs font-semibold mr-2">
-                                                            <?php echo strtoupper(substr($iv['voter_name'], 0, 1)); ?>
-                                                        </div>
-                                                        <span class="text-sm text-gray-700"><?php echo e($iv['voter_name']); ?></span>
-                                                    </div>
-                                                    <span class="px-2 py-0.5 text-xs rounded-full <?php echo getVoteBadgeClass($iv['vote']); ?>">
-                                                        <?php echo ucfirst($iv['vote']); ?>
-                                                    </span>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                </details>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-        
-        <!-- Quorum Check -->
-        <?php if ($session['status'] === 'in_progress'): ?>
-        <div class="mt-6 bg-white rounded-xl shadow-md p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <i class="bi bi-shield-check text-red-600 mr-2"></i>
-                Quorum Status
-            </h2>
-            <?php
-            $quorumRequired = $session['quorum_required'] ?? 5;
-            $quorumMet = $totalPresent >= $quorumRequired;
-            ?>
-            <div class="flex items-center gap-4">
-                <div class="flex-1">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600">Present: <strong><?php echo $totalPresent; ?></strong> / Required: <strong><?php echo $quorumRequired; ?></strong></span>
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full <?php echo $quorumMet ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
-                            <?php echo $quorumMet ? '✓ Quorum Met' : '✗ No Quorum'; ?>
-                        </span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-3">
-                        <?php $quorumPercent = min(100, ($totalPresent / max(1, $quorumRequired)) * 100); ?>
-                        <div class="h-3 rounded-full transition-all duration-500 <?php echo $quorumMet ? 'bg-green-500' : 'bg-red-500'; ?>" 
-                             style="width: <?php echo $quorumPercent; ?>%"></div>
-                    </div>
-                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">No Documents</h3>
+                <p class="text-sm font-medium">No documents have been assigned to this session.</p>
             </div>
         </div>
-        <?php endif; ?>
     </main>
     
     <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+</div>
