@@ -144,32 +144,32 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <?php else: ?>
                         <?php foreach ($activeSessions as $s): ?>
                             <div onclick="openVotingTerminal(<?php echo $s['id']; ?>)" class="group cursor-pointer">
-                                <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 hover:border-gray-600 transition-all transform hover:-translate-y-1 relative overflow-hidden h-full hover:shadow-2xl">
+                                <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all transform hover:-translate-y-1 relative overflow-hidden h-full hover:shadow-2xl shadow-md">
                                     
                                     <div class="flex justify-between items-start mb-4">
-                                        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-green-500/40 text-green-400 bg-green-500/10">
-                                            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                                        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-green-500/40 text-green-600 dark:text-green-400 bg-green-500/10">
+                                            <span class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-400 animate-pulse"></span>
                                             Live Session
                                         </span>
-                                        <span class="text-xs text-gray-500 font-medium"><?php echo e($s['session_number']); ?></span>
+                                        <span class="text-xs text-gray-400 dark:text-gray-500 font-medium"><?php echo e($s['session_number']); ?></span>
                                     </div>
                                     
-                                    <h3 class="text-lg font-black text-white mb-2 group-hover:text-red-100 transition-colors"><?php echo e($s['title']); ?></h3>
-                                    <p class="text-gray-400 text-sm mb-5 line-clamp-2"><?php echo e($s['description'] ?: 'No description provided.'); ?></p>
+                                    <h3 class="text-lg font-black text-gray-900 dark:text-white mb-2 group-hover:text-red-700 dark:group-hover:text-red-100 transition-colors"><?php echo e($s['title']); ?></h3>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-5 line-clamp-2"><?php echo e($s['description'] ?: 'No description provided.'); ?></p>
                                     
                                     <div class="flex items-center gap-5 mb-5">
-                                        <span class="flex items-center gap-1.5 text-gray-300 text-sm font-semibold">
+                                        <span class="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 text-sm font-semibold">
                                             <i class="bi bi-file-earmark-text text-red-500"></i>
                                             <?php echo $s['document_count']; ?> Document<?php echo $s['document_count'] != 1 ? 's' : ''; ?>
                                         </span>
-                                        <span class="flex items-center gap-1.5 text-gray-300 text-sm font-semibold">
-                                            <i class="bi bi-people-fill text-blue-400"></i>
+                                        <span class="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 text-sm font-semibold">
+                                            <i class="bi bi-people-fill text-blue-500 dark:text-blue-400"></i>
                                             <?php echo $s['attendee_count']; ?> Present
                                         </span>
                                     </div>
                                     
-                                    <div class="pt-4 border-t border-gray-700/50 flex items-center justify-between">
-                                        <span class="text-gray-500 text-xs font-black uppercase tracking-wider">Started: <?php echo date('h:i A', strtotime($s['actual_start_time'] ?? $s['start_time'])); ?></span>
+                                    <div class="pt-4 border-t border-gray-200 dark:border-gray-700/50 flex items-center justify-between">
+                                        <span class="text-gray-400 dark:text-gray-500 text-xs font-black uppercase tracking-wider">Started: <?php echo date('h:i A', strtotime($s['actual_start_time'] ?? $s['start_time'])); ?></span>
                                         <span class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase tracking-wider px-4 py-2.5 rounded-lg transition-all">
                                             Enter Terminal <i class="bi bi-arrow-right"></i>
                                         </span>
@@ -185,48 +185,48 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div id="votingTerminalModal" class="fixed inset-0 z-[120] hidden">
                 <div class="flex items-center justify-center min-h-screen">
                     <!-- Backdrop -->
-                    <div class="fixed inset-0 bg-black/85 backdrop-blur-sm transition-opacity duration-300" onclick="closeVotingTerminal()"></div>
+                    <div class="fixed inset-0 bg-black/50 dark:bg-black/85 backdrop-blur-sm transition-opacity duration-300" onclick="closeVotingTerminal()"></div>
                     
                     <!-- Modal Box -->
-                    <div class="relative bg-gray-950 w-full max-w-5xl mx-4 rounded-[2rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border border-gray-800">
+                    <div class="relative bg-white dark:bg-gray-950 w-full max-w-5xl mx-4 rounded-[2rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border border-gray-200 dark:border-gray-800">
                         <!-- Terminal Header Bar -->
-                        <div class="bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-white flex items-center justify-between shrink-0 border-b border-gray-700/50">
+                        <div class="bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-800 px-6 py-4 flex items-center justify-between shrink-0 border-b border-gray-200 dark:border-gray-700/50">
                             <div class="flex items-center gap-4">
-                                <button onclick="closeVotingTerminal()" class="text-gray-400 hover:text-white transition-colors" title="Exit Terminal">
+                                <button onclick="closeVotingTerminal()" class="text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors" title="Exit Terminal">
                                     <i class="bi bi-x-circle text-xl"></i>
                                 </button>
                                 <div>
-                                    <h2 id="terminalTitle" class="font-bold text-white text-sm md:text-base"></h2>
-                                    <p id="terminalNumber" class="text-[10px] text-gray-500 uppercase tracking-widest font-bold"></p>
+                                    <h2 id="terminalTitle" class="font-bold text-gray-900 dark:text-white text-sm md:text-base"></h2>
+                                    <p id="terminalNumber" class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-bold"></p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
                                 <div class="hidden md:block text-right">
-                                    <p class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Attendee</p>
-                                    <p class="text-xs font-bold text-gray-300"><?php echo e($_SESSION['user_name'] ?? 'User'); ?></p>
+                                    <p class="text-[9px] text-gray-400 dark:text-gray-500 uppercase font-bold tracking-wider">Attendee</p>
+                                    <p class="text-xs font-bold text-gray-700 dark:text-gray-300"><?php echo e($_SESSION['user_name'] ?? 'User'); ?></p>
                                 </div>
-                                <div class="bg-red-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase animate-pulse tracking-widest shadow-lg shadow-red-600/30">
+                                <div class="bg-red-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase animate-pulse tracking-widest shadow-lg shadow-red-600/30">
                                     Live Terminal
                                 </div>
                             </div>
                         </div>
 
                         <!-- Terminal Content -->
-                        <div id="terminalBody" class="flex-1 overflow-y-auto custom-scrollbar">
+                        <div id="terminalBody" class="flex-1 overflow-y-auto custom-scrollbar bg-gray-50 dark:bg-transparent">
                             <div class="flex items-center justify-center py-20">
                                 <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
                             </div>
                         </div>
 
                         <!-- Terminal Footer -->
-                        <div class="bg-gray-900 px-6 py-3 border-t border-gray-800 flex items-center justify-between shrink-0">
+                        <div class="bg-gray-100 dark:bg-gray-900 px-6 py-3 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between shrink-0">
                             <div class="flex items-center gap-3">
                                 <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
                                 <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Session Active</span>
                             </div>
                             <div class="flex items-center gap-4">
                                 <span id="terminalProgress" class="text-[10px] text-gray-500 font-bold uppercase tracking-wider"></span>
-                                <button onclick="closeVotingTerminal()" class="text-[10px] text-gray-500 hover:text-red-400 font-bold uppercase tracking-wider transition-colors">
+                                <button onclick="closeVotingTerminal()" class="text-[10px] text-gray-500 hover:text-red-500 dark:hover:text-red-400 font-bold uppercase tracking-wider transition-colors">
                                     <i class="bi bi-box-arrow-left mr-1"></i> Exit Terminal
                                 </button>
                             </div>
@@ -513,13 +513,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     ${renderSessionHeader(session, totalPresent, attendees.length, voted, total, percent)}
                     
                     <!-- Empty State -->
-                    <div class="bg-gray-900/60 rounded-2xl border border-gray-800 p-16 text-center mt-6">
-                        <div class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-5">
-                            <i class="bi bi-inbox text-3xl text-gray-600"></i>
+                    <div class="bg-gray-50 dark:bg-gray-900/60 rounded-2xl border border-gray-200 dark:border-gray-800 p-16 text-center mt-6">
+                        <div class="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-5">
+                            <i class="bi bi-inbox text-3xl text-gray-400 dark:text-gray-600"></i>
                         </div>
-                        <h3 class="text-xl font-black text-white mb-2">No Documents Queued</h3>
+                        <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2">No Documents Queued</h3>
                         <p class="text-gray-500 text-sm max-w-sm mx-auto mb-6">This session has no legislative items assigned for voting yet. The session administrator will add documents when ready.</p>
-                        <button onclick="closeVotingTerminal()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-6 py-2.5 rounded-xl font-bold text-sm transition-all border border-gray-700">
+                        <button onclick="closeVotingTerminal()" class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-2.5 rounded-xl font-bold text-sm transition-all border border-gray-300 dark:border-gray-700">
                             <i class="bi bi-arrow-left mr-2"></i> Back to Sessions
                         </button>
                     </div>
@@ -537,18 +537,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="p-6 md:p-10 animate-fade-in">
                     ${renderSessionHeader(session, totalPresent, attendees.length, voted, total, percent)}
                     
-                    <div class="bg-gray-900/60 rounded-2xl border border-gray-800 overflow-hidden mt-6">
+                    <div class="bg-gray-50 dark:bg-gray-900/60 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden mt-6">
                         <div class="p-12 md:p-16 text-center">
-                            <div class="w-24 h-24 bg-green-500/10 text-green-400 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-green-500/5">
+                            <div class="w-24 h-24 bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-green-500/5">
                                 <i class="bi bi-check2-all text-5xl"></i>
                             </div>
-                            <h3 class="text-2xl font-black text-white mb-2">Voting Complete!</h3>
-                            <p class="text-gray-400 mb-8 max-w-md mx-auto text-sm">You have successfully cast your votes for all ${total} document${total !== 1 ? 's' : ''} in this session.</p>
+                            <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-2">Voting Complete!</h3>
+                            <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto text-sm">You have successfully cast your votes for all ${total} document${total !== 1 ? 's' : ''} in this session.</p>
                             <div class="flex flex-wrap justify-center gap-3">
                                 <a href="results.php?session=${session.id}" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-red-600/20 text-sm">
                                     <i class="bi bi-bar-chart-fill"></i> View Results
                                 </a>
-                                <button onclick="closeVotingTerminal()" class="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 px-6 py-3 rounded-xl font-bold transition-all text-sm">
+                                <button onclick="closeVotingTerminal()" class="inline-flex items-center gap-2 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-xl font-bold transition-all text-sm">
                                     <i class="bi bi-box-arrow-left"></i> Exit Session
                                 </button>
                             </div>
@@ -578,17 +578,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="flex flex-col lg:flex-row gap-6 mt-6">
                     <!-- Left: Active Document -->
                     <div class="flex-1 min-w-0">
-                        <div class="bg-gray-900/60 rounded-2xl border border-gray-800 overflow-hidden">
+                        <div class="bg-gray-50 dark:bg-gray-900/60 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                             <!-- Document Info -->
                             <div class="p-6 md:p-8">
                                 <div class="flex items-center gap-2 mb-4">
-                                    <span class="px-3 py-1 bg-red-500/10 text-red-400 text-[10px] font-black rounded-full uppercase border border-red-500/20 tracking-wider">${(doc => doc.type ? doc.type.charAt(0).toUpperCase() + doc.type.slice(1) : 'Document')(currentDoc)}</span>
-                                    <span class="text-gray-700">&bull;</span>
+                                    <span class="px-3 py-1 bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] font-black rounded-full uppercase border border-red-200 dark:border-red-500/20 tracking-wider">${(doc => doc.type ? doc.type.charAt(0).toUpperCase() + doc.type.slice(1) : 'Document')(currentDoc)}</span>
+                                    <span class="text-gray-300 dark:text-gray-700">&bull;</span>
                                     <span class="text-xs text-gray-500 font-bold">${currentDoc.doc_number || ''}</span>
-                                    <span class="ml-auto text-[10px] text-red-400 font-black uppercase tracking-wider animate-pulse"><i class="bi bi-circle-fill text-[6px] mr-1"></i> Awaiting Your Vote</span>
+                                    <span class="ml-auto text-[10px] text-red-500 dark:text-red-400 font-black uppercase tracking-wider animate-pulse"><i class="bi bi-circle-fill text-[6px] mr-1"></i> Awaiting Your Vote</span>
                                 </div>
-                                <h1 class="text-xl md:text-2xl font-black text-white mb-3 leading-tight">${currentDoc.title}</h1>
-                                <div class="text-gray-400 leading-relaxed text-sm bg-gray-800/40 p-4 rounded-xl border border-gray-800/80">
+                                <h1 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white mb-3 leading-tight">${currentDoc.title}</h1>
+                                <div class="text-gray-600 dark:text-gray-400 leading-relaxed text-sm bg-gray-100 dark:bg-gray-800/40 p-4 rounded-xl border border-gray-200 dark:border-gray-800/80">
                                     ${currentDoc.summary || 'No summary available for this document.'}
                                 </div>
                             </div>
@@ -597,29 +597,29 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <div class="px-6 md:px-8 pb-6 md:pb-8">
                                 <div class="grid grid-cols-3 gap-3 mb-4" id="vote-buttons-${currentDoc.document_id}">
                                     <button onclick="selectVote(${currentDoc.document_id}, 'approve')" data-vote="approve"
-                                        class="vote-opt-${currentDoc.document_id} py-4 rounded-xl border-2 border-gray-800 hover:border-green-500 hover:bg-green-500/10 text-gray-500 hover:text-green-400 font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center gap-2 group">
-                                        <div class="w-12 h-12 rounded-full bg-gray-800 group-hover:bg-green-500/20 flex items-center justify-center transition-all">
+                                        class="vote-opt-${currentDoc.document_id} py-4 rounded-xl border-2 border-gray-200 dark:border-gray-800 hover:border-green-500 hover:bg-green-500/10 text-gray-400 dark:text-gray-500 hover:text-green-500 dark:hover:text-green-400 font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center gap-2 group">
+                                        <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:bg-green-500/20 flex items-center justify-center transition-all">
                                             <i class="bi bi-check-lg text-xl"></i>
                                         </div>
                                         Approve
                                     </button>
                                     <button onclick="selectVote(${currentDoc.document_id}, 'reject')" data-vote="reject"
-                                        class="vote-opt-${currentDoc.document_id} py-4 rounded-xl border-2 border-gray-800 hover:border-red-500 hover:bg-red-500/10 text-gray-500 hover:text-red-400 font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center gap-2 group">
-                                        <div class="w-12 h-12 rounded-full bg-gray-800 group-hover:bg-red-500/20 flex items-center justify-center transition-all">
+                                        class="vote-opt-${currentDoc.document_id} py-4 rounded-xl border-2 border-gray-200 dark:border-gray-800 hover:border-red-500 hover:bg-red-500/10 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center gap-2 group">
+                                        <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:bg-red-500/20 flex items-center justify-center transition-all">
                                             <i class="bi bi-x-lg text-xl"></i>
                                         </div>
                                         Reject
                                     </button>
                                     <button onclick="selectVote(${currentDoc.document_id}, 'abstain')" data-vote="abstain"
-                                        class="vote-opt-${currentDoc.document_id} py-4 rounded-xl border-2 border-gray-800 hover:border-gray-500 hover:bg-gray-500/10 text-gray-500 hover:text-gray-300 font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center gap-2 group">
-                                        <div class="w-12 h-12 rounded-full bg-gray-800 group-hover:bg-gray-500/20 flex items-center justify-center transition-all">
+                                        class="vote-opt-${currentDoc.document_id} py-4 rounded-xl border-2 border-gray-200 dark:border-gray-800 hover:border-gray-500 hover:bg-gray-500/10 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center gap-2 group">
+                                        <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:bg-gray-500/20 flex items-center justify-center transition-all">
                                             <i class="bi bi-slash-circle text-xl"></i>
                                         </div>
                                         Abstain
                                     </button>
                                 </div>
                                 <button onclick="submitVote(${currentDoc.document_id})" id="submit-btn-${currentDoc.document_id}"
-                                    class="w-full py-3.5 rounded-xl bg-gray-800 text-gray-600 font-black text-xs uppercase tracking-widest cursor-not-allowed transition-all" disabled>
+                                    class="w-full py-3.5 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-600 font-black text-xs uppercase tracking-widest cursor-not-allowed transition-all" disabled>
                                     Select your vote above
                                 </button>
                             </div>
@@ -629,39 +629,39 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <!-- Right: Sidebar -->
                     <div class="w-full lg:w-64 shrink-0">
                         <!-- Progress Card -->
-                        <div class="bg-gray-900/60 rounded-2xl border border-gray-800 p-5 mb-4">
+                        <div class="bg-gray-50 dark:bg-gray-900/60 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
                             <div class="flex items-center justify-between mb-3">
-                                <h3 class="font-bold text-gray-300 uppercase tracking-widest text-[10px]">Progress</h3>
-                                <span class="text-[10px] font-bold px-2 py-1 bg-gray-800 text-gray-400 rounded-full">${voted}/${total}</span>
+                                <h3 class="font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest text-[10px]">Progress</h3>
+                                <span class="text-[10px] font-bold px-2 py-1 bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-full">${voted}/${total}</span>
                             </div>
-                            <div class="w-full h-2 bg-gray-800 rounded-full mb-1 overflow-hidden">
+                            <div class="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-full mb-1 overflow-hidden">
                                 <div class="h-full bg-red-600 transition-all duration-1000 ease-out rounded-full" style="width: ${percent}%"></div>
                             </div>
                         </div>
 
                         <!-- Document Queue -->
-                        <div class="bg-gray-900/60 rounded-2xl border border-gray-800 p-5">
-                            <h3 class="font-bold text-gray-400 text-[10px] uppercase tracking-widest mb-3">Document Queue</h3>
+                        <div class="bg-gray-50 dark:bg-gray-900/60 rounded-2xl border border-gray-200 dark:border-gray-800 p-5">
+                            <h3 class="font-bold text-gray-500 dark:text-gray-400 text-[10px] uppercase tracking-widest mb-3">Document Queue</h3>
                             <div class="space-y-2 max-h-[40vh] overflow-y-auto pr-1 custom-scrollbar">
                                 ${docs.map(doc => {
                                     const isCurrent = doc.document_id === currentDoc.document_id;
                                     if (doc.my_vote) {
-                                        const clr = doc.my_vote === 'approve' ? 'text-green-400' : doc.my_vote === 'reject' ? 'text-red-400' : 'text-gray-400';
-                                        return `<div class="p-2.5 rounded-lg bg-gray-800/40 border border-gray-800/50 opacity-50">
+                                        const clr = doc.my_vote === 'approve' ? 'text-green-600 dark:text-green-400' : doc.my_vote === 'reject' ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400';
+                                        return `<div class="p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800/50 opacity-50">
                                             <div class="flex justify-between items-center gap-2">
                                                 <p class="text-[10px] font-bold text-gray-500 line-clamp-1 flex-1">${doc.title}</p>
                                                 <span class="text-[8px] font-black uppercase ${clr}"><i class="bi bi-check2"></i> ${doc.my_vote}</span>
                                             </div>
                                         </div>`;
                                     } else if (isCurrent) {
-                                        return `<div class="p-2.5 rounded-lg bg-red-500/5 border border-red-500/20" style="border-left: 3px solid #dc2626;">
+                                        return `<div class="p-2.5 rounded-lg bg-red-50 dark:bg-red-500/5 border border-red-200 dark:border-red-500/20" style="border-left: 3px solid #dc2626;">
                                             <div class="flex justify-between items-center gap-2">
-                                                <p class="text-[10px] font-bold text-white line-clamp-1 flex-1">${doc.title}</p>
+                                                <p class="text-[10px] font-bold text-gray-900 dark:text-white line-clamp-1 flex-1">${doc.title}</p>
                                                 <span class="text-[7px] font-black bg-red-600 text-white px-1.5 py-0.5 rounded uppercase">Now</span>
                                             </div>
                                         </div>`;
                                     } else {
-                                        return `<div class="p-2.5 rounded-lg bg-gray-900/30 border border-gray-800/30 opacity-30">
+                                        return `<div class="p-2.5 rounded-lg bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-800/30 opacity-30">
                                             <p class="text-[10px] font-bold text-gray-500 line-clamp-1">${doc.title}</p>
                                         </div>`;
                                     }
@@ -678,40 +678,40 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         return `
             <!-- Session Overview Strip -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center text-red-500 shrink-0">
+                <div class="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-red-100 dark:bg-red-500/10 rounded-lg flex items-center justify-center text-red-500 shrink-0">
                         <i class="bi bi-file-earmark-text text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-[9px] text-gray-600 font-black uppercase tracking-widest">Documents</p>
-                        <p class="text-lg font-black text-white">${totalDocs}</p>
+                        <p class="text-[9px] text-gray-400 dark:text-gray-600 font-black uppercase tracking-widest">Documents</p>
+                        <p class="text-lg font-black text-gray-900 dark:text-white">${totalDocs}</p>
                     </div>
                 </div>
-                <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center text-green-400 shrink-0">
+                <div class="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-green-100 dark:bg-green-500/10 rounded-lg flex items-center justify-center text-green-600 dark:text-green-400 shrink-0">
                         <i class="bi bi-people-fill text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-[9px] text-gray-600 font-black uppercase tracking-widest">Present</p>
-                        <p class="text-lg font-black text-green-400">${present}<span class="text-gray-600 text-xs">/${totalAttendees}</span></p>
+                        <p class="text-[9px] text-gray-400 dark:text-gray-600 font-black uppercase tracking-widest">Present</p>
+                        <p class="text-lg font-black text-green-600 dark:text-green-400">${present}<span class="text-gray-400 dark:text-gray-600 text-xs">/${totalAttendees}</span></p>
                     </div>
                 </div>
-                <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400 shrink-0">
+                <div class="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
                         <i class="bi bi-building text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-[9px] text-gray-600 font-black uppercase tracking-widest">Committee</p>
-                        <p class="text-sm font-bold text-gray-300 mt-0.5 line-clamp-1">${session.committee_name || 'Plenary'}</p>
+                        <p class="text-[9px] text-gray-400 dark:text-gray-600 font-black uppercase tracking-widest">Committee</p>
+                        <p class="text-sm font-bold text-gray-700 dark:text-gray-300 mt-0.5 line-clamp-1">${session.committee_name || 'Plenary'}</p>
                     </div>
                 </div>
-                <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-amber-500/10 rounded-lg flex items-center justify-center text-amber-400 shrink-0">
+                <div class="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-amber-100 dark:bg-amber-500/10 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
                         <i class="bi bi-check2-square text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-[9px] text-gray-600 font-black uppercase tracking-widest">My Votes</p>
-                        <p class="text-lg font-black text-amber-400">${voted}<span class="text-gray-600 text-xs">/${totalDocs}</span></p>
+                        <p class="text-[9px] text-gray-400 dark:text-gray-600 font-black uppercase tracking-widest">My Votes</p>
+                        <p class="text-lg font-black text-amber-600 dark:text-amber-400">${voted}<span class="text-gray-400 dark:text-gray-600 text-xs">/${totalDocs}</span></p>
                     </div>
                 </div>
             </div>
@@ -719,18 +719,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     }
 
     function renderVotedDocCard(doc) {
-        const clr = doc.my_vote === 'approve' ? 'border-green-500/30 bg-green-500/5' :
-                    doc.my_vote === 'reject' ? 'border-red-500/30 bg-red-500/5' :
-                    'border-gray-700 bg-gray-800/30';
-        const badge = doc.my_vote === 'approve' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                      doc.my_vote === 'reject' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                      'bg-gray-800 text-gray-400 border-gray-700';
+        const clr = doc.my_vote === 'approve' ? 'border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/5' :
+                    doc.my_vote === 'reject' ? 'border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/5' :
+                    'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30';
+        const badge = doc.my_vote === 'approve' ? 'bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20' :
+                      doc.my_vote === 'reject' ? 'bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20' :
+                      'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700';
         return `
             <div class="p-4 rounded-xl border ${clr}">
                 <div class="flex justify-between items-start gap-3">
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-gray-600 font-bold uppercase mb-1">${doc.doc_number || ''}</p>
-                        <p class="text-xs font-bold text-gray-300 line-clamp-1">${doc.title}</p>
+                        <p class="text-[9px] text-gray-400 dark:text-gray-600 font-bold uppercase mb-1">${doc.doc_number || ''}</p>
+                        <p class="text-xs font-bold text-gray-700 dark:text-gray-300 line-clamp-1">${doc.title}</p>
                     </div>
                     <span class="px-2 py-1 text-[8px] font-black rounded-lg uppercase border ${badge} shrink-0">${doc.my_vote}</span>
                 </div>
@@ -741,15 +741,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     function renderAttendeesList(attendees) {
         if (!attendees.length) return '';
         return `
-            <div class="mt-6 bg-gray-900/60 border border-gray-800 rounded-2xl p-5">
+            <div class="mt-6 bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
                 <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">Session Attendees</h4>
                 <div class="flex flex-wrap gap-2">
                     ${attendees.map(a => `
-                        <div class="flex items-center gap-2 bg-gray-800/60 rounded-lg px-3 py-2 border border-gray-700/50">
-                            <div class="w-7 h-7 rounded-full ${a.status === 'present' ? 'bg-green-500/15 text-green-400' : 'bg-gray-700 text-gray-500'} flex items-center justify-center text-[10px] font-black">
+                        <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800/60 rounded-lg px-3 py-2 border border-gray-200 dark:border-gray-700/50">
+                            <div class="w-7 h-7 rounded-full ${a.status === 'present' ? 'bg-green-100 dark:bg-green-500/15 text-green-600 dark:text-green-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500'} flex items-center justify-center text-[10px] font-black">
                                 ${a.full_name.charAt(0)}
                             </div>
-                            <span class="text-xs font-bold ${a.status === 'present' ? 'text-gray-300' : 'text-gray-600'}">${a.full_name}</span>
+                            <span class="text-xs font-bold ${a.status === 'present' ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-600'}">${a.full_name}</span>
                         </div>
                     `).join('')}
                 </div>
