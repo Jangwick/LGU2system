@@ -139,30 +139,43 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
+    <main class="flex-1 overflow-y-auto vdm-page-bg p-3 md:p-6 custom-scrollbar">
         <!-- Page Header -->
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <a href="session-details.php?id=<?php echo $sessionId; ?>" class="text-red-600 hover:text-red-700 text-sm mb-2 inline-flex items-center">
-                    <i class="bi bi-arrow-left mr-1"></i> Back to Session
-                </a>
-                <h1 class="text-2xl font-bold text-gray-800">Edit Voting Session</h1>
-                <p class="text-gray-600 text-sm mt-1"><?php echo e($session['session_number']); ?> • <?php echo e($session['title']); ?></p>
+        <div class="bg-[#dc2626] rounded-[2.5rem] shadow-xl p-8 mb-8 text-white animate-fade-in relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <a href="session-details.php?id=<?php echo $sessionId; ?>" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl transition-all">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                        <h1 class="text-3xl md:text-4xl font-black tracking-tight">Modify Session</h1>
+                    </div>
+                    <p class="text-red-100 font-medium opacity-90"><?php echo e($session['session_number']); ?> • <?php echo e($session['title']); ?></p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10 text-center">
+                        <span class="block text-[10px] font-black uppercase tracking-widest text-red-100 opacity-70 mb-1">Status</span>
+                        <span class="text-sm font-black uppercase tracking-tighter"><?php echo e($session['status']); ?></span>
+                    </div>
+                </div>
             </div>
-            <a href="session-details.php?id=<?php echo $sessionId; ?>" class="text-gray-500 hover:text-gray-700">
-                <i class="bi bi-x-lg text-xl"></i>
-            </a>
         </div>
         
         <?php if (!empty($errors)): ?>
-            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div class="bg-red-50 border border-red-200 rounded-[2rem] p-8 mb-8 animate-shake">
                 <div class="flex items-start">
-                    <i class="bi bi-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center shrink-0 mr-6">
+                        <i class="bi bi-exclamation-octagon-fill text-2xl"></i>
+                    </div>
                     <div>
-                        <h4 class="text-red-800 font-medium">Please fix the following errors:</h4>
-                        <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                        <h4 class="text-red-800 font-black text-lg mb-2">Please correct the following:</h4>
+                        <ul class="text-sm text-red-700 font-bold space-y-1">
                             <?php foreach ($errors as $error): ?>
-                                <li><?php echo e($error); ?></li>
+                                <li class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span>
+                                    <?php echo e($error); ?>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
@@ -170,155 +183,206 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         <?php endif; ?>
         
-        <form method="POST" class="space-y-6">
-            <!-- Basic Information -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-info-circle text-red-600 mr-2"></i>
-                    Session Information
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Session Title <span class="text-red-500">*</span></label>
-                        <input type="text" name="title" value="<?php echo e($_POST['title'] ?? $session['title']); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                               placeholder="e.g., Regular Session - October 2024" required>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Session Date <span class="text-red-500">*</span></label>
-                        <input type="date" name="session_date" value="<?php echo e($_POST['session_date'] ?? $session['session_date']); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Start Time <span class="text-red-500">*</span></label>
-                            <input type="time" name="start_time" value="<?php echo e($_POST['start_time'] ?? $session['start_time']); ?>" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-                            <input type="time" name="end_time" value="<?php echo e($_POST['end_time'] ?? $session['end_time']); ?>" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                        <input type="text" name="location" value="<?php echo e($_POST['location'] ?? $session['location']); ?>" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                               placeholder="e.g., Session Hall, Conference Room A">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Committee (Optional)</label>
-                        <select name="committee_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                            <option value="">-- No specific committee --</option>
-                            <?php foreach ($committees as $committee): ?>
-                                <option value="<?php echo $committee['id']; ?>" 
-                                    <?php echo ($session['committee_id'] == $committee['id']) ? 'selected' : ''; ?>>
-                                    <?php echo e($committee['name']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Vote Type</label>
-                        <select name="vote_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                            <?php
-                            $voteTypes = ['roll_call' => 'Roll Call Vote', 'voice' => 'Voice Vote', 'ballot' => 'Ballot Vote (Secret)', 'unanimous' => 'Unanimous Consent'];
-                            foreach ($voteTypes as $val => $label):
-                            ?>
-                                <option value="<?php echo $val; ?>" <?php echo ($session['vote_type'] ?? 'roll_call') === $val ? 'selected' : ''; ?>>
-                                    <?php echo $label; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Quorum Required</label>
-                        <input type="number" name="quorum_required" value="<?php echo e($_POST['quorum_required'] ?? $session['quorum_required']); ?>" 
-                               min="1" max="50"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                        <p class="text-xs text-gray-500 mt-1">Minimum number of members required for a valid vote</p>
-                    </div>
-                    
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea name="description" rows="3"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                  placeholder="Describe the purpose and agenda of this session..."><?php echo e($_POST['description'] ?? $session['description']); ?></textarea>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Documents Selection -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-file-earmark-text text-red-600 mr-2"></i>
-                    Documents for Voting
-                </h2>
-                
-                <?php if (empty($pendingDocuments)): ?>
-                    <div class="text-center py-8 bg-gray-50 rounded-lg">
-                        <i class="bi bi-inbox text-4xl text-gray-300 mb-2"></i>
-                        <p class="text-gray-500">No documents available for voting</p>
-                    </div>
-                <?php else: ?>
-                    <div class="max-h-64 overflow-y-auto border border-gray-200 rounded-lg">
-                        <?php foreach ($pendingDocuments as $doc): ?>
-                            <label class="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
-                                <input type="checkbox" name="documents[]" value="<?php echo $doc['id']; ?>" 
-                                       class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
-                                       <?php echo in_array($doc['id'], $assignedDocIds) ? 'checked' : ''; ?>>
-                                <div class="ml-3 flex-1">
-                                    <div class="text-sm font-medium text-gray-900"><?php echo e($doc['title']); ?></div>
-                                    <div class="text-xs text-gray-500"><?php echo e($doc['doc_number']); ?> • <?php echo ucfirst($doc['type']); ?></div>
-                                </div>
-                            </label>
-                        <?php endforeach; ?>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2"><i class="bi bi-info-circle mr-1"></i> Select documents to be included in this voting session</p>
-                <?php endif; ?>
-            </div>
-            
-            <!-- Attendees Selection -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="bi bi-people text-red-600 mr-2"></i>
-                    Expected Attendees
-                </h2>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    <?php foreach ($councilors as $councilor): ?>
-                        <label class="flex items-center p-3 bg-gray-50 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
-                            <input type="checkbox" name="attendees[]" value="<?php echo $councilor['id']; ?>" 
-                                   class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" 
-                                   <?php echo in_array($councilor['id'], $assignedAttendeeIds) ? 'checked' : ''; ?>>
-                            <div class="ml-3">
-                                <div class="text-sm font-medium text-gray-900"><?php echo e($councilor['full_name']); ?></div>
-                                <div class="text-xs text-gray-500"><?php echo e($councilor['position'] ?? 'Councilor'); ?></div>
+        <form method="POST" class="vdm-form space-y-8 pb-32 animate-fade-in-up">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Session Details Sidebar (Left) -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Basic Information Card -->
+                    <div class="vdm-card rounded-[2.5rem] shadow-sm p-8 md:p-10 border">
+                        <div class="flex items-center gap-4 mb-10">
+                            <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center text-xl">
+                                <i class="bi bi-info-circle-fill"></i>
                             </div>
-                        </label>
-                    <?php endforeach; ?>
+                            <h2 class="text-2xl font-black vdm-heading tracking-tight">Update Information</h2>
+                        </div>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Session Title <span class="text-red-500">*</span></label>
+                                <input type="text" name="title" value="<?php echo e($_POST['title'] ?? $session['title']); ?>" required
+                                       class="w-full px-6 py-4 vdm-input-field rounded-[1.5rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-black vdm-input"
+                                       placeholder="e.g. Regular Session - Resolution Planning">
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Session Date <span class="text-red-500">*</span></label>
+                                    <div class="relative group">
+                                        <i class="bi bi-calendar absolute left-5 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-red-500 transition-colors"></i>
+                                        <input type="date" name="session_date" value="<?php echo e($_POST['session_date'] ?? $session['session_date']); ?>" required
+                                               class="w-full pl-14 pr-6 py-4 vdm-input-field rounded-[1.5rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-black vdm-input">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Start <span class="text-red-500">*</span></label>
+                                        <input type="time" name="start_time" value="<?php echo e($_POST['start_time'] ?? $session['start_time']); ?>" required
+                                               class="w-full px-6 py-4 vdm-input-field rounded-[1.5rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-black vdm-input text-center">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Est. End</label>
+                                        <input type="time" name="end_time" value="<?php echo e($_POST['end_time'] ?? $session['end_time']); ?>"
+                                               class="w-full px-6 py-4 vdm-input-field rounded-[1.5rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-black vdm-input text-center">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Description / Agenda</label>
+                                <textarea name="description" rows="4" 
+                                          class="w-full px-6 py-4 vdm-input-field rounded-[1.5rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-black vdm-input resize-none"
+                                          placeholder="Provide a brief summary of the session goals..."><?php echo e($_POST['description'] ?? $session['description']); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents Selection Card -->
+                    <div class="vdm-card rounded-[2.5rem] shadow-sm p-8 md:p-10 border">
+                        <div class="flex items-center justify-between mb-10">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-xl">
+                                    <i class="bi bi-file-earmark-check-fill"></i>
+                                </div>
+                                <h2 class="text-2xl font-black vdm-heading tracking-tight">Legislative Items</h2>
+                            </div>
+                            <span class="text-[10px] font-black bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-4 py-1.5 rounded-xl border border-blue-100 dark:border-blue-800 uppercase tracking-widest">Select Documents</span>
+                        </div>
+                        
+                        <?php if (empty($pendingDocuments)): ?>
+                            <div class="vdm-card rounded-[2rem] p-16 text-center border-2 border-dashed">
+                                <i class="bi bi-file-earmark-text-fill text-5xl vdm-muted mb-4 block"></i>
+                                <p class="vdm-sub font-black">No documents available.</p>
+                            </div>
+                        <?php else: ?>
+                            <div class="grid grid-cols-1 gap-4 max-h-[500px] overflow-y-auto pr-3 custom-scrollbar">
+                                <?php foreach ($pendingDocuments as $doc): ?>
+                                    <label class="group relative vdm-card rounded-[1.5rem] p-5 flex items-center cursor-pointer hover:border-red-200 dark:hover:border-red-900/50 transition-all shadow-sm border">
+                                        <input type="checkbox" name="documents[]" value="<?php echo $doc['id']; ?>" 
+                                               <?php echo in_array($doc['id'], $assignedDocIds) ? 'checked' : ''; ?>
+                                               class="w-6 h-6 text-red-600 rounded-xl border-slate-200 dark:border-slate-700 focus:ring-red-500/20 transition-all mr-5">
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between mb-1.5">
+                                                <span class="text-[9px] font-black vdm-sub uppercase tracking-[0.1em] group-hover:text-red-500 transition-colors"><?php echo e($doc['doc_number']); ?></span>
+                                                <span class="text-[8px] vdm-badge px-2.5 py-1 rounded-lg border uppercase font-black tracking-tighter"><?php echo e($doc['type']); ?></span>
+                                            </div>
+                                            <h4 class="text-sm font-black vdm-heading group-hover:text-red-800 dark:group-hover:text-red-500 transition-colors"><?php echo e($doc['title']); ?></h4>
+                                        </div>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Session Configuration (Right) -->
+                <div class="space-y-8">
+                    <!-- Session Config Card -->
+                    <div class="vdm-card rounded-[2.5rem] shadow-sm p-8 border">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-11 h-11 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl flex items-center justify-center text-lg">
+                                <i class="bi bi-gear-fill"></i>
+                            </div>
+                            <h3 class="text-xl font-black vdm-heading tracking-tight">Settings</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Committee</label>
+                                <select name="committee_id" class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 outline-none font-black vdm-input">
+                                    <option value="">-- Plenary Session --</option>
+                                    <?php foreach ($committees as $c): ?>
+                                        <option value="<?php echo $c['id']; ?>" <?php echo ($session['committee_id'] == $c['id']) ? 'selected' : ''; ?>><?php echo e($c['name']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Vote Method</label>
+                                <select name="vote_type" class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 outline-none font-black vdm-input">
+                                    <?php
+                                    $voteTypes = ['roll_call' => 'Roll Call Vote', 'voice' => 'Voice Vote', 'ballot' => 'Secret Ballot', 'unanimous' => 'Unanimous Consent'];
+                                    foreach ($voteTypes as $val => $label):
+                                    ?>
+                                        <option value="<?php echo $val; ?>" <?php echo ($session['vote_type'] ?? 'roll_call') === $val ? 'selected' : ''; ?>>
+                                            <?php echo $label; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Location</label>
+                                <input type="text" name="location" value="<?php echo e($session['location']); ?>"
+                                       class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 outline-none font-black vdm-input">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-[11px] font-black vdm-label uppercase tracking-widest mb-3 ml-1">Min. Quorum</label>
+                                <input type="number" name="quorum_required" value="<?php echo e($session['quorum_required']); ?>" min="1" max="100"
+                                       class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 outline-none font-black vdm-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Participants Card -->
+                    <div class="vdm-card rounded-[2.5rem] shadow-sm p-8 border max-h-[600px] flex flex-col">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-4">
+                                <div class="w-11 h-11 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-lg">
+                                    <i class="bi bi-people-fill"></i>
+                                </div>
+                                <h3 class="text-xl font-black vdm-heading tracking-tight">Expected Attendees</h3>
+                            </div>
+                        </div>
+                        <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3">
+                            <?php foreach ($councilors as $user): ?>
+                                <label class="flex items-center p-4 vdm-card rounded-[1.5rem] cursor-pointer hover:border-red-100 dark:hover:border-red-900/50 transition-all border group shadow-sm">
+                                    <input type="checkbox" name="attendees[]" value="<?php echo $user['id']; ?>" 
+                                           <?php echo in_array($user['id'], $assignedAttendeeIds) ? 'checked' : ''; ?>
+                                           class="w-5 h-5 text-red-600 rounded-lg border-slate-200 dark:border-slate-700 focus:ring-red-500/20 mr-4">
+                                    <div>
+                                        <p class="text-sm font-black vdm-heading leading-none group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo e($user['full_name']); ?></p>
+                                        <p class="text-[9px] vdm-sub font-black uppercase tracking-widest mt-1.5"><?php echo e($user['position'] ?? 'Councilor'); ?></p>
+                                    </div>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <!-- Submit Buttons -->
-            <div class="flex items-center justify-between">
-                <a href="session-details.php?id=<?php echo $sessionId; ?>" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                    Cancel
-                </a>
-                <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors inline-flex items-center">
-                    <i class="bi bi-check-circle mr-2"></i>
-                    Save Changes
-                </button>
+
+            <!-- Sticky Bottom Actions -->
+            <div class="fixed bottom-0 left-0 right-0 vdm-footer p-6 z-50 shadow-[0_-20px_50px_-20px_rgba(0,0,0,0.1)] md:ml-64 border-t">
+                <div class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+                    <a href="session-details.php?id=<?php echo $sessionId; ?>" class="px-8 py-4 vdm-muted font-black hover:text-red-600 transition-all uppercase tracking-widest text-sm">
+                        <i class="bi bi-x-lg mr-2"></i> Cancel
+                    </a>
+                    <button type="submit" class="bg-[#dc2626] text-white px-12 py-5 rounded-[2rem] font-black shadow-2xl shadow-red-200 hover:bg-red-700 hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3 uppercase tracking-tight text-sm">
+                        Save Changes
+                        <i class="bi bi-check-circle-fill text-lg"></i>
+                    </button>
+                </div>
             </div>
         </form>
     </main>
     
     <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+</div>
+
+<style>
+    .animate-fade-in { animation: fadeIn 0.6s ease-out; }
+    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .animate-shake { animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #dc262620; border-radius: 20px; }
+</style>
