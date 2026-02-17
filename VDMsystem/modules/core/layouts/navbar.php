@@ -134,7 +134,7 @@ if (isset($_SESSION['user_id'])) {
                     <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50" style="background-color: white;">
                         <div class="p-4 border-b border-gray-200">
                             <p class="text-sm font-medium text-gray-800"><?php echo htmlspecialchars($_SESSION['user_email'] ?? 'guest@lgu.gov'); ?></p>
-                            <p class="text-xs text-gray-500 mt-1"><?php echo htmlspecialchars(ucfirst($_SESSION['user_role'] ?? 'Viewer')); ?></p>
+                            <p class="text-xs text-gray-500 mt-1"><?php echo htmlspecialchars(ucfirst($_SESSION['user_role'] ?? 'Pending')); ?></p>
                         </div>
                         <div class="py-2">
                             <a href="<?php echo BASE_URL; ?>/modules/users/views/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

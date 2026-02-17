@@ -17,10 +17,19 @@
     <nav class="flex-1 overflow-y-auto py-2">
         <?php 
         // Get user role for permission checks
-        $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-        $canVote = in_array($userRole, ['councilor', 'admin', 'administrator', 'secretary']);
-        $canManage = in_array($userRole, ['secretary', 'admin', 'administrator']);
-        $isAdmin = in_array($userRole, ['admin', 'administrator']);
+        $userRole = strtolower(trim($_SESSION['user_role'] ?? 'pending'));
+        
+        // Match roles as per role-hierarchy.md
+        $isAdmin   = in_array($userRole, ['admin', 'administrator']);
+        $isSec     = in_array($userRole, ['secretary']);
+        $isEncoder = in_array($userRole, ['encoder']);
+        $isCouncil = in_array($userRole, ['councilor']);
+        
+        // Feature access
+        $canVote    = $isCouncil || $isAdmin;
+        $canManage  = $isSec || $isAdmin;
+        $canEncode  = $isEncoder || $isSec || $isAdmin;
+        $isStaff    = $canEncode || $canVote; // Any logged in verified user
         ?>
         <div class="px-4 space-y-1">
             <!-- Dashboard -->
@@ -51,10 +60,22 @@
                 <span class="sidebar-text">Vote Results</span>
             </a>
             
+            <!-- Legislative Repository Section - Encoder, Secretary, Admin -->
+            <?php if ($canEncode): ?>
+            <div class="pt-4 pb-2 sidebar-text">
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Repository</p>
+            </div>
+            
+            <a href="<?php echo BASE_URL; ?>/modules/documents/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'documents' ? 'active' : ''; ?>">
+                <i class="bi bi-file-earmark-text"></i>
+                <span class="sidebar-text">Document Management</span>
+            </a>
+            <?php endif; ?>
+            
             <!-- Reports & Analytics Section - Available for Secretary and Admin -->
             <?php if ($canManage): ?>
             <div class="pt-4 pb-2 sidebar-text">
-                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Analytics</p>
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Intelligence</p>
             </div>
             
             <a href="<?php echo REPORTS_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'reports' ? 'active' : ''; ?>">
@@ -90,33 +111,33 @@
             </a>
             <?php endif; ?>
             
-            <!-- Integration Section - Dropdown (Secretary and Admin only) -->
-            <?php if ($canManage): ?>
+            <!-- Integration Section - Dropdown (Encoder, Secretary and Admin) -->
+            <?php if ($canEncode): ?>
             <div class="pt-4 pb-2 sidebar-text">
-                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Integration</p>
+                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Inter-Systems</p>
             </div>
             
             <div class="dropdown-section integration-section dark:bg-red-900/40">
                 <button onclick="toggleDropdown('integrationDropdown')" class="nav-item integration-btn w-full text-left dark:bg-red-700!">
                     <i class="bi bi-plug"></i>
-                    <span class="flex-1 sidebar-text">Integration Modules</span>
+                    <span class="flex-1 sidebar-text">External Data</span>
                     <i class="bi bi-chevron-down dropdown-icon sidebar-text" id="integrationDropdown-icon"></i>
                 </button>
                 
                 <div id="integrationDropdown" class="dropdown-content hidden">
                     <a href="<?php echo BASE_URL; ?>/modules/integration/views/lrms.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'lrms-integration' ? 'active' : ''; ?>">
                         <i class="bi bi-journal-text"></i>
-                        <span class="sidebar-text">LRMS Records</span>
+                        <span class="sidebar-text">LRMS Sync</span>
                     </a>
                     
                     <a href="<?php echo BASE_URL; ?>/modules/integration/views/ordinances.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'ordinances' ? 'active' : ''; ?>">
                         <i class="bi bi-file-text"></i>
-                        <span class="sidebar-text">Ordinances</span>
+                        <span class="sidebar-text">Sync Ordinances</span>
                     </a>
                     
                     <a href="<?php echo BASE_URL; ?>/modules/integration/views/resolutions.php" class="nav-item nav-item-sub <?php echo ($currentPage ?? '') === 'resolutions' ? 'active' : ''; ?>">
                         <i class="bi bi-file-check"></i>
-                        <span class="sidebar-text">Resolutions</span>
+                        <span class="sidebar-text">Sync Resolutions</span>
                     </a>
                 </div>
             </div>

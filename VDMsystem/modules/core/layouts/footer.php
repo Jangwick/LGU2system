@@ -164,10 +164,15 @@
         <!-- Mobile Navigation Menu -->
         <nav class="flex-1 py-4 px-3 overflow-y-auto">
             <?php 
-            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-            $canVote = in_array($userRole, ['councilor', 'admin', 'administrator', 'secretary']);
-            $canManage = in_array($userRole, ['secretary', 'admin', 'administrator']);
-            $isAdmin = in_array($userRole, ['admin', 'administrator']);
+            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'pending'));
+            $isAdmin   = in_array($userRole, ['admin', 'administrator']);
+            $isSec     = in_array($userRole, ['secretary']);
+            $isEncoder = in_array($userRole, ['encoder']);
+            $isCouncil = in_array($userRole, ['councilor']);
+            
+            $canVote    = $isCouncil || $isAdmin;
+            $canManage  = $isSec || $isAdmin; 
+            $canEncode  = $isEncoder || $isSec || $isAdmin;
             ?>
             
             <!-- Dashboard -->
@@ -247,7 +252,7 @@
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-white truncate"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest'); ?></p>
-                    <p class="text-xs text-red-300 truncate"><?php echo ucfirst(htmlspecialchars($_SESSION['user_role'] ?? 'Viewer')); ?></p>
+                    <p class="text-xs text-red-300 truncate"><?php echo ucfirst(htmlspecialchars($_SESSION['user_role'] ?? 'Pending Account')); ?></p>
                 </div>
             </div>
             

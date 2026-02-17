@@ -267,7 +267,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <i class="bi bi-eye-fill"></i>
                                             </button>
                                             
-                                            <?php if ($session['status'] === 'in_progress' && hasRole(['councilor', 'admin'])): ?>
+                                            <?php if ($session['status'] === 'in_progress' && hasRole(['councilor', 'admin', 'administrator'])): ?>
                                                 <a href="cast-vote.php?session=<?php echo $session['id']; ?>" 
                                                    class="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition-all shadow-sm hover:shadow-md pulse-effect" 
                                                    title="Cast Vote">
@@ -283,7 +283,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 </a>
                                             <?php endif; ?>
                                             
-                                            <?php if ($session['status'] === 'scheduled' && hasRole(['admin', 'secretary'])): ?>
+                                            <?php if ($session['status'] === 'scheduled' && hasRole(['admin', 'administrator', 'secretary'])): ?>
                                                 <button type="button" onclick="openEditSessionModal(<?php echo $session['id']; ?>)" 
                                                    class="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition-all shadow-sm hover:shadow-md" 
                                                    title="Edit Session">

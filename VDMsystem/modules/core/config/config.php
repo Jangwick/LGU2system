@@ -158,6 +158,17 @@ function redirectToDashboard() {
 /**
  * Check if user is authenticated
  */
+// Define role constants as per docs/role-hierarchy.md
+define('ROLE_LEVEL_4', 'admin');         // Administrator
+define('ROLE_LEVEL_4_ALT', 'administrator'); 
+define('ROLE_LEVEL_3', 'secretary');     // Secretary (Office Staff)
+define('ROLE_LEVEL_2', 'encoder');       // Encoder (Office Staff)
+define('ROLE_LEVEL_1', 'councilor');     // Councilor (Voter)
+define('ROLE_LEVEL_0', 'pending');       // Pending account
+
+/**
+ * Check if user is authenticated
+ */
 function isAuthenticated() {
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
@@ -178,7 +189,7 @@ function hasRole($role) {
  * Check if user is admin
  */
 function isAdmin() {
-    return hasRole(['admin', 'administrator']);
+    return hasRole([ROLE_LEVEL_4, ROLE_LEVEL_4_ALT]);
 }
 
 /**

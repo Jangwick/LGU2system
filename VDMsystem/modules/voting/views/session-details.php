@@ -161,21 +161,30 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <?php if (hasRole(['admin', 'secretary'])): ?>
                     <?php if ($session['status'] === 'scheduled'): ?>
-                    <form method="POST" class="inline">
-                        <input type="hidden" name="action" value="start">
-                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-green-600/20 flex items-center">
-                            <i class="bi bi-play-fill mr-2 text-lg"></i> Start Session
-                        </button>
-                    </form>
-                    <a href="edit-session.php?id=<?php echo $sessionId; ?>" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-amber-500/20 flex items-center">
-                        <i class="bi bi-pencil-fill mr-2"></i> Edit
-                    </a>
-                    <form method="POST" class="inline">
-                        <input type="hidden" name="action" value="cancel">
-                        <button type="submit" class="vdm-card border shadow-none hover:bg-slate-100 dark:hover:bg-slate-800 vdm-text-muted px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all flex items-center">
-                            <i class="bi bi-x-circle-fill mr-2"></i> Cancel
-                        </button>
-                    </form>
+                        <!-- Actions for Scheduled Sessions -->
+                        <form method="POST" class="inline">
+                            <input type="hidden" name="action" value="start">
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-green-600/20 flex items-center">
+                                <i class="bi bi-play-fill mr-2 text-lg"></i> Start Session
+                            </button>
+                        </form>
+                        <a href="edit-session.php?id=<?php echo $sessionId; ?>" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-amber-500/20 flex items-center">
+                            <i class="bi bi-pencil-fill mr-2"></i> Edit
+                        </a>
+                        <form method="POST" class="inline">
+                            <input type="hidden" name="action" value="cancel">
+                            <button type="submit" class="vdm-card border shadow-none hover:bg-slate-100 dark:hover:bg-slate-800 vdm-text-muted px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all flex items-center">
+                                <i class="bi bi-x-circle-fill mr-2"></i> Cancel
+                            </button>
+                        </form>
+                    <?php elseif ($session['status'] === 'in_progress'): ?>
+                        <!-- Actions for Active Sessions -->
+                        <form method="POST" class="inline">
+                            <input type="hidden" name="action" value="end">
+                            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-purple-600/20 flex items-center" onclick="return confirm('Calculate results and close this session?')">
+                                <i class="bi bi-stop-circle-fill mr-2 text-lg"></i> End Session
+                            </button>
+                        </form>
                     <?php endif; ?>
                 <?php endif; ?>
             </div>
@@ -426,8 +435,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <a href="view-document.php?id=<?php echo $doc['id']; ?>" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <?php if ($session['status'] === 'in_progress'): ?>
-                                                <button onclick="openLiveVoteModal(<?php echo $doc['id']; ?>)" class="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white hover:bg-black transition-all shadow-lg shadow-red-500/20">
+                                            <?php if ($session['status'] === 'in_progress' && hasRole(['admin', 'secretary', 'councilor', 'administrator'])): ?>
+                                                <button onclick="openLiveVoteModal(<?php echo $doc['id']; ?>)" class="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white hover:bg-black transition-all shadow-lg shadow-red-500/20" title="Control Live Vote">
                                                     <i class="bi bi-play-fill text-lg"></i>
                                                 </button>
                                             <?php endif; ?>

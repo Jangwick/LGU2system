@@ -159,8 +159,8 @@ class DashboardController {
     public function getRecentVotes($limit = 8) {
         try {
             $userId  = $_SESSION['user_id'] ?? null;
-            $role    = strtolower($_SESSION['user_role'] ?? 'viewer');
-            $isAdmin = in_array($role, ['admin','administrator','secretary']);
+            $role    = strtolower($_SESSION['user_role'] ?? 'pending');
+            $isAdmin = in_array($role, ['admin', 'administrator', 'secretary']);
 
             if ($isAdmin) {
                 return $this->fetchAll(

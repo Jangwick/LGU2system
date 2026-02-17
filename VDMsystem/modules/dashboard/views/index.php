@@ -21,10 +21,16 @@ $recentVotes      = $dashboard->getRecentVotes(5);
 $approvalRate     = $dashboard->getApprovalRate();
 
 // Role helpers
-$userRole   = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-$canVote    = in_array($userRole, ['councilor','admin','administrator','secretary']);
-$canManage  = in_array($userRole, ['secretary','admin','administrator']);
-$isAdmin    = in_array($userRole, ['admin','administrator']);
+// Role helpers matching role-hierarchy.md
+$userRole   = strtolower(trim($_SESSION['user_role'] ?? 'pending'));
+$isAdmin    = in_array($userRole, ['admin', 'administrator']);
+$isSec      = in_array($userRole, ['secretary']);
+$isEncoder  = in_array($userRole, ['encoder']);
+$isCouncil  = in_array($userRole, ['councilor']);
+
+$canVote    = $isCouncil || $isAdmin;
+$canManage  = $isSec || $isAdmin;
+$canEncode  = $isEncoder || $isSec || $isAdmin;
 
 // System status checks
 $systemStatus = [
