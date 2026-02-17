@@ -123,7 +123,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo formatDate($s['session_date']); ?>
                                     </div>
                                     
-                                    <button onclick="viewAnalytics(<?php echo $s['id']; ?>)" class="block w-full text-center bg-slate-900 dark:bg-slate-700 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg hover:shadow-red-500/20">
+                                    <button onclick="viewAnalytics(<?php echo $s['id']; ?>)" class="block w-full text-center bg-slate-900 dark:bg-red-600 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 dark:hover:bg-red-700 transition-all shadow-lg hover:shadow-red-500/20">
                                         View Full Analytics <i class="bi bi-arrow-right ml-1"></i>
                                     </button>
                                 </div>
@@ -270,18 +270,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- Individual Votes Logs (Auditable) -->
                 <?php if (hasRole(['admin', 'secretary'])): ?>
-                    <div class="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden mb-12 text-white p-10 border-4 border-slate-800">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 border-b border-slate-800 pb-8">
+                    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl overflow-hidden mb-12 text-slate-900 dark:text-white p-10 border border-slate-100 dark:border-slate-800">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 border-b border-slate-50 dark:border-slate-800 pb-8">
                             <div>
-                                <h3 class="text-2xl font-black mb-1 flex items-center gap-3 uppercase tracking-tighter">
-                                    <i class="bi bi-shield-lock-fill text-red-500"></i>
+                                <h3 class="text-2xl font-black mb-1 flex items-center gap-3 uppercase tracking-tighter vdm-heading">
+                                    <i class="bi bi-shield-lock-fill text-red-600"></i>
                                     Individual Audit Log
                                 </h3>
-                                <p class="text-slate-500 text-sm font-medium">Review specific decisions made by each legislator during this session.</p>
+                                <p class="vdm-text-muted text-sm font-medium opacity-70">Review specific decisions made by each legislator during this session.</p>
                             </div>
-                            <div class="bg-slate-800 px-6 py-3 rounded-2xl border border-slate-700 shadow-inner">
-                                <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest italic flex items-center">
-                                    <i class="bi bi-info-circle mr-2 text-red-500"></i> Authorized Access Required
+                            <div class="bg-slate-100 dark:bg-slate-800 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                                <span class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-widest italic flex items-center">
+                                    <i class="bi bi-info-circle mr-2 text-red-600"></i> Authorized Access Required
                                 </span>
                             </div>
                         </div>
@@ -300,36 +300,38 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             );
                             
                             if (empty($allVotes)): ?>
-                                <div class="col-span-full py-20 text-center text-slate-600">
-                                    <i class="bi bi-database-exclamation text-5xl mb-4 block"></i>
-                                    <p class="font-black uppercase tracking-widest text-xs">No records found for this session</p>
+                                <div class="col-span-full py-20 text-center">
+                                    <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100 dark:border-slate-700">
+                                        <i class="bi bi-database-exclamation text-3xl text-slate-300"></i>
+                                    </div>
+                                    <p class="font-black uppercase tracking-widest text-[10px] vdm-text-muted opacity-40">No records found for this session</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($allVotes as $v): ?>
-                                    <div class="bg-slate-800/50 rounded-2xl p-6 border-2 border-slate-800 hover:border-red-500 transition-all group shadow-lg">
+                                    <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800 hover:border-red-500 transition-all group shadow-sm">
                                         <div class="flex items-center justify-between mb-5">
                                             <div class="flex items-center gap-4">
-                                                <div class="w-12 h-12 bg-slate-700 text-red-500 rounded-2xl flex items-center justify-center font-black text-xl shadow-inner border border-slate-600">
+                                                <div class="w-12 h-12 bg-white dark:bg-slate-700 text-red-600 rounded-2xl flex items-center justify-center font-black text-xl shadow-sm border border-slate-100 dark:border-slate-600">
                                                     <?php echo strtoupper(substr($v['voter_name'], 0, 1)); ?>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm font-black text-white uppercase tracking-tighter mb-0.5"><?php echo e($v['voter_name']); ?></p>
-                                                    <p class="text-[9px] text-slate-500 uppercase font-black tracking-widest opacity-80"><?php echo e($v['position']); ?></p>
+                                                    <p class="text-sm font-black vdm-heading uppercase tracking-tighter mb-0.5 group-hover:text-red-600 transition-colors"><?php echo e($v['voter_name']); ?></p>
+                                                    <p class="text-[9px] vdm-text-muted uppercase font-black tracking-widest opacity-60"><?php echo e($v['position']); ?></p>
                                                 </div>
                                             </div>
                                             <?php
-                                            $vClass = $v['vote'] === 'approve' ? 'bg-green-500/10 text-green-400 border-green-500/20' : ($v['vote'] === 'reject' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-slate-700 text-slate-400 border-slate-600');
+                                            $vClass = $v['vote'] === 'approve' ? 'bg-green-500/10 text-green-600 dark:text-green-500 border-green-500/20' : ($v['vote'] === 'reject' ? 'bg-red-500/10 text-red-600 dark:text-red-500 border-red-500/20' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 border-slate-200 dark:border-slate-600');
                                             ?>
-                                            <span class="px-2.5 py-1 text-[8px] font-black rounded uppercase border-2 tracking-widest <?php echo $vClass; ?>">
+                                            <span class="px-2.5 py-1 text-[8px] font-black rounded-lg uppercase border tracking-widest <?php echo $vClass; ?>">
                                                 <?php echo $v['vote']; ?>
                                             </span>
                                         </div>
-                                        <div class="border-t border-slate-700 pt-4">
-                                            <p class="text-[9px] text-slate-500 uppercase font-black mb-1.5 opacity-60 tracking-widest">Document Item</p>
-                                            <p class="text-[11px] font-black text-slate-300 uppercase leading-snug tracking-tighter mb-4 line-clamp-1 group-hover:text-white transition-colors"><?php echo e($v['doc_title']); ?></p>
+                                        <div class="border-t border-slate-100 dark:border-slate-800 pt-4">
+                                            <p class="text-[9px] vdm-text-muted uppercase font-black mb-1.5 opacity-40 tracking-widest">Document Item</p>
+                                            <p class="text-[11px] font-black vdm-text-muted dark:text-slate-300 uppercase leading-snug tracking-tighter mb-4 line-clamp-1 group-hover:text-slate-900 dark:group-hover:text-white transition-colors"><?php echo e($v['doc_title']); ?></p>
                                             <div class="flex items-center justify-between">
-                                                <span class="text-[8px] bg-slate-900/50 px-2 py-1 rounded text-slate-500 font-bold tracking-tighter">ID: #<?php echo $v['id']; ?></span>
-                                                <p class="text-[9px] text-slate-600 font-black uppercase tracking-tighter"><?php echo date('M d, H:i', strtotime($v['cast_at'])); ?></p>
+                                                <span class="text-[8px] bg-white dark:bg-slate-900/50 px-2 py-1 rounded border border-slate-100 dark:border-slate-800 text-slate-400 font-bold tracking-tighter">ID: #<?php echo $v['id']; ?></span>
+                                                <p class="text-[9px] vdm-text-muted font-black uppercase tracking-tighter opacity-60"><?php echo date('M d, H:i', strtotime($v['cast_at'])); ?></p>
                                             </div>
                                         </div>
                                     </div>

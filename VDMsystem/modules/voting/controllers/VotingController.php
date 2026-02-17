@@ -516,7 +516,7 @@ class VotingController {
                             ELSE sd.status 
                         END as voting_status, 
                         sd.vote_order as voting_order, 
-                        d.doc_number, d.title, d.type, d.summary, d.status as doc_status,
+                        d.doc_number, d.title, d.type, d.description as summary, d.status as doc_status,
                         (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id) as vote_count,
                         (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'approve') as approve_count,
                         (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'reject') as reject_count,
