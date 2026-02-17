@@ -106,8 +106,9 @@ class VotingController {
                     dbInsert('session_documents', [
                         'session_id' => $sessionId,
                         'document_id' => $docId,
-                        'voting_order' => $order++,
-                        'voting_status' => 'pending'
+                        'vote_order' => $order,
+                        'order_number' => $order++,
+                        'status' => 'pending'
                     ]);
                 }
             }
@@ -164,8 +165,9 @@ class VotingController {
                     dbInsert('session_documents', [
                         'session_id' => $sessionId,
                         'document_id' => $docId,
-                        'voting_order' => $order++,
-                        'voting_status' => 'pending'
+                        'vote_order' => $order,
+                        'order_number' => $order++,
+                        'status' => 'pending'
                     ]);
                 }
             }
@@ -357,14 +359,14 @@ class VotingController {
                 $result = 'pending';
                 if ($totalVotes >= $quorum) {
                     if ($approveCount > $rejectCount) {
-                        $result = 'passed';
+                        $result = 'approved';
                         // Update document status
                         dbUpdate('documents', [
                             'status' => 'approved',
                             'approved_at' => date('Y-m-d H:i:s')
                         ], 'id = ?', [$doc['doc_id']]);
                     } else {
-                        $result = 'failed';
+                        $result = 'rejected';
                         dbUpdate('documents', [
                             'status' => 'rejected'
                         ], 'id = ?', [$doc['doc_id']]);
@@ -373,9 +375,9 @@ class VotingController {
                 
                 // Update session document record
                 dbUpdate('session_documents', [
-                    'voting_status' => $result,
-                    'votes_for' => $approveCount,
-                    'votes_against' => $rejectCount
+                    'status' => $result,
+                    'approve_count' => $approveCount,
+                    'reject_count' => $rejectCount
                 ], 'id = ?', [$doc['id']]);
             }
             
@@ -402,8 +404,10 @@ class VotingController {
                 $totalApprove += $doc['approve_count'];
                 $totalReject += $doc['reject_count'];
                 $totalAbstain += $doc['abstain_count'];
-                if ($doc['voting_status'] === 'passed') $passed++;
-                if ($doc['voting_status'] === 'failed') $failed++;
+                // Check both alias and direct column for safety
+                $status = $doc['voting_status'] ?? $doc['status'] ?? 'pending';
+                if ($status === 'passed' || $status === 'approved') $passed++;
+                if ($status === 'failed' || $status === 'rejected') $failed++;
             }
 
             return [
@@ -494,7 +498,14 @@ class VotingController {
     public function getSessionDocuments($sessionId) {
         try {
             return dbFetchAll(
-                "SELECT sd.*, d.doc_number, d.title, d.type, d.summary, d.status as doc_status,
+                "SELECT sd.*, 
+                        CASE 
+                            WHEN sd.status = 'approved' THEN 'passed' 
+                            WHEN sd.status = 'rejected' THEN 'failed' 
+                            ELSE sd.status 
+                        END as voting_status, 
+                        sd.vote_order as voting_order, 
+                        d.doc_number, d.title, d.type, d.summary, d.status as doc_status,
                         (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id) as vote_count,
                         (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'approve') as approve_count,
                         (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'reject') as reject_count,
@@ -502,7 +513,7 @@ class VotingController {
                  FROM session_documents sd
                  JOIN documents d ON sd.document_id = d.id
                  WHERE sd.session_id = ?
-                 ORDER BY sd.voting_order, d.created_at",
+                 ORDER BY sd.vote_order, d.created_at",
                 [$sessionId]
             );
         } catch (Exception $e) {
