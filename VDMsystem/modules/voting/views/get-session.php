@@ -22,6 +22,16 @@ $session = $voting->getSession($sessionId);
 $documents = $voting->getSessionDocuments($sessionId);
 $attendees = $voting->getSessionAttendees($sessionId);
 
+// Attach current user's votes to each document
+$userId = $_SESSION['user_id'];
+foreach ($documents as &$doc) {
+    $vote = dbFetchOne(
+        "SELECT vote FROM votes WHERE document_id = ? AND session_id = ? AND councilor_id = ?",
+        [$doc['document_id'] ?? $doc['id'], $sessionId, $userId]
+    );
+    $doc['my_vote'] = $vote['vote'] ?? null;
+}
+
 if ($session) {
     echo json_encode([
         'success' => true,
