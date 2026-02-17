@@ -117,6 +117,19 @@ define('DASHBOARD_INDEX_URL', DASHBOARD_URL . '/views/index.php');
 define('DOCUMENTS_INDEX_URL', DOCUMENTS_URL . '/views/index.php');
 define('VOTING_INDEX_URL', VOTING_URL . '/views/index.php');
 
+// --- Email Security / OTP Configuration (Copied from LLRMSystem) ---
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'Johnrick1214@gmail.com');
+define('SMTP_PASS', 'imok xero ttaf mypf'); // Gmail App Password
+define('SMTP_FROM', 'Johnrick1214@gmail.com');
+define('SMTP_FROM_NAME', 'VDM System Security');
+
+// OTP Settings
+define('OTP_EXPIRY_MINUTES', 10);
+define('OTP_RESEND_COOLDOWN', 60); // Seconds
+// ------------------------------------------------------------------
+
 /**
  * Get a URL path relative to the base URL
  */
@@ -277,3 +290,7 @@ function getVoteBadgeClass($vote) {
     ];
     return $classes[strtolower($vote)] ?? 'bg-gray-100 text-gray-800';
 }
+
+// Set global timezone
+date_default_timezone_set('Asia/Manila');
+

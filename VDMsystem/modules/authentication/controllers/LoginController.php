@@ -66,39 +66,43 @@ try {
         redirect(LOGIN_URL);
     }
     
-    // Set session variables
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['user_name'] = $user['full_name'];
-    $_SESSION['user_email'] = $user['email'];
-    $_SESSION['user_role'] = $user['role'];
-    $_SESSION['user_department'] = $user['department'];
-    $_SESSION['user_position'] = $user['position'];
-    $_SESSION['logged_in_at'] = date('Y-m-d H:i:s');
+    // --- OTP IMPLEMENTATION (LLRMSystem Security) ---
+    require_once __DIR__ . '/../../core/utils/Mailer.php';
     
-    // Update last login
-    dbUpdate('users', 
-        ['last_login' => date('Y-m-d H:i:s')],
-        'id = ?',
-        [$user['id']]
-    );
+    // Determine target email for security (personal email for admin accounts as per LLRMSystem)
+    $targetEmail = $user['email'];
+    if ($user['email'] === 'admin@vdm.gov.ph' || $user['role'] === 'admin') {
+        // As requested: using the Gmail function from LLRM for security
+        $targetEmail = 'Johnrick1214@gmail.com'; 
+    }
+
+    // Generate 6-digit OTP
+    $otpCode = sprintf("%06d", mt_rand(1, 999999));
+    $expiry = date('Y-m-d H:i:s', strtotime('+' . OTP_EXPIRY_MINUTES . ' minutes'));
     
-    // Log successful login
-    logAudit('login_success', $user['id'], 'authentication', 'user', $user['id'], 'User logged in successfully', [
-        'ip_address' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
+    // Store OTP in database
+    dbInsert('user_otps', [
+        'user_id' => $user['id'],
+        'otp_code' => $otpCode,
+        'expires_at' => $expiry
     ]);
     
-    // Handle remember me
-    if ($remember) {
-        // Set a longer session cookie
-        $params = session_get_cookie_params();
-        setcookie(session_name(), session_id(), time() + (86400 * 30), // 30 days
-            $params['path'], $params['domain'], $params['secure'], $params['httponly']
-        );
-    }
+    // Save user ID and target email to temporary session for OTP verification
+    $_SESSION['otp_pending_user_id'] = $user['id'];
+    $_SESSION['otp_remember_me'] = $remember;
+    $_SESSION['otp_target_email'] = $targetEmail;
     
-    // Redirect to dashboard
-    redirect(DASHBOARD_INDEX_URL);
+    // Send OTP email
+    $mailer = new Mailer();
+    if ($mailer->sendOTP($targetEmail, $otpCode)) {
+        // Redirect to OTP verification page
+        header('Location: ../views/verify-otp.php');
+        exit;
+    } else {
+        $_SESSION['login_error'] = 'Failed to send verification code. Please try again.';
+        redirect(LOGIN_URL);
+    }
+    // --- END OTP IMPLEMENTATION ---
     
 } catch (Exception $e) {
     error_log('Login error: ' . $e->getMessage());
