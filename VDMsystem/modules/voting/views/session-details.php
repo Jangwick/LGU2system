@@ -133,60 +133,60 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Session Header Actions -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-            <div>
-                <div class="flex items-center gap-3">
-                    <span class="vdm-text-muted font-bold tracking-widest uppercase text-xs">Administrative Terminal</span>
-                    <span class="w-1.5 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-                    <p class="vdm-text-muted text-xs font-medium">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-10 bg-red-600 rounded-full"></div>
+                <div>
+                    <span class="vdm-text-muted font-black tracking-widest uppercase text-[10px] opacity-80">Administrative Terminal</span>
+                    <p class="vdm-heading text-sm font-black uppercase tracking-tighter">
                         Session #<?php echo e($session['session_number']); ?>
                     </p>
                 </div>
-                
-                <!-- Action Buttons / Status Badge -->
-                <div class="flex flex-wrap items-center gap-4 mt-6">
-                    <?php
-                    $statusConfig = [
-                        'scheduled' => ['bg' => 'bg-indigo-500/10', 'text' => 'text-indigo-500', 'label' => 'Scheduled'],
-                        'in_progress' => ['bg' => 'bg-green-500/10', 'text' => 'text-green-500', 'label' => 'Live Now'],
-                        'completed' => ['bg' => 'bg-purple-500/10', 'text' => 'text-purple-500', 'label' => 'Archived'],
-                        'cancelled' => ['bg' => 'bg-slate-500/10', 'text' => 'text-slate-500', 'label' => 'Cancelled']
-                    ];
-                    $cfg = $statusConfig[$session['status']] ?? ['bg' => 'bg-slate-500/10', 'text' => 'text-slate-500', 'label' => 'Unknown'];
-                    ?>
-                    <span class="<?php echo $cfg['bg'] . ' ' . $cfg['text']; ?> px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-current">
-                        <?php echo $cfg['label']; ?>
-                    </span>
+            </div>
+            
+            <!-- Action Buttons / Status Badge -->
+            <div class="flex flex-wrap items-center gap-4">
+                <?php
+                $statusConfig = [
+                    'scheduled' => ['bg' => 'bg-indigo-500/10', 'text' => 'text-indigo-500', 'label' => 'Scheduled'],
+                    'in_progress' => ['bg' => 'bg-green-500/10', 'text' => 'text-green-500', 'label' => 'Live Now'],
+                    'completed' => ['bg' => 'bg-purple-500/10', 'text' => 'text-purple-500', 'label' => 'Archived'],
+                    'cancelled' => ['bg' => 'bg-slate-500/10', 'text' => 'text-slate-500', 'label' => 'Cancelled']
+                ];
+                $cfg = $statusConfig[$session['status']] ?? ['bg' => 'bg-slate-500/10', 'text' => 'text-slate-500', 'label' => 'Unknown'];
+                ?>
+                <span class="<?php echo $cfg['bg'] . ' ' . $cfg['text']; ?> px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-current mr-2">
+                    <?php echo $cfg['label']; ?>
+                </span>
 
-                    <?php if (hasRole(['admin', 'secretary'])): ?>
-                        <?php if ($session['status'] === 'scheduled'): ?>
-                        <form method="POST" class="inline">
-                            <input type="hidden" name="action" value="start">
-                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-green-600/20 flex items-center">
-                                <i class="bi bi-play-fill mr-2 text-lg"></i> Start Session
-                            </button>
-                        </form>
-                        <a href="edit-session.php?id=<?php echo $sessionId; ?>" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-amber-500/20 flex items-center">
-                            <i class="bi bi-pencil-fill mr-2"></i> Edit
-                        </a>
-                        <form method="POST" class="inline">
-                            <input type="hidden" name="action" value="cancel">
-                            <button type="submit" class="vdm-card border shadow-none hover:bg-slate-100 dark:hover:bg-slate-800 vdm-text-muted px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all flex items-center">
-                                <i class="bi bi-x-circle-fill mr-2"></i> Cancel
-                            </button>
-                        </form>
-                        <?php endif; ?>
+                <?php if (hasRole(['admin', 'secretary'])): ?>
+                    <?php if ($session['status'] === 'scheduled'): ?>
+                    <form method="POST" class="inline">
+                        <input type="hidden" name="action" value="start">
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-green-600/20 flex items-center">
+                            <i class="bi bi-play-fill mr-2 text-lg"></i> Start Session
+                        </button>
+                    </form>
+                    <a href="edit-session.php?id=<?php echo $sessionId; ?>" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all shadow-lg shadow-amber-500/20 flex items-center">
+                        <i class="bi bi-pencil-fill mr-2"></i> Edit
+                    </a>
+                    <form method="POST" class="inline">
+                        <input type="hidden" name="action" value="cancel">
+                        <button type="submit" class="vdm-card border shadow-none hover:bg-slate-100 dark:hover:bg-slate-800 vdm-text-muted px-6 py-2.5 rounded-xl text-[10px] uppercase tracking-widest font-black transition-all flex items-center">
+                            <i class="bi bi-x-circle-fill mr-2"></i> Cancel
+                        </button>
+                    </form>
                     <?php endif; ?>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
         
         <!-- Premium Statistics Cards Row -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 mb-10">
             <!-- Documents Card -->
-            <div class="vdm-card rounded-2xl shadow-xl border-none p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
+            <div class="vdm-card rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800/50 p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
                 <div>
-                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-60">Documents</p>
+                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-80">Documents</p>
                     <p class="text-3xl font-black vdm-heading"><?php echo $totalDocs; ?></p>
                 </div>
                 <div class="bg-red-500/10 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner">
@@ -194,22 +194,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             <!-- Present Card -->
-            <div class="vdm-card rounded-2xl shadow-xl border-none p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
+            <div class="vdm-card rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800/50 p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
                 <div>
-                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-60">Quorum</p>
+                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-80">Quorum</p>
                     <p class="text-3xl font-black text-green-500"><?php echo $totalPresent; ?><span class="text-sm vdm-text-muted ml-1">/<?php echo count($attendees); ?></span></p>
                 </div>
                 <div class="bg-green-500/10 text-green-500 w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner">
                     <i class="bi bi-people"></i>
                 </div>
             </div>
-                    <i class="bi bi-people"></i>
-                </div>
-            </div>
             <!-- Total Votes Card -->
-            <div class="vdm-card rounded-2xl shadow-xl border-none p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
+            <div class="vdm-card rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800/50 p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
                 <div>
-                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-60">Total Votes</p>
+                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-80">Total Votes</p>
                     <p class="text-3xl font-black text-purple-500"><?php echo $totalVotes; ?></p>
                 </div>
                 <div class="bg-purple-500/10 text-purple-500 w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner">
@@ -217,9 +214,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             <!-- Passed Card -->
-            <div class="vdm-card rounded-2xl shadow-xl border-none p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
+            <div class="vdm-card rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800/50 p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
                 <div>
-                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-60">Passed</p>
+                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-80">Passed</p>
                     <p class="text-3xl font-black text-teal-500"><?php echo $passedDocs; ?></p>
                 </div>
                 <div class="bg-teal-500/10 text-teal-500 w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner">
@@ -227,9 +224,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             <!-- Failed Card -->
-            <div class="vdm-card rounded-2xl shadow-xl border-none p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
+            <div class="vdm-card rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800/50 p-6 flex items-center justify-between group hover:-translate-y-1 transition-all">
                 <div>
-                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-60">Failed</p>
+                    <p class="text-[10px] font-black vdm-text-muted uppercase tracking-widest mb-1 opacity-80">Failed</p>
                     <p class="text-3xl font-black text-orange-500"><?php echo $failedDocs; ?></p>
                 </div>
                 <div class="bg-orange-500/10 text-orange-500 w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner">
@@ -241,7 +238,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Info Split View -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
             <!-- Session Information -->
-            <div class="lg:col-span-2 vdm-card rounded-3xl shadow-xl p-8 md:p-10 border-none relative overflow-hidden">
+            <div class="lg:col-span-2 vdm-card rounded-3xl shadow-xl p-8 md:p-10 border border-slate-100 dark:border-slate-800/50 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-red-500/[0.02] rounded-full -mr-32 -mt-32 blur-3xl"></div>
                 <h2 class="text-xl md:text-2xl font-black vdm-heading mb-10 flex items-center uppercase tracking-tighter">
                     <i class="bi bi-info-circle text-red-500 mr-4 text-2xl"></i>
@@ -250,19 +247,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-12 relative z-10">
                     <div class="flex items-start group">
                         <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-red-500 transition-colors">
-                            <i class="bi bi-calendar-event text-slate-500 group-hover:text-white transition-colors"></i>
+                            <i class="bi bi-calendar-event vdm-text-muted group-hover:text-white transition-colors"></i>
                         </div>
                         <div>
-                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-60">Legislative Date</p>
+                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-80">Legislative Date</p>
                             <p class="vdm-heading font-black uppercase text-sm tracking-tight"><?php echo formatDate($session['session_date'], 'F d, Y'); ?></p>
                         </div>
                     </div>
                     <div class="flex items-start group">
                         <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-red-500 transition-colors">
-                            <i class="bi bi-clock-history text-slate-500 group-hover:text-white transition-colors"></i>
+                            <i class="bi bi-clock-history vdm-text-muted group-hover:text-white transition-colors"></i>
                         </div>
                         <div>
-                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-60">Time Slot</p>
+                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-80">Time Slot</p>
                             <p class="vdm-heading font-black uppercase text-sm tracking-tight">
                                 <?php echo date('h:i A', strtotime($session['start_time'])); ?> - 
                                 <?php echo $session['end_time'] ? date('h:i A', strtotime($session['end_time'])) : '05:00 PM'; ?>
@@ -271,37 +268,37 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <div class="flex items-start group">
                         <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-red-500 transition-colors">
-                            <i class="bi bi-geo-alt-fill text-slate-500 group-hover:text-white transition-colors"></i>
+                            <i class="bi bi-geo-alt-fill vdm-text-muted group-hover:text-white transition-colors"></i>
                         </div>
                         <div>
-                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-60">Venue / Location</p>
+                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-80">Venue / Location</p>
                             <p class="vdm-heading font-black uppercase text-sm tracking-tight"><?php echo e($session['location'] ?? 'Legislative Hall'); ?></p>
                         </div>
                     </div>
                     <div class="flex items-start group">
                         <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-red-500 transition-colors">
-                            <i class="bi bi-fingerprint text-slate-500 group-hover:text-white transition-colors"></i>
+                            <i class="bi bi-fingerprint vdm-text-muted group-hover:text-white transition-colors"></i>
                         </div>
                         <div>
-                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-60">Protocol Type</p>
+                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-80">Protocol Type</p>
                             <p class="vdm-heading font-black uppercase text-sm tracking-tight"><?php echo str_replace('_', ' ', $session['vote_type'] ?? 'Roll Call'); ?></p>
                         </div>
                     </div>
                     <div class="flex items-start group">
                         <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-red-500 transition-colors">
-                            <i class="bi bi-shield-check text-slate-500 group-hover:text-white transition-colors"></i>
+                            <i class="bi bi-shield-check vdm-text-muted group-hover:text-white transition-colors"></i>
                         </div>
                         <div>
-                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-60">Quorum Requirement</p>
+                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-80">Quorum Requirement</p>
                             <p class="vdm-heading font-black uppercase text-sm tracking-tight"><?php echo $session['quorum_required'] ?? 7; ?> MEMBERS MIN.</p>
                         </div>
                     </div>
                     <div class="flex items-start group">
                         <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-red-500 transition-colors">
-                            <i class="bi bi-building-fill text-slate-500 group-hover:text-white transition-colors"></i>
+                            <i class="bi bi-building-fill vdm-text-muted group-hover:text-white transition-colors"></i>
                         </div>
                         <div>
-                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-60">Primary Committee</p>
+                            <p class="text-[10px] vdm-text-muted uppercase font-black tracking-widest mb-1 opacity-80">Primary Committee</p>
                             <p class="vdm-heading font-black uppercase text-sm tracking-tight"><?php echo e($session['committee_name'] ?? 'General Assembly'); ?></p>
                         </div>
                     </div>
@@ -309,7 +306,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Attendees -->
-            <div class="vdm-card rounded-3xl shadow-xl p-8 border-none flex flex-col">
+            <div class="vdm-card rounded-3xl shadow-xl p-8 border border-slate-100 dark:border-slate-800/50 flex flex-col">
                 <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
                     <h2 class="text-sm font-black vdm-heading flex items-center uppercase tracking-widest">
                         <i class="bi bi-people-fill text-red-500 mr-3 text-lg"></i>
@@ -347,14 +344,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Documents Section -->
-        <div class="vdm-card rounded-3xl shadow-2xl border-none overflow-hidden mb-12 animate-fade-in-up">
+        <div class="vdm-card rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800/50 overflow-hidden mb-12 animate-fade-in-up">
             <div class="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <h2 class="text-xl font-black vdm-heading flex items-center uppercase tracking-tighter">
                     <i class="bi bi-file-earmark-text-fill text-red-500 mr-4 text-2xl"></i>
                     Legislative Agenda & Documents
                 </h2>
                 <div class="flex items-center gap-3">
-                    <span class="text-[10px] font-black vdm-text-muted bg-slate-100 dark:bg-slate-800 px-4 py-1.5 rounded-full uppercase tracking-widest border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] font-black vdm-text-muted bg-slate-100 dark:bg-slate-800 px-4 py-1.5 rounded-full uppercase tracking-widest border border-slate-200 dark:border-slate-700 opacity-90">
                         Total Items: <?php echo count($documents); ?>
                     </span>
                 </div>
@@ -364,11 +361,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-900/50">
-                            <th class="px-8 py-4 text-left text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">No.</th>
-                            <th class="px-8 py-4 text-left text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">Document / Description</th>
-                            <th class="px-8 py-4 text-center text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">Verification</th>
-                            <th class="px-8 py-4 text-center text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">Status</th>
-                            <th class="px-8 py-4 text-right text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">Action</th>
+                            <th class="px-8 py-4 text-left text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 opacity-80">No.</th>
+                            <th class="px-8 py-4 text-left text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 opacity-80">Document / Description</th>
+                            <th class="px-8 py-4 text-center text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 opacity-80">Verification</th>
+                            <th class="px-8 py-4 text-center text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 opacity-80">Status</th>
+                            <th class="px-8 py-4 text-right text-[10px] font-black vdm-text-muted uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 opacity-80">Action</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
@@ -380,7 +377,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <i class="bi bi-inbox-fill text-3xl"></i>
                                         </div>
                                         <p class="text-[11px] font-black vdm-heading uppercase tracking-widest">No legislative items found</p>
-                                        <p class="text-[10px] vdm-text-muted mt-1 uppercase font-bold opacity-60">Session is awaiting agenda upload</p>
+                                        <p class="text-[10px] vdm-text-muted mt-1 uppercase font-bold opacity-80">Session is awaiting agenda upload</p>
                                     </div>
                                 </td>
                             </tr>

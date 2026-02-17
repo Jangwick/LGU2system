@@ -1193,6 +1193,7 @@ html.dark {
 .vdm-input { color: var(--vdm-input) !important; }
 .vdm-sub { color: var(--vdm-sub) !important; }
 .vdm-muted { color: var(--vdm-muted) !important; }
+.vdm-text-muted { color: var(--vdm-muted) !important; }
 
 /* --- Placeholder --- */
 .vdm-input::placeholder { color: var(--vdm-placeholder) !important; }
