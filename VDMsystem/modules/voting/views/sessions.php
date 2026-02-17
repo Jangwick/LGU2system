@@ -476,8 +476,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeSessionDetailsModal()"></div>
                 
                 <!-- Modal Box -->
-                <div class="relative bg-white dark:bg-slate-950 w-full max-w-7xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border border-gray-100 dark:border-slate-800">
-                    <div class="bg-white dark:bg-slate-800 p-6 md:p-8 flex items-center justify-between shrink-0 border-b border-gray-100 dark:border-slate-700">
+                <div class="relative vdm-page-bg w-full max-w-7xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border">
+                    <div class="vdm-card p-6 md:p-8 flex items-center justify-between shrink-0 border-b">
                         <div class="flex items-center gap-4">
                             <button onclick="closeSessionDetailsModal()" class="text-red-600 hover:text-red-700 font-black text-sm flex items-center group transition-all">
                                 <i class="bi bi-arrow-left mr-2 transition-transform group-hover:-translate-x-1"></i> Back to Sessions
@@ -486,7 +486,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <!-- Modal Body (Content Area) -->
-                    <div id="detailsModalContent" class="overflow-y-auto p-6 md:p-10 custom-scrollbar">
+                    <div id="detailsModalContent" class="overflow-y-auto p-6 md:p-10 custom-scrollbar vdm-page-bg">
                         <div class="flex items-center justify-center py-20">
                             <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
                         </div>
@@ -596,25 +596,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="animate-fade-in">
                         <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
                             <div>
-                                <h1 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-2">${s.title}</h1>
-                                <p class="text-slate-500 dark:text-slate-400 font-bold text-sm md:text-lg">
-                                    <span class="text-slate-400 dark:text-slate-500">#${s.session_number}</span> &bull; Created by <span class="text-red-600">${s.created_by_name || 'Admin User'}</span>
+                                <h1 class="text-3xl md:text-5xl font-black vdm-heading tracking-tight leading-tight mb-2">${s.title}</h1>
+                                <p class="vdm-muted font-bold text-sm md:text-lg">
+                                    <span class="vdm-sub">#${s.session_number}</span> &bull; Created by <span class="text-red-600">${s.created_by_name || 'Admin User'}</span>
                                 </p>
                                 <div class="flex flex-wrap items-center gap-3 mt-6">
-                                    <span class="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800 px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm">${s.status.toUpperCase()}</span>
+                                    <span class="vdm-badge px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm">${s.status.toUpperCase()}</span>
                                     
                                     ${s.status === 'scheduled' ? `
-                                        <button onclick="handleSessionAction(${s.id}, 'start')" class="bg-[#22c55e] text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-green-100 hover:-translate-y-0.5 transition-all">
+                                        <button onclick="handleSessionAction(${s.id}, 'start')" class="!bg-emerald-500 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:!bg-emerald-600 hover:-translate-y-0.5 transition-all">
                                             <i class="bi bi-play-fill text-lg"></i> Start Session
                                         </button>
                                     ` : ''}
 
-                                    <button onclick="closeSessionDetailsModal(); openEditSessionModal(${s.id})" class="bg-[#facc15] text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-yellow-100 hover:-translate-y-0.5 transition-all">
+                                    <button onclick="closeSessionDetailsModal(); openEditSessionModal(${s.id})" class="!bg-amber-400 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-amber-400/30 hover:!bg-amber-500 hover:-translate-y-0.5 transition-all">
                                         <i class="bi bi-pencil-fill"></i> Edit
                                     </button>
 
                                     ${s.status !== 'completed' && s.status !== 'cancelled' ? `
-                                        <button onclick="handleSessionAction(${s.id}, 'cancel')" class="bg-[#4b5563] text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-gray-200 hover:-translate-y-0.5 transition-all">
+                                        <button onclick="handleSessionAction(${s.id}, 'cancel')" class="!bg-slate-600 dark:!bg-slate-700 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-slate-900/40 hover:!bg-slate-700 hover:-translate-y-0.5 transition-all">
                                             <i class="bi bi-x-circle-fill"></i> Cancel
                                         </button>
                                     ` : ''}
@@ -624,37 +624,37 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                         <!-- Stats Grid -->
                         <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-10">
-                            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
                                 <div>
-                                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Documents</p>
-                                    <p class="text-3xl font-black text-slate-900 dark:text-white">${totalDocs}</p>
+                                    <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Documents</p>
+                                    <p class="text-3xl font-black vdm-heading">${totalDocs}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center text-xl"><i class="bi bi-file-earmark-text"></i></div>
                             </div>
-                            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
                                 <div>
-                                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Present</p>
+                                    <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Present</p>
                                     <p class="text-3xl font-black text-[#22c55e]">${totalPresent}/${atts.length}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-green-50 dark:bg-green-900/20 text-[#22c55e] rounded-full flex items-center justify-center text-xl"><i class="bi bi-people"></i></div>
                             </div>
-                            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
                                 <div>
-                                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Total Votes</p>
+                                    <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Total Votes</p>
                                     <p class="text-3xl font-black text-indigo-600 dark:text-indigo-400">${totalVotes}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center text-xl"><i class="bi bi-hand-thumbs-up"></i></div>
                             </div>
-                            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
                                 <div>
-                                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Passed</p>
+                                    <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Passed</p>
                                     <p class="text-3xl font-black text-teal-500 dark:text-teal-400">${passedDocs}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-teal-50 dark:bg-teal-900/20 text-teal-500 dark:text-teal-400 rounded-full flex items-center justify-center text-xl"><i class="bi bi-check2-circle"></i></div>
                             </div>
-                            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
                                 <div>
-                                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Failed</p>
+                                    <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Failed</p>
                                     <p class="text-3xl font-black text-red-500">${failedDocs}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center text-xl"><i class="bi bi-x-circle"></i></div>
@@ -663,62 +663,62 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                         <!-- Split Content -->
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-                            <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm">
-                                <h3 class="text-xl font-black text-slate-800 dark:text-slate-200 flex items-center gap-3 mb-10">
+                            <div class="lg:col-span-2 vdm-card p-10 rounded-[2.5rem] border shadow-sm">
+                                <h3 class="text-xl font-black vdm-heading flex items-center gap-3 mb-10">
                                     <i class="bi bi-info-circle text-red-600"></i> Session Information
                                 </h3>
                                 <div class="grid grid-cols-2 gap-y-12 gap-x-10">
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-calendar2-event text-lg"></i></div>
+                                        <div class="w-10 h-10 vdm-card rounded-xl flex items-center justify-center vdm-muted border"><i class="bi bi-calendar2-event text-lg"></i></div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Date</p>
-                                            <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.session_date}</p>
+                                            <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-2">Date</p>
+                                            <p class="text-sm font-black vdm-heading">${s.session_date}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-clock text-lg"></i></div>
+                                        <div class="w-10 h-10 vdm-card rounded-xl flex items-center justify-center vdm-muted border"><i class="bi bi-clock text-lg"></i></div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Time</p>
-                                            <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.start_time} - ${s.end_time || '05:00 PM'}</p>
+                                            <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-2">Time</p>
+                                            <p class="text-sm font-black vdm-heading">${s.start_time} - ${s.end_time || '05:00 PM'}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-geo-alt text-lg"></i></div>
+                                        <div class="w-10 h-10 vdm-card rounded-xl flex items-center justify-center vdm-muted border"><i class="bi bi-geo-alt text-lg"></i></div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Location</p>
-                                            <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.location || 'Session Hall'}</p>
+                                            <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-2">Location</p>
+                                            <p class="text-sm font-black vdm-heading">${s.location || 'Session Hall'}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-diagram-3 text-lg"></i></div>
+                                        <div class="w-10 h-10 vdm-card rounded-xl flex items-center justify-center vdm-muted border"><i class="bi bi-diagram-3 text-lg"></i></div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Vote Type</p>
-                                            <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.vote_type}</p>
+                                            <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-2">Vote Type</p>
+                                            <p class="text-sm font-black vdm-heading">${s.vote_type}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-people text-lg"></i></div>
+                                        <div class="w-10 h-10 vdm-card rounded-xl flex items-center justify-center vdm-muted border"><i class="bi bi-people text-lg"></i></div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Quorum Required</p>
-                                            <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.quorum_required} members</p>
+                                            <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-2">Quorum Required</p>
+                                            <p class="text-sm font-black vdm-heading">${s.quorum_required} members</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-5">
-                                        <div class="w-10 h-10 bg-white dark:bg-slate-900/50 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800"><i class="bi bi-building text-lg"></i></div>
+                                        <div class="w-10 h-10 vdm-card rounded-xl flex items-center justify-center vdm-muted border"><i class="bi bi-building text-lg"></i></div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Committee</p>
-                                            <p class="text-sm font-black text-slate-800 dark:text-slate-200">${s.committee_name || 'Finance and Budget'}</p>
+                                            <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-2">Committee</p>
+                                            <p class="text-sm font-black vdm-heading">${s.committee_name || 'Finance and Budget'}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 border border-gray-100 dark:border-slate-700 shadow-sm flex flex-col">
+                            <div class="vdm-card rounded-[2.5rem] p-8 border shadow-sm flex flex-col">
                                 <div class="flex items-center justify-between mb-8">
-                                    <h3 class="text-lg font-black text-slate-800 dark:text-slate-200 flex items-center gap-3">
+                                    <h3 class="text-lg font-black vdm-heading flex items-center gap-3">
                                         <i class="bi bi-people text-red-600"></i> Attendees
                                     </h3>
-                                    <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 tracking-tighter">${totalPresent}/${atts.length}</span>
+                                    <span class="text-[10px] font-black vdm-sub tracking-tighter">${totalPresent}/${atts.length}</span>
                                 </div>
                                 <div class="space-y-6 overflow-y-auto pr-2 custom-scrollbar flex-1 max-h-[400px]">
                                     ${atts.map(a => `
@@ -726,11 +726,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <div class="flex items-center gap-3">
                                                 <div class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 flex items-center justify-center font-black text-xs uppercase">${a.full_name.charAt(0)}</div>
                                                 <div>
-                                                    <p class="text-xs font-black text-slate-800 dark:text-slate-200 leading-none mb-1">${a.full_name}</p>
-                                                    <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">${a.position || 'Administrator'}</p>
+                                                    <p class="text-xs font-black vdm-heading leading-none mb-1">${a.full_name}</p>
+                                                    <p class="text-[9px] font-bold vdm-muted uppercase tracking-tighter">${a.position || 'Administrator'}</p>
                                                 </div>
                                             </div>
-                                            <span class="px-3 py-1 text-[8px] font-black rounded-lg ${a.status === 'present' ? 'bg-green-50 dark:bg-green-900/20 text-green-600' : 'bg-slate-50 dark:bg-slate-900/30 text-slate-400 dark:text-slate-500'} uppercase tracking-widest border border-current opacity-70">${a.status || 'ABSENT'}</span>
+                                            <span class="px-3 py-1 text-[8px] font-black rounded-lg ${a.status === 'present' ? 'bg-green-50 dark:bg-green-900/20 text-green-600' : 'bg-slate-50 dark:bg-slate-900/30 vdm-muted'} uppercase tracking-widest border border-current opacity-70">${a.status || 'ABSENT'}</span>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -738,17 +738,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
 
                         <!-- Documents Section -->
-                        <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
-                            <div class="p-8 border-b border-gray-50 dark:border-slate-700 flex items-center gap-4">
+                        <div class="vdm-card rounded-[2.5rem] border shadow-sm overflow-hidden">
+                            <div class="p-8 border-b flex items-center gap-4" style="border-color: var(--vdm-card-border)">
                                 <i class="bi bi-file-earmark-text text-2xl text-red-600"></i>
-                                <h3 class="text-xl font-black text-slate-800 dark:text-slate-200">Documents for Voting</h3>
+                                <h3 class="text-xl font-black vdm-heading">Documents for Voting</h3>
                             </div>
                             <div class="p-16 text-center">
-                                <div class="w-20 h-20 bg-white dark:bg-slate-900/50 rounded-[2rem] border border-slate-100 dark:border-slate-800 flex items-center justify-center mx-auto mb-6 text-slate-200 dark:text-slate-700 text-3xl">
+                                <div class="w-20 h-20 vdm-card rounded-[2rem] border flex items-center justify-center mx-auto mb-6 vdm-muted text-3xl">
                                     <i class="bi bi-inbox"></i>
                                 </div>
-                                <h4 class="text-xl font-black text-slate-800 dark:text-slate-200 mb-2">No Documents</h4>
-                                <p class="text-slate-400 dark:text-slate-500 font-bold max-w-xs mx-auto">No documents have been assigned to this voting session for decision-making.</p>
+                                <h4 class="text-xl font-black vdm-heading mb-2">No Documents</h4>
+                                <p class="vdm-muted font-bold max-w-xs mx-auto">No documents have been assigned to this voting session for decision-making.</p>
                             </div>
                         </div>
                     </div>

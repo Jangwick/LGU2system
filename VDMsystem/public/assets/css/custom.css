@@ -1166,21 +1166,26 @@ main::-webkit-scrollbar-thumb:active {
 
 /* Dark Mode Colors - completely separate path via .dark class */
 html.dark {
-    --vdm-heading: #f1f5f9;
-    --vdm-label: #94a3b8;
-    --vdm-input: #e2e8f0;
-    --vdm-sub: #94a3b8;
-    --vdm-muted: #64748b;
-    --vdm-placeholder: #475569;
-    --vdm-card-bg: #0f172a;
-    --vdm-input-bg: #1e293b;
-    --vdm-card-border: #1e293b;
-    --vdm-input-border: #334155;
-    --vdm-page-bg: #020617;
-    --vdm-hover-bg: #1e293b;
-    --vdm-footer-bg: rgba(2, 6, 23, 0.8);
+    --vdm-heading: #f8fafc; /* Slate 50 */
+    --vdm-label: #cbd5e1;   /* Slate 300 */
+    --vdm-input: #f1f5f9;   /* Slate 100 */
+    --vdm-sub: #cbd5e1;     /* Slate 300 */
+    --vdm-muted: #94a3b8;   /* Slate 400 */
+    --vdm-placeholder: #64748b; /* Slate 500 */
+    --vdm-card-bg: #1e293b; /* Slate 800 - better contrast on slate 950 */
+    --vdm-input-bg: #0f172a; /* Slate 900 */
+    --vdm-card-border: #334155; /* Slate 700 */
+    --vdm-input-border: #1e293b; /* Slate 800 */
+    --vdm-page-bg: #020617;  /* Slate 950 */
+    --vdm-hover-bg: #334155; /* Slate 700 */
+    --vdm-footer-bg: rgba(2, 6, 23, 0.95);
     --vdm-footer-border: #1e293b;
 }
+
+/* Custom shadow utility for colored glows in dark mode */
+.dark .shadow-emerald-500\/20 { shadow-color: rgba(16, 185, 129, 0.4); }
+.dark .shadow-amber-400\/30 { shadow-color: rgba(251, 191, 36, 0.4); }
+.dark .shadow-slate-900\/40 { shadow-color: rgba(0, 0, 0, 0.6); }
 
 /* --- Text Color Utilities (use !important to prevent bleed) --- */
 .vdm-heading { color: var(--vdm-heading) !important; }
@@ -1195,26 +1200,26 @@ html.dark {
 
 /* --- Container Utilities --- */
 .vdm-card {
-    background-color: var(--vdm-card-bg);
-    border-color: var(--vdm-card-border);
+    background-color: var(--vdm-card-bg) !important;
+    border-color: var(--vdm-card-border) !important;
 }
 
 .vdm-input-field {
-    background-color: var(--vdm-input-bg);
-    border-color: var(--vdm-input-border);
+    background-color: var(--vdm-input-bg) !important;
+    border-color: var(--vdm-input-border) !important;
 }
 
 .vdm-input-field:focus {
-    background-color: var(--vdm-card-bg);
+    background-color: var(--vdm-card-bg) !important;
 }
 
 .vdm-page-bg {
-    background-color: var(--vdm-page-bg);
+    background-color: var(--vdm-page-bg) !important;
 }
 
 .vdm-footer {
-    background-color: var(--vdm-footer-bg);
-    border-color: var(--vdm-footer-border);
+    background-color: var(--vdm-footer-bg) !important;
+    border-color: var(--vdm-footer-border) !important;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
 }
