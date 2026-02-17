@@ -1,6 +1,18 @@
 /* Custom CSS Styles - VDM System */
 /* Same design as LLRM System with Red Theme */
 
+/* Smooth Global Theme Transition */
+*,
+*::before,
+*::after {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        fill 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* ========================================
    Custom Scrollbars - Draggable & Styled
    ======================================== */
@@ -445,9 +457,19 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Dark Mode - Navbar */
+/* Premium Welcome Banner (Synched with LLRM System) */
+.vdm-welcome-banner {
+    background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%) !important;
+    transition: background 0.5s ease-in-out;
+}
+
+.dark .vdm-welcome-banner {
+    background: linear-gradient(90deg, #991b1b 0%, #450a0a 100%) !important;
+}
+
 .dark nav {
-    background-color: #2d2d2d !important;
-    border-color: #404040 !important;
+    background-color: #1a1a1a !important;
+    border-color: #2d2d2d !important;
 }
 
 .dark nav h2,
@@ -457,36 +479,29 @@ main::-webkit-scrollbar-thumb:active {
     color: #e5e5e5 !important;
 }
 
-.dark nav button {
-    color: #e5e5e5 !important;
-}
-
-.dark nav button:hover {
-    background-color: #404040 !important;
-    color: #ffffff !important;
-}
-
-.dark nav input {
-    background-color: #404040 !important;
-    border-color: #555555 !important;
-    color: #e5e5e5 !important;
-}
-
-.dark nav input::placeholder {
-    color: #999999 !important;
-}
-
-/* Dark Mode - Sidebar */
-.dark aside,
+/* Dark Mode - Sidebar (Solid Red like LLRM) */
+.dark aside#sidebar,
 .dark .sidebar,
-.dark aside#sidebar {
-    background: linear-gradient(180deg, #7f1d1d 0%, #450a0a 100%) !important;
-    border-color: #450a0a !important;
+.dark aside#mobile-sidebar {
+    background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%) !important;
+    border-color: #7f1d1d !important;
 }
 
-.dark aside nav,
+.dark .sidebar-logo,
+.dark .sidebar-user {
+    background-color: transparent !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.dark aside#sidebar nav,
 .dark .sidebar nav {
     background-color: transparent !important;
+}
+
+.dark .dropdown-section {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 0.75rem;
+    margin: 0.5rem 1rem;
 }
 
 .dark aside a,
@@ -496,68 +511,44 @@ main::-webkit-scrollbar-thumb:active {
     color: #e5e5e5 !important;
 }
 
-.dark aside a:hover,
-.dark .sidebar a:hover,
-.dark aside button:hover,
-.dark .sidebar button:hover {
-    background-color: rgba(220, 38, 38, 0.3) !important;
+/* Dark Mode - Navigation Items (Solid White like LLRM) */
+.dark aside .nav-item,
+.dark .sidebar .nav-item {
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
-.dark aside a.active,
-.dark .sidebar a.active {
-    background-color: rgba(220, 38, 38, 0.5) !important;
+.dark aside .nav-item:hover,
+.dark .sidebar .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
 }
 
-.dark aside .bg-red-600,
-.dark .sidebar .bg-red-600 {
+.dark aside .nav-item.active,
+.dark .sidebar .nav-item.active {
     background-color: #dc2626 !important;
+    /* Matches LLRM active state */
+    color: #ffffff !important;
+    font-weight: 600 !important;
 }
 
-/* Dark Mode - Sidebar Section Headers */
-.dark aside .text-red-300,
-.dark .sidebar .text-red-300 {
+.dark .sidebar-text p.text-red-300 {
     color: #fca5a5 !important;
-}
-
-/* Dark Mode - Sidebar Dropdown */
-.dark aside .dropdown-content,
-.dark .sidebar .dropdown-content {
-    background-color: rgba(127, 29, 29, 0.5) !important;
-}
-
-.dark aside#sidebar .dropdown-section button.nav-item,
-.dark .sidebar .dropdown-section button.nav-item,
-.dark aside button.nav-item,
-.dark .sidebar button.nav-item {
-    background-color: transparent !important;
-    border: none !important;
-}
-
-.dark aside#sidebar .dropdown-section button.nav-item:hover,
-.dark .sidebar .dropdown-section button.nav-item:hover,
-.dark aside button.nav-item:hover,
-.dark .sidebar button.nav-item:hover {
-    background-color: rgba(220, 38, 38, 0.3) !important;
-}
-
-.dark aside .nav-item-sub:hover,
-.dark .sidebar .nav-item-sub:hover {
-    background-color: rgba(220, 38, 38, 0.4) !important;
+    opacity: 0.9;
 }
 
 /* Dark Mode - Cards & Containers */
 .dark .bg-white {
-    background-color: #2d2d2d !important;
+    background-color: #1a1a1a !important;
+    border-color: #2d2d2d !important;
 }
 
 .dark .bg-gray-50,
 .dark .bg-gray-100 {
-    background-color: #1a1a1a !important;
+    background-color: #0f0f0f !important;
 }
 
 .dark .bg-gray-200 {
-    background-color: #404040 !important;
+    background-color: #2d2d2d !important;
 }
 
 /* Dark Mode - Text Colors */
@@ -567,99 +558,204 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 .dark .text-gray-700 {
-    color: #cccccc !important;
+    color: #d4d4d4 !important;
 }
 
 .dark .text-gray-600 {
-    color: #b3b3b3 !important;
+    color: #a3a3a3 !important;
 }
 
 .dark .text-gray-500 {
-    color: #999999 !important;
+    color: #a3a3a3 !important;
 }
 
 .dark .text-gray-400 {
-    color: #808080 !important;
+    color: #888888 !important;
+}
+
+/* Dark Mode - Brand Text Colors */
+.dark .text-red-400 {
+    color: #f87171 !important;
+}
+
+.dark .text-red-500,
+.dark .text-red-600,
+.dark .text-red-700 {
+    color: #ef4444 !important;
+}
+
+.dark .text-blue-400 {
+    color: #60a5fa !important;
+}
+
+.dark .text-blue-500,
+.dark .text-blue-600,
+.dark .text-blue-700 {
+    color: #3b82f6 !important;
+}
+
+.dark .text-indigo-400 {
+    color: #818cf8 !important;
+}
+
+.dark .text-indigo-500,
+.dark .text-indigo-600,
+.dark .text-indigo-700 {
+    color: #6366f1 !important;
 }
 
 /* Dark Mode - Borders */
 .dark .border-gray-200,
 .dark .border-gray-100 {
-    border-color: #404040 !important;
-}
-
-.dark .shadow,
-.dark .shadow-md,
-.dark .shadow-lg,
-.dark .shadow-xl {
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
+    border-color: #2d2d2d !important;
 }
 
 /* Dark Mode - Hover States */
 .dark .hover\:bg-gray-50:hover,
 .dark .hover\:bg-gray-100:hover {
-    background-color: #404040 !important;
+    background-color: #262626 !important;
 }
 
 .dark .hover\:bg-gray-200:hover {
-    background-color: #4d4d4d !important;
+    background-color: #333333 !important;
 }
 
-/* Dark Mode - Dropdowns */
-.dark #notifications-dropdown,
-.dark #profile-dropdown {
-    background-color: #2d2d2d !important;
-    border-color: #404040 !important;
+/* Dark Mode - Utility Backgrounds (Icons/Badges) */
+.dark .bg-red-50 {
+    background-color: rgba(220, 38, 38, 0.15) !important;
+}
+
+.dark .bg-green-50 {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.dark .bg-indigo-50 {
+    background-color: rgba(79, 70, 229, 0.15) !important;
+}
+
+.dark .bg-purple-50 {
+    background-color: rgba(147, 51, 234, 0.15) !important;
+}
+
+.dark .bg-blue-50 {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Dark Mode - Utility Backgrounds (Icons/Badges) */
+.dark .bg-red-50 {
+    background-color: rgba(239, 68, 68, 0.12) !important;
+}
+
+.dark .bg-green-50 {
+    background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+.dark .bg-indigo-50 {
+    background-color: rgba(99, 102, 241, 0.12) !important;
+}
+
+.dark .bg-purple-50 {
+    background-color: rgba(147, 51, 234, 0.12) !important;
+}
+
+.dark .bg-blue-50 {
+    background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+.dark .bg-yellow-50 {
+    background-color: rgba(245, 158, 11, 0.12) !important;
+}
+
+.dark .bg-red-100 {
+    background-color: rgba(239, 68, 68, 0.22) !important;
+}
+
+.dark .bg-green-100 {
+    background-color: rgba(16, 185, 129, 0.22) !important;
+}
+
+.dark .bg-indigo-100 {
+    background-color: rgba(99, 102, 241, 0.22) !important;
+}
+
+.dark .bg-yellow-100 {
+    background-color: rgba(245, 158, 11, 0.22) !important;
+}
+
+/* Dark Mode - Borders */
+.dark .border-gray-200,
+.dark .border-gray-100 {
+    border-color: #2d2d2d !important;
+}
+
+.dark .border-red-100 {
+    border-color: rgba(239, 68, 68, 0.25) !important;
+}
+
+.dark .border-blue-100 {
+    border-color: rgba(59, 130, 246, 0.25) !important;
+}
+
+.dark .border-indigo-100 {
+    border-color: rgba(99, 102, 241, 0.25) !important;
 }
 
 /* Dark Mode - Tables */
 .dark table {
-    background-color: #2d2d2d !important;
+    background-color: #1a1a1a !important;
 }
 
-.dark table thead {
-    background-color: #404040 !important;
+.dark table thead tr {
+    background-color: #262626 !important;
 }
 
 .dark table tbody tr {
-    background-color: #2d2d2d !important;
+    background-color: #1a1a1a !important;
+    border-color: #262626 !important;
 }
 
 .dark table tbody tr:hover {
-    background-color: #3a3a3a !important;
+    background-color: #212121 !important;
 }
 
-.dark table th,
-.dark table td {
-    border-color: #404040 !important;
-    color: #e5e5e5 !important;
+/* Dark Mode - Status Badge Text */
+.dark .text-indigo-800,
+.dark .text-indigo-600 {
+    color: #a5b4fc !important;
 }
 
-/* Dark Mode - Forms */
-.dark input,
-.dark textarea,
-.dark select {
-    background-color: #404040 !important;
-    border-color: #555555 !important;
-    color: #e5e5e5 !important;
+/* Committee Badge - Premium Dark Mode Look */
+.dark .committee-badge {
+    background-color: rgba(220, 38, 38, 0.15) !important;
+    border: 1px solid rgba(254, 202, 202, 0.2) !important;
+    color: #fecaca !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.dark input:focus,
-.dark textarea:focus,
-.dark select:focus {
-    border-color: #dc2626 !important;
-    background-color: #4d4d4d !important;
+.dark .text-green-800,
+.dark .text-green-600 {
+    color: #4ade80 !important;
 }
 
-.dark input::placeholder,
-.dark textarea::placeholder {
-    color: #999999 !important;
+.dark .text-red-800,
+.dark .text-red-600 {
+    color: #f87171 !important;
+}
+
+.dark .text-yellow-800,
+.dark .text-yellow-600 {
+    color: #fbbf24 !important;
 }
 
 /* Dark Mode - Date Input Fields */
-.dark input[type="date"] {
-    background-color: #3d3d3d !important;
-    border-color: #525252 !important;
+.dark input[type="date"],
+.dark input[type="text"],
+.dark input[type="number"],
+.dark select,
+.dark textarea {
+    background-color: #262626 !important;
+    border-color: #404040 !important;
     color: #e5e5e5 !important;
 }
 
@@ -668,35 +764,10 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Dark Mode - Buttons */
-.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-yellow-600):not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-warning) {
-    background-color: #404040 !important;
+.dark button:not(.bg-red-600):not(.bg-red-700):not(.bg-green-600):not(.bg-yellow-600):not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-warning) {
+    background-color: #2d2d2d !important;
+    border-color: #404040 !important;
     color: #e5e5e5 !important;
-}
-
-/* Dark Mode - Status Badges */
-.dark .bg-green-100 {
-    background-color: #1a4d2e !important;
-}
-
-.dark .text-green-800,
-.dark .text-green-600 {
-    color: #4ade80 !important;
-}
-
-.dark .bg-red-100 {
-    background-color: #4d1a1a !important;
-}
-
-.dark .bg-yellow-100 {
-    background-color: #4d3d1a !important;
-}
-
-.dark .bg-indigo-100 {
-    background-color: #312e81 !important;
-}
-
-.dark .text-indigo-800 {
-    color: #a5b4fc !important;
 }
 
 /* Dark Mode - Charts */

@@ -63,15 +63,15 @@
         .border-b { border-bottom-width: 1px; }
         .border-gray-200 { border-color: #e5e7eb; }
         
-        /* Dark mode critical styles */
-        .dark body, html.dark body { background-color: #111827 !important; color: #f3f4f6 !important; }
-        .dark .bg-gray-100, html.dark .bg-gray-100 { background-color: #1f2937 !important; }
-        .dark .bg-white, html.dark .bg-white { background-color: #1f2937 !important; }
-        .dark nav.bg-white, html.dark nav.bg-white { background-color: #1f2937 !important; border-color: #374151 !important; }
-        .dark .text-gray-800, html.dark .text-gray-800 { color: #f3f4f6 !important; }
-        .dark .text-gray-600, html.dark .text-gray-600 { color: #d1d5db !important; }
-        .dark footer, html.dark footer { background-color: #1f2937 !important; border-color: #374151 !important; }
-        .dark footer *, html.dark footer * { color: #d1d5db !important; }
+        /* Dark mode critical styles - Synced with LLRMSystem */
+        .dark body, html.dark body { background-color: #0f0f0f !important; color: #e5e5e5 !important; }
+        .dark .bg-gray-100, html.dark .bg-gray-100 { background-color: #1a1a1a !important; }
+        .dark .bg-white, html.dark .bg-white { background-color: #2d2d2d !important; }
+        .dark nav.bg-white, html.dark nav.bg-white { background-color: #2d2d2d !important; border-color: #404040 !important; }
+        .dark .text-gray-800, html.dark .text-gray-800 { color: #e5e5e5 !important; }
+        .dark .text-gray-600, html.dark .text-gray-600 { color: #b3b3b3 !important; }
+        .dark footer, html.dark footer { background-color: #2d2d2d !important; border-color: #404040 !important; }
+        .dark footer *, html.dark footer * { color: #b3b3b3 !important; }
     </style>
     
     <!-- Custom CSS -->

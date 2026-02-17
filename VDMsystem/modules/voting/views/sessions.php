@@ -51,25 +51,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <?php endif; ?>
         
         <!-- Welcome/Header Banner -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white transform transition-all duration-300 animate-fade-in relative overflow-hidden">
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white transform transition-all duration-500 ease-in-out animate-fade-in relative overflow-hidden">
             <!-- Subtle decorative background element -->
-            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
             <div class="relative flex items-center justify-between gap-4">
                 <!-- Left Side: Title & Context -->
                 <div>
-                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight transition-all duration-500">
                         Voting Sessions
                     </h1>
-                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">
+                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium transition-all duration-500">
                         Manage, monitor, and conduct legislative voting sessions effectively.
                     </p>
                 </div>
-
+ 
                 <!-- Right Side: Action Button -->
                 <div class="shrink-0">
                     <?php if (hasRole(['admin', 'secretary'])): ?>
-                    <button type="button" onclick="openCreateSessionModal()" class="bg-white text-red-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center group">
+                    <button type="button" onclick="openCreateSessionModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
                         <i class="bi bi-plus-lg mr-2 transition-transform group-hover:rotate-90"></i>
                         New Voting Session
                     </button>
@@ -177,10 +177,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <div class="flex items-end gap-2">
-                    <button type="submit" class="flex-1 bg-gray-800 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition-all flex items-center justify-center">
+                    <button type="submit" class="flex-1 bg-red-700 dark:bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-800 dark:hover:bg-red-700 transition-all flex items-center justify-center shadow-sm">
                         <i class="bi bi-filter mr-2"></i> Apply Filters
                     </button>
-                    <a href="sessions.php" class="bg-gray-100 text-gray-600 p-2 rounded-lg hover:bg-gray-200 transition-all" title="Clear Filters">
+                    <a href="sessions.php" class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700" title="Clear Filters">
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </a>
                 </div>
@@ -237,16 +237,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded border border-gray-200">
+                                        <span class="committee-badge text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded border border-gray-200">
                                             <?php echo e($session['committee_name'] ?? 'Plenary / General'); ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <span class="text-sm font-bold text-gray-800 bg-red-50 text-red-700 w-8 h-8 rounded-full flex items-center justify-center border border-red-100 shadow-sm" title="Documents">
+                                            <span class="text-sm font-bold bg-red-50 text-red-700 dark:text-red-400 w-8 h-8 rounded-full flex items-center justify-center border border-red-100 shadow-sm" title="Documents">
                                                 <?php echo $session['document_count']; ?>
                                             </span>
-                                            <span class="text-sm font-bold text-blue-800 bg-blue-50 text-blue-700 w-8 h-8 rounded-full flex items-center justify-center border border-blue-100 shadow-sm" title="Attendees Present">
+                                            <span class="text-sm font-bold bg-blue-50 text-blue-700 dark:text-blue-400 w-8 h-8 rounded-full flex items-center justify-center border border-blue-100 shadow-sm" title="Attendees Present">
                                                 <?php echo $session['attendee_count']; ?>
                                             </span>
                                         </div>

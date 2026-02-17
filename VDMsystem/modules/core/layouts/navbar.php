@@ -92,7 +92,7 @@ if (isset($_SESSION['user_id'])) {
                     </button>
                     
                     <!-- Notifications Dropdown -->
-                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50" style="background-color: white;">
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 md:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
                         <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                             <h3 class="text-sm font-semibold text-gray-800">Notifications</h3>
                             <button id="mark-all-read-btn" class="text-xs text-red-600 hover:text-red-700 font-medium">Mark all as read</button>
