@@ -85,6 +85,10 @@ define('VOTING_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'voting');
 define('WORKFLOWS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'workflows');
 define('REPORTS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'reports');
 define('AUDIT_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'audit');
+define('USERS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'users');
+define('COMMITTEES_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'committees');
+define('SETTINGS_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'settings');
+define('INTEGRATION_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'integration');
 
 // URL paths
 define('ASSETS_URL', BASE_URL . '/public/assets');
@@ -100,6 +104,10 @@ define('VOTING_URL', BASE_URL . '/modules/voting');
 define('WORKFLOWS_URL', BASE_URL . '/modules/workflows');
 define('REPORTS_URL', BASE_URL . '/modules/reports');
 define('AUDIT_URL', BASE_URL . '/modules/audit');
+define('USERS_URL', BASE_URL . '/modules/users');
+define('COMMITTEES_URL', BASE_URL . '/modules/committees');
+define('SETTINGS_URL', BASE_URL . '/modules/settings');
+define('INTEGRATION_URL', BASE_URL . '/modules/integration');
 
 // Common page URLs
 define('LOGIN_URL', AUTH_URL . '/views/login.php');

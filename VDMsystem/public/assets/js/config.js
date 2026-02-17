@@ -56,8 +56,12 @@
             dashboard: BASE_URL + '/modules/dashboard',
             voting: BASE_URL + '/modules/voting',
             documents: BASE_URL + '/modules/documents',
-            users: BASE_URL + '/modules/user-management',
+            users: BASE_URL + '/modules/users',
             reports: BASE_URL + '/modules/reports',
+            committees: BASE_URL + '/modules/committees',
+            audit: BASE_URL + '/modules/audit',
+            settings: BASE_URL + '/modules/settings',
+            integration: BASE_URL + '/modules/integration',
             help: BASE_URL + '/modules/help'
         },
         
@@ -67,8 +71,11 @@
             dashboard: BASE_URL + '/modules/dashboard/api',
             voting: BASE_URL + '/modules/voting/api',
             documents: BASE_URL + '/modules/documents/api',
-            users: BASE_URL + '/modules/user-management/api',
-            reports: BASE_URL + '/modules/reports/api'
+            users: BASE_URL + '/modules/users/api',
+            reports: BASE_URL + '/modules/reports/api',
+            committees: BASE_URL + '/modules/committees/api',
+            audit: BASE_URL + '/modules/audit/api',
+            settings: BASE_URL + '/modules/settings/api'
         },
         
         // Assets
