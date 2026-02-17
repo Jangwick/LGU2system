@@ -146,16 +146,32 @@ if (isset($_SESSION['user_id'])) {
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 transition-all">Department</label>
                         <div class="relative">
                             <i class="bi bi-building absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="text" name="department" placeholder="Legislative Affairs"
-                                   class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 transition-all font-medium">
+                            <select name="department" required class="w-full pl-12 pr-10 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 appearance-none font-medium cursor-pointer">
+                                <option value="" disabled selected>Select Department</option>
+                                <option value="Legislative Affairs">Legislative Affairs</option>
+                                <option value="Sangguniang Panlungsod">Sangguniang Panlungsod</option>
+                                <option value="Office of the Vice Mayor">Office of the Vice Mayor</option>
+                                <option value="Finance & Budget">Finance & Budget</option>
+                                <option value="Legal & Audit">Legal & Audit</option>
+                                <option value="General Public">General Public</option>
+                            </select>
+                            <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                         </div>
                     </div>
                     <div class="input-group">
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 transition-all">Position</label>
                         <div class="relative">
                             <i class="bi bi-award absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="text" name="position" placeholder="District Councilor"
-                                   class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 transition-all font-medium">
+                            <select name="position" required class="w-full pl-12 pr-10 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 appearance-none font-medium cursor-pointer">
+                                <option value="" disabled selected>Select Position</option>
+                                <option value="City Councilor">City Councilor</option>
+                                <option value="District Councilor">District Councilor</option>
+                                <option value="Legislative Secretary">Legislative Secretary</option>
+                                <option value="Administrative Staff">Administrative Staff</option>
+                                <option value="Session Encoder">Session Encoder</option>
+                                <option value="Public Citizen">Public Citizen</option>
+                            </select>
+                            <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                         </div>
                     </div>
                 </div>

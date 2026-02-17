@@ -500,6 +500,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <script>
+    // Role-based access control for client-side rendering
+    const userRole = '<?php echo strtolower($_SESSION['user_role'] ?? 'pending'); ?>';
+    const canManageSessions = ['admin', 'administrator', 'secretary'].includes(userRole);
+
     function openCreateSessionModal() {
         const modal = document.getElementById('createSessionModal');
         const form = document.getElementById('sessionForm');
@@ -601,22 +605,28 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <span class="vdm-sub">#${s.session_number}</span> &bull; Created by <span class="text-red-600">${s.created_by_name || 'Admin User'}</span>
                                 </p>
                                 <div class="flex flex-wrap items-center gap-3 mt-6">
-                                    <span class="vdm-badge px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm">${s.status.toUpperCase()}</span>
+                                    <span class="vdm-badge px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm">${s.status.replace('_', ' ').toUpperCase()}</span>
                                     
-                                    ${s.status === 'scheduled' ? `
-                                        <button onclick="handleSessionAction(${s.id}, 'start')" class="!bg-emerald-500 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:!bg-emerald-600 hover:-translate-y-0.5 transition-all">
-                                            <i class="bi bi-play-fill text-lg"></i> Start Session
-                                        </button>
-                                    ` : ''}
+                                    ${canManageSessions ? `
+                                        ${s.status === 'scheduled' ? `
+                                            <button onclick="handleSessionAction(${s.id}, 'start')" class="!bg-emerald-500 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:!bg-emerald-600 hover:-translate-y-0.5 transition-all">
+                                                <i class="bi bi-play-fill text-lg"></i> Start Session
+                                            </button>
+                                            
+                                            <button onclick="closeSessionDetailsModal(); openEditSessionModal(${s.id})" class="!bg-amber-400 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-amber-400/30 hover:!bg-amber-500 hover:-translate-y-0.5 transition-all">
+                                                <i class="bi bi-pencil-fill"></i> Edit
+                                            </button>
 
-                                    <button onclick="closeSessionDetailsModal(); openEditSessionModal(${s.id})" class="!bg-amber-400 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-amber-400/30 hover:!bg-amber-500 hover:-translate-y-0.5 transition-all">
-                                        <i class="bi bi-pencil-fill"></i> Edit
-                                    </button>
+                                            <button onclick="handleSessionAction(${s.id}, 'cancel')" class="!bg-slate-600 dark:!bg-slate-700 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-slate-900/40 hover:!bg-slate-700 hover:-translate-y-0.5 transition-all">
+                                                <i class="bi bi-x-circle-fill"></i> Cancel
+                                            </button>
+                                        ` : ''}
 
-                                    ${s.status !== 'completed' && s.status !== 'cancelled' ? `
-                                        <button onclick="handleSessionAction(${s.id}, 'cancel')" class="!bg-slate-600 dark:!bg-slate-700 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-slate-900/40 hover:!bg-slate-700 hover:-translate-y-0.5 transition-all">
-                                            <i class="bi bi-x-circle-fill"></i> Cancel
-                                        </button>
+                                        ${s.status === 'in_progress' ? `
+                                            <button onclick="handleSessionAction(${s.id}, 'end')" class="!bg-purple-600 text-white px-6 py-2.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg shadow-purple-600/20 hover:!bg-purple-700 hover:-translate-y-0.5 transition-all">
+                                                <i class="bi bi-stop-circle-fill text-lg"></i> End Session
+                                            </button>
+                                        ` : ''}
                                     ` : ''}
                                 </div>
                             </div>
@@ -739,16 +749,85 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                         <!-- Documents Section -->
                         <div class="vdm-card rounded-[2.5rem] border shadow-sm overflow-hidden">
-                            <div class="p-8 border-b flex items-center gap-4" style="border-color: var(--vdm-card-border)">
-                                <i class="bi bi-file-earmark-text text-2xl text-red-600"></i>
-                                <h3 class="text-xl font-black vdm-heading">Documents for Voting</h3>
-                            </div>
-                            <div class="p-16 text-center">
-                                <div class="w-20 h-20 vdm-card rounded-[2rem] border flex items-center justify-center mx-auto mb-6 vdm-muted text-3xl">
-                                    <i class="bi bi-inbox"></i>
+                            <div class="px-8 py-6 border-b flex flex-col md:flex-row md:items-center justify-between gap-4" style="border-color: var(--vdm-card-border)">
+                                <div class="flex items-center gap-4">
+                                    <i class="bi bi-file-earmark-text text-2xl text-red-600"></i>
+                                    <h3 class="text-xl font-black vdm-heading uppercase tracking-tighter">Documents for Voting</h3>
                                 </div>
-                                <h4 class="text-xl font-black vdm-heading mb-2">No Documents</h4>
-                                <p class="vdm-muted font-bold max-w-xs mx-auto">No documents have been assigned to this voting session for decision-making.</p>
+                                <span class="text-[10px] font-black vdm-sub bg-slate-50 dark:bg-slate-800/50 px-4 py-1.5 rounded-full border border-current opacity-60">Total Agenda: ${docs.length} Items</span>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                ${docs.length === 0 ? `
+                                    <div class="p-16 text-center">
+                                        <div class="w-20 h-20 vdm-card rounded-[2rem] border flex items-center justify-center mx-auto mb-6 vdm-muted text-3xl">
+                                            <i class="bi bi-inbox"></i>
+                                        </div>
+                                        <h4 class="text-xl font-black vdm-heading mb-2">No Documents</h4>
+                                        <p class="vdm-muted font-bold max-w-xs mx-auto">No documents have been assigned to this voting session for decision-making.</p>
+                                    </div>
+                                ` : `
+                                    <table class="w-full border-collapse">
+                                        <thead>
+                                            <tr class="bg-slate-50 dark:bg-slate-900/50">
+                                                <th class="px-8 py-4 text-left text-[10px] font-black vdm-muted uppercase tracking-[0.2em] border-b opacity-80" style="border-color: var(--vdm-card-border)">Document Details</th>
+                                                <th class="px-8 py-4 text-center text-[10px] font-black vdm-muted uppercase tracking-[0.2em] border-b opacity-80" style="border-color: var(--vdm-card-border)">Status</th>
+                                                <th class="px-8 py-4 text-center text-[10px] font-black vdm-muted uppercase tracking-[0.2em] border-b opacity-80" style="border-color: var(--vdm-card-border)">Results</th>
+                                                <th class="px-8 py-4 text-right text-[10px] font-black vdm-muted uppercase tracking-[0.2em] border-b opacity-80" style="border-color: var(--vdm-card-border)">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y" style="border-color: var(--vdm-card-border)">
+                                            ${docs.map((doc, idx) => {
+                                                const status = doc.voting_status || 'pending';
+                                                const badgeClass = status === 'passed' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 
+                                                                 (status === 'failed' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 
+                                                                 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700');
+                                                
+                                                return `
+                                                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                                                        <td class="px-8 py-6">
+                                                            <div class="flex items-center">
+                                                                <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4 border group-hover:bg-red-500 group-hover:text-white transition-all">
+                                                                    <i class="bi bi-file-earmark-pdf text-lg"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <p class="text-xs font-black vdm-heading leading-tight mb-1 group-hover:text-red-600 transition-colors">${doc.title}</p>
+                                                                    <div class="flex items-center gap-2">
+                                                                        <span class="text-[9px] font-black vdm-muted uppercase opacity-60 tracking-tighter">${doc.doc_number}</span>
+                                                                        <span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                                                                        <span class="text-[9px] font-black vdm-muted uppercase opacity-60 tracking-tighter">${doc.type}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-8 py-6 text-center">
+                                                            <span class="px-3 py-1 text-[9px] font-black rounded-full uppercase tracking-widest border ${badgeClass}">
+                                                                ${status.toUpperCase()}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-8 py-6 text-center">
+                                                            <div class="flex justify-center gap-4">
+                                                                <div class="text-center">
+                                                                    <p class="text-xs font-black text-green-500">${doc.approve_count || 0}</p>
+                                                                    <p class="text-[8px] font-black vdm-muted uppercase opacity-40">App</p>
+                                                                </div>
+                                                                <div class="text-center">
+                                                                    <p class="text-xs font-black text-red-500">${doc.reject_count || 0}</p>
+                                                                    <p class="text-[8px] font-black vdm-muted uppercase opacity-40">Rej</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-8 py-6 text-right">
+                                                            <a href="view-document.php?id=${doc.document_id || doc.id}" class="inline-flex w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 items-center justify-center text-slate-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                                                <i class="bi bi-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                `;
+                                            }).join('')}
+                                        </tbody>
+                                    </table>
+                                `}
                             </div>
                         </div>
                     </div>
