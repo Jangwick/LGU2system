@@ -51,25 +51,31 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-2 md:p-6">
         <!-- Welcome Banner -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg md:rounded-2xl shadow-xl p-4 md:p-8 mb-3 md:mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                <div class="animate-slide-in-left">
-                    <h1 class="text-lg md:text-3xl font-bold mb-0.5 md:mb-2 line-clamp-1">
+        <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white transform transition-all duration-500 ease-in-out animate-fade-in relative overflow-hidden">
+            <!-- Subtle decorative background element -->
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
+            
+            <div class="relative flex items-center justify-between gap-4">
+                <!-- Left Side: Title & Context -->
+                <div>
+                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight transition-all duration-500">
                         Hi, <?php echo e($_SESSION['user_name'] ?? 'User'); ?>! 👋
                     </h1>
-                    <p class="text-red-100 text-xs md:text-base animate-slide-in-left animation-delay-100">
+                    <p class="text-red-100 text-xs md:text-base opacity-90 font-medium transition-all duration-500">
                         Voting & decision-making status for today.
                     </p>
                 </div>
-                <div class="flex w-full md:w-auto gap-2 md:gap-3 animate-slide-in-right mt-3 md:mt-0">
+                
+                <!-- Right Side: Action Buttons -->
+                <div class="shrink-0 flex gap-3">
                     <?php if ($canManage): ?>
-                    <a href="<?php echo VOTING_URL; ?>/views/create-session.php" class="flex-1 md:flex-none justify-center !bg-white text-red-600 px-4 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-[1.02] active:scale-95 text-sm border-none">
-                        <i class="bi bi-plus-circle mr-2"></i>
+                    <a href="<?php echo VOTING_URL; ?>/views/create-session.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                        <i class="bi bi-plus-circle mr-2 transition-transform group-hover:rotate-90"></i>
                         <span>New Session</span>
                     </a>
                     <?php endif; ?>
                     <?php if ($canVote): ?>
-                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="flex-1 md:flex-none justify-center bg-red-600 text-white px-4 py-2.5 rounded-xl font-bold hover:bg-red-700 border border-white/10 shadow-lg transition-all flex items-center transform hover:scale-[1.02] active:scale-95 text-sm">
+                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="!bg-red-600 !text-white px-6 py-2.5 rounded-xl font-bold hover:!bg-red-700 border border-white/20 shadow-lg transition-all flex items-center transform hover:scale-[1.02] active:scale-95 text-sm">
                         <i class="bi bi-hand-thumbs-up mr-2"></i>
                         <span>Cast Vote</span>
                     </a>
@@ -79,67 +85,55 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mb-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
             <!-- Total Sessions -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-100 group cursor-pointer">
-                <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
+            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+                <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-red-600">Total Sessions</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['total_sessions']); ?></h3>
-                        <p class="text-green-600 text-[10px] md:text-sm mt-1 hidden sm:block">
-                            <i class="bi bi-broadcast"></i> <?php echo $stats['active_sessions']; ?> active
-                        </p>
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Total Sessions</p>
+                        <p class="text-2xl font-bold text-gray-800"><?php echo number_format($stats['total_sessions']); ?></p>
                     </div>
-                    <div class="bg-red-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-calendar-check text-red-600 text-sm md:text-2xl"></i>
+                    <div class="bg-red-50 rounded-full p-2.5">
+                        <i class="bi bi-calendar-event text-red-600 text-xl"></i>
                     </div>
                 </div>
             </div>
             
             <!-- Pending Vote -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-200 group cursor-pointer">
-                <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
+            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-yellow-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+                <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-yellow-600">Pending Vote</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['pending_vote']); ?></h3>
-                        <p class="text-yellow-600 text-[10px] md:text-sm mt-1 hidden sm:block">
-                            <i class="bi bi-clock"></i> <?php echo $stats['pending_vote']; ?> awaiting
-                        </p>
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Pending Vote</p>
+                        <p class="text-2xl font-bold text-gray-800"><?php echo number_format($stats['pending_vote']); ?></p>
                     </div>
-                    <div class="bg-yellow-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-hourglass-split text-yellow-600 text-sm md:text-2xl"></i>
+                    <div class="bg-yellow-50 rounded-full p-2.5">
+                        <i class="bi bi-hourglass-split text-yellow-600 text-xl"></i>
                     </div>
                 </div>
             </div>
             
             <!-- Approved This Month -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-300 group cursor-pointer">
-                <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
+            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+                <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-green-600">Approved</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['approved']); ?></h3>
-                        <p class="text-green-600 text-[10px] md:text-sm mt-1 hidden sm:block">
-                            <i class="bi bi-check-circle"></i> <?php echo $approvalRate; ?>% approval
-                        </p>
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Approved</p>
+                        <p class="text-2xl font-bold text-gray-800"><?php echo number_format($stats['approved']); ?></p>
                     </div>
-                    <div class="bg-green-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-check-circle text-green-600 text-sm md:text-2xl"></i>
+                    <div class="bg-green-50 rounded-full p-2.5">
+                        <i class="bi bi-check-circle text-green-600 text-xl"></i>
                     </div>
                 </div>
             </div>
             
             <!-- Total Votes -->
-            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-400 group cursor-pointer">
-                <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
+            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-purple-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+                <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-purple-600">Total Votes</p>
-                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 transform transition-all group-hover:scale-110"><?php echo number_format($stats['total_votes']); ?></h3>
-                        <p class="text-gray-600 text-[10px] md:text-sm mt-1 hidden sm:block">
-                            <i class="bi bi-hand-thumbs-up"></i> All time
-                        </p>
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Total Votes</p>
+                        <p class="text-2xl font-bold text-gray-800"><?php echo number_format($stats['total_votes']); ?></p>
                     </div>
-                    <div class="bg-purple-100 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
-                        <i class="bi bi-hand-thumbs-up text-purple-600 text-sm md:text-2xl"></i>
+                    <div class="bg-purple-50 rounded-full p-2.5">
+                        <i class="bi bi-hand-thumbs-up text-purple-600 text-xl"></i>
                     </div>
                 </div>
             </div>
