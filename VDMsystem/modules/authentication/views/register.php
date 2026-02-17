@@ -125,12 +125,17 @@ if (isset($_SESSION['user_id'])) {
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 transition-all">Role / Title</label>
                         <div class="relative">
                             <i class="bi bi-briefcase absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <select name="role" required class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 appearance-none font-medium cursor-pointer">
+                            <select name="role" id="role-select" required class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 appearance-none font-medium cursor-pointer">
+                                <option value="viewer">Public Viewer</option>
                                 <option value="councilor">Councilor</option>
                                 <option value="secretary">Legislative Secretary</option>
-                                <option value="viewer">Public Viewer</option>
                             </select>
                             <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                        </div>
+                        <!-- Approval notice for privileged roles -->
+                        <div id="approval-notice" class="hidden mt-3 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl text-xs font-bold flex items-start gap-2">
+                            <i class="bi bi-shield-exclamation text-amber-500 text-base mt-0.5 shrink-0"></i>
+                            <span>This role requires <strong>administrator approval</strong> before you can sign in. You will be notified once your account has been reviewed.</span>
                         </div>
                     </div>
                 </div>
@@ -219,6 +224,29 @@ if (isset($_SESSION['user_id'])) {
                 eye.classList.replace('bi-eye-slash', 'bi-eye');
             }
         }
+
+        // Role-based approval notice toggle
+        const roleSelect = document.getElementById('role-select');
+        const approvalNotice = document.getElementById('approval-notice');
+        const submitBtn = document.querySelector('button[type="submit"]');
+        const submitBtnText = submitBtn.querySelector('span');
+
+        function updateApprovalNotice() {
+            const role = roleSelect.value;
+            const needsApproval = (role === 'councilor' || role === 'secretary');
+            
+            if (needsApproval) {
+                approvalNotice.classList.remove('hidden');
+                submitBtnText.textContent = 'Submit for Approval';
+            } else {
+                approvalNotice.classList.add('hidden');
+                submitBtnText.textContent = 'Create Account';
+            }
+        }
+
+        roleSelect.addEventListener('change', updateApprovalNotice);
+        // Run on page load
+        updateApprovalNotice();
 
         document.getElementById('register-form').addEventListener('submit', function(e) {
             const pass = document.getElementById('password').value;

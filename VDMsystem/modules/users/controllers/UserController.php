@@ -135,6 +135,7 @@ class UserController {
             'position' => $data['position'] ?? null,
             'department' => $data['department'] ?? null,
             'is_active' => isset($data['is_active']) ? (int)$data['is_active'] : 1,
+            'approval_status' => $data['approval_status'] ?? 'approved',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ];
@@ -276,6 +277,9 @@ class UserController {
         $stats['active_users'] = dbCount('users', 'is_active = 1');
         $stats['inactive_users'] = $stats['total_users'] - $stats['active_users'];
         
+        // Pending approval count
+        $stats['pending_approval'] = dbCount('users', "approval_status = 'pending'");
+        
         // Users by role
         $stmt = $this->db->query("SELECT role, COUNT(*) as count FROM users GROUP BY role ORDER BY count DESC");
         $stats['by_role'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -287,5 +291,14 @@ class UserController {
         $stats['admin_count'] = dbCount('users', "role IN ('admin', 'administrator')");
         
         return $stats;
+    }
+    
+    /**
+     * Get users pending approval
+     */
+    public function getPendingApprovals() {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE approval_status = 'pending' ORDER BY created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

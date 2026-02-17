@@ -1,6 +1,5 @@
 <?php
 session_start();
-header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
@@ -41,23 +40,28 @@ try {
     }
 
     // Create the user
-    // We explicitly set role to 'viewer' for self-registration for security, or keep user choice if trusted
-    // But usually 'viewer' or 'pending' is better.
-    // Based on LLRM pattern, we might allow choice but usually they are approved by admin.
+    // Viewers are auto-approved. Councilors and Secretaries need admin approval.
+    $role = $data['role'] ?? 'viewer';
+    $needsApproval = in_array($role, ['councilor', 'secretary']);
     
     $result = $userController->create([
         'full_name' => $data['full_name'],
         'email' => $data['email'],
         'username' => $data['username'],
         'password' => $data['password'],
-        'role' => $data['role'] ?? 'viewer',
+        'role' => $role,
         'position' => $data['position'] ?? '',
         'department' => $data['department'] ?? '',
-        'is_active' => 1 // Active for now, or 0 if needs approval
+        'is_active' => $needsApproval ? 0 : 1,
+        'approval_status' => $needsApproval ? 'pending' : 'approved'
     ]);
 
     if ($result['success']) {
-        $_SESSION['flash_success'] = "Account created successfully! Please sign in.";
+        if ($needsApproval) {
+            $_SESSION['flash_success'] = "Account created successfully! Your account is pending administrator approval. You will be able to sign in once approved.";
+        } else {
+            $_SESSION['flash_success'] = "Account created successfully! Please sign in.";
+        }
         header("Location: ../views/login.php");
         exit;
     } else {

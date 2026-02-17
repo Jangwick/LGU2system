@@ -31,7 +31,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 try {
     // Find user by email
     $user = dbFetchOne(
-        "SELECT id, username, email, password, full_name, role, department, position, is_active, last_login 
+        "SELECT id, username, email, password, full_name, role, department, position, is_active, approval_status, last_login 
          FROM users WHERE email = ?",
         [$email]
     );
@@ -45,6 +45,18 @@ try {
         ]);
         
         $_SESSION['login_error'] = 'Invalid email or password.';
+        redirect(LOGIN_URL);
+    }
+    
+    // Check approval status for roles that require it
+    $approvalStatus = $user['approval_status'] ?? 'approved';
+    if ($approvalStatus === 'pending') {
+        $_SESSION['login_error'] = 'Your account is pending administrator approval. You will be able to sign in once your account has been reviewed and approved.';
+        redirect(LOGIN_URL);
+    }
+    
+    if ($approvalStatus === 'rejected') {
+        $_SESSION['login_error'] = 'Your account registration has been declined. Please contact the administrator for more information.';
         redirect(LOGIN_URL);
     }
     

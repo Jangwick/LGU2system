@@ -16,6 +16,7 @@ if (!isAdmin()) {
 $controller = new UserController();
 $data = $controller->index();
 $stats = $controller->getStatistics();
+$pendingUsers = $controller->getPendingApprovals();
 
 $pageTitle = 'User Management';
 $currentPage = 'users';
@@ -128,6 +129,62 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
         </div>
+
+        <?php if (!empty($pendingUsers)): ?>
+        <!-- Pending Approvals Section -->
+        <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 rounded-xl shadow-md p-6 mb-6 animate-fade-in-up">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-amber-100 dark:bg-amber-900/30 rounded-full p-2.5">
+                        <i class="bi bi-hourglass-split text-amber-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-amber-900 dark:text-amber-300">Pending Approvals</h2>
+                        <p class="text-xs text-amber-700 dark:text-amber-400"><?php echo count($pendingUsers); ?> account(s) awaiting your review</p>
+                    </div>
+                </div>
+                <span class="bg-amber-500 text-white text-xs font-black px-3 py-1 rounded-full animate-pulse"><?php echo count($pendingUsers); ?> NEW</span>
+            </div>
+            <div class="space-y-3">
+                <?php foreach ($pendingUsers as $pu): ?>
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-amber-200 dark:border-amber-800/30 flex items-center justify-between hover:shadow-md transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
+                            <span class="text-amber-700 dark:text-amber-400 font-bold text-sm"><?php echo strtoupper(substr($pu['full_name'], 0, 2)); ?></span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-gray-900 dark:text-white"><?php echo e($pu['full_name']); ?></p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e($pu['email']); ?></p>
+                        </div>
+                        <?php
+                        $pendingRoleClass = match(strtolower($pu['role'])) {
+                            'councilor' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+                            'secretary' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+                            default => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                        };
+                        ?>
+                        <span class="px-3 py-1 text-[10px] font-black rounded-full uppercase tracking-wider <?php echo $pendingRoleClass; ?>">
+                            <?php echo ucfirst($pu['role']); ?>
+                        </span>
+                        <span class="text-xs text-gray-400 dark:text-gray-500">
+                            <i class="bi bi-clock mr-1"></i>Registered <?php echo formatDate($pu['created_at']); ?>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="approveUser(<?php echo $pu['id']; ?>, '<?php echo e($pu['full_name']); ?>')" 
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm hover:shadow-md flex items-center gap-1.5">
+                            <i class="bi bi-check-lg"></i> Approve
+                        </button>
+                        <button onclick="rejectUser(<?php echo $pu['id']; ?>, '<?php echo e($pu['full_name']); ?>')" 
+                                class="bg-white dark:bg-gray-800 hover:bg-red-600 hover:text-white text-gray-600 dark:text-gray-400 px-4 py-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-700 transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 hover:border-red-600">
+                            <i class="bi bi-x-lg"></i> Decline
+                        </button>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <!-- Search and Filters -->
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 mb-6 animate-fade-in-up" style="animation-delay: 100ms;">
@@ -243,7 +300,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo e($user['position'] ?? '-'); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if ($user['is_active']): ?>
+                                        <?php 
+                                        $approvalStatus = $user['approval_status'] ?? 'approved';
+                                        if ($approvalStatus === 'pending'): ?>
+                                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">Pending Approval</span>
+                                        <?php elseif ($approvalStatus === 'rejected'): ?>
+                                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Rejected</span>
+                                        <?php elseif ($user['is_active']): ?>
                                             <span class="px-3 py-1 text-xs font-bold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Active</span>
                                         <?php else: ?>
                                             <span class="px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Inactive</span>
@@ -542,4 +605,49 @@ document.getElementById('userModal')?.addEventListener('click', function(e) {
 document.getElementById('deleteModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeDeleteModal();
 });
+
+// Approve/Reject User Registration
+function approveUser(id, name) {
+    if (!confirm('Approve ' + name + '? They will be able to sign in immediately.')) return;
+    
+    fetch(App.apiUrl('users', 'approve-user.php'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + id + '&action=approve'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(data.message || 'User approved!', 'success');
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            showToast('Error: ' + (data.error || 'Approval failed'), 'error');
+        }
+    })
+    .catch(error => {
+        showToast('Network error: ' + error.message, 'error');
+    });
+}
+
+function rejectUser(id, name) {
+    if (!confirm('Decline ' + name + '\'s registration? They will not be able to sign in.')) return;
+    
+    fetch(App.apiUrl('users', 'approve-user.php'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + id + '&action=reject'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(data.message || 'Registration declined.', 'success');
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            showToast('Error: ' + (data.error || 'Action failed'), 'error');
+        }
+    })
+    .catch(error => {
+        showToast('Network error: ' + error.message, 'error');
+    });
+}
 </script>
