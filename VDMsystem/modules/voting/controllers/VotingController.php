@@ -17,8 +17,16 @@ class VotingController {
             $params = [];
             
             if (!empty($filters['status'])) {
-                $where .= " AND vs.status = ?";
-                $params[] = $filters['status'];
+                if (is_array($filters['status'])) {
+                    $placeholders = implode(',', array_fill(0, count($filters['status']), '?'));
+                    $where .= " AND vs.status IN ($placeholders)";
+                    foreach ($filters['status'] as $status) {
+                        $params[] = $status;
+                    }
+                } else {
+                    $where .= " AND vs.status = ?";
+                    $params[] = $filters['status'];
+                }
             }
             
             if (!empty($filters['search'])) {
@@ -61,7 +69,10 @@ class VotingController {
     public function getSession($sessionId) {
         try {
             return dbFetchOne(
-                "SELECT vs.*, u.full_name as created_by_name, c.name as committee_name
+                "SELECT vs.*, u.full_name as created_by_name, c.name as committee_name,
+                        (SELECT COUNT(*) FROM session_documents WHERE session_id = vs.id) as document_count,
+                        (SELECT COUNT(*) FROM session_attendees WHERE session_id = vs.id AND status = 'present') as attendee_count,
+                        (SELECT COUNT(*) FROM votes WHERE session_id = vs.id) as vote_count
                  FROM voting_sessions vs
                  LEFT JOIN users u ON vs.created_by = u.id
                  LEFT JOIN committees c ON vs.committee_id = c.id

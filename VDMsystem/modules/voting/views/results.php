@@ -123,9 +123,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo formatDate($s['session_date']); ?>
                                     </div>
                                     
-                                    <a href="results.php?session=<?php echo $s['id']; ?>" class="block w-full text-center bg-slate-900 dark:bg-slate-700 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg hover:shadow-red-500/20">
+                                    <button onclick="viewAnalytics(<?php echo $s['id']; ?>)" class="block w-full text-center bg-slate-900 dark:bg-slate-700 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg hover:shadow-red-500/20">
                                         View Full Analytics <i class="bi bi-arrow-right ml-1"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -374,6 +374,138 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     </main>
     
     <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+
+<!-- Analytics Modal -->
+<div id="analyticsModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeAnalyticsModal()"></div>
+        
+        <!-- Modal Box -->
+        <div class="relative bg-white dark:bg-slate-900 w-full max-w-6xl rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[92vh] border border-white/20 dark:border-slate-800">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-red-600 to-red-700 p-8 md:p-10 text-white flex items-center justify-between shrink-0 relative overflow-hidden">
+                <!-- Decorative elements -->
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-black/10 rounded-full blur-3xl"></div>
+                
+                <div class="relative z-10 flex items-center gap-6">
+                    <div class="w-16 h-16 bg-white/20 rounded-[2rem] flex items-center justify-center backdrop-blur-xl border border-white/30 shadow-inner group">
+                        <i class="bi bi-bar-chart-line-fill text-3xl group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-black tracking-tight leading-none mb-2">Legislative Intelligence</h2>
+                        <div class="flex items-center gap-3">
+                            <span class="text-red-100 text-[10px] font-black uppercase tracking-[0.3em] opacity-80">Session Performance Analytics</span>
+                            <span class="w-1 h-1 bg-white/40 rounded-full"></span>
+                            <span id="modalSessionNum" class="text-white text-[10px] font-black uppercase tracking-widest">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeAnalyticsModal()" class="relative z-10 w-14 h-14 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-white/20 transition-all group backdrop-blur-md border border-white/10">
+                    <i class="bi bi-x-lg text-xl transition-transform group-hover:rotate-90"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div id="analyticsContent" class="flex-1 overflow-y-auto p-0 custom-scrollbar bg-slate-50 dark:bg-slate-950 min-h-[500px]">
+                <div class="flex flex-col items-center justify-center h-[500px]">
+                    <div class="relative">
+                        <div class="animate-ping absolute inset-0 rounded-full bg-red-500/20"></div>
+                        <div class="relative bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl">
+                            <i class="bi bi-cpu text-4xl text-red-600 animate-pulse"></i>
+                        </div>
+                    </div>
+                    <p class="mt-8 vdm-text-muted font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">Generating Report...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+.animate-modal-in {
+    animation: modal-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+</style>
+
+<script>
+function viewAnalytics(sessionId) {
+    const modal = document.getElementById('analyticsModal');
+    const content = document.getElementById('analyticsContent');
+    const sessionNum = document.getElementById('modalSessionNum');
+    
+    // Show modal and loading state
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    sessionNum.innerText = "Processing...";
+    content.innerHTML = `
+        <div class="flex flex-col items-center justify-center h-[500px]">
+            <div class="relative">
+                <div class="animate-ping absolute inset-0 rounded-full bg-red-500/20"></div>
+                <div class="relative bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl">
+                    <i class="bi bi-cpu text-4xl text-red-600 animate-pulse"></i>
+                </div>
+            </div>
+            <p class="mt-8 vdm-text-muted font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">Generating Report...</p>
+        </div>
+    `;
+
+    // Fetch analytics data
+    fetch(`get-session-analytics.php?id=${sessionId}`)
+        .then(response => response.text())
+        .then(html => {
+            content.innerHTML = html;
+            
+            // Extract session number from loaded content if needed, 
+            // or we can pass it from the button
+            const loadedSessionNum = content.querySelector('[data-session-num]')?.getAttribute('data-session-num');
+            if (loadedSessionNum) sessionNum.innerText = loadedSessionNum;
+
+            // Execute any scripts in the loaded HTML (for Chart.js)
+            const scripts = content.getElementsByTagName('script');
+            for (let script of scripts) {
+                const newScript = document.createElement('script');
+                newScript.text = script.text;
+                document.body.appendChild(newScript).parentNode.removeChild(newScript);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching analytics:', error);
+            content.innerHTML = `
+                <div class="p-10 text-center">
+                    <i class="bi bi-exclamation-triangle text-5xl text-red-500 mb-4 block"></i>
+                    <h3 class="text-xl font-black vdm-heading mb-2">Failed to load analytics</h3>
+                    <p class="vdm-text-muted mb-6">There was an error retrieving the data for this session.</p>
+                    <button onclick="viewAnalytics(${sessionId})" class="bg-red-600 text-white px-6 py-2 rounded-xl font-bold">Try Again</button>
+                </div>
+            `;
+        });
+}
+
+function closeAnalyticsModal() {
+    const modal = document.getElementById('analyticsModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") {
+        closeAnalyticsModal();
+    }
+});
+</script>
 </div>
 
 <style>
