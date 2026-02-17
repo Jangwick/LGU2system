@@ -36,63 +36,71 @@ function hasRoleLocal($roles) {
 ?>
 
 <!-- Session Results Dashboard Content -->
-<div class="animate-fade-in p-8 md:p-12 space-y-10" data-session-num="<?php echo e($session['session_number']); ?>">
+<div class="animate-fade-in p-8 md:p-12 space-y-16" style="width: 100%; text-align: left;" data-session-num="<?php echo e($session['session_number']); ?>">
     
-    <!-- Hero Info Row (Replaces the big header card for a cleaner look inside modal) -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 pb-10 border-b border-slate-200 dark:border-slate-800">
-        <div>
-            <h1 class="text-4xl md:text-6xl font-black vdm-heading tracking-tighter uppercase leading-[0.9] mb-4"><?php echo e($session['title']); ?></h1>
-            <div class="flex flex-wrap items-center gap-4">
-                <div class="flex items-center gap-2 px-3 py-1 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-widest">
-                    <i class="bi bi-calendar3"></i>
+    <!-- Hero Info Row (Optimized for Modal/Detail view) -->
+    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%;" class="mb-16 border-b border-slate-100 dark:border-slate-800 pb-16">
+        <!-- Left Side: Identity -->
+        <div style="flex: 1 1 0%; text-align: left;">
+            <h1 class="text-5xl md:text-7xl font-black vdm-heading tracking-tighter uppercase leading-[0.75] mb-8 drop-shadow-sm" style="text-align: left;"><?php echo e($session['title']); ?></h1>
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 1rem;">
+                <div class="flex items-center gap-2 px-5 py-2 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">
+                    <i class="bi bi-calendar3 text-red-500"></i>
                     <?php echo formatDate($session['session_date']); ?>
                 </div>
-                <div class="flex items-center gap-2 px-3 py-1 bg-red-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest">
-                    <i class="bi bi-clock-history"></i>
+                <div class="flex items-center gap-2 px-5 py-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 shadow-lg">
+                    <i class="bi bi-clock-history text-red-500"></i>
                     <?php echo $session['start_time']; ?>
                 </div>
-                <span class="w-1.5 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-                <span class="vdm-text-muted font-black uppercase tracking-[0.2em] text-[10px] opacity-60">Authorized Analytics Export v1.0</span>
+                <span class="w-2 h-2 bg-slate-200 dark:bg-slate-700 rounded-full"></span>
+                <span class="vdm-text-muted font-black uppercase tracking-[0.25em] text-[10px] opacity-60 flex items-center gap-2">
+                    <i class="bi bi-hash text-red-500 text-sm"></i> <?php echo e($session['session_number']); ?>
+                </span>
             </div>
         </div>
-        <div class="flex gap-3">
-             <button onclick="window.print()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm px-8 py-4 rounded-2xl font-black vdm-text-muted text-[10px] uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center gap-3">
-                <i class="bi bi-printer-fill text-lg text-red-600"></i> Print Full Report
+
+        <!-- Right Side: Actions -->
+        <div style="flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 1rem; padding-bottom: 0.5rem;">
+             <button onclick="window.print()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl px-10 py-6 rounded-[2.5rem] font-black vdm-text-muted text-[10px] uppercase tracking-[0.15em] hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center gap-4 group">
+                <i class="bi bi-printer-fill text-xl text-red-600 group-hover:scale-110 transition-transform"></i> Print Full Report
+            </button>
+            <button class="bg-slate-900 dark:bg-red-600 text-white px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] hover:bg-black dark:hover:bg-red-700 transition-all shadow-2xl shadow-red-500/20 flex items-center gap-4 group">
+                <i class="bi bi-cloud-download-fill text-xl group-hover:translate-y-0.5 transition-transform"></i> Export Intelligence
             </button>
         </div>
     </div>
 
     <!-- Statistics Row -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="vdm-card p-8 rounded-[2.5rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-red-500/5 rounded-full blur-2xl group-hover:bg-red-500/10 transition-all"></div>
             <div class="relative">
-                <p class="text-[10px] vdm-text-muted font-black uppercase tracking-widest mb-4 opacity-50 flex items-center gap-2">
-                    <i class="bi bi-layers-fill text-red-500"></i> Total Items
+                <p class="text-[10px] vdm-text-muted font-black uppercase tracking-widest mb-5 opacity-50 flex items-center gap-3">
+                    <i class="bi bi-layers-fill text-red-500 text-sm"></i> Global Items
                 </p>
                 <p class="text-6xl font-black vdm-heading tracking-tighter mb-2"><?php echo $summary['total_docs']; ?></p>
                 <p class="text-[10px] vdm-text-muted font-bold uppercase tracking-tight opacity-70 flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> Items Processed
+                    <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> Legislative Scope
                 </p>
             </div>
         </div>
-        <div class="vdm-card p-8 rounded-[2.5rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-500/5 rounded-full blur-2xl group-hover:bg-green-500/10 transition-all"></div>
             <div class="relative">
-                <p class="text-[10px] text-green-600 dark:text-green-500/60 font-black uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <i class="bi bi-shield-check"></i> Items Passed
+                <p class="text-[10px] text-green-600 dark:text-green-500 font-black uppercase tracking-widest mb-5 flex items-center gap-3">
+                    <i class="bi bi-shield-check text-sm"></i> Items Passed
                 </p>
                 <p class="text-6xl font-black text-green-600 dark:text-green-500 tracking-tighter mb-2"><?php echo $summary['passed_docs']; ?></p>
-                <div class="inline-flex items-center px-3 py-1 bg-green-500/10 text-green-600 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border border-green-500/20">
+                <div class="inline-flex items-center px-4 py-1 bg-green-500/10 text-green-600 rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-sm border border-green-500/20">
                     <?php echo $summary['total_docs'] > 0 ? round(($summary['passed_docs'] / $summary['total_docs']) * 100) : 0; ?>% Approval
                 </div>
             </div>
         </div>
-        <div class="vdm-card p-8 rounded-[2.5rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-500/5 rounded-full blur-2xl group-hover:bg-orange-500/10 transition-all"></div>
             <div class="relative">
-                <p class="text-[10px] text-orange-600 dark:text-orange-500/60 font-black uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <i class="bi bi-shield-x"></i> Items Failed
+                <p class="text-[10px] text-orange-600 dark:text-orange-500 font-black uppercase tracking-widest mb-5 flex items-center gap-3">
+                    <i class="bi bi-shield-x text-sm"></i> Items Failed
                 </p>
                 <p class="text-6xl font-black text-orange-600 dark:text-orange-500 tracking-tighter mb-2"><?php echo $summary['failed_docs']; ?></p>
                 <p class="text-[10px] vdm-text-muted font-bold uppercase tracking-tight opacity-70 flex items-center gap-2">
@@ -100,11 +108,11 @@ function hasRoleLocal($roles) {
                 </p>
             </div>
         </div>
-        <div class="vdm-card p-8 rounded-[2.5rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-slate-500/5 rounded-full blur-2xl group-hover:bg-slate-500/10 transition-all"></div>
             <div class="relative">
-                <p class="text-[10px] vdm-text-muted font-black uppercase tracking-widest mb-4 opacity-50 flex items-center gap-2">
-                    <i class="bi bi-people-fill text-slate-500"></i> Total Votes
+                <p class="text-[10px] vdm-text-muted font-black uppercase tracking-widest mb-5 opacity-50 flex items-center gap-3">
+                    <i class="bi bi-people-fill text-slate-500 text-sm"></i> Total Votes
                 </p>
                 <p class="text-6xl font-black vdm-heading tracking-tighter mb-2"><?php echo $summary['total_approve'] + $summary['total_reject'] + $summary['total_abstain']; ?></p>
                 <p class="text-[10px] vdm-text-muted font-bold uppercase tracking-tight opacity-70 flex items-center gap-2">
