@@ -2,72 +2,40 @@
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../controllers/VotingController.php';
 
 // Check authentication
 if (!isset($_SESSION['user_id'])) {
     redirectToLogin();
 }
 
+$voting = new VotingController();
 $sessionId = $_GET['session'] ?? null;
+$userId = $_SESSION['user_id'];
 
-// If specific session, show that session's results
-if ($sessionId) {
-    $session = dbFetchOne(
-        "SELECT vs.*, u.full_name as created_by_name 
-         FROM voting_sessions vs 
-         LEFT JOIN users u ON vs.created_by = u.id 
-         WHERE vs.id = ?",
-        [$sessionId]
-    );
-    
+// Get appropriate data
+if (!$sessionId) {
+    // List completed or in-progress sessions for results viewing
+    $sessions = $voting->getSessions(['status' => ['completed', 'in_progress']]);
+} else {
+    // Single session detail
+    $session = $voting->getSession($sessionId);
     if (!$session) {
         $_SESSION['flash_error'] = "Session not found.";
         header('Location: results.php');
         exit;
     }
     
-    // Get document results for this session
-    $documentResults = dbFetchAll(
-        "SELECT sd.*, d.doc_number, d.title, d.type, d.status as doc_status,
-                (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'approve') as approve_count,
-                (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'reject') as reject_count,
-                (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'abstain') as abstain_count,
-                (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id) as total_votes
-         FROM session_documents sd
-         JOIN documents d ON sd.document_id = d.id
-         WHERE sd.session_id = ?
-         ORDER BY sd.voting_order, d.created_at",
-        [$sessionId]
-    );
-    
-    // Get individual votes for each document (only visible to admin/secretary)
-    $showDetails = hasRole(['admin', 'secretary']);
-    
-} else {
-    // Get all completed sessions with results summary
-    $completedSessions = dbFetchAll(
-        "SELECT vs.*, u.full_name as created_by_name,
-                (SELECT COUNT(*) FROM session_documents WHERE session_id = vs.id) as doc_count,
-                (SELECT COUNT(*) FROM votes WHERE session_id = vs.id) as total_votes,
-                (SELECT COUNT(*) FROM votes WHERE session_id = vs.id AND vote = 'approve') as total_approved,
-                (SELECT COUNT(*) FROM votes WHERE session_id = vs.id AND vote = 'reject') as total_rejected
-         FROM voting_sessions vs
-         LEFT JOIN users u ON vs.created_by = u.id
-         WHERE vs.status IN ('completed', 'in_progress')
-         ORDER BY vs.session_date DESC, vs.start_time DESC"
-    );
+    $summary = $voting->getSessionResultsSummary($sessionId);
+    $documents = $voting->getSessionDocuments($sessionId);
 }
 
-$pageTitle = $sessionId ? 'Session Results' : 'Voting Results';
-$currentPage = 'voting-results';
+$pageTitle = 'Voting Results';
+$currentPage = 'results';
 $breadcrumbs = [
     ['label' => 'Voting', 'url' => '#'],
     ['label' => 'Results']
 ];
-
-if ($sessionId) {
-    $breadcrumbs[] = ['label' => $session['session_number']];
-}
 
 include_once __DIR__ . '/../../core/layouts/header.php';
 ?>
@@ -82,259 +50,315 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
-        <?php if (!$sessionId): ?>
-            <!-- Sessions Results List -->
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Voting Results</h1>
-                    <p class="text-gray-600 text-sm mt-1">View voting outcomes and statistics</p>
+        <!-- Flash Messages -->
+        <?php if (isset($_SESSION['flash_error'])): ?>
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 animate-fade-in">
+                <div class="flex items-center">
+                    <i class="bi bi-exclamation-triangle text-red-500 mr-2 text-lg"></i>
+                    <span class="text-red-700 font-medium"><?php echo $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?></span>
                 </div>
-                <?php if (hasRole(['admin', 'secretary'])): ?>
-                <a href="#" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center">
-                    <i class="bi bi-download mr-2"></i>
-                    Export Report
-                </a>
-                <?php endif; ?>
             </div>
-            
-            <?php if (empty($completedSessions)): ?>
-                <div class="bg-white rounded-xl shadow-md p-12 text-center">
-                    <i class="bi bi-bar-chart text-6xl text-gray-300 mb-4"></i>
-                    <h2 class="text-xl font-semibold text-gray-700 mb-2">No Results Available</h2>
-                    <p class="text-gray-500">There are no completed voting sessions yet.</p>
+        <?php endif; ?>
+
+        <?php if (!$sessionId): ?>
+            <!-- Results List View -->
+            <div class="animate-fade-in">
+                <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl shadow-xl p-8 mb-8 text-white">
+                    <h1 class="text-3xl font-bold mb-2">Legislative Dashboards</h1>
+                    <p class="text-gray-400">Review outcomes, analytics, and historical data of all voting sessions.</p>
                 </div>
-            <?php else: ?>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <?php foreach ($completedSessions as $cs): ?>
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300">
-                            <div class="p-6">
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-sm text-gray-500"><?php echo htmlspecialchars($cs['session_number']); ?></span>
-                                    <span class="px-2 py-1 text-xs rounded-full <?php echo $cs['status'] === 'completed' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'; ?>">
-                                        <?php echo ucfirst(str_replace('_', ' ', $cs['status'])); ?>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up">
+                    <?php if (empty($sessions)): ?>
+                        <div class="lg:col-span-3 bg-white rounded-3xl p-16 text-center shadow-lg border-2 border-dashed border-gray-100">
+                            <i class="bi bi-bar-chart text-7xl text-gray-200 mb-6 block"></i>
+                            <h2 class="text-2xl font-bold text-gray-700">No Results Available</h2>
+                            <p class="text-gray-500">Wait for sessions to complete or start to see voting results here.</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($sessions as $s): ?>
+                            <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-1 group border border-gray-100">
+                                <div class="bg-gray-50 p-4 border-b border-gray-100 flex justify-between items-center">
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest"><?php echo $s['session_number']; ?></span>
+                                    <?php
+                                    $statusClass = $s['status'] === 'completed' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700';
+                                    ?>
+                                    <span class="px-2 py-0.5 text-[9px] font-bold rounded-full uppercase <?php echo $statusClass; ?>">
+                                        <?php echo $s['status']; ?>
                                     </span>
                                 </div>
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2"><?php echo htmlspecialchars($cs['title']); ?></h3>
-                                <div class="text-sm text-gray-500 mb-4">
-                                    <i class="bi bi-calendar mr-1"></i> <?php echo formatDate($cs['session_date'], 'M d, Y'); ?>
-                                </div>
-                                
-                                <!-- Mini Stats -->
-                                <div class="grid grid-cols-3 gap-2 mb-4">
-                                    <div class="text-center p-2 bg-green-50 rounded-lg">
-                                        <div class="text-lg font-bold text-green-600"><?php echo $cs['total_approved']; ?></div>
-                                        <div class="text-xs text-gray-500">Approved</div>
-                                    </div>
-                                    <div class="text-center p-2 bg-red-50 rounded-lg">
-                                        <div class="text-lg font-bold text-red-600"><?php echo $cs['total_rejected']; ?></div>
-                                        <div class="text-xs text-gray-500">Rejected</div>
-                                    </div>
-                                    <div class="text-center p-2 bg-red-50 rounded-lg">
-                                        <div class="text-lg font-bold text-red-600"><?php echo $cs['total_votes']; ?></div>
-                                        <div class="text-xs text-gray-500">Total</div>
-                                    </div>
-                                </div>
-                                
-                                <a href="results.php?session=<?php echo $cs['id']; ?>" 
-                                   class="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg font-medium transition-colors">
-                                    View Details <i class="bi bi-arrow-right ml-1"></i>
-                                </a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-            
-        <?php else: ?>
-            <!-- Single Session Results -->
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <a href="results.php" class="text-red-600 hover:text-red-700 text-sm mb-2 inline-block">
-                        <i class="bi bi-arrow-left mr-1"></i> Back to All Results
-                    </a>
-                    <h1 class="text-2xl font-bold text-gray-800"><?php echo htmlspecialchars($session['title']); ?></h1>
-                    <p class="text-gray-600 text-sm mt-1"><?php echo htmlspecialchars($session['session_number']); ?> • <?php echo formatDate($session['session_date'], 'F d, Y'); ?></p>
-                </div>
-                <?php if (hasRole(['admin', 'secretary'])): ?>
-                <div class="flex gap-2">
-                    <button onclick="window.print()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">
-                        <i class="bi bi-printer mr-1"></i> Print
-                    </button>
-                    <a href="#" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                        <i class="bi bi-download mr-1"></i> Export PDF
-                    </a>
-                </div>
-                <?php endif; ?>
-            </div>
-            
-            <!-- Session Summary Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <?php
-                $totalApproved = array_sum(array_column($documentResults, 'approve_count'));
-                $totalRejected = array_sum(array_column($documentResults, 'reject_count'));
-                $totalAbstained = array_sum(array_column($documentResults, 'abstain_count'));
-                $totalVotes = $totalApproved + $totalRejected + $totalAbstained;
-                ?>
-                <div class="bg-white rounded-xl shadow-md p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase">Total Votes</p>
-                            <p class="text-2xl font-bold text-gray-800"><?php echo $totalVotes; ?></p>
-                        </div>
-                        <div class="bg-red-100 rounded-full p-3">
-                            <i class="bi bi-people text-red-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow-md p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase">Approved</p>
-                            <p class="text-2xl font-bold text-green-600"><?php echo $totalApproved; ?></p>
-                        </div>
-                        <div class="bg-green-100 rounded-full p-3">
-                            <i class="bi bi-hand-thumbs-up text-green-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow-md p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase">Rejected</p>
-                            <p class="text-2xl font-bold text-red-600"><?php echo $totalRejected; ?></p>
-                        </div>
-                        <div class="bg-red-100 rounded-full p-3">
-                            <i class="bi bi-hand-thumbs-down text-red-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow-md p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase">Abstained</p>
-                            <p class="text-2xl font-bold text-gray-500"><?php echo $totalAbstained; ?></p>
-                        </div>
-                        <div class="bg-gray-100 rounded-full p-3">
-                            <i class="bi bi-dash-circle text-gray-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Document Results -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <div class="p-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-800">Document Results</h2>
-                </div>
-                
-                <?php if (empty($documentResults)): ?>
-                    <div class="p-8 text-center text-gray-500">
-                        <i class="bi bi-inbox text-4xl mb-2"></i>
-                        <p>No documents were voted on in this session.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="divide-y divide-gray-200">
-                        <?php foreach ($documentResults as $docResult): ?>
-                            <?php
-                            $total = $docResult['approve_count'] + $docResult['reject_count'] + $docResult['abstain_count'];
-                            $approvePercent = $total > 0 ? ($docResult['approve_count'] / $total) * 100 : 0;
-                            $rejectPercent = $total > 0 ? ($docResult['reject_count'] / $total) * 100 : 0;
-                            $abstainPercent = $total > 0 ? ($docResult['abstain_count'] / $total) * 100 : 0;
-                            
-                            // Determine result
-                            $result = 'Pending';
-                            $resultClass = 'bg-yellow-100 text-yellow-800';
-                            if ($docResult['voting_status'] === 'passed') {
-                                $result = 'Passed';
-                                $resultClass = 'bg-green-100 text-green-800';
-                            } elseif ($docResult['voting_status'] === 'failed') {
-                                $result = 'Failed';
-                                $resultClass = 'bg-red-100 text-red-800';
-                            }
-                            ?>
-                            <div class="p-4 hover:bg-gray-50 transition-colors">
-                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <span class="text-sm text-gray-500"><?php echo htmlspecialchars($docResult['doc_number']); ?></span>
-                                            <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800"><?php echo ucfirst($docResult['type']); ?></span>
-                                            <span class="px-2 py-0.5 text-xs rounded-full <?php echo $resultClass; ?>"><?php echo $result; ?></span>
+                                <div class="p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-4 group-hover:text-red-700 transition-colors line-clamp-2 h-14"><?php echo e($s['title']); ?></h3>
+                                    
+                                    <div class="grid grid-cols-3 gap-2 mb-6">
+                                        <div class="bg-gray-50 rounded-xl p-3 text-center border border-gray-100 group-hover:bg-red-50 transition-colors">
+                                            <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Docs</p>
+                                            <p class="font-bold text-gray-800"><?php echo $s['document_count']; ?></p>
                                         </div>
-                                        <h3 class="font-semibold text-gray-900"><?php echo htmlspecialchars($docResult['title']); ?></h3>
+                                        <div class="bg-gray-50 rounded-xl p-3 text-center border border-gray-100 group-hover:bg-red-50 transition-colors">
+                                            <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Votes</p>
+                                            <p class="font-bold text-gray-800"><?php echo $s['vote_count']; ?></p>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-xl p-3 text-center border border-gray-100 group-hover:bg-red-50 transition-colors">
+                                            <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Quorum</p>
+                                            <p class="font-bold text-gray-800"><?php echo $s['attendee_count']; ?></p>
+                                        </div>
                                     </div>
                                     
-                                    <div class="flex items-center gap-6">
-                                        <!-- Vote Counts -->
-                                        <div class="flex items-center gap-4">
-                                            <div class="text-center">
-                                                <div class="text-lg font-bold text-green-600"><?php echo $docResult['approve_count']; ?></div>
-                                                <div class="text-xs text-gray-500">Approve</div>
-                                            </div>
-                                            <div class="text-center">
-                                                <div class="text-lg font-bold text-red-600"><?php echo $docResult['reject_count']; ?></div>
-                                                <div class="text-xs text-gray-500">Reject</div>
-                                            </div>
-                                            <div class="text-center">
-                                                <div class="text-lg font-bold text-gray-500"><?php echo $docResult['abstain_count']; ?></div>
-                                                <div class="text-xs text-gray-500">Abstain</div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Progress Bar -->
-                                        <div class="w-40 hidden md:block">
-                                            <div class="flex h-4 rounded-full overflow-hidden bg-gray-200">
-                                                <div class="bg-green-500 transition-all" style="width: <?php echo $approvePercent; ?>%"></div>
-                                                <div class="bg-red-500 transition-all" style="width: <?php echo $rejectPercent; ?>%"></div>
-                                                <div class="bg-gray-400 transition-all" style="width: <?php echo $abstainPercent; ?>%"></div>
-                                            </div>
-                                            <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                                <span><?php echo round($approvePercent); ?>%</span>
-                                                <span><?php echo round($rejectPercent); ?>%</span>
-                                            </div>
-                                        </div>
+                                    <div class="flex items-center text-xs text-gray-500 mb-6">
+                                        <i class="bi bi-calendar-check mr-2 text-red-600"></i>
+                                        <?php echo formatDate($s['session_date']); ?>
                                     </div>
+                                    
+                                    <a href="results.php?session=<?php echo $s['id']; ?>" class="w-full bg-gray-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all shadow-md transform active:scale-95">
+                                        View Full Analytics
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
                                 </div>
-                                
-                                <?php if ($showDetails): ?>
-                                    <!-- Expandable Vote Details -->
-                                    <details class="mt-4">
-                                        <summary class="cursor-pointer text-sm text-red-600 hover:text-red-700">
-                                            View Individual Votes
-                                        </summary>
-                                        <div class="mt-3 pl-4 border-l-2 border-gray-200">
-                                            <?php
-                                            $individualVotes = dbFetchAll(
-                                                "SELECT v.*, u.full_name 
-                                                 FROM votes v 
-                                                 JOIN users u ON v.councilor_id = u.id 
-                                                 WHERE v.document_id = ? AND v.session_id = ?
-                                                 ORDER BY v.cast_at",
-                                                [$docResult['document_id'], $sessionId]
-                                            );
-                                            ?>
-                                            <?php if (empty($individualVotes)): ?>
-                                                <p class="text-sm text-gray-500">No votes recorded.</p>
-                                            <?php else: ?>
-                                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                                                    <?php foreach ($individualVotes as $iv): ?>
-                                                        <div class="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
-                                                            <span class="text-sm text-gray-700"><?php echo htmlspecialchars($iv['full_name']); ?></span>
-                                                            <span class="px-2 py-0.5 text-xs rounded-full <?php echo getVoteBadgeClass($iv['vote']); ?>">
-                                                                <?php echo ucfirst($iv['vote']); ?>
-                                                            </span>
-                                                        </div>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    </details>
-                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        <?php else: ?>
+            <!-- Session Results Dashboard -->
+            <div class="animate-fade-in">
+                <!-- Dashboard Header -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <a href="results.php" class="text-red-600 hover:text-red-800 font-bold text-sm mb-4 inline-flex items-center group">
+                            <i class="bi bi-arrow-left-circle mr-2 transition-transform group-hover:-translate-x-1"></i>
+                            Back to Analytics List
+                        </a>
+                        <h1 class="text-3xl font-bold text-gray-800"><?php echo e($session['title']); ?></h1>
+                        <p class="text-gray-500 font-medium">Session Results Dashboard • <?php echo e($session['session_number']); ?></p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="window.print()" class="bg-white text-gray-700 border border-gray-200 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2">
+                            <i class="bi bi-printer"></i> Print Report
+                        </button>
+                        <button class="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-800 transition-all shadow-md flex items-center gap-2">
+                            <i class="bi bi-download"></i> Export Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistics Row -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-b-4 border-red-600">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-2">Total Documents</p>
+                        <p class="text-3xl font-bold text-gray-800"><?php echo $summary['total_docs']; ?></p>
+                        <p class="text-xs text-gray-500 mt-1">Processed during session</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-b-4 border-green-600">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-2">Documents Passed</p>
+                        <p class="text-3xl font-bold text-green-600"><?php echo $summary['passed_docs']; ?></p>
+                        <p class="text-xs text-green-800 bg-green-50 px-2 py-0.5 rounded-full inline-block mt-1">
+                            <?php echo $summary['total_docs'] > 0 ? round(($summary['passed_docs'] / $summary['total_docs']) * 100) : 0; ?>% Approval Rate
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-b-4 border-red-400">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-2">Documents Failed</p>
+                        <p class="text-3xl font-bold text-red-600"><?php echo $summary['failed_docs']; ?></p>
+                        <p class="text-xs text-gray-500 mt-1">Action required</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-b-4 border-gray-800">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-2">Total Votes</p>
+                        <p class="text-3xl font-bold text-gray-800"><?php echo $summary['total_approve'] + $summary['total_reject'] + $summary['total_abstain']; ?></p>
+                        <p class="text-xs text-gray-500 mt-1">Cast by <?php echo $session['attendee_count']; ?> members</p>
+                    </div>
+                </div>
+
+                <!-- Visual Analytics Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <!-- Global Voting Distribution Chart -->
+                    <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+                        <h3 class="font-bold text-gray-800 text-lg mb-8 flex items-center gap-2">
+                            <i class="bi bi-pie-chart-fill text-red-600"></i>
+                            Voting Distribution
+                        </h3>
+                        <div class="max-w-[250px] mx-auto mb-8">
+                            <canvas id="votingChart"></canvas>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-2xl">
+                                <span class="flex items-center text-sm font-bold text-green-800"><span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span> Approvals</span>
+                                <span class="font-bold text-green-900"><?php echo $summary['total_approve']; ?></span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-red-50 rounded-2xl">
+                                <span class="flex items-center text-sm font-bold text-red-800"><span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span> Rejections</span>
+                                <span class="font-bold text-red-900"><?php echo $summary['total_reject']; ?></span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-2xl">
+                                <span class="flex items-center text-sm font-bold text-gray-800"><span class="w-3 h-3 bg-gray-400 rounded-full mr-2"></span> Abstentions</span>
+                                <span class="font-bold text-gray-900"><?php echo $summary['total_abstain']; ?></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Table of Decisions -->
+                    <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col">
+                        <div class="p-6 border-b border-gray-100 bg-gray-50">
+                            <h3 class="font-bold text-gray-800 flex items-center justify-between">
+                                Itemized Outcomes
+                                <span class="text-xs bg-white text-gray-400 px-3 py-1 rounded-full border border-gray-200 uppercase tracking-widest">Legislative Items</span>
+                            </h3>
+                        </div>
+                        <div class="overflow-y-auto flex-1 custom-scrollbar">
+                            <table class="w-full">
+                                <thead class="text-[10px] text-gray-400 uppercase font-bold tracking-widest bg-white sticky top-0">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left">Document</th>
+                                        <th class="px-6 py-4 text-center">Result</th>
+                                        <th class="px-6 py-4 text-center">Approve</th>
+                                        <th class="px-6 py-4 text-center">Reject</th>
+                                        <th class="px-6 py-4 text-center">Abstain</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <?php foreach ($documents as $doc): ?>
+                                        <tr class="hover:bg-red-50 transition-colors group">
+                                            <td class="px-6 py-4">
+                                                <div class="max-w-md">
+                                                    <p class="text-[10px] font-bold text-red-400 mb-0.5"><?php echo e($doc['doc_number']); ?></p>
+                                                    <h4 class="text-sm font-bold text-gray-800 line-clamp-1 group-hover:text-red-700 transition-colors"><?php echo e($doc['title']); ?></h4>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                <?php
+                                                $resClass = $doc['voting_status'] === 'passed' ? 'bg-green-100 text-green-700' : ($doc['voting_status'] === 'failed' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700');
+                                                ?>
+                                                <span class="px-3 py-1 text-[10px] font-bold rounded-full uppercase shadow-sm <?php echo $resClass; ?>">
+                                                    <?php echo $doc['voting_status']; ?>
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-center text-sm font-bold text-green-600"><?php echo $doc['approve_count']; ?></td>
+                                            <td class="px-6 py-4 text-center text-sm font-bold text-red-600"><?php echo $doc['reject_count']; ?></td>
+                                            <td class="px-6 py-4 text-center text-sm font-bold text-gray-400"><?php echo $doc['abstain_count']; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Individual Votes Logs (Auditable) -->
+                <?php if (hasRole(['admin', 'secretary'])): ?>
+                    <div class="bg-gray-900 rounded-3xl shadow-2xl overflow-hidden mb-8 text-white p-8">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-gray-800 pb-6">
+                            <div>
+                                <h3 class="text-xl font-bold mb-1 flex items-center gap-2">
+                                    <i class="bi bi-shield-lock-fill text-red-500"></i>
+                                    Individual Audit Log
+                                </h3>
+                                <p class="text-gray-400 text-sm">Review specific decisions made by each legislator.</p>
+                            </div>
+                            <div class="bg-gray-800 px-4 py-2 rounded-2xl border border-gray-700">
+                                <span class="text-xs text-gray-500 font-bold uppercase tracking-widest italic flex items-center">
+                                    <i class="bi bi-info-circle mr-2"></i> Authorized Access Only
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 custom-scrollbar max-h-[500px] overflow-y-auto">
+                            <?php 
+                            // Fetch all votes for audit
+                            $allVotes = dbFetchAll(
+                                "SELECT v.*, u.full_name as voter_name, u.position, d.title as doc_title
+                                 FROM votes v
+                                 JOIN users u ON v.councilor_id = u.id
+                                 JOIN documents d ON v.document_id = d.id
+                                 WHERE v.session_id = ?
+                                 ORDER BY v.cast_at DESC", 
+                                [$sessionId]
+                            );
+                            
+                            if (empty($allVotes)): ?>
+                                <div class="col-span-full py-12 text-center text-gray-500">
+                                    <i class="bi bi-database-exclamation text-4xl mb-3 block"></i>
+                                    No individual votes recorded for this session.
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($allVotes as $v): ?>
+                                    <div class="bg-gray-800 rounded-2xl p-5 border border-gray-700 hover:border-red-500 transition-all group">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 bg-gray-700 text-gray-300 rounded-full flex items-center justify-center font-bold">
+                                                    <?php echo strtoupper(substr($v['voter_name'], 0, 1)); ?>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-bold text-white"><?php echo e($v['voter_name']); ?></p>
+                                                    <p class="text-[10px] text-gray-500 uppercase font-bold"><?php echo e($v['position']); ?></p>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            $vClass = $v['vote'] === 'approve' ? 'bg-green-900 text-green-300 border-green-800' : ($v['vote'] === 'reject' ? 'bg-red-900 text-red-300 border-red-800' : 'bg-gray-700 text-gray-300 border-gray-600');
+                                            ?>
+                                            <span class="px-2 py-0.5 text-[8px] font-bold rounded-full uppercase border <?php echo $vClass; ?>">
+                                                <?php echo $v['vote']; ?>
+                                            </span>
+                                        </div>
+                                        <div class="border-t border-gray-700 pt-3">
+                                            <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Document Item</p>
+                                            <p class="text-xs font-bold text-gray-300 line-clamp-1 mb-2"><?php echo e($v['doc_title']); ?></p>
+                                            <p class="text-[9px] text-gray-600 text-right italic font-medium">Cast on <?php echo formatDateTime($v['cast_at']); ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 <?php endif; ?>
             </div>
+
+            <!-- Chart Initialization Script -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const ctx = document.getElementById('votingChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Approve', 'Reject', 'Abstain'],
+                            datasets: [{
+                                data: [
+                                    <?php echo $summary['total_approve']; ?>, 
+                                    <?php echo $summary['total_reject']; ?>, 
+                                    <?php echo $summary['total_abstain']; ?>
+                                ],
+                                backgroundColor: ['#10b981', '#ef4444', '#9ca3af'],
+                                borderWidth: 0,
+                                hoverOffset: 10
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            cutout: '75%',
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                });
+            </script>
         <?php endif; ?>
     </main>
     
     <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+</div>
+
+<style>
+    .animate-fade-in { animation: fadeIn 0.8s ease-out; }
+    .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 20px; }
+    
+    /* Document results table scroll styling for detail view */
+    .custom-scrollbar { scrollbar-width: thin; scrollbar-color: #e5e7eb transparent; }
+</style>

@@ -4,6 +4,7 @@
  * Handles voting session management and vote processing
  */
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/utils/audit.php';
 
 class VotingController {
     
@@ -37,12 +38,13 @@ class VotingController {
             }
             
             return dbFetchAll(
-                "SELECT vs.*, u.full_name as created_by_name,
+                "SELECT vs.*, u.full_name as created_by_name, c.name as committee_name,
                         (SELECT COUNT(*) FROM session_documents WHERE session_id = vs.id) as document_count,
                         (SELECT COUNT(*) FROM session_attendees WHERE session_id = vs.id AND status = 'present') as attendee_count,
                         (SELECT COUNT(*) FROM votes WHERE session_id = vs.id) as vote_count
                  FROM voting_sessions vs
                  LEFT JOIN users u ON vs.created_by = u.id
+                 LEFT JOIN committees c ON vs.committee_id = c.id
                  WHERE $where
                  ORDER BY vs.session_date DESC, vs.start_time DESC",
                 $params
@@ -129,6 +131,93 @@ class VotingController {
     }
     
     /**
+     * Update a voting session
+     */
+    public function updateSession($sessionId, $data) {
+        try {
+            $session = $this->getSession($sessionId);
+            if (!$session) {
+                throw new Exception("Session not found");
+            }
+
+            if (!in_array($session['status'], ['scheduled'])) {
+                throw new Exception("Only scheduled sessions can be edited.");
+            }
+
+            $updateData = [];
+            $allowedFields = ['title', 'description', 'session_date', 'start_time', 'end_time', 'location', 'vote_type', 'quorum_required', 'committee_id'];
+            foreach ($allowedFields as $field) {
+                if (array_key_exists($field, $data)) {
+                    $updateData[$field] = $data[$field] ?: null;
+                }
+            }
+
+            if (!empty($updateData)) {
+                dbUpdate('voting_sessions', $updateData, 'id = ?', [$sessionId]);
+            }
+
+            // Update documents if provided
+            if (isset($data['documents'])) {
+                dbDelete('session_documents', 'session_id = ?', [$sessionId]);
+                $order = 1;
+                foreach ($data['documents'] as $docId) {
+                    dbInsert('session_documents', [
+                        'session_id' => $sessionId,
+                        'document_id' => $docId,
+                        'voting_order' => $order++,
+                        'voting_status' => 'pending'
+                    ]);
+                }
+            }
+
+            // Update attendees if provided
+            if (isset($data['attendees'])) {
+                dbDelete('session_attendees', 'session_id = ?', [$sessionId]);
+                foreach ($data['attendees'] as $userId) {
+                    dbInsert('session_attendees', [
+                        'session_id' => $sessionId,
+                        'user_id' => $userId,
+                        'status' => 'absent'
+                    ]);
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            error_log('VotingController::updateSession error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Delete/cancel a voting session
+     */
+    public function cancelSession($sessionId, $userId) {
+        try {
+            $session = $this->getSession($sessionId);
+            if (!$session) {
+                throw new Exception("Session not found");
+            }
+
+            if ($session['status'] === 'completed') {
+                throw new Exception("Completed sessions cannot be cancelled.");
+            }
+
+            dbUpdate('voting_sessions', ['status' => 'cancelled'], 'id = ?', [$sessionId]);
+
+            logAudit('session_cancel', $userId, 'voting', 'voting_sessions', $sessionId, 'Voting session cancelled', [
+                'session_number' => $session['session_number'],
+                'previous_status' => $session['status']
+            ]);
+
+            return true;
+        } catch (Exception $e) {
+            error_log('VotingController::cancelSession error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    /**
      * Start a voting session
      */
     public function startSession($sessionId, $userId) {
@@ -142,13 +231,14 @@ class VotingController {
                 throw new Exception("Session cannot be started. Current status: " . $session['status']);
             }
             
-            dbUpdate('voting_sessions', $sessionId, [
+            dbUpdate('voting_sessions', [
                 'status' => 'in_progress',
                 'actual_start_time' => date('Y-m-d H:i:s')
-            ]);
+            ], 'id = ?', [$sessionId]);
             
-            logAudit($userId, 'session_start', 'voting_sessions', $sessionId, 
-                     ['status' => 'scheduled'], ['status' => 'in_progress']);
+            logAudit('session_start', $userId, 'voting', 'voting_sessions', $sessionId, 'Voting session started', [
+                'session_number' => $session['session_number']
+            ]);
             
             return true;
         } catch (Exception $e) {
@@ -174,13 +264,14 @@ class VotingController {
             // Calculate final results for all documents
             $this->calculateSessionResults($sessionId);
             
-            dbUpdate('voting_sessions', $sessionId, [
+            dbUpdate('voting_sessions', [
                 'status' => 'completed',
                 'actual_end_time' => date('Y-m-d H:i:s')
-            ]);
+            ], 'id = ?', [$sessionId]);
             
-            logAudit($userId, 'session_end', 'voting_sessions', $sessionId,
-                     ['status' => 'in_progress'], ['status' => 'completed']);
+            logAudit('session_end', $userId, 'voting', 'voting_sessions', $sessionId, 'Voting session completed', [
+                'session_number' => $session['session_number']
+            ]);
             
             return true;
         } catch (Exception $e) {
@@ -227,7 +318,7 @@ class VotingController {
                 'user_agent' => $data['user_agent'] ?? null
             ]);
             
-            logAudit($data['councilor_id'], 'vote_cast', 'votes', $voteId, null, [
+            logAudit('vote_cast', $data['councilor_id'], 'voting', 'votes', $voteId, 'Vote cast', [
                 'session_id' => $data['session_id'],
                 'document_id' => $data['document_id'],
                 'vote' => $data['vote']
@@ -268,30 +359,63 @@ class VotingController {
                     if ($approveCount > $rejectCount) {
                         $result = 'passed';
                         // Update document status
-                        dbUpdate('documents', $doc['doc_id'], [
+                        dbUpdate('documents', [
                             'status' => 'approved',
                             'approved_at' => date('Y-m-d H:i:s')
-                        ]);
+                        ], 'id = ?', [$doc['doc_id']]);
                     } else {
                         $result = 'failed';
-                        dbUpdate('documents', $doc['doc_id'], [
+                        dbUpdate('documents', [
                             'status' => 'rejected'
-                        ]);
+                        ], 'id = ?', [$doc['doc_id']]);
                     }
                 }
                 
                 // Update session document record
-                dbUpdate('session_documents', $doc['id'], [
+                dbUpdate('session_documents', [
                     'voting_status' => $result,
                     'votes_for' => $approveCount,
                     'votes_against' => $rejectCount
-                ]);
+                ], 'id = ?', [$doc['id']]);
             }
             
             return true;
         } catch (Exception $e) {
             error_log('VotingController::calculateSessionResults error: ' . $e->getMessage());
             throw $e;
+        }
+    }
+
+    /**
+     * Get summary of results for a session
+     */
+    public function getSessionResultsSummary($sessionId) {
+        try {
+            $docs = $this->getSessionDocuments($sessionId);
+            $totalApprove = 0;
+            $totalReject = 0;
+            $totalAbstain = 0;
+            $passed = 0;
+            $failed = 0;
+
+            foreach ($docs as $doc) {
+                $totalApprove += $doc['approve_count'];
+                $totalReject += $doc['reject_count'];
+                $totalAbstain += $doc['abstain_count'];
+                if ($doc['voting_status'] === 'passed') $passed++;
+                if ($doc['voting_status'] === 'failed') $failed++;
+            }
+
+            return [
+                'total_docs' => count($docs),
+                'passed_docs' => $passed,
+                'failed_docs' => $failed,
+                'total_approve' => $totalApprove,
+                'total_reject' => $totalReject,
+                'total_abstain' => $totalAbstain
+            ];
+        } catch (Exception $e) {
+            return null;
         }
     }
     
@@ -325,10 +449,10 @@ class VotingController {
             );
             
             if ($attendee) {
-                dbUpdate('session_attendees', $attendee['id'], [
+                dbUpdate('session_attendees', [
                     'status' => $isPresent ? 'present' : 'absent',
                     'check_in_time' => $isPresent ? date('Y-m-d H:i:s') : null
-                ]);
+                ], 'id = ?', [$attendee['id']]);
             } else {
                 dbInsert('session_attendees', [
                     'session_id' => $sessionId,
@@ -360,6 +484,29 @@ class VotingController {
             );
         } catch (Exception $e) {
             error_log('VotingController::getSessionAttendees error: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get session documents
+     */
+    public function getSessionDocuments($sessionId) {
+        try {
+            return dbFetchAll(
+                "SELECT sd.*, d.doc_number, d.title, d.type, d.summary, d.status as doc_status,
+                        (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id) as vote_count,
+                        (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'approve') as approve_count,
+                        (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'reject') as reject_count,
+                        (SELECT COUNT(*) FROM votes WHERE document_id = d.id AND session_id = sd.session_id AND vote = 'abstain') as abstain_count
+                 FROM session_documents sd
+                 JOIN documents d ON sd.document_id = d.id
+                 WHERE sd.session_id = ?
+                 ORDER BY sd.voting_order, d.created_at",
+                [$sessionId]
+            );
+        } catch (Exception $e) {
+            error_log('VotingController::getSessionDocuments error: ' . $e->getMessage());
             return [];
         }
     }

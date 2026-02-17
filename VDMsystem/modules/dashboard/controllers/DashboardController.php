@@ -26,7 +26,7 @@ class DashboardController {
                 'completed_sessions'  => $this->count('voting_sessions', "status = 'completed'"),
                 'total_votes'         => $this->count('votes'),
                 'pending_vote'        => $this->count('documents', "status = 'pending_vote'"),
-                'approved'            => $this->count('documents', "status = 'approved' AND MONTH(approved_at) = MONTH(CURRENT_DATE()) AND YEAR(approved_at) = YEAR(CURRENT_DATE())"),
+                'approved'            => $this->count('documents', "status = 'approved' AND MONTH(updated_at) = MONTH(CURRENT_DATE()) AND YEAR(updated_at) = YEAR(CURRENT_DATE())"),
                 'rejected'            => $this->count('documents', "status = 'rejected'"),
                 'total_documents'     => $this->count('documents'),
                 'total_users'         => $this->count('users', "is_active = 1"),
@@ -215,9 +215,10 @@ class DashboardController {
     public function getRecentAuditActivity($limit = 10) {
         try {
             return $this->fetchAll(
-                "SELECT id, event_type, user_name, module, action, details, created_at
-                 FROM audit_logs
-                 ORDER BY created_at DESC LIMIT ?", [$limit]
+                "SELECT a.id, a.event_type, u.full_name AS user_name, a.module, a.action, a.details, a.created_at
+                 FROM audit_logs a
+                 LEFT JOIN users u ON a.user_id = u.id
+                 ORDER BY a.created_at DESC LIMIT ?", [$limit]
             );
         } catch (Exception $e) {
             return [];
