@@ -69,10 +69,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Right Side: Action Buttons -->
                 <div class="shrink-0 flex gap-3">
                     <?php if ($canManage): ?>
-                    <a href="<?php echo VOTING_URL; ?>/views/create-session.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                    <button type="button" onclick="openCreateSessionModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
                         <i class="bi bi-plus-circle mr-2 transition-transform group-hover:rotate-90"></i>
                         <span>New Session</span>
-                    </a>
+                    </button>
                     <?php endif; ?>
                     <?php if ($canVote): ?>
                     <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="!bg-red-600 !text-white px-6 py-2.5 rounded-xl font-bold hover:!bg-red-700 border border-white/20 shadow-lg transition-all flex items-center transform hover:scale-[1.02] active:scale-95 text-sm">
@@ -311,7 +311,195 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
     </main>
 
-<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+<?php 
+include_once __DIR__ . '/../../core/layouts/footer.php'; 
+
+// Fetch data for Modal (Same as sessions.php)
+$committeesData = dbFetchAll("SELECT id, name FROM committees WHERE is_active = 1 ORDER BY name");
+$pendingDocsData = dbFetchAll("SELECT id, doc_number, title, type FROM documents WHERE status = 'pending_vote' ORDER BY created_at DESC");
+$councilorsData = dbFetchAll("SELECT id, full_name, position FROM users WHERE role IN ('councilor', 'admin') AND is_active = 1 ORDER BY full_name");
+?>
+
+<!-- Create/Configure Session Modal -->
+<div id="createSessionModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeCreateSessionModal()"></div>
+        
+        <!-- Modal Box -->
+        <div class="relative bg-white dark:bg-slate-950 w-full max-w-6xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border border-gray-100 dark:border-slate-800">
+            <!-- Premium Header -->
+            <div class="bg-[#dc2626] p-7 md:p-9 text-white flex items-center justify-between shrink-0 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-black tracking-tight leading-none mb-1">Configure New Session</h2>
+                    <p class="text-red-100 text-sm font-medium opacity-90">Set up legislative sessions, documents, and expected attendees.</p>
+                </div>
+                <button onclick="closeCreateSessionModal()" class="relative z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all group">
+                    <i class="bi bi-x-lg text-xl transition-transform group-hover:rotate-90"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="sessionForm" action="<?php echo VOTING_URL; ?>/views/create-session.php" method="POST" class="vdm-form flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar vdm-page-bg">
+                <input type="hidden" name="session_id" id="modalSessionId" value="">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Left Section (Basic Info & Documents) -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Basic Information -->
+                        <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="w-11 h-11 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center text-lg">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </div>
+                                <h3 class="text-xl font-black vdm-heading tracking-tight">Basic Information</h3>
+                            </div>
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Session Title <span class="text-red-500">*</span></label>
+                                    <input type="text" name="title" required class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input" placeholder="e.g. Regular Session - Resolution Planning">
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div>
+                                        <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Date <span class="text-red-500">*</span></label>
+                                        <input type="date" name="session_date" value="<?php echo date('Y-m-d'); ?>" required class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Start <span class="text-red-500">*</span></label>
+                                        <input type="time" name="start_time" value="14:00" required class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">End</label>
+                                        <input type="time" name="end_time" class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black vdm-label uppercase tracking-[0.15em] mb-2">Description</label>
+                                    <textarea name="description" rows="3" class="w-full px-5 py-3.5 vdm-input-field rounded-[1.25rem] border focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none text-sm font-black vdm-input resize-none" placeholder="Briefly describe the session agenda..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Legislative Items -->
+                        <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
+                            <div class="flex items-center justify-between mb-8">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-11 h-11 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-lg">
+                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                    </div>
+                                    <h3 class="text-xl font-black vdm-heading tracking-tight">Legislative Items</h3>
+                                </div>
+                                <span class="text-[10px] font-black bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-1.5 rounded-xl border border-blue-100 dark:border-blue-800 uppercase tracking-widest">Pending Vote</span>
+                            </div>
+                            <div class="grid grid-cols-1 gap-3 max-h-[300px] overflow-y-auto pr-3 custom-scrollbar">
+                                <?php if (empty($pendingDocsData)): ?>
+                                    <div class="text-center py-12 vdm-card rounded-[1.5rem] border-2 border-dashed">
+                                        <i class="bi bi-inbox text-4xl text-slate-200 dark:text-slate-700 block mb-3"></i>
+                                        <p class="text-sm font-black vdm-muted">No pending legislative items found.</p>
+                                    </div>
+                                <?php else: ?>
+                                    <?php foreach ($pendingDocsData as $doc): ?>
+                                    <label class="flex items-center p-4 rounded-[1.25rem] vdm-card hover:border-red-200 dark:hover:border-red-900/50 transition-all cursor-pointer group border">
+                                        <div class="mr-4">
+                                            <input type="checkbox" name="documents[]" value="<?php echo $doc['id']; ?>" class="w-5 h-5 text-red-600 rounded-lg border-slate-200 focus:ring-red-500/20 cursor-pointer">
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between mb-1">
+                                                <span class="text-[9px] font-black vdm-muted uppercase tracking-tighter"><?php echo htmlspecialchars($doc['doc_number']); ?></span>
+                                                <span class="text-[8px] vdm-badge px-2 py-0.5 rounded-lg border font-black uppercase tracking-widest"><?php echo htmlspecialchars($doc['type']); ?></span>
+                                            </div>
+                                            <h4 class="text-sm font-black vdm-heading leading-tight group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo htmlspecialchars($doc['title']); ?></h4>
+                                        </div>
+                                    </label>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Section (Settings & Attendees) -->
+                    <div class="space-y-8">
+                        <!-- Settings -->
+                        <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="w-11 h-11 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl flex items-center justify-center text-lg">
+                                    <i class="bi bi-gear-fill"></i>
+                                </div>
+                                <h3 class="text-xl font-black vdm-heading tracking-tight">Session Settings</h3>
+                            </div>
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-[10px] font-black vdm-label uppercase tracking-widest mb-2 ml-1">Committee</label>
+                                    <select name="committee_id" class="w-full px-4 py-3 vdm-input-field rounded-[1.25rem] border text-sm font-black vdm-input outline-none focus:ring-4 focus:ring-red-500/10 cursor-pointer">
+                                        <option value="">-- Plenary Session --</option>
+                                        <?php foreach ($committeesData as $c): ?>
+                                            <option value="<?php echo $c['id']; ?>"><?php echo htmlspecialchars($c['name']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black vdm-label uppercase tracking-widest mb-2 ml-1">Vote Method</label>
+                                    <select name="vote_type" class="w-full px-4 py-3 vdm-input-field rounded-[1.25rem] border text-sm font-black vdm-input outline-none focus:ring-4 focus:ring-red-500/10 cursor-pointer">
+                                        <option value="roll_call">Roll Call Vote</option>
+                                        <option value="voice">Voice Vote</option>
+                                        <option value="ballot">Secret Ballot</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black vdm-label uppercase tracking-widest mb-2 ml-1">Quorum</label>
+                                    <input type="number" name="quorum_required" value="5" class="w-full px-4 py-3 vdm-input-field rounded-[1.25rem] border text-sm font-black vdm-input outline-none focus:ring-4 focus:ring-red-500/10">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attendees -->
+                        <div class="vdm-card rounded-[2rem] p-8 shadow-sm border min-h-[400px] flex flex-col">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="w-11 h-11 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-lg">
+                                    <i class="bi bi-people-fill"></i>
+                                </div>
+                                <h3 class="text-xl font-black vdm-heading tracking-tight">Attendees</h3>
+                            </div>
+                            <div class="overflow-y-auto space-y-2 flex-1 custom-scrollbar pr-2">
+                                <?php foreach ($councilorsData as $user): ?>
+                                <label class="flex items-center p-3.5 rounded-[1.25rem] vdm-card cursor-pointer hover:border-red-200 dark:hover:border-red-900/50 transition-all border group">
+                                    <div class="mr-4">
+                                        <input type="checkbox" name="attendees[]" value="<?php echo $user['id']; ?>" checked class="w-5 h-5 text-red-600 rounded-lg border-slate-200 dark:border-slate-700 focus:ring-red-500/20 cursor-pointer">
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-black vdm-heading leading-none group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo htmlspecialchars($user['full_name']); ?></p>
+                                        <p class="text-[9px] vdm-sub font-black mt-1 uppercase tracking-widest"><?php echo htmlspecialchars($user['position']); ?></p>
+                                    </div>
+                                </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="flex items-center justify-between mt-10 pt-8 border-t shrink-0" style="border-color: var(--vdm-card-border)">
+                    <button type="button" onclick="closeCreateSessionModal()" class="px-8 py-3.5 text-sm font-black vdm-muted hover:text-red-600 transition-all uppercase tracking-widest">Discard</button>
+                    <button type="submit" class="bg-[#dc2626] text-white px-10 py-4 rounded-[1.5rem] font-black shadow-xl shadow-red-200 hover:bg-red-700 hover:-translate-y-1 transition-all flex items-center gap-3 text-sm uppercase tracking-tight">
+                        Create Session <i class="bi bi-check2-circle"></i>
+                    </button>
+                </div>
+            </form>
+        </div> <!-- Modal Box End -->
+    </div> <!-- Flex Wrapper End -->
+</div>
+
+<script>
+function openCreateSessionModal() {
+    document.getElementById('createSessionModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCreateSessionModal() {
+    document.getElementById('createSessionModal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+</script>
 
 <script>
 // Function to check if dark mode is active
