@@ -61,10 +61,10 @@ function hasRoleLocal($roles) {
 
         <!-- Right Side: Actions -->
         <div style="flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 1rem; padding-bottom: 0.5rem;">
-             <button onclick="window.print()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl px-10 py-6 rounded-[2.5rem] font-black vdm-text-muted text-[10px] uppercase tracking-[0.15em] hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center gap-4 group">
-                <i class="bi bi-printer-fill text-xl text-red-600 group-hover:scale-110 transition-transform"></i> Print Full Report
+             <button onclick="window.print()" class="border shadow-xl px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all flex items-center gap-4 group bg-white hover:bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600 dark:text-slate-200" style="color: inherit;">
+                <i class="bi bi-printer-fill text-xl text-red-500"></i> Print Full Report
             </button>
-            <button class="bg-slate-900 dark:bg-red-600 text-white px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] hover:bg-black dark:hover:bg-red-700 transition-all shadow-2xl shadow-red-500/20 flex items-center gap-4 group">
+            <button class="px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all shadow-2xl flex items-center gap-4 group bg-red-600 hover:bg-red-700 text-white border border-red-600 dark:bg-red-600 dark:hover:bg-red-700 dark:border-red-500 dark:text-white shadow-red-500/20">
                 <i class="bi bi-cloud-download-fill text-xl group-hover:translate-y-0.5 transition-transform"></i> Export Intelligence
             </button>
         </div>
