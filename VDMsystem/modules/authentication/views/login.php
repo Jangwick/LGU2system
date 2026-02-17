@@ -124,6 +124,18 @@ if (function_exists('checkAlreadyLoggedIn')) {
                         <span><?php echo htmlspecialchars($_SESSION['login_error']); unset($_SESSION['login_error']); ?></span>
                     </div>
                 <?php endif; ?>
+                <?php if (isset($_SESSION['flash_error'])): ?>
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">
+                        <i class="bi bi-exclamation-circle mr-2"></i>
+                        <span><?php echo htmlspecialchars($_SESSION['flash_error']); unset($_SESSION['flash_error']); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['flash_success'])): ?>
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">
+                        <i class="bi bi-check-circle mr-2"></i>
+                        <span><?php echo htmlspecialchars($_SESSION['flash_success']); unset($_SESSION['flash_success']); ?></span>
+                    </div>
+                <?php endif; ?>
                 <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success'): ?>
                     <div class="bg-green-50 border border-green-200 text-green-700 px-3 md:px-4 py-2 md:py-3 rounded-lg flex items-center text-sm">
                         <i class="bi bi-check-circle mr-2"></i>
