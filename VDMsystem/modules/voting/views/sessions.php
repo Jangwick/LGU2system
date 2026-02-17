@@ -818,9 +818,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                             </div>
                                                         </td>
                                                         <td class="px-8 py-6 text-right">
-                                                            <a href="view-document.php?id=${doc.document_id || doc.id}" class="inline-flex w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 items-center justify-center text-slate-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
-                                                                <i class="bi bi-eye"></i>
-                                                            </a>
+                                                            <div class="flex items-center justify-end gap-2">
+                                                                <a href="view-document.php?id=${doc.document_id || doc.id}" 
+                                                                   class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-all shadow-sm border border-slate-200 dark:border-slate-700" 
+                                                                   title="View Details">
+                                                                    <i class="bi bi-eye text-lg"></i>
+                                                                </a>
+                                                                
+                                                                ${s.status === 'in_progress' && ['councilor', 'admin', 'administrator'].includes(userRole) ? `
+                                                                    <a href="cast-vote.php?session=${s.id}" 
+                                                                       class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white hover:bg-black transition-all shadow-lg shadow-red-600/20" 
+                                                                       title="Cast Your Vote">
+                                                                        <i class="bi bi-play-fill text-xl"></i>
+                                                                    </a>
+                                                                ` : ''}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 `;
