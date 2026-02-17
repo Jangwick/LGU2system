@@ -198,16 +198,6 @@
                 <span>Vote Results</span>
             </a>
             
-            <!-- Documents Section -->
-            <div class="mt-4 mb-2 px-4">
-                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Documents</p>
-            </div>
-            
-            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'documents' ? 'bg-red-700' : ''; ?>">
-                <i class="bi bi-file-earmark-text mr-3 text-lg"></i>
-                <span>All Documents</span>
-            </a>
-            
             <!-- Reports & Analytics - Secretary and Admin only -->
             <?php if ($canManage): ?>
             <div class="mt-4 mb-2 px-4">

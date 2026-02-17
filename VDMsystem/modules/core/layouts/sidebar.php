@@ -51,23 +51,6 @@
                 <span class="sidebar-text">Vote Results</span>
             </a>
             
-            <!-- Documents Section -->
-            <div class="pt-4 pb-2 sidebar-text">
-                <p class="px-4 text-xs font-semibold text-red-300 uppercase tracking-wider">Documents</p>
-            </div>
-            
-            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="nav-item <?php echo ($currentPage ?? '') === 'documents' ? 'active' : ''; ?>">
-                <i class="bi bi-file-earmark-text"></i>
-                <span class="sidebar-text">All Documents</span>
-            </a>
-            
-            <?php if ($canManage): ?>
-            <a href="<?php echo BASE_URL; ?>/modules/documents/views/create.php" class="nav-item <?php echo ($currentPage ?? '') === 'create-document' ? 'active' : ''; ?>">
-                <i class="bi bi-file-plus"></i>
-                <span class="sidebar-text">New Document</span>
-            </a>
-            <?php endif; ?>
-            
             <!-- Reports & Analytics Section - Available for Secretary and Admin -->
             <?php if ($canManage): ?>
             <div class="pt-4 pb-2 sidebar-text">
