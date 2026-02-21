@@ -8,11 +8,11 @@ function getDatabase() {
     static $db = null;
     
     if ($db === null) {
-        $host = '127.0.0.1';
-        $dbname = 'lrms_db';
-        $username = 'root';
-        $password = '';
-        $port = '3306';
+        $host = DB_HOST;
+        $dbname = DB_NAME;
+        $username = DB_USER;
+        $password = DB_PASS;
+        $port = DB_PORT;
         
         try {
             $db = new PDO(

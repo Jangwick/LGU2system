@@ -4,7 +4,6 @@
  * Usage: Run via terminal or browse to /modules/search/controllers/IndexWorker.php (if routed)
  */
 
-require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../services/EmbeddingService.php';
 
 class IndexWorker {
@@ -12,12 +11,9 @@ class IndexWorker {
     private $embeddingService;
 
     public function __construct() {
-        $dbConfig = require __DIR__ . '/../../core/config/database.php';
-        $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']};charset={$dbConfig['charset']}";
-        $this->db = new PDO($dsn, $dbConfig['user'], $dbConfig['password'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::ASSOC
-        ]);
+        require_once __DIR__ . '/../../core/config/config.php';
+        require_once __DIR__ . '/../../core/config/database.php';
+        $this->db = getDatabase();
         $this->embeddingService = new EmbeddingService();
     }
 

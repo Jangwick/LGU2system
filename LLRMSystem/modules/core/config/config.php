@@ -282,6 +282,13 @@ if (file_exists(__DIR__ . '/config.local.php')) {
     require_once __DIR__ . '/config.local.php';
 }
 
+// Database Configuration Defaults (can be overridden in config.local.php)
+if (!defined('DB_HOST')) define('DB_HOST', '127.0.0.1');
+if (!defined('DB_PORT')) define('DB_PORT', '3306');
+if (!defined('DB_NAME')) define('DB_NAME', 'lrms_db');
+if (!defined('DB_USER')) define('DB_USER', 'root');
+if (!defined('DB_PASS')) define('DB_PASS', '');
+
 // AI Configuration
 if (!defined('GEMINI_API_KEY')) {
     define('GEMINI_API_KEY', ''); // Fallback to empty if not defined in local config
