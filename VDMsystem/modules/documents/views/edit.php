@@ -180,6 +180,5 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </form>
     </main>
-</div>
 
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

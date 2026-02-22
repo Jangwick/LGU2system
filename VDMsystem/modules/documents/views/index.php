@@ -621,5 +621,6 @@ function deleteDocument(id) {
     }
 }
 </script>
+</main>
 
-    <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+<?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
