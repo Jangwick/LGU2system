@@ -195,43 +195,59 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-md p-4 mb-6">
-            <form method="GET" class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
-                    <div class="relative">
-                        <input type="text" name="search" value="<?php echo htmlspecialchars($searchQuery); ?>" 
-                               placeholder="Search documents..." 
-                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                        <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        <div class="bg-white rounded-[2.5rem] shadow-md border border-slate-200/60 p-8 mb-8">
+            <form method="GET" class="space-y-6">
+                <!-- Search -->
+                <div class="relative group">
+                    <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-600 transition-colors">
+                        <i class="bi bi-search font-bold text-lg"></i>
+                    </div>
+                    <input type="text" name="search" value="<?php echo htmlspecialchars($searchQuery); ?>" 
+                           placeholder="Search documents..." 
+                           class="w-full pl-16 pr-6 py-5 bg-slate-50/50 border border-slate-200 rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-bold text-sm transition-all shadow-sm">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Type -->
+                    <div class="relative group">
+                        <select name="type" class="w-full pl-6 pr-12 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-bold text-sm transition-all appearance-none cursor-pointer">
+                            <option value="">All Types</option>
+                            <?php foreach ($documentTypes as $type): ?>
+                                <option value="<?php echo $type; ?>" <?php echo $typeFilter === $type ? 'selected' : ''; ?>>
+                                    <?php echo ucfirst(str_replace('_', ' ', $type)); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <i class="bi bi-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none transition-transform group-focus-within:rotate-180"></i>
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="relative group">
+                        <select name="status" class="w-full pl-6 pr-12 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-bold text-sm transition-all appearance-none cursor-pointer">
+                            <option value="">All Status</option>
+                            <?php foreach ($statusList as $status): ?>
+                                <option value="<?php echo $status; ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>>
+                                    <?php echo ucfirst(str_replace('_', ' ', $status)); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <i class="bi bi-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none transition-transform group-focus-within:rotate-180"></i>
                     </div>
                 </div>
-                <div>
-                    <select name="type" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                        <option value="">All Types</option>
-                        <?php foreach ($documentTypes as $type): ?>
-                            <option value="<?php echo $type; ?>" <?php echo $typeFilter === $type ? 'selected' : ''; ?>>
-                                <?php echo ucfirst(str_replace('_', ' ', $type)); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+
+                <!-- Filter Action Bar -->
+                <div class="relative">
+                    <button type="submit" class="w-full py-3.5 bg-slate-900 text-white rounded-xl font-black uppercase tracking-[0.3em] text-[10px] flex items-center justify-center gap-3 transition-all hover:bg-slate-800 hover:shadow-lg active:scale-[0.995]">
+                        <i class="bi bi-funnel-fill text-xs opacity-60"></i> Filter
+                    </button>
                 </div>
-                <div>
-                    <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                        <option value="">All Status</option>
-                        <?php foreach ($statusList as $status): ?>
-                            <option value="<?php echo $status; ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>>
-                                <?php echo ucfirst(str_replace('_', ' ', $status)); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <button type="submit" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">
-                    <i class="bi bi-filter mr-1"></i> Filter
-                </button>
+
                 <?php if ($typeFilter || $statusFilter || $searchQuery): ?>
-                <a href="index.php" class="text-gray-500 hover:text-gray-700 px-4 py-2">
-                    <i class="bi bi-x-circle"></i> Clear
-                </a>
+                <div class="flex justify-start">
+                    <a href="index.php" class="inline-flex items-center text-xs font-black text-slate-400 hover:text-red-600 uppercase tracking-[0.2em] transition-colors group">
+                        <i class="bi bi-x-circle-fill mr-2 text-sm opacity-60 group-hover:opacity-100"></i> Clear Filters
+                    </a>
+                </div>
                 <?php endif; ?>
             </form>
         </div>
