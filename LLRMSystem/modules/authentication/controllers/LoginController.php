@@ -137,7 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Record attempt for lockout
                 $attemptInfo = $security->recordFailedAttempt($ip, $email);
                 
-                $message = 'Invalid password.';
+                // Use a uniform message — do not reveal whether the email exists
+                $message = 'Invalid email or password.';
                 if ($attemptInfo['count'] >= 3) {
                     $remaining = 5 - $attemptInfo['count'];
                     if ($remaining > 0) {
@@ -163,11 +164,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Record attempt for lockout
             $attemptInfo = $security->recordFailedAttempt($ip, $email);
             
-            $message = 'Email address not found or account is inactive.';
+            // Use a uniform message — do not reveal whether the email exists
+            $message = 'Invalid email or password.';
             if ($attemptInfo['count'] >= 3) {
                 $remaining = 5 - $attemptInfo['count'];
                 if ($remaining > 0) {
-                    $message .= " You have $remaining attempts remaining.";
+                    $message .= " You have $remaining attempts remaining before temporary lockout.";
                 } else {
                     $message = "Too many failed attempts. Your access is temporarily locked for security. Please try again in 5 minutes.";
                 }

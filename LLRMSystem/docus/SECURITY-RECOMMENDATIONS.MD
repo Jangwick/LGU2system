@@ -533,7 +533,7 @@ These are ordered by priority. Address Critical and High items before deploying 
 - [x] **Set `APP_ENV = 'production'`** in the deployment `config.local.php` and suppress error display.
 - [x] **Audit all view files** for missing `htmlspecialchars()` — search for patterns like `echo $`, `echo $_`, `<?= $` and apply the `e()` helper wrapper.
 - [ ] **Implement persistent API rate limiting** using a database log table — the current in-memory counter is non-functional.
-- [ ] **Unify login error messages** to prevent user enumeration.
+- [x] **Unify login error messages** to prevent user enumeration.
 
 ### Phase 4 — Hardening (Ongoing / Post-Launch)
 
