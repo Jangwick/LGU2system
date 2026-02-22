@@ -1,0 +1,25 @@
+Options -Indexes
+
+# -----------------------------------------------------------------------
+# HTTPS Enforcement
+# Redirect all plain HTTP traffic to HTTPS unconditionally.
+# -----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Do not redirect when running on localhost / 127.0.0.1 (dev convenience)
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# -----------------------------------------------------------------------
+# HTTP Strict Transport Security
+# Tell browsers to always use HTTPS for this origin for 1 year and
+# include subdomains.  Only activate HSTS *after* you have verified that
+# HTTPS is working correctly — the header cannot be easily undone.
+# -----------------------------------------------------------------------
+<IfModule mod_headers.c>
+    # Uncomment the line below once HTTPS is confirmed working on the server:
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>

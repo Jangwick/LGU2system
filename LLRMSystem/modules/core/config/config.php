@@ -45,8 +45,14 @@ function detectBaseUrl() {
     static $baseUrl = null;
     
     if ($baseUrl === null) {
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        // Always prefer https. On localhost/development fall back to the
+        // actual scheme so local development still works without TLS.
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $isLocalhost = in_array($host, ['localhost', '127.0.0.1'], true)
+            || str_starts_with($host, 'localhost:');
+        $protocol = (!$isLocalhost || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'))
+            ? 'https'
+            : 'http';
         $documentRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
         $basePath = str_replace('\\', '/', detectBasePath());
         
@@ -256,8 +262,13 @@ function checkAlreadyLoggedIn() {
  * @return string Current page URL
  */
 function currentUrl() {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    // Mirror the HTTPS-preference logic in detectBaseUrl().
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $isLocalhost = in_array($host, ['localhost', '127.0.0.1'], true)
+        || str_starts_with($host, 'localhost:');
+    $protocol = (!$isLocalhost || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'))
+        ? 'https'
+        : 'http';
     $uri = $_SERVER['REQUEST_URI'] ?? '';
     return $protocol . '://' . $host . $uri;
 }
@@ -298,7 +309,12 @@ if (!defined('GEMINI_API_KEY')) {
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
-    ini_set('session.cookie_secure', isset($_SERVER['HTTPS']) ? 1 : 0);
+    // HTTPS is enforced at the web-server level (.htaccess rewrite).
+    // Set the Secure flag unconditionally so session cookies are never
+    // transmitted over plain HTTP, even if a request somehow bypasses
+    // the redirect rule.
+    ini_set('session.cookie_secure', 1);
+    ini_set('session.cookie_samesite', 'Strict');
 }
 
 // Error reporting based on environment
