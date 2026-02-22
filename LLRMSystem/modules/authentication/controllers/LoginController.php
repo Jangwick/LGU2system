@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // Generate OTP instead of logging in
-                $otpCode = sprintf("%06d", mt_rand(1, 999999));
+                $otpCode = sprintf("%06d", random_int(0, 999999));
                 $expiry = date('Y-m-d H:i:s', strtotime('+' . OTP_EXPIRY_MINUTES . ' minutes'));
                 
                 // Store OTP in database
