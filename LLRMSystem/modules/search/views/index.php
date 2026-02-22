@@ -275,7 +275,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </span>
                                 <div class="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-                                    <?= ucfirst($mode) ?> Engine
+                                    <?= e(ucfirst($mode)) ?> Engine
                                 </div>
                                 <button onclick="exportResults()" class="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest transition-all">
                                     <i class="bi bi-download text-red-600 dark:text-red-500"></i> Export CSV
@@ -317,9 +317,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <div class="flex-1 min-w-0">
                                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                                 <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest <?= getStatusBadgeClass($doc['status']) ?>">
-                                                    <?= $doc['status'] ?>
+                                                    <?= e($doc['status']) ?>
                                                 </span>
-                                                <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest bg-gray-50 dark:bg-gray-950 px-2 py-1 rounded-lg border border-gray-100 dark:border-gray-700">REF: <?= $doc['reference_number'] ?? 'N/A' ?></span>
+                                                <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest bg-gray-50 dark:bg-gray-950 px-2 py-1 rounded-lg border border-gray-100 dark:border-gray-700">REF: <?= e($doc['reference_number'] ?? 'N/A') ?></span>
                                                 
                                                 <?php if(isset($doc['relevance_score'])): ?>
                                                 <div class="relevance-bar ml-auto flex items-center gap-2 bg-red-50/50 dark:bg-red-900/10 px-3 py-1.5 rounded-xl border border-red-100 dark:border-red-900/30">
@@ -352,7 +352,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                     <?php 
                                                     $tags = explode(',', $doc['tags'] ?? '');
                                                     foreach(array_slice($tags, 0, 3) as $tag): if(empty($tag)) continue; ?>
-                                                    <span class="px-2.5 py-1 rounded-lg bg-gray-50 dark:bg-gray-950 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 border border-gray-100 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900 hover:text-red-600 dark:hover:text-red-400 transition-all cursor-pointer">#<?= trim($tag) ?></span>
+                                                    <span class="px-2.5 py-1 rounded-lg bg-gray-50 dark:bg-gray-950 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 border border-gray-100 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900 hover:text-red-600 dark:hover:text-red-400 transition-all cursor-pointer">#<?= e(trim($tag)) ?></span>
                                                     <?php endforeach; ?>
                                                 </div>
 

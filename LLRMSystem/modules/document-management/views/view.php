@@ -114,12 +114,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                         <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-white"><?= htmlspecialchars($document['title']) ?></h1>
                         <span class="badge <?= getStatusBadge($document['status']) ?>">
-                            <?= ucfirst($document['status']) ?>
+                            <?= e(ucfirst($document['status'])) ?>
                         </span>
                     </div>
-                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1">Reference: <span class="font-mono font-semibold"><?= $document['reference_number'] ?></span></p>
+                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1">Reference: <span class="font-mono font-semibold"><?= e($document['reference_number']) ?></span></p>
                     <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                        Type: <?= ucfirst(str_replace('_', ' ', $document['document_type'])) ?> • 
+                        Type: <?= e(ucfirst(str_replace('_', ' ', $document['document_type']))) ?> • 
                         Date: <?= date('F d, Y', strtotime($document['document_date'])) ?>
                     </p>
                 </div>
@@ -259,12 +259,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                            class="block p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <span class="text-xs text-gray-500 dark:text-gray-400"><?= getLinkTypeLabel($link['link_type']) ?></span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400"><?= e(getLinkTypeLabel($link['link_type'])) ?></span>
                                     <p class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1"><?= htmlspecialchars($link['linked_title']) ?></p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><?= $link['linked_reference'] ?></p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><?= e($link['linked_reference']) ?></p>
                                 </div>
                                 <span class="badge <?= getStatusBadge($link['linked_status']) ?>">
-                                    <?= ucfirst($link['linked_status']) ?>
+                                    <?= e(ucfirst($link['linked_status'])) ?>
                                 </span>
                             </div>
                         </a>
@@ -275,12 +275,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                            class="block p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <span class="text-xs text-gray-500 dark:text-gray-400"><?= getLinkTypeLabel($link['link_type']) ?> (incoming)</span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400"><?= e(getLinkTypeLabel($link['link_type'])) ?> (incoming)</span>
                                     <p class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1"><?= htmlspecialchars($link['title']) ?></p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><?= $link['reference_number'] ?></p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><?= e($link['reference_number']) ?></p>
                                 </div>
                                 <span class="badge <?= getStatusBadge($link['status']) ?>">
-                                    <?= ucfirst($link['status']) ?>
+                                    <?= e(ucfirst($link['status'])) ?>
                                 </span>
                             </div>
                         </a>

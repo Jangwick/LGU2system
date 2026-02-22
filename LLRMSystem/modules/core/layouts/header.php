@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../utils/helpers.php';
 require_once __DIR__ . '/../middleware/CsrfMiddleware.php';
 ?>
 <!DOCTYPE html>
@@ -12,7 +13,7 @@ require_once __DIR__ . '/../middleware/CsrfMiddleware.php';
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
-    <title><?php echo $pageTitle ?? APP_NAME; ?> - City Government of Valenzuela</title>
+    <title><?php echo e($pageTitle ?? APP_NAME); ?> - City Government of Valenzuela</title>
     <meta name="description" content="Legislative Records Management System - City Government of Valenzuela, Metropolitan Manila">
     <meta name="keywords" content="LRMS, Valenzuela, Legislative Records, Document Management">
     <?php echo CsrfMiddleware::metaTag(); ?>

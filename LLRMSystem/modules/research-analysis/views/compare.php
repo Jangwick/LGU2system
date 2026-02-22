@@ -75,7 +75,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                 <div class="bg-gray-50 p-4 border-b flex justify-between items-start">
                                     <div>
                                         <h4 class="font-bold text-gray-900 line-clamp-2"><?= htmlspecialchars($doc['title']) ?></h4>
-                                        <p class="text-xs text-gray-500 font-mono mt-1"><?= $doc['reference_number'] ?></p>
+                                        <p class="text-xs text-gray-500 font-mono mt-1"><?= e($doc['reference_number']) ?></p>
                                     </div>
                                     <button onclick="removeDocument(<?= $doc['id'] ?>)" class="text-gray-400 hover:text-red-500">
                                         <i class="bi bi-x-lg"></i>
@@ -85,7 +85,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                     <div class="grid grid-cols-2 gap-4 text-sm">
                                         <div>
                                             <span class="block text-gray-500 mb-1 font-medium italic">Type</span>
-                                            <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-md font-semibold"><?= ucfirst($doc['document_type']) ?></span>
+                                            <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-md font-semibold"><?= e(ucfirst($doc['document_type'])) ?></span>
                                         </div>
                                         <div>
                                             <span class="block text-gray-500 mb-1 font-medium italic">Date</span>
@@ -121,7 +121,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                             </div>
                                             <div class="flex justify-between text-xs py-1">
                                                 <span class="text-gray-500">Status</span>
-                                                <span class="text-green-600 font-bold"><?= strtoupper($doc['status']) ?></span>
+                                                <span class="text-green-600 font-bold"><?= e(strtoupper($doc['status'])) ?></span>
                                             </div>
                                         </div>
                                     </div>

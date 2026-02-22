@@ -355,7 +355,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </div>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                                        <span class="badge badge-primary"><?php echo ucfirst($doc['document_type']); ?></span>
+                                        <span class="badge badge-primary"><?php echo e(ucfirst($doc['document_type'])); ?></span>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo htmlspecialchars($doc['reference_number']); ?>
@@ -413,7 +413,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <div class="flex items-center gap-2">
                                     <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
                                     <span class="badge badge-primary !text-[10px] !py-0.5">
-                                        <?php echo ucfirst($doc['document_type']); ?>
+                                        <?php echo e(ucfirst($doc['document_type'])); ?>
                                     </span>
                                 </div>
                                 <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">

@@ -170,7 +170,7 @@ function getIntFileIconBg($mimeType, $fileName = '') {
                                 $cls = $statusClasses[$record['status']] ?? 'bg-gray-100';
                                 ?>
                                 <span class="px-3 py-1 rounded-full text-xs font-bold <?php echo $cls; ?>">
-                                    <?php echo ucfirst($record['status']); ?>
+                                    <?php echo e(ucfirst($record['status'])); ?>
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-right">

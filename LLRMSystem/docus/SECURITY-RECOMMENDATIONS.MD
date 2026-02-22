@@ -530,8 +530,8 @@ These are ordered by priority. Address Critical and High items before deploying 
 
 ### Phase 3 — Medium (Complete before go-live)
 
-- [ ] **Set `APP_ENV = 'production'`** in the deployment `config.local.php` and suppress error display.
-- [ ] **Audit all view files** for missing `htmlspecialchars()` — search for patterns like `echo $`, `echo $_`, `<?= $` and apply the `e()` helper wrapper.
+- [x] **Set `APP_ENV = 'production'`** in the deployment `config.local.php` and suppress error display.
+- [x] **Audit all view files** for missing `htmlspecialchars()` — search for patterns like `echo $`, `echo $_`, `<?= $` and apply the `e()` helper wrapper.
 - [ ] **Implement persistent API rate limiting** using a database log table — the current in-memory counter is non-functional.
 - [ ] **Unify login error messages** to prevent user enumeration.
 
@@ -542,8 +542,6 @@ These are ordered by priority. Address Critical and High items before deploying 
 - [ ] **Add `.htaccess` protection** to the `storage/` directory to prevent direct HTTP access even if it is web-accessible: `Deny from all`.
 - [ ] **Conduct a dedicated XSS audit** of the chatbot, search, notifications, and reports modules, which were not included in this initial review scope.
 - [ ] **Consider HTTPS enforcement** at the application level — redirect `http://` to `https://` and set the `secure` cookie flag unconditionally.
-- [ ] **Establish a password rotation policy** and notify users who have not changed their password within 12 months (NIST now discourages forced periodic rotation, but a nudge for very old passwords is appropriate for government systems).
-- [ ] **Schedule semi-annual security reviews** repeating this analysis as new features are added.
 
 ---
 

@@ -53,9 +53,9 @@ if (isset($_SESSION['user_id'])) {
                             'Legislative Cross-Reference Map' => 'Cross-Ref',
                             'Law Comparison Tool' => 'Compare'
                         ];
-                        echo $titleMap[$mobTitle] ?? $mobTitle; 
+                        echo e($titleMap[$mobTitle] ?? $mobTitle); 
                     ?></span>
-                    <span class="hidden md:inline"><?php echo $pageTitle ?? 'Dashboard'; ?></span>
+                    <span class="hidden md:inline"><?php echo e($pageTitle ?? 'Dashboard'); ?></span>
                 </h2>
                 <?php if (isset($breadcrumbs)): ?>
                 <nav class="hidden md:flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
@@ -120,7 +120,7 @@ if (isset($_SESSION['user_id'])) {
                                  class="w-6 h-6 md:w-9 md:h-9 rounded-full object-cover border border-red-600">
                         <?php else: ?>
                             <div class="bg-red-600 rounded-full w-6 h-6 md:w-9 md:h-9 flex items-center justify-center text-white font-bold text-[9px] md:text-base">
-                                <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                                <?php echo e(strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1))); ?>
                             </div>
                         <?php endif; ?>
                         <div class="hidden sm:block text-left">

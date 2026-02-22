@@ -113,9 +113,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <select name="action" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
                         <option value="">All Actions</option>
                         <?php foreach ($data['actions'] as $action): ?>
-                            <option value="<?php echo $action; ?>" 
+                            <option value="<?php echo e($action); ?>" 
                                     <?php echo $data['filters']['action'] == $action ? 'selected' : ''; ?>>
-                                <?php echo ucfirst($action ?? ''); ?>
+                                <?php echo e(ucfirst($action ?? '')); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -125,9 +125,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <select name="table_name" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
                         <option value="">All Tables</option>
                         <?php foreach ($data['tables'] as $table): ?>
-                            <option value="<?php echo $table; ?>" 
+                            <option value="<?php echo e($table); ?>" 
                                     <?php echo $data['filters']['table_name'] == $table ? 'selected' : ''; ?>>
-                                <?php echo str_replace('_', ' ', ucfirst($table ?? '')); ?>
+                                <?php echo e(str_replace('_', ' ', ucfirst($table ?? ''))); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -221,7 +221,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 transform group-hover:scale-110 transition-transform duration-200 shadow-sm">
-                                                <?php echo strtoupper(substr($log['full_name'] ?? 'U', 0, 1)); ?>
+                                                <?php echo e(strtoupper(substr($log['full_name'] ?? 'U', 0, 1))); ?>
                                             </div>
                                             <div>
                                                 <div class="font-medium text-gray-900 dark:text-gray-200 group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors"><?php echo htmlspecialchars($log['full_name'] ?? 'Unknown'); ?></div>

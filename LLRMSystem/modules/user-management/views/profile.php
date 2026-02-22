@@ -57,7 +57,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                  class="w-32 h-32 bg-white rounded-full object-cover shadow-lg border-4 border-white">
                         <?php else: ?>
                             <div id="profile-avatar" class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-red-600 text-5xl font-bold shadow-lg">
-                                <?php echo strtoupper(substr($user['full_name'] ?? $user['email'], 0, 2)); ?>
+                                <?php echo e(strtoupper(substr($user['full_name'] ?? $user['email'], 0, 2))); ?>
                             </div>
                         <?php endif; ?>
                         <button onclick="document.getElementById('avatar-upload').click()" 
@@ -75,7 +75,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div class="flex flex-wrap gap-2 justify-center md:justify-start">
                             <span class="px-3 py-1 bg-red-500 rounded-full text-sm font-medium">
                                 <i class="bi bi-person-badge mr-1"></i>
-                                <?php echo ucfirst($user['role'] ?? 'User'); ?>
+                                <?php echo e(ucfirst($user['role'] ?? 'User')); ?>
                             </span>
                             <span class="px-3 py-1 bg-red-500 rounded-full text-sm font-medium">
                                 <i class="bi bi-building mr-1"></i>

@@ -216,7 +216,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <span class="badge <?php echo $dashboardController->getStatusBadgeClass($doc['status']); ?>">
-                                                <?php echo ucfirst($doc['status']); ?>
+                                                <?php echo e(ucfirst($doc['status'])); ?>
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
@@ -285,21 +285,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <span class="text-sm text-gray-600 dark:text-gray-400">API Integration</span>
                             <span class="badge badge-<?php echo $systemStatus['api']['class']; ?>">
                                 <i class="bi bi-<?php echo $systemStatus['api']['status'] === 'online' ? 'check-circle' : 'x-circle'; ?> mr-1"></i>
-                                <?php echo ucfirst($systemStatus['api']['status']); ?>
+                                <?php echo e(ucfirst($systemStatus['api']['status'])); ?>
                             </span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600 dark:text-gray-400">Database</span>
                             <span class="badge badge-<?php echo $systemStatus['database']['class']; ?>">
                                 <i class="bi bi-<?php echo $systemStatus['database']['status'] === 'healthy' ? 'check-circle' : 'exclamation-circle'; ?> mr-1"></i>
-                                <?php echo ucfirst($systemStatus['database']['status']); ?>
+                                <?php echo e(ucfirst($systemStatus['database']['status'])); ?>
                             </span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600 dark:text-gray-400">Storage</span>
                             <span class="badge badge-<?php echo $systemStatus['storage']['class']; ?>">
                                 <i class="bi bi-<?php echo $systemStatus['storage']['class'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?> mr-1"></i>
-                                <?php echo $systemStatus['storage']['status']; ?>
+                                <?php echo e($systemStatus['storage']['status']); ?>
                             </span>
                         </div>
                     </div>

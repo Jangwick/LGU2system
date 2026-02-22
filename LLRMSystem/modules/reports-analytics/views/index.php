@@ -207,7 +207,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                             <?php foreach ($storageByType as $type): ?>
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <?php echo ucfirst(str_replace('_', ' ', $type['document_type'])); ?>
+                                        <?php echo e(ucfirst(str_replace('_', ' ', $type['document_type']))); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-black text-blue-600 dark:text-blue-400">
                                         <?php 

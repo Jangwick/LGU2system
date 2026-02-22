@@ -239,7 +239,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         };
                                         ?>
                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $statusClass; ?> transition-transform duration-200 hover:scale-105">
-                                            <?php echo ucfirst($user['status']); ?>
+                                            <?php echo e(ucfirst($user['status'])); ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
