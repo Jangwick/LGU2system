@@ -9,6 +9,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
+CsrfMiddleware::requireValidToken();
+
 // Check if user has permission to upload documents (not viewer)
 $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
 if ($userRole === 'viewer') {

@@ -4,6 +4,8 @@
  * Database Configuration
  */
 
+require_once __DIR__ . '/config.php';
+
 function getDatabase() {
     static $db = null;
     

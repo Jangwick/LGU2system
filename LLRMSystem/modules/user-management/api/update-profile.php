@@ -7,6 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
+CsrfMiddleware::requireValidToken();
+
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 

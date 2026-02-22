@@ -3,6 +3,7 @@ session_start();
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
+require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 
 header('Content-Type: application/json');
 
@@ -11,6 +12,8 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
+
+CsrfMiddleware::requireValidToken();
 
 // Check if file was uploaded
 if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK) {

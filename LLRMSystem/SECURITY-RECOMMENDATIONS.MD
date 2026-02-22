@@ -516,8 +516,8 @@ These are ordered by priority. Address Critical and High items before deploying 
 
 ### Phase 1 — Critical (Complete within 1 sprint)
 
-- [ ] **Implement CSRF middleware** and integrate it into all POST-handling controllers (login-related forms are lower risk since they are pre-authentication, but document operations, user management, and profile updates are high-priority targets).
-- [ ] **Replace `mt_rand()` with `random_int()`** for OTP generation — this is a one-line change with no performance trade-off.
+- [x] **Implement CSRF middleware** and integrate it into all POST-handling controllers (login-related forms are lower risk since they are pre-authentication, but document operations, user management, and profile updates are high-priority targets).
+- [x] **Replace `mt_rand()` with `random_int()`** for OTP generation — this is a one-line change with no performance trade-off.
 - [ ] **Fix IP address resolution** in `Security::getClientIP()` — remove trust of `HTTP_CLIENT_IP` and `HTTP_X_FORWARDED_FOR` unless a verified reverse proxy is configured.
 - [ ] **Remove hardcoded credentials** from `config.php`. Create a `config.local.php.example` template and document the required environment variables in the README.
 

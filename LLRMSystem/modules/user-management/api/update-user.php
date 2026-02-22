@@ -2,6 +2,9 @@
 session_start();
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
+CsrfMiddleware::requireValidToken();
+
 require_once __DIR__ . '/../controllers/UserController.php';
 
 try {

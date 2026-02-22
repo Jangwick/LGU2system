@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/../config/config.php'; ?>
+<?php
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../middleware/CsrfMiddleware.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +15,7 @@
     <title><?php echo $pageTitle ?? APP_NAME; ?> - City Government of Valenzuela</title>
     <meta name="description" content="Legislative Records Management System - City Government of Valenzuela, Metropolitan Manila">
     <meta name="keywords" content="LRMS, Valenzuela, Legislative Records, Document Management">
+    <?php echo CsrfMiddleware::metaTag(); ?>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -64,6 +68,9 @@
     
     <!-- Application Configuration -->
     <script src="<?php echo asset('js/config.js'); ?>"></script>
+
+    <!-- CSRF Fetch Interceptor — must load before any fetch() calls -->
+    <script src="<?php echo asset('js/csrf.js'); ?>"></script>
     
     <!-- Notification System -->
     <script src="<?php echo asset('js/notifications.js'); ?>" defer></script>
