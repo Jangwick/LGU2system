@@ -5,6 +5,26 @@
 require_once __DIR__ . '/modules/core/config/config.php';
 require_once __DIR__ . '/modules/dashboard/services/DashboardService.php';
 
+// ── Security Response Headers ────────────────────────────────────────────────
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()');
+header(
+    "Content-Security-Policy: " .
+    "default-src 'self'; " .
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; " .
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; " .
+    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
+    "img-src 'self' data: blob: https://lacs.spvalenzuela.com; " .
+    "connect-src 'self'; " .
+    "frame-ancestors 'self'; " .
+    "base-uri 'self'; " .
+    "form-action 'self';"
+);
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Check if user is already logged in with a valid session
 checkAlreadyLoggedIn();
 

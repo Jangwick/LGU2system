@@ -537,7 +537,7 @@ These are ordered by priority. Address Critical and High items before deploying 
 
 ### Phase 4 — Hardening (Ongoing / Post-Launch)
 
-- [ ] **Add security response headers** globally via a bootstrap include or `.htaccess` (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`).
+- [x] **Add security response headers** globally via a bootstrap include or `.htaccess` (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`).
 - [ ] **Integrate a common password blocklist** at registration and password-change time.
 - [ ] **Add `.htaccess` protection** to the `storage/` directory to prevent direct HTTP access even if it is web-accessible: `Deny from all`.
 - [ ] **Conduct a dedicated XSS audit** of the chatbot, search, notifications, and reports modules, which were not included in this initial review scope.
