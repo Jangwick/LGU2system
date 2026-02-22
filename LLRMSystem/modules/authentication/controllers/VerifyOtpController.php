@@ -40,14 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = getDatabase();
         $logger = new Logger($conn);
 
-        // Verify OTP
+        // Fetch all valid (unused, non-expired) OTPs for this user and verify via hash.
+        // Direct SQL comparison is not possible because OTPs are stored as bcrypt hashes.
         $stmt = $conn->prepare("
             SELECT * FROM user_otps 
-            WHERE user_id = ? AND otp_code = ? AND is_used = 0 AND expires_at > NOW() 
-            ORDER BY created_at DESC LIMIT 1
+            WHERE user_id = ? AND is_used = 0 AND expires_at > NOW() 
+            ORDER BY created_at DESC
         ");
-        $stmt->execute([$userId, $otp]);
-        $validOtp = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([$userId]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $validOtp = null;
+        foreach ($rows as $row) {
+            if (password_verify($otp, $row['otp_code'])) {
+                $validOtp = $row;
+                break;
+            }
+        }
 
         if ($validOtp) {
             // Mark OTP as used

@@ -523,7 +523,7 @@ These are ordered by priority. Address Critical and High items before deploying 
 
 ### Phase 2 — High (Complete before first user-acceptance test)
 
-- [ ] **Hash OTPs** before storing and use `password_verify()` on retrieval.
+- [x] **Hash OTPs** before storing and use `password_verify()` on retrieval.
 - [ ] **Add OTP brute-force rate limiting** in `VerifyOtpController.php` — invalidate OTP and force re-login after 5 failed attempts.
 - [ ] **Fix Remember Me cookie flags** — add `httponly`, `secure`, `samesite: Strict`, and store a SHA-256 hash of the token, not the plaintext.
 - [ ] **Replace client MIME type check** with `mime_content_type($file['tmp_name'])` in `DocumentService::validateFile()`.

@@ -97,9 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $otpCode = sprintf("%06d", random_int(0, 999999));
                 $expiry = date('Y-m-d H:i:s', strtotime('+' . OTP_EXPIRY_MINUTES . ' minutes'));
                 
-                // Store OTP in database
+                // Store hashed OTP in database (plaintext is emailed, hash is stored)
+                $otpHash = password_hash($otpCode, PASSWORD_DEFAULT);
                 $stmt = $conn->prepare("INSERT INTO user_otps (user_id, otp_code, expires_at) VALUES (?, ?, ?)");
-                $stmt->execute([$user['id'], $otpCode, $expiry]);
+                $stmt->execute([$user['id'], $otpHash, $expiry]);
                 
                 // Save user ID to temporary session for OTP verification
                 $_SESSION['otp_pending_user_id'] = $user['id'];
