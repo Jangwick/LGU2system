@@ -37,7 +37,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-gray-950 p-3 md:p-6 custom-scrollbar">
+    <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#0f0f0f] p-3 md:p-6 custom-scrollbar">
         <!-- Flash Messages -->
         <?php if (isset($_SESSION['flash_success'])): ?>
             <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-4 animate-fade-in">
@@ -60,18 +60,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white transform transition-all duration-500 ease-in-out animate-fade-in relative overflow-hidden">
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
-            <div class="relative flex items-center justify-between gap-4">
+            <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight transition-all duration-500">
                         User Management
                     </h1>
-                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium transition-all duration-500">
+                    <p class="text-red-100 text-sm opacity-90 font-medium transition-all duration-500">
                         Manage system users, roles, and permissions.
                     </p>
                 </div>
                 
-                <div class="shrink-0">
-                    <button type="button" onclick="openCreateModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <button type="button" onclick="openCreateModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 w-full md:w-auto text-sm">
                         <i class="bi bi-person-plus mr-2 transition-transform group-hover:rotate-12"></i>
                         Add New User
                     </button>
@@ -80,7 +80,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
             <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
                 <div class="flex items-center justify-between">
                     <div>
@@ -140,43 +140,38 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <div>
                         <h2 class="text-lg font-bold text-amber-900 dark:text-amber-300">Pending Approvals</h2>
-                        <p class="text-xs text-amber-700 dark:text-amber-400"><?php echo count($pendingUsers); ?> account(s) awaiting your review</p>
+                        <p class="text-xs text-amber-700 dark:text-amber-400 opacity-80 uppercase tracking-widest font-black"><?php echo count($pendingUsers); ?> account(s) awaiting review</p>
                     </div>
                 </div>
-                <span class="bg-amber-500 text-white text-xs font-black px-3 py-1 rounded-full animate-pulse"><?php echo count($pendingUsers); ?> NEW</span>
+                <span class="bg-amber-500 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm"><?php echo count($pendingUsers); ?> NEW</span>
             </div>
             <div class="space-y-3">
                 <?php foreach ($pendingUsers as $pu): ?>
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-amber-200 dark:border-amber-800/30 flex items-center justify-between hover:shadow-md transition-all">
+                <div class="bg-white dark:bg-[#1a1a1a] rounded-xl p-4 md:p-5 border border-amber-200 dark:border-amber-800/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:shadow-md transition-all">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
+                        <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center shrink-0">
                             <span class="text-amber-700 dark:text-amber-400 font-bold text-sm"><?php echo strtoupper(substr($pu['full_name'], 0, 2)); ?></span>
                         </div>
                         <div>
-                            <p class="font-bold text-gray-900 dark:text-white"><?php echo e($pu['full_name']); ?></p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e($pu['email']); ?></p>
+                            <div class="flex items-center flex-wrap gap-2 mb-0.5">
+                                <p class="font-bold text-gray-900 dark:text-white"><?php echo e($pu['full_name']); ?></p>
+                                <span class="px-2 py-0.5 text-[8px] font-black rounded uppercase tracking-widest <?php echo $pendingRoleClass; ?>">
+                                    <?php echo $pu['role']; ?>
+                                </span>
+                            </div>
+                            <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium mb-1"><?php echo e($pu['email']); ?></p>
+                            <p class="text-[9px] text-gray-400 dark:text-gray-500 uppercase font-black tracking-widest">
+                                <i class="bi bi-clock-history mr-1"></i><?php echo formatDate($pu['created_at']); ?>
+                            </p>
                         </div>
-                        <?php
-                        $pendingRoleClass = match(strtolower($pu['role'])) {
-                            'councilor' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-                            'secretary' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-                            default => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                        };
-                        ?>
-                        <span class="px-3 py-1 text-[10px] font-black rounded-full uppercase tracking-wider <?php echo $pendingRoleClass; ?>">
-                            <?php echo ucfirst($pu['role']); ?>
-                        </span>
-                        <span class="text-xs text-gray-400 dark:text-gray-500">
-                            <i class="bi bi-clock mr-1"></i>Registered <?php echo formatDate($pu['created_at']); ?>
-                        </span>
                     </div>
-                    <div class="flex items-center gap-2 shrink-0">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
                         <button onclick="approveUser(<?php echo $pu['id']; ?>, '<?php echo e($pu['full_name']); ?>')" 
-                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm hover:shadow-md flex items-center gap-1.5">
+                                class="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 border border-green-600">
                             <i class="bi bi-check-lg"></i> Approve
                         </button>
                         <button onclick="rejectUser(<?php echo $pu['id']; ?>, '<?php echo e($pu['full_name']); ?>')" 
-                                class="bg-white dark:bg-gray-800 hover:bg-red-600 hover:text-white text-gray-600 dark:text-gray-400 px-4 py-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-700 transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 hover:border-red-600">
+                                class="flex-1 sm:flex-none bg-white dark:bg-gray-800 hover:bg-red-600 hover:text-white text-gray-600 dark:text-gray-400 px-4 py-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-700 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 hover:border-red-600">
                             <i class="bi bi-x-lg"></i> Decline
                         </button>
                     </div>
@@ -187,21 +182,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <?php endif; ?>
 
         <!-- Search and Filters -->
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 mb-6 animate-fade-in-up" style="animation-delay: 100ms;">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md p-6 mb-6 animate-fade-in-up border border-gray-100 dark:border-gray-800" style="animation-delay: 100ms;">
+            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="relative group">
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">Search Users</label>
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">Search Users</label>
                     <div class="relative">
                         <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="text" name="search" value="<?php echo e($data['filters']['search'] ?? ''); ?>" 
-                               class="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none" 
-                               placeholder="Name, email, username...">
+                               class="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm" 
+                               placeholder="Name or details...">
                     </div>
                 </div>
                 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">Role</label>
-                    <select name="role" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">Role</label>
+                    <select name="role" class="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
                         <option value="">All Roles</option>
                         <option value="admin" <?php echo ($data['filters']['role'] ?? '') === 'admin' ? 'selected' : ''; ?>>Admin</option>
                         <option value="secretary" <?php echo ($data['filters']['role'] ?? '') === 'secretary' ? 'selected' : ''; ?>>Secretary</option>
@@ -211,19 +206,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">Status</label>
-                    <select name="status" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">Status</label>
+                    <select name="status" class="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
                         <option value="">All Statuses</option>
                         <option value="1" <?php echo ($data['filters']['status'] ?? '') === '1' ? 'selected' : ''; ?>>Active</option>
                         <option value="0" <?php echo ($data['filters']['status'] ?? '') === '0' ? 'selected' : ''; ?>>Inactive</option>
                     </select>
                 </div>
                 
-                <div class="flex items-end gap-2">
-                    <button type="submit" class="flex-1 bg-red-700 dark:bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-800 dark:hover:bg-red-700 transition-all flex items-center justify-center shadow-sm">
-                        <i class="bi bi-filter mr-2"></i> Apply
+                <div class="flex items-end gap-3">
+                    <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-black shadow-md transition-all flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest">
+                        <i class="bi bi-filter mr-1"></i> Apply
                     </button>
-                    <a href="index.php" class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700" title="Clear Filters">
+                    <a href="index.php" class="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700" title="Clear Filters">
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </a>
                 </div>
@@ -231,8 +226,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Users Table -->
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/80">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md overflow-hidden animate-fade-in-up border border-gray-100 dark:border-gray-800" style="animation-delay: 200ms;">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-sm">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                         Users List
@@ -376,50 +371,56 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Create/Edit User Modal -->
-<div id="userModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-900 backdrop-blur-md mb-20">
-        <div class="flex justify-between items-center mb-6">
-            <h3 id="modalTitle" class="text-xl font-bold text-gray-900 dark:text-white">Add New User</h3>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors">
-                <i class="bi bi-x-lg text-2xl"></i>
+<div id="userModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50 p-2 md:p-4">
+    <div class="relative top-10 md:top-20 mx-auto p-6 md:p-8 border border-white/10 w-full max-w-2xl shadow-2xl rounded-2xl md:rounded-[2.5rem] bg-white dark:bg-[#1a1a1a] backdrop-blur-md mb-20">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h3 id="modalTitle" class="text-xl md:text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tighter">Add New User</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Configure account details and permissions.</p>
+            </div>
+            <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-red-500 transition-all">
+                <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
         
         <form id="userForm" onsubmit="saveUser(event)">
             <input type="hidden" id="userId" name="id">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name <span class="text-red-500">*</span></label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Full Name <span class="text-red-500">*</span></label>
                     <input type="text" id="userFullName" name="full_name" required 
-                           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
+                           class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm"
+                           placeholder="Enter full name">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email <span class="text-red-500">*</span></label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Email Address <span class="text-red-500">*</span></label>
                     <input type="email" id="userEmail" name="email" required 
-                           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
+                           class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm"
+                           placeholder="email@example.com">
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Username</label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Username</label>
                     <input type="text" id="userUsername" name="username" 
-                           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
+                           class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm"
+                           placeholder="Account username">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password <span id="passwordRequired" class="text-red-500">*</span></label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Password <span id="passwordRequired" class="text-red-500">*</span></label>
                     <input type="password" id="userPassword" name="password" 
-                           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave blank to keep current password (when editing)</p>
+                           class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm"
+                           placeholder="••••••••">
+                    <p class="text-[9px] text-gray-400 dark:text-gray-500 mt-2 font-medium italic">Leave blank to keep current password if editing</p>
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role <span class="text-red-500">*</span></label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">System Role <span class="text-red-500">*</span></label>
                     <select id="userRole" name="role" required 
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
+                            class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm">
                         <option value="viewer">Viewer</option>
                         <option value="councilor">Councilor</option>
                         <option value="secretary">Secretary</option>
@@ -427,36 +428,36 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Position</label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Official Position</label>
                     <input type="text" id="userPosition" name="position" 
-                           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
-                           placeholder="e.g. Councilor, Secretary General">
+                           class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm"
+                           placeholder="e.g. Councilor">
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Department</label>
                     <input type="text" id="userDepartment" name="department" 
-                           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
-                           placeholder="e.g. Legislative Affairs">
+                           class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm"
+                           placeholder="Legislative Affairs">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status <span class="text-red-500">*</span></label>
+                    <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Account Status <span class="text-red-500">*</span></label>
                     <select id="userStatus" name="is_active" required 
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
+                            class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm">
                         <option value="1">Active</option>
                         <option value="0">Inactive</option>
                     </select>
                 </div>
             </div>
             
-            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <button type="button" onclick="closeModal()" class="px-6 py-2.5 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-semibold transition-all">
+            <div class="flex flex-col sm:flex-row justify-end gap-3 pt-8 border-t border-gray-100 dark:border-gray-800">
+                <button type="button" onclick="closeModal()" class="w-full sm:w-auto px-8 py-3 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-black text-[11px] uppercase tracking-widest transition-all border border-gray-100 dark:border-gray-700">
                     Cancel
                 </button>
-                <button type="submit" class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
-                    <i class="bi bi-save mr-2"></i> Save User
+                <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black text-[11px] uppercase tracking-widest transition-all shadow-md hover:shadow-lg border border-red-600">
+                    <i class="bi bi-save mr-2"></i> Save Changes
                 </button>
             </div>
         </form>

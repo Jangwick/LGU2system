@@ -43,33 +43,33 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-gray-950 p-3 md:p-6 custom-scrollbar">
+    <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#0f0f0f] p-3 md:p-6 custom-scrollbar">
         <!-- Header Banner -->
         <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white transform transition-all duration-500 ease-in-out animate-fade-in relative overflow-hidden">
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
-            <div class="relative flex items-center justify-between gap-4">
+            <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight transition-all duration-500">
                         Audit Logs
                     </h1>
-                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium transition-all duration-500">
+                    <p class="text-red-100 text-sm opacity-90 font-medium transition-all duration-500">
                         System activity tracking and security audit trail.
                     </p>
                 </div>
                 
-                <div class="shrink-0">
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     <a href="?export=csv&<?php echo http_build_query($data['filters']); ?>" 
-                       class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
-                        <i class="bi bi-download mr-2"></i>
-                        Export CSV
+                       class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 w-full md:w-auto text-sm">
+                        <i class="bi bi-download mr-2 transition-transform group-hover:rotate-12"></i>
+                        Export CSV Intelligence
                     </a>
                 </div>
             </div>
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
             <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
                 <div class="flex items-center justify-between">
                     <div>
@@ -120,12 +120,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Filters -->
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 mb-6 animate-fade-in-up" style="animation-delay: 100ms;">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md p-6 mb-6 animate-fade-in-up border border-gray-100 dark:border-gray-800" style="animation-delay: 100ms;">
+            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
                 <div>
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">User</label>
-                    <select name="user_id" class="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
-                        <option value="">All Users</option>
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">Target User</label>
+                    <select name="user_id" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                        <option value="">All Identities</option>
                         <?php foreach ($data['users'] as $user): ?>
                             <option value="<?php echo $user['id']; ?>" <?php echo ($data['filters']['user_id'] ?? '') == $user['id'] ? 'selected' : ''; ?>>
                                 <?php echo e($user['full_name']); ?>
@@ -135,9 +135,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">Module</label>
-                    <select name="module" class="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
-                        <option value="">All Modules</option>
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">System Module</label>
+                    <select name="module" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                        <option value="">All Contexts</option>
                         <?php foreach ($data['modules'] as $mod): ?>
                             <option value="<?php echo e($mod); ?>" <?php echo ($data['filters']['module'] ?? '') == $mod ? 'selected' : ''; ?>>
                                 <?php echo ucfirst(e($mod)); ?>
@@ -147,9 +147,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">Event Type</label>
-                    <select name="event_type" class="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
-                        <option value="">All Events</option>
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">Event Type</label>
+                    <select name="event_type" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                        <option value="">All Protocols</option>
                         <?php foreach ($data['eventTypes'] as $et): ?>
                             <option value="<?php echo e($et); ?>" <?php echo ($data['filters']['event_type'] ?? '') == $et ? 'selected' : ''; ?>>
                                 <?php echo ucwords(str_replace('_', ' ', $et)); ?>
@@ -159,22 +159,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">From</label>
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">From</label>
                     <input type="date" name="date_from" value="<?php echo e($data['filters']['date_from'] ?? ''); ?>" 
-                           class="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                           class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
                 </div>
                 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1 block">To</label>
+                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">To</label>
                     <input type="date" name="date_to" value="<?php echo e($data['filters']['date_to'] ?? ''); ?>" 
-                           class="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                           class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
                 </div>
                 
-                <div class="flex items-end gap-2">
-                    <button type="submit" class="flex-1 bg-red-700 dark:bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-800 transition-all flex items-center justify-center shadow-sm">
-                        <i class="bi bi-funnel mr-1"></i> Filter
+                <div class="flex items-end gap-3">
+                    <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-black shadow-md transition-all flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest border border-red-600">
+                        <i class="bi bi-funnel"></i> Apply
                     </button>
-                    <a href="index.php" class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700" title="Clear">
+                    <a href="index.php" class="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700" title="Reset Filters">
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </a>
                 </div>
@@ -182,51 +182,53 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Search Bar -->
             <form method="GET" class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                <div class="flex gap-2">
+                <div class="flex flex-col sm:flex-row gap-4">
                     <div class="flex-1 relative">
-                        <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                         <input type="text" name="search" value="<?php echo e($data['filters']['search'] ?? ''); ?>" 
-                               class="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm" 
-                               placeholder="Search actions, events, or users...">
+                               class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm shadow-sm" 
+                               placeholder="Search identities, context, or protocol actions...">
                     </div>
-                    <button type="submit" class="bg-gray-800 dark:bg-gray-700 text-white px-5 py-2 rounded-lg font-bold hover:bg-black transition-all text-sm">Search</button>
-                    <?php if (!empty($data['filters']['search'])): ?>
-                        <a href="index.php" class="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-lg hover:bg-red-100 transition-all flex items-center">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    <?php endif; ?>
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-1 sm:flex-none bg-gray-900 dark:bg-gray-800 text-white px-8 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-black transition-all border border-gray-900">Search</button>
+                        <?php if (!empty($data['filters']['search'])): ?>
+                            <a href="index.php" class="px-4 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl hover:bg-red-100 transition-all flex items-center border border-red-100 dark:border-red-900">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </form>
         </div>
 
         <!-- Logs Table -->
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/80">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <i class="bi bi-list-ul text-red-600"></i>
-                        Activity Logs
-                        <span class="px-3 py-1 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold rounded-full"><?php echo number_format($data['total']); ?> records</span>
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md overflow-hidden animate-fade-in-up border border-gray-100 dark:border-gray-800" style="animation-delay: 200ms;">
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h2 class="text-lg font-black text-gray-900 dark:text-white flex items-center gap-3 uppercase tracking-tighter">
+                        <i class="bi bi-shield-lock-fill text-red-600"></i>
+                        Activity Audit Logs
+                        <span class="px-3 py-1 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[10px] font-black rounded-lg uppercase tracking-widest border border-red-100/50"><?php echo number_format($data['total']); ?> records</span>
                     </h2>
-                    <div class="text-xs text-gray-500 dark:text-gray-400">
-                        Showing <?php echo max(1, (($data['page'] - 1) * $data['perPage']) + 1); ?> to <?php echo min($data['page'] * $data['perPage'], $data['total']); ?>
+                    <div class="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                        Intelligence Stream: <?php echo max(1, (($data['page'] - 1) * $data['perPage']) + 1); ?> - <?php echo min($data['page'] * $data['perPage'], $data['total']); ?>
                     </div>
                 </div>
             </div>
             
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    <thead class="bg-gray-50/80 dark:bg-gray-800/80 border-b border-gray-200 dark:border-gray-800 backdrop-blur-md">
                         <tr>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date/Time</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Event</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Module</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Action</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">IP Address</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Temporal Signature</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Entity / Identity</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Protocol Event</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Module Context</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Operation Details</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Network Origin</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800/50">
                         <?php if (empty($data['logs'])): ?>
                             <tr>
                                 <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
@@ -247,8 +249,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <?php echo strtoupper(substr($log['full_name'] ?? 'S', 0, 1)); ?>
                                             </div>
                                             <div>
-                                                <div class="font-medium text-gray-900 dark:text-white text-sm group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors"><?php echo e($log['full_name'] ?? 'System'); ?></div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400"><?php echo e($log['email'] ?? ''); ?></div>
+                                                <div class="font-bold text-gray-900 dark:text-white text-sm group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors"><?php echo e($log['full_name'] ?? 'System'); ?></div>
+                                                <div class="text-[10px] text-gray-500 dark:text-gray-400 font-medium"><?php echo e($log['email'] ?? ''); ?></div>
                                             </div>
                                         </div>
                                     </td>
@@ -281,7 +283,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $eventIcon = 'bi-calendar-check';
                                         }
                                         ?>
-                                        <span class="px-2.5 py-1 text-xs font-bold rounded-full <?php echo $eventClass; ?> inline-flex items-center gap-1">
+                                        <span class="px-3 py-1.5 text-[9px] font-black rounded uppercase tracking-widest <?php echo $eventClass; ?> inline-flex items-center gap-1.5 shadow-sm">
                                             <i class="bi <?php echo $eventIcon; ?>"></i>
                                             <?php echo ucwords(str_replace('_', ' ', $eventStr)); ?>
                                         </span>
@@ -309,12 +311,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Pagination -->
             <?php if ($data['totalPages'] > 1): ?>
-                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/80">
+                <div class="px-6 py-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
                     <nav class="flex justify-center">
-                        <ul class="flex items-center space-x-2">
+                        <ul class="flex flex-wrap items-center justify-center gap-3">
                             <li>
                                 <a href="?page=<?php echo $data['page'] - 1; ?>&<?php echo http_build_query($data['filters']); ?>" 
-                                   class="<?php echo $data['page'] <= 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-200 dark:hover:bg-gray-700'; ?> w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 transition-colors">
+                                   class="<?php echo $data['page'] <= 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-200 dark:hover:bg-gray-800'; ?> w-10 h-10 rounded-xl bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 transition-all shadow-sm">
                                     <i class="bi bi-chevron-left"></i>
                                 </a>
                             </li>
@@ -322,7 +324,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php for ($i = max(1, $data['page'] - 2); $i <= min($data['totalPages'], $data['page'] + 2); $i++): ?>
                                 <li>
                                     <a href="?page=<?php echo $i; ?>&<?php echo http_build_query($data['filters']); ?>" 
-                                       class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all <?php echo $i == $data['page'] ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-600'; ?>">
+                                       class="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black transition-all <?php echo $i == $data['page'] ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' : 'bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-red-600'; ?>">
                                         <?php echo $i; ?>
                                     </a>
                                 </li>
@@ -330,7 +332,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             
                             <li>
                                 <a href="?page=<?php echo $data['page'] + 1; ?>&<?php echo http_build_query($data['filters']); ?>" 
-                                   class="<?php echo $data['page'] >= $data['totalPages'] ? 'pointer-events-none opacity-50' : 'hover:bg-gray-200 dark:hover:bg-gray-700'; ?> w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 transition-colors">
+                                   class="<?php echo $data['page'] >= $data['totalPages'] ? 'pointer-events-none opacity-50' : 'hover:bg-gray-200 dark:hover:bg-gray-800'; ?> w-10 h-10 rounded-xl bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 transition-all shadow-sm">
                                     <i class="bi bi-chevron-right"></i>
                                 </a>
                             </li>
