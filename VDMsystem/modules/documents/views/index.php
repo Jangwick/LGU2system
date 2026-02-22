@@ -159,7 +159,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-3 md:p-6">
         <!-- Flash Messages -->
         <?php if (isset($_SESSION['flash_success'])): ?>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6 animate-fade-in" role="alert">
@@ -177,7 +177,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Page Header -->
         <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
-            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl dark:opacity-5"></div>
             <div class="relative flex items-center justify-between gap-4">
                 <div>
                     <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Document Management</h1>
@@ -195,7 +195,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Filters -->
-        <div class="bg-white rounded-[2.5rem] shadow-md border border-slate-200/60 p-8 mb-8">
+        <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-md border border-slate-200/60 dark:border-gray-800 p-8 mb-8">
             <form method="GET" class="space-y-6">
                 <!-- Search -->
                 <div class="relative group">
@@ -210,7 +210,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Type -->
                     <div class="relative group">
-                        <select name="type" class="w-full pl-6 pr-12 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-bold text-sm transition-all appearance-none cursor-pointer">
+                        <select name="type" class="w-full pl-6 pr-12 py-4 bg-slate-50/50 dark:bg-gray-800/50 border border-slate-200 dark:border-gray-700 rounded-2xl focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-bold text-sm transition-all appearance-none cursor-pointer dark:text-gray-200">
                             <option value="">All Types</option>
                             <?php foreach ($documentTypes as $type): ?>
                                 <option value="<?php echo $type; ?>" <?php echo $typeFilter === $type ? 'selected' : ''; ?>>
@@ -223,7 +223,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     
                     <!-- Status -->
                     <div class="relative group">
-                        <select name="status" class="w-full pl-6 pr-12 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-bold text-sm transition-all appearance-none cursor-pointer">
+                        <select name="status" class="w-full pl-6 pr-12 py-4 bg-slate-50/50 dark:bg-gray-800/50 border border-slate-200 dark:border-gray-700 rounded-2xl focus:bg-white dark:focus:bg-gray-800 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none font-bold text-sm transition-all appearance-none cursor-pointer dark:text-gray-200">
                             <option value="">All Status</option>
                             <?php foreach ($statusList as $status): ?>
                                 <option value="<?php echo $status; ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>>
@@ -254,13 +254,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         
         <!-- Quick Stats -->
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-            <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-slate-500">
-                <div class="text-2xl font-bold text-gray-800"><?php echo $stats['total']; ?></div>
-                <div class="text-xs text-gray-500">Total</div>
+            <div class="bg-white dark:bg-gray-900 rounded-lg shadow p-3 text-center border-t-4 border-slate-500">
+                <div class="text-2xl font-bold text-gray-800 dark:text-white"><?php echo $stats['total']; ?></div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">Total</div>
             </div>
-            <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-gray-400">
-                <div class="text-2xl font-bold text-gray-500"><?php echo $stats['draft']; ?></div>
-                <div class="text-xs text-gray-500">Draft</div>
+            <div class="bg-white dark:bg-gray-900 rounded-lg shadow p-3 text-center border-t-4 border-gray-400">
+                <div class="text-2xl font-bold text-gray-500 dark:text-gray-400"><?php echo $stats['draft']; ?></div>
+                <div class="text-xs text-gray-400 dark:text-gray-500">Draft</div>
             </div>
             <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-purple-500">
                 <div class="text-2xl font-bold text-purple-600"><?php echo $stats['pending_vote']; ?></div>
@@ -277,7 +277,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Documents List -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden border border-transparent dark:border-gray-800">
             <?php if (empty($documents)): ?>
                 <div class="p-12 text-center">
                     <i class="bi bi-file-earmark-x text-5xl text-gray-300 mb-4"></i>
@@ -291,8 +291,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             <?php else: ?>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+                        <thead class="bg-gray-50 dark:bg-gray-800/50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
@@ -302,22 +302,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
                             <?php foreach ($documents as $doc): ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
-                                            <div class="bg-red-100 rounded-lg p-2 mr-3">
-                                                <i class="bi bi-file-earmark-text text-red-600 text-xl"></i>
+                                            <div class="bg-red-100 dark:bg-red-900/30 rounded-lg p-2 mr-3">
+                                                <i class="bi bi-file-earmark-text text-red-600 dark:text-red-400 text-xl"></i>
                                             </div>
                                             <div>
-                                                <div class="font-medium text-gray-900"><?php echo htmlspecialchars($doc['title']); ?></div>
-                                                <div class="text-sm text-gray-500"><?php echo htmlspecialchars($doc['doc_number']); ?></div>
+                                                <div class="font-medium text-gray-900 dark:text-white"><?php echo htmlspecialchars($doc['title']); ?></div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400"><?php echo htmlspecialchars($doc['doc_number']); ?></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
                                             <?php echo ucfirst(str_replace('_', ' ', $doc['type'])); ?>
                                         </span>
                                     </td>
