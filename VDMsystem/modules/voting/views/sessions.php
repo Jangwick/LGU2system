@@ -39,7 +39,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto bg-slate-50 p-3 md:p-6 custom-scrollbar">
+    <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-3 md:p-6 custom-scrollbar">
         <!-- Flash Messages -->
         <?php if (isset($_SESSION['flash_success'])): ?>
             <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4 animate-fade-in">
@@ -93,57 +93,57 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         $councilors = dbFetchAll("SELECT id, full_name, position FROM users WHERE role IN ('councilor', 'admin') AND is_active = 1 ORDER BY full_name");
         ?>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
-            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-red-700">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Total Sessions</p>
-                        <p class="text-2xl font-bold text-gray-800"><?php echo $sTotal; ?></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Total Sessions</p>
+                        <p class="text-2xl font-bold text-gray-800 dark:text-white"><?php echo $sTotal; ?></p>
                     </div>
-                    <div class="bg-red-50 rounded-full p-2.5">
-                        <i class="bi bi-calendar-event text-red-600 text-xl"></i>
+                    <div class="bg-red-50 dark:bg-red-900/20 rounded-full p-2.5">
+                        <i class="bi bi-calendar-event text-red-600 dark:text-red-400 text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-green-700">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">In Progress</p>
-                        <p class="text-2xl font-bold text-green-600"><?php echo $sActive; ?></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">In Progress</p>
+                        <p class="text-2xl font-bold text-green-600 dark:text-green-400"><?php echo $sActive; ?></p>
                     </div>
-                    <div class="bg-green-50 rounded-full p-2.5">
-                        <i class="bi bi-play-circle text-green-600 text-xl animate-pulse"></i>
+                    <div class="bg-green-50 dark:bg-green-900/20 rounded-full p-2.5">
+                        <i class="bi bi-play-circle text-green-600 dark:text-green-400 text-xl animate-pulse"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-indigo-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-indigo-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-indigo-700">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Scheduled</p>
-                        <p class="text-2xl font-bold text-indigo-600"><?php echo $sSched; ?></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Scheduled</p>
+                        <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400"><?php echo $sSched; ?></p>
                     </div>
-                    <div class="bg-indigo-50 rounded-full p-2.5">
-                        <i class="bi bi-clock-history text-indigo-600 text-xl"></i>
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-full p-2.5">
+                        <i class="bi bi-clock-history text-indigo-600 dark:text-indigo-400 text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-purple-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-purple-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-purple-700">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Completed</p>
-                        <p class="text-2xl font-bold text-purple-600"><?php echo $sComp; ?></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Completed</p>
+                        <p class="text-2xl font-bold text-purple-600 dark:text-purple-400"><?php echo $sComp; ?></p>
                     </div>
-                    <div class="bg-purple-50 rounded-full p-2.5">
-                        <i class="bi bi-check2-all text-purple-600 text-xl"></i>
+                    <div class="bg-purple-50 dark:bg-purple-900/20 rounded-full p-2.5">
+                        <i class="bi bi-check2-all text-purple-600 dark:text-purple-400 text-xl"></i>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Search and Filters -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6 animate-fade-in-up" style="animation-delay: 100ms;">
+        <div class="bg-white dark:bg-slate-900/50 rounded-2xl shadow-md p-6 mb-6 border border-gray-100 dark:border-slate-800 animate-fade-in-up" style="animation-delay: 100ms;">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="relative group">
                     <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Search Sessions</label>
@@ -188,10 +188,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Sessions Table -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
+        <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-800 animate-fade-in-up" style="animation-delay: 200ms;">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50 border-b border-gray-200">
+                    <thead class="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">
                         <tr>
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Session Details</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Schedule</th>
@@ -212,41 +212,41 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php else: ?>
                             <?php foreach ($sessions as $session): ?>
-                                <tr class="hover:bg-red-50 transition-colors group">
+                                <tr class="hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors group">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
                                             <div class="bg-red-100 text-red-700 w-10 h-10 rounded-lg flex items-center justify-center font-bold mr-4 group-hover:bg-red-600 group-hover:text-white transition-all transform group-hover:rotate-3 shadow-sm">
                                                 <i class="bi bi-calendar-check"></i>
                                             </div>
                                             <div>
-                                                <div class="font-bold text-gray-900 group-hover:text-red-700 transition-colors"><?php echo e($session['title']); ?></div>
-                                                <div class="text-xs text-gray-500"><?php echo e($session['session_number']); ?> • Added by <?php echo e($session['created_by_name']); ?></div>
+                                                <div class="font-bold text-gray-900 dark:text-white group-hover:text-red-700 dark:group-hover:text-red-500 transition-colors"><?php echo e($session['title']); ?></div>
+                                                <div class="text-xs text-gray-500 dark:text-gray-400"><?php echo e($session['session_number']); ?> • Added by <?php echo e($session['created_by_name']); ?></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-col">
-                                            <span class="text-sm font-medium text-gray-700">
-                                                <i class="bi bi-calendar3 mr-1 text-red-500"></i>
+                                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                <i class="bi bi-calendar3 mr-1 text-red-500 dark:text-red-400"></i>
                                                 <?php echo formatDate($session['session_date'], 'M d, Y'); ?>
                                             </span>
-                                            <span class="text-xs text-gray-500 mt-1">
-                                                <i class="bi bi-clock mr-1 text-gray-400"></i>
+                                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                <i class="bi bi-clock mr-1 text-gray-400 dark:text-gray-500"></i>
                                                 <?php echo date('h:i A', strtotime($session['start_time'])); ?>
                                             </span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="committee-badge text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded border border-gray-200">
+                                        <span class="committee-badge text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded border border-gray-200 dark:border-slate-700">
                                             <?php echo e($session['committee_name'] ?? 'Plenary / General'); ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <span class="text-sm font-bold bg-red-50 text-red-700 dark:text-red-400 w-8 h-8 rounded-full flex items-center justify-center border border-red-100 shadow-sm" title="Documents">
+                                            <span class="text-sm font-bold bg-red-50 dark:bg-red-900/40 text-red-700 dark:text-red-300 w-8 h-8 rounded-full flex items-center justify-center border border-red-100 dark:border-red-900/50 shadow-sm" title="Documents">
                                                 <?php echo $session['document_count']; ?>
                                             </span>
-                                            <span class="text-sm font-bold bg-blue-50 text-blue-700 dark:text-blue-400 w-8 h-8 rounded-full flex items-center justify-center border border-blue-100 shadow-sm" title="Attendees Present">
+                                            <span class="text-sm font-bold bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 w-8 h-8 rounded-full flex items-center justify-center border border-blue-100 dark:border-blue-900/50 shadow-sm" title="Attendees Present">
                                                 <?php echo $session['attendee_count']; ?>
                                             </span>
                                         </div>
@@ -320,14 +320,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <!-- Modal Body -->
-                    <form id="sessionForm" action="create-session.php" method="POST" class="vdm-form flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar vdm-page-bg">
+                    <form id="sessionForm" action="create-session.php" method="POST" class="vdm-form flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar bg-white dark:bg-slate-950">
                         <input type="hidden" name="session_id" id="modalSessionId" value="">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             
                             <!-- Left Section (Basic Info & Documents) -->
                             <div class="lg:col-span-2 space-y-8">
                                 <!-- Basic Information -->
-                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
+                                <div class="vdm-card dark:bg-slate-900 rounded-[2rem] p-8 shadow-sm border dark:border-slate-800">
                                     <div class="flex items-center gap-4 mb-8">
                                         <div class="w-11 h-11 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center text-lg">
                                             <i class="bi bi-info-circle-fill"></i>
@@ -361,7 +361,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
 
                                 <!-- Legislative Items -->
-                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
+                                <div class="vdm-card dark:bg-slate-900 rounded-[2rem] p-8 shadow-sm border dark:border-slate-800">
                                     <div class="flex items-center justify-between mb-8">
                                         <div class="flex items-center gap-4">
                                             <div class="w-11 h-11 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-lg">
@@ -379,7 +379,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             </div>
                                         <?php else: ?>
                                             <?php foreach ($pendingDocuments as $doc): ?>
-                                            <label class="flex items-center p-4 rounded-[1.25rem] vdm-card hover:border-red-200 dark:hover:border-red-900/50 transition-all cursor-pointer group border">
+                                            <label class="flex items-center p-4 rounded-[1.25rem] vdm-card dark:bg-slate-800/50 hover:border-red-200 dark:hover:border-red-900/50 transition-all cursor-pointer group border dark:border-slate-700">
                                                 <div class="mr-4">
                                                     <input type="checkbox" name="documents[]" value="<?php echo $doc['id']; ?>" class="w-5 h-5 text-red-600 rounded-lg border-slate-200 focus:ring-red-500/20 cursor-pointer">
                                                 </div>
@@ -400,7 +400,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <!-- Right Section (Settings & Attendees) -->
                             <div class="space-y-8">
                                 <!-- Settings -->
-                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border">
+                                <div class="vdm-card dark:bg-slate-900 rounded-[2rem] p-8 shadow-sm border dark:border-slate-800">
                                     <div class="flex items-center gap-4 mb-8">
                                         <div class="w-11 h-11 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl flex items-center justify-center text-lg">
                                             <i class="bi bi-gear-fill"></i>
@@ -433,7 +433,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
 
                                 <!-- Attendees -->
-                                <div class="vdm-card rounded-[2rem] p-8 shadow-sm border min-h-[400px] flex flex-col">
+                                <div class="vdm-card dark:bg-slate-900 rounded-[2rem] p-8 shadow-sm border dark:border-slate-800 min-h-[400px] flex flex-col">
                                     <div class="flex items-center gap-4 mb-8">
                                         <div class="w-11 h-11 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-lg">
                                             <i class="bi bi-people-fill"></i>
@@ -442,7 +442,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </div>
                                     <div class="overflow-y-auto space-y-2 flex-1 custom-scrollbar pr-2">
                                         <?php foreach ($councilors as $user): ?>
-                                        <label class="flex items-center p-3.5 rounded-[1.25rem] vdm-card cursor-pointer hover:border-red-200 dark:hover:border-red-900/50 transition-all border group">
+                                        <label class="flex items-center p-3.5 rounded-[1.25rem] vdm-card dark:bg-slate-800/50 cursor-pointer hover:border-red-200 dark:hover:border-red-900/50 transition-all border dark:border-slate-700 group">
                                             <div class="mr-4">
                                                 <input type="checkbox" name="attendees[]" value="<?php echo $user['id']; ?>" checked class="w-5 h-5 text-red-600 rounded-lg border-slate-200 dark:border-slate-700 focus:ring-red-500/20 cursor-pointer">
                                             </div>
@@ -476,8 +476,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeSessionDetailsModal()"></div>
                 
                 <!-- Modal Box -->
-                <div class="relative vdm-page-bg w-full max-w-7xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border">
-                    <div class="vdm-card p-6 md:p-8 flex items-center justify-between shrink-0 border-b">
+                <div class="relative bg-white dark:bg-slate-950 w-full max-w-7xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[95vh] border border-gray-100 dark:border-slate-800">
+                    <div class="vdm-card dark:bg-slate-900 p-6 md:p-8 flex items-center justify-between shrink-0 border-b dark:border-slate-800">
                         <div class="flex items-center gap-4">
                             <button onclick="closeSessionDetailsModal()" class="text-red-600 hover:text-red-700 font-black text-sm flex items-center group transition-all">
                                 <i class="bi bi-arrow-left mr-2 transition-transform group-hover:-translate-x-1"></i> Back to Sessions
@@ -486,7 +486,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <!-- Modal Body (Content Area) -->
-                    <div id="detailsModalContent" class="overflow-y-auto p-6 md:p-10 custom-scrollbar vdm-page-bg">
+                    <div id="detailsModalContent" class="overflow-y-auto p-6 md:p-10 custom-scrollbar dark:bg-slate-950">
                         <div class="flex items-center justify-center py-20">
                             <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
                         </div>
@@ -600,7 +600,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="animate-fade-in">
                         <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
                             <div>
-                                <h1 class="text-3xl md:text-5xl font-black vdm-heading tracking-tight leading-tight mb-2">${s.title}</h1>
+                                <h1 class="text-3xl md:text-5xl font-black vdm-heading dark:text-white tracking-tight leading-tight mb-2">${s.title}</h1>
                                 <p class="vdm-muted font-bold text-sm md:text-lg">
                                     <span class="vdm-sub">#${s.session_number}</span> &bull; Created by <span class="text-red-600">${s.created_by_name || 'Admin User'}</span>
                                 </p>
@@ -634,35 +634,35 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                         <!-- Stats Grid -->
                         <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-10">
-                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
+                            <div class="vdm-card dark:bg-slate-900 p-6 rounded-[2rem] border dark:border-slate-800 shadow-sm flex items-center justify-between">
                                 <div>
                                     <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Documents</p>
-                                    <p class="text-3xl font-black vdm-heading">${totalDocs}</p>
+                                    <p class="text-3xl font-black vdm-heading dark:text-white">${totalDocs}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center text-xl"><i class="bi bi-file-earmark-text"></i></div>
                             </div>
-                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
+                            <div class="vdm-card dark:bg-slate-900 p-6 rounded-[2rem] border dark:border-slate-800 shadow-sm flex items-center justify-between">
                                 <div>
                                     <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Present</p>
                                     <p class="text-3xl font-black text-[#22c55e]">${totalPresent}/${atts.length}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-green-50 dark:bg-green-900/20 text-[#22c55e] rounded-full flex items-center justify-center text-xl"><i class="bi bi-people"></i></div>
                             </div>
-                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
+                            <div class="vdm-card dark:bg-slate-900 p-6 rounded-[2rem] border dark:border-slate-800 shadow-sm flex items-center justify-between">
                                 <div>
                                     <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Total Votes</p>
                                     <p class="text-3xl font-black text-indigo-600 dark:text-indigo-400">${totalVotes}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center text-xl"><i class="bi bi-hand-thumbs-up"></i></div>
                             </div>
-                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
+                            <div class="vdm-card dark:bg-slate-900 p-6 rounded-[2rem] border dark:border-slate-800 shadow-sm flex items-center justify-between">
                                 <div>
                                     <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Passed</p>
                                     <p class="text-3xl font-black text-teal-500 dark:text-teal-400">${passedDocs}</p>
                                 </div>
                                 <div class="w-12 h-12 bg-teal-50 dark:bg-teal-900/20 text-teal-500 dark:text-teal-400 rounded-full flex items-center justify-center text-xl"><i class="bi bi-check2-circle"></i></div>
                             </div>
-                            <div class="vdm-card p-6 rounded-[2rem] border shadow-sm flex items-center justify-between">
+                            <div class="vdm-card dark:bg-slate-900 p-6 rounded-[2rem] border dark:border-slate-800 shadow-sm flex items-center justify-between">
                                 <div>
                                     <p class="text-[10px] font-black vdm-muted uppercase tracking-widest mb-1">Failed</p>
                                     <p class="text-3xl font-black text-red-500">${failedDocs}</p>
@@ -673,7 +673,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                         <!-- Split Content -->
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-                            <div class="lg:col-span-2 vdm-card p-10 rounded-[2.5rem] border shadow-sm">
+                            <div class="lg:col-span-2 vdm-card dark:bg-slate-900 p-10 rounded-[2.5rem] border dark:border-slate-800 shadow-sm">
                                 <h3 class="text-xl font-black vdm-heading flex items-center gap-3 mb-10">
                                     <i class="bi bi-info-circle text-red-600"></i> Session Information
                                 </h3>
@@ -723,7 +723,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
                             </div>
 
-                            <div class="vdm-card rounded-[2.5rem] p-8 border shadow-sm flex flex-col">
+                            <div class="vdm-card dark:bg-slate-900 rounded-[2.5rem] p-8 border dark:border-slate-800 shadow-sm flex flex-col">
                                 <div class="flex items-center justify-between mb-8">
                                     <h3 class="text-lg font-black vdm-heading flex items-center gap-3">
                                         <i class="bi bi-people text-red-600"></i> Attendees
@@ -748,7 +748,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
 
                         <!-- Documents Section -->
-                        <div class="vdm-card rounded-[2.5rem] border shadow-sm overflow-hidden">
+                        <div class="vdm-card dark:bg-slate-900 rounded-[2.5rem] border dark:border-slate-800 shadow-sm overflow-hidden">
                             <div class="px-8 py-6 border-b flex flex-col md:flex-row md:items-center justify-between gap-4" style="border-color: var(--vdm-card-border)">
                                 <div class="flex items-center gap-4">
                                     <i class="bi bi-file-earmark-text text-2xl text-red-600"></i>
@@ -769,7 +769,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 ` : `
                                     <table class="w-full border-collapse">
                                         <thead>
-                                            <tr class="bg-slate-50 dark:bg-slate-900/50">
+                                            <tr class="bg-slate-50 dark:bg-slate-800/50">
                                                 <th class="px-8 py-4 text-left text-[10px] font-black vdm-muted uppercase tracking-[0.2em] border-b opacity-80" style="border-color: var(--vdm-card-border)">Document Details</th>
                                                 <th class="px-8 py-4 text-center text-[10px] font-black vdm-muted uppercase tracking-[0.2em] border-b opacity-80" style="border-color: var(--vdm-card-border)">Status</th>
                                                 <th class="px-8 py-4 text-center text-[10px] font-black vdm-muted uppercase tracking-[0.2em] border-b opacity-80" style="border-color: var(--vdm-card-border)">Results</th>
