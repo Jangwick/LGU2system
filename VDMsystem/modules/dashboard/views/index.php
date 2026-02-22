@@ -61,13 +61,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Subtle decorative background element -->
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
-            <div class="relative !flex !flex-row items-center !justify-between w-full gap-6">
+            <!-- Desktop View: Always Horizontal, Title Left, Buttons Right -->
+            <div class="hidden md:flex relative !flex-row items-center !justify-between w-full gap-6">
                 <!-- Left Side: Title & Context -->
                 <div class="flex-1 text-left">
-                    <h1 class="text-2xl md:text-4xl font-black mb-1 p-0 m-0 tracking-tight transition-all duration-500">
+                    <h1 class="text-4xl font-black mb-1 p-0 m-0 tracking-tight transition-all duration-500">
                         Hi, <?php echo e($_SESSION['user_name'] ?? 'User'); ?>! 👋
                     </h1>
-                    <p class="text-red-100 text-sm md:text-lg opacity-90 font-medium p-0 m-0 transition-all duration-500">
+                    <p class="text-red-100 text-lg opacity-90 font-medium p-0 m-0 transition-all duration-500">
                         Voting & decision-making status for today.
                     </p>
                 </div>
@@ -75,15 +76,42 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Right Side: Action Buttons -->
                 <div class="flex flex-row items-center gap-3 shrink-0">
                     <?php if ($canManage): ?>
-                    <button type="button" onclick="openCreateSessionModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 text-sm">
+                    <button type="button" onclick="openCreateSessionModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 text-sm">
                         <i class="bi bi-plus-circle mr-2 transition-transform group-hover:rotate-90"></i>
                         <span>New Session</span>
                     </button>
                     <?php endif; ?>
                     <?php if ($canVote): ?>
-                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="!bg-red-600 !text-white px-4 md:px-7 py-3 rounded-xl font-bold hover:!bg-red-700 border border-white/20 shadow-lg transition-all flex items-center justify-center transform hover:scale-[1.02] active:scale-95 text-sm">
+                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="!bg-red-600 !text-white px-7 py-3 rounded-xl font-bold hover:!bg-red-700 border border-white/20 shadow-lg transition-all flex items-center justify-center transform hover:scale-[1.02] active:scale-95 text-sm">
                         <i class="bi bi-hand-thumbs-up mr-2"></i>
                         <span>Cast Vote</span>
+                    </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Mobile View: Optimized Stacked Layout -->
+            <div class="flex md:hidden flex-col items-start w-full gap-6">
+                <div>
+                    <h1 class="text-3xl font-black mb-1 p-0 m-0 tracking-tight">
+                        Hi, <?php echo e($_SESSION['user_name'] ?? 'User'); ?>! 👋
+                    </h1>
+                    <p class="text-red-100 text-sm opacity-90 font-medium p-0 m-0">
+                        Voting & decision-making status for today.
+                    </p>
+                </div>
+                
+                <div class="flex flex-row flex-wrap items-center gap-2 w-full">
+                    <?php if ($canManage): ?>
+                    <button type="button" onclick="openCreateSessionModal()" class="flex-1 !bg-white !text-red-600 px-4 py-3 rounded-xl font-bold shadow-lg flex items-center justify-center border border-red-600 text-xs">
+                        <i class="bi bi-plus-circle mr-2"></i>
+                        New Session
+                    </button>
+                    <?php endif; ?>
+                    <?php if ($canVote): ?>
+                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="flex-1 !bg-red-600 !text-white px-4 py-3 rounded-xl font-bold border border-white/20 shadow-lg flex items-center justify-center text-xs">
+                        <i class="bi bi-hand-thumbs-up mr-2"></i>
+                        Cast Vote
                     </a>
                     <?php endif; ?>
                 </div>

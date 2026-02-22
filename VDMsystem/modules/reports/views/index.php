@@ -65,24 +65,48 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Subtle decorative background element -->
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
-            <div class="relative !flex !flex-row items-center !justify-between w-full gap-6">
+            <!-- Desktop View: Always Horizontal, Title Left, Buttons Right -->
+            <div class="hidden md:flex relative !flex-row items-center !justify-between w-full gap-6">
                 <!-- Left Side: Title & Context -->
                 <div class="flex-1 text-left">
-                    <h1 class="text-2xl md:text-4xl font-black mb-1 p-0 m-0 tracking-tight transition-all duration-500">
+                    <h1 class="text-4xl font-black mb-1 p-0 m-0 tracking-tight transition-all duration-500">
                         Reports & Analytics
                     </h1>
-                    <p class="text-red-100 text-sm md:text-lg opacity-90 font-medium p-0 m-0 transition-all duration-500">
+                    <p class="text-red-100 text-lg opacity-90 font-medium p-0 m-0 transition-all duration-500">
                         Legislative performance, voting trends, attendance metrics, and document intelligence.
                     </p>
                 </div>
 
                 <!-- Right Side: Action Buttons -->
                 <div class="flex flex-row items-center gap-3 shrink-0">
-                    <button onclick="exportReport()" class="!bg-white/10 hover:!bg-white/20 backdrop-blur-sm text-white px-4 md:px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-white/20 text-sm">
+                    <button onclick="exportReport()" class="!bg-white/10 hover:!bg-white/20 backdrop-blur-sm text-white px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-white/20 text-sm">
                         <i class="bi bi-download mr-2"></i> Export
                     </button>
-                    <button onclick="window.print()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 text-sm">
+                    <button onclick="window.print()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 text-sm">
                         <i class="bi bi-printer mr-2"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile View: Optimized Stacked Layout -->
+            <div class="flex md:hidden flex-col items-start w-full gap-6">
+                <div>
+                    <h1 class="text-3xl font-black mb-1 p-0 m-0 tracking-tight">
+                        Reports & Analytics
+                    </h1>
+                    <p class="text-red-100 text-sm opacity-90 font-medium p-0 m-0">
+                        Legislative performance, voting trends, attendance metrics, and document intelligence.
+                    </p>
+                </div>
+                
+                <div class="flex flex-row flex-wrap items-center gap-2 w-full">
+                    <button onclick="exportReport()" class="flex-1 !bg-white/10 backdrop-blur-sm text-white px-4 py-3 rounded-xl font-bold shadow-lg flex items-center justify-center border border-white/20 text-xs">
+                        <i class="bi bi-download mr-2"></i>
+                        Export
+                    </button>
+                    <button onclick="window.print()" class="flex-1 !bg-white !text-red-600 px-4 py-3 rounded-xl font-bold border border-red-600 shadow-lg flex items-center justify-center text-xs">
+                        <i class="bi bi-printer mr-2"></i>
+                        Print
                     </button>
                 </div>
             </div>

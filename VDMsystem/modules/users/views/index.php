@@ -60,20 +60,40 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white transform transition-all duration-500 ease-in-out animate-fade-in relative overflow-hidden">
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
-            <div class="relative !flex !flex-row items-center !justify-between w-full gap-6">
+            <!-- Desktop View: Always Horizontal, Title Left, Buttons Right -->
+            <div class="hidden md:flex relative !flex-row items-center !justify-between w-full gap-6">
                 <div class="flex-1 text-left">
-                    <h1 class="text-2xl md:text-4xl font-black mb-1 p-0 m-0 tracking-tight transition-all duration-500">
+                    <h1 class="text-4xl font-black mb-1 p-0 m-0 tracking-tight transition-all duration-500">
                         User Management
                     </h1>
-                    <p class="text-red-100 text-sm md:text-lg opacity-90 font-medium p-0 m-0 transition-all duration-500">
+                    <p class="text-red-100 text-lg opacity-90 font-medium p-0 m-0 transition-all duration-500">
                         Manage system users, roles, and permissions.
                     </p>
                 </div>
                 
                 <div class="flex flex-row items-center gap-3 shrink-0">
-                    <button type="button" onclick="openCreateModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 text-sm">
+                    <button type="button" onclick="openCreateModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 text-sm">
                         <i class="bi bi-person-plus mr-2 transition-transform group-hover:rotate-12"></i>
                         Add New User
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile View: Optimized Stacked Layout -->
+            <div class="flex md:hidden flex-col items-start w-full gap-6">
+                <div>
+                    <h1 class="text-3xl font-black mb-1 p-0 m-0 tracking-tight">
+                        User Management
+                    </h1>
+                    <p class="text-red-100 text-sm opacity-90 font-medium p-0 m-0">
+                        Manage system users, roles, and permissions.
+                    </p>
+                </div>
+                
+                <div class="flex flex-row flex-wrap items-center gap-2 w-full">
+                    <button type="button" onclick="openCreateModal()" class="flex-1 !bg-white !text-red-600 px-4 py-3 rounded-xl font-bold border border-red-600 shadow-lg flex items-center justify-center text-xs">
+                        <i class="bi bi-person-plus mr-2"></i>
+                        Add User
                     </button>
                 </div>
             </div>
