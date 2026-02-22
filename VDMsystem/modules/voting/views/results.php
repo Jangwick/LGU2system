@@ -63,13 +63,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Page Header -->
         <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
-            <div class="relative flex items-center justify-between gap-4">
+            <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Voting Results</h1>
-                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium">Review outcomes, analytics, and historical data of all voting sessions.</p>
+                    <p class="text-red-100 text-sm opacity-90 font-medium">Review outcomes, analytics, and historical data of all voting sessions.</p>
                 </div>
-                <div class="shrink-0">
-                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 w-full md:w-auto text-sm">
                         <i class="bi bi-list-ul mr-2"></i>
                         All Sessions
                     </a>
@@ -91,8 +91,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <?php else: ?>
                         <?php foreach ($sessions as $s): ?>
                             <div class="vdm-card rounded-2xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 group border-none">
-                                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 flex justify-between items-center px-6">
-                                    <span class="text-[10px] font-black vdm-text-muted uppercase tracking-widest bg-white dark:bg-slate-700 px-2 py-1 rounded shadow-sm">#<?php echo $s['session_number']; ?></span>
+                                <div class="bg-gray-50 dark:bg-[#2d2d2d] p-4 flex justify-between items-center px-6 border-b border-gray-100 dark:border-gray-800">
+                                    <span class="text-[10px] font-black vdm-text-muted uppercase tracking-widest bg-white dark:bg-[#1a1a1a] px-2 py-1 rounded shadow-sm border border-gray-100 dark:border-gray-800">#<?php echo $s['session_number']; ?></span>
                                     <?php
                                     $statusClass = $s['status'] === 'completed' ? 'bg-purple-500/10 text-purple-500' : 'bg-green-500/10 text-green-500';
                                     ?>
@@ -104,15 +104,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <h3 class="text-xl font-black vdm-heading mb-6 group-hover:text-red-500 transition-colors line-clamp-2 h-14 uppercase tracking-tighter leading-tight"><?php echo e($s['title']); ?></h3>
                                     
                                     <div class="grid grid-cols-3 gap-3 mb-8">
-                                        <div class="vdm-page-bg rounded-xl p-3 text-center border border-slate-100 dark:border-slate-800 group-hover:border-red-500/30 transition-all">
+                                        <div class="bg-gray-50 dark:!bg-[#1a1a1a] rounded-xl p-3 text-center border border-gray-100 dark:border-gray-800 group-hover:border-red-500/30 transition-all">
                                             <p class="text-[9px] vdm-text-muted uppercase font-black mb-1 opacity-60">Items</p>
                                             <p class="font-black vdm-heading"><?php echo $s['document_count']; ?></p>
                                         </div>
-                                        <div class="vdm-page-bg rounded-xl p-3 text-center border border-slate-100 dark:border-slate-800 group-hover:border-red-500/30 transition-all">
+                                        <div class="bg-gray-50 dark:!bg-[#1a1a1a] rounded-xl p-3 text-center border border-gray-100 dark:border-gray-800 group-hover:border-red-500/30 transition-all">
                                             <p class="text-[9px] vdm-text-muted uppercase font-black mb-1 opacity-60">Votes</p>
                                             <p class="font-black vdm-heading"><?php echo $s['vote_count']; ?></p>
                                         </div>
-                                        <div class="vdm-page-bg rounded-xl p-3 text-center border border-slate-100 dark:border-slate-800 group-hover:border-red-500/30 transition-all">
+                                        <div class="bg-gray-50 dark:!bg-[#1a1a1a] rounded-xl p-3 text-center border border-gray-100 dark:border-gray-800 group-hover:border-red-500/30 transition-all">
                                             <p class="text-[9px] vdm-text-muted uppercase font-black mb-1 opacity-60">Quorum</p>
                                             <p class="font-black vdm-heading"><?php echo $s['attendee_count']; ?></p>
                                         </div>

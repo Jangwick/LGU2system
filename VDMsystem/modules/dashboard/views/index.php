@@ -61,27 +61,27 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Subtle decorative background element -->
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
-            <div class="relative flex items-center justify-between gap-4">
+            <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <!-- Left Side: Title & Context -->
                 <div>
                     <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight transition-all duration-500">
                         Hi, <?php echo e($_SESSION['user_name'] ?? 'User'); ?>! 👋
                     </h1>
-                    <p class="text-red-100 text-xs md:text-base opacity-90 font-medium transition-all duration-500">
+                    <p class="text-red-100 text-sm md:text-base opacity-90 font-medium transition-all duration-500">
                         Voting & decision-making status for today.
                     </p>
                 </div>
                 
                 <!-- Right Side: Action Buttons -->
-                <div class="shrink-0 flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     <?php if ($canManage): ?>
-                    <button type="button" onclick="openCreateSessionModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                    <button type="button" onclick="openCreateSessionModal()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 w-full md:w-auto text-sm">
                         <i class="bi bi-plus-circle mr-2 transition-transform group-hover:rotate-90"></i>
                         <span>New Session</span>
                     </button>
                     <?php endif; ?>
                     <?php if ($canVote): ?>
-                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="!bg-red-600 !text-white px-6 py-2.5 rounded-xl font-bold hover:!bg-red-700 border border-white/20 shadow-lg transition-all flex items-center transform hover:scale-[1.02] active:scale-95 text-sm">
+                    <a href="<?php echo VOTING_URL; ?>/views/cast-vote.php" class="!bg-red-600 !text-white px-4 md:px-6 py-3 rounded-xl font-bold hover:!bg-red-700 border border-white/20 shadow-lg transition-all flex items-center justify-center transform hover:scale-[1.02] active:scale-95 text-sm w-full md:w-auto">
                         <i class="bi bi-hand-thumbs-up mr-2"></i>
                         <span>Cast Vote</span>
                     </a>
@@ -91,7 +91,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
             <!-- Total Sessions -->
             <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
                 <div class="flex items-center justify-between">
