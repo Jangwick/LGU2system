@@ -69,62 +69,62 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
-            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 animate-fade-in-up">
+            <div class="bg-white dark:bg-[#1a1a1a] rounded-xl md:rounded-2xl shadow-md p-3 md:p-5 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-gray-100 dark:border-gray-800">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Total Logs</p>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-white"><?php echo number_format($stats['total_logs']); ?></p>
+                        <p class="text-[9px] md:text-xs text-gray-500 dark:text-gray-400 uppercase font-black tracking-widest">Total Logs</p>
+                        <p class="text-xl md:text-2xl font-black text-gray-900 dark:text-white"><?php echo number_format($stats['total_logs']); ?></p>
                     </div>
-                    <div class="bg-red-50 dark:bg-red-900/20 rounded-full p-2.5">
-                        <i class="bi bi-database-fill text-red-600 text-xl"></i>
+                    <div class="bg-red-50 dark:bg-red-900/20 rounded-xl p-2 md:p-3">
+                        <i class="bi bi-database-fill text-red-600 text-lg md:text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-[#1a1a1a] rounded-xl md:rounded-2xl shadow-md p-3 md:p-5 border-l-4 border-green-500 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-gray-100 dark:border-gray-800">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Today</p>
-                        <p class="text-2xl font-bold text-green-600"><?php echo number_format($stats['logs_today']); ?></p>
+                        <p class="text-[9px] md:text-xs text-gray-500 dark:text-gray-400 uppercase font-black tracking-widest">Today</p>
+                        <p class="text-xl md:text-2xl font-black text-green-600"><?php echo number_format($stats['logs_today']); ?></p>
                     </div>
-                    <div class="bg-green-50 dark:bg-green-900/20 rounded-full p-2.5">
-                        <i class="bi bi-calendar-day text-green-600 text-xl"></i>
+                    <div class="bg-green-50 dark:bg-green-900/20 rounded-xl p-2 md:p-3">
+                        <i class="bi bi-calendar-day text-green-600 text-lg md:text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 border-l-4 border-indigo-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-[#1a1a1a] rounded-xl md:rounded-2xl shadow-md p-3 md:p-5 border-l-4 border-indigo-500 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-gray-100 dark:border-gray-800">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">This Week</p>
-                        <p class="text-2xl font-bold text-indigo-600"><?php echo number_format($stats['logs_this_week']); ?></p>
+                        <p class="text-[9px] md:text-xs text-gray-500 dark:text-gray-400 uppercase font-black tracking-widest">This Week</p>
+                        <p class="text-xl md:text-2xl font-black text-indigo-600"><?php echo number_format($stats['logs_this_week']); ?></p>
                     </div>
-                    <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-full p-2.5">
-                        <i class="bi bi-calendar-week text-indigo-600 text-xl"></i>
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-2 md:p-3">
+                        <i class="bi bi-calendar-week text-indigo-600 text-lg md:text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 border-l-4 border-amber-500 hover:shadow-lg transition-all transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-[#1a1a1a] rounded-xl md:rounded-2xl shadow-md p-3 md:p-5 border-l-4 border-amber-500 hover:shadow-lg transition-all transform hover:-translate-y-1 border border-gray-100 dark:border-gray-800">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Most Active</p>
-                        <p class="text-sm font-bold text-gray-800 dark:text-white truncate" title="<?php echo e($stats['most_active_user']); ?>"><?php echo e($stats['most_active_user']); ?></p>
+                        <p class="text-[9px] md:text-xs text-gray-500 dark:text-gray-400 uppercase font-black tracking-widest">Most Active</p>
+                        <p class="text-xs md:text-sm font-black text-gray-900 dark:text-white truncate max-w-[80px] md:max-w-none" title="<?php echo e($stats['most_active_user']); ?>"><?php echo e($stats['most_active_user']); ?></p>
                     </div>
-                    <div class="bg-amber-50 dark:bg-amber-900/20 rounded-full p-2.5">
-                        <i class="bi bi-person-fill text-amber-600 text-xl"></i>
+                    <div class="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-2 md:p-3">
+                        <i class="bi bi-person-fill text-amber-600 text-lg md:text-xl"></i>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Filters -->
-        <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md p-6 mb-6 animate-fade-in-up border border-gray-100 dark:border-gray-800" style="animation-delay: 100ms;">
-            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
-                <div>
-                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">Target User</label>
-                    <select name="user_id" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up border border-gray-100 dark:border-gray-800" style="animation-delay: 100ms;">
+            <form method="GET" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-6">
+                <div class="col-span-1">
+                    <label class="text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-1.5 block tracking-widest">Target User</label>
+                    <select name="user_id" class="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-[11px] md:text-sm">
                         <option value="">All Identities</option>
                         <?php foreach ($data['users'] as $user): ?>
                             <option value="<?php echo $user['id']; ?>" <?php echo ($data['filters']['user_id'] ?? '') == $user['id'] ? 'selected' : ''; ?>>
@@ -134,9 +134,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 
-                <div>
-                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">System Module</label>
-                    <select name="module" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                <div class="col-span-1">
+                    <label class="text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-1.5 block tracking-widest">System Module</label>
+                    <select name="module" class="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-[11px] md:text-sm">
                         <option value="">All Contexts</option>
                         <?php foreach ($data['modules'] as $mod): ?>
                             <option value="<?php echo e($mod); ?>" <?php echo ($data['filters']['module'] ?? '') == $mod ? 'selected' : ''; ?>>
@@ -146,9 +146,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 
-                <div>
-                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">Event Type</label>
-                    <select name="event_type" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                <div class="col-span-1">
+                    <label class="text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-1.5 block tracking-widest">Event Type</label>
+                    <select name="event_type" class="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-[11px] md:text-sm">
                         <option value="">All Protocols</option>
                         <?php foreach ($data['eventTypes'] as $et): ?>
                             <option value="<?php echo e($et); ?>" <?php echo ($data['filters']['event_type'] ?? '') == $et ? 'selected' : ''; ?>>
@@ -158,20 +158,20 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </select>
                 </div>
                 
-                <div>
-                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">From</label>
+                <div class="col-span-1">
+                    <label class="text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-1.5 block tracking-widest">From</label>
                     <input type="date" name="date_from" value="<?php echo e($data['filters']['date_from'] ?? ''); ?>" 
-                           class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                           class="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-[11px] md:text-sm">
                 </div>
                 
-                <div>
-                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2 block tracking-widest">To</label>
+                <div class="col-span-1">
+                    <label class="text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-1.5 block tracking-widest">To</label>
                     <input type="date" name="date_to" value="<?php echo e($data['filters']['date_to'] ?? ''); ?>" 
-                           class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm">
+                           class="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-[11px] md:text-sm">
                 </div>
                 
-                <div class="flex items-end gap-3">
-                    <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-black shadow-md transition-all flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest border border-red-600">
+                <div class="col-span-1 flex items-end gap-2">
+                    <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2.5 rounded-xl font-black shadow-md transition-all flex items-center justify-center gap-1.5 text-[10px] md:text-[11px] uppercase tracking-widest border border-red-600">
                         <i class="bi bi-funnel"></i> Apply
                     </button>
                     <a href="index.php" class="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700" title="Reset Filters">
@@ -216,7 +216,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             
-            <div class="overflow-x-auto custom-scrollbar">
+            <!-- Desktop Table View -->
+            <div class="hidden md:block overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left">
                     <thead class="bg-gray-50/80 dark:bg-gray-800/80 border-b border-gray-200 dark:border-gray-800 backdrop-blur-md">
                         <tr>
@@ -307,6 +308,52 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden divide-y divide-gray-100 dark:divide-gray-800/50">
+                <?php if (empty($data['logs'])): ?>
+                    <div class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                        <i class="bi bi-inbox text-5xl block mb-3 opacity-20"></i>
+                        <p class="text-lg">No audit logs found</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($data['logs'] as $log): ?>
+                        <div class="p-4 bg-white dark:bg-[#1a1a1a] hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-all">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white text-[10px] font-black shadow-sm">
+                                        <?php echo strtoupper(substr($log['full_name'] ?? 'S', 0, 1)); ?>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-tight"><?php echo e($log['full_name'] ?? 'System'); ?></p>
+                                        <p class="text-[9px] text-gray-500 dark:text-gray-400 font-medium"><?php echo date('M d, H:i:s', strtotime($log['created_at'])); ?></p>
+                                    </div>
+                                </div>
+                                <?php
+                                $eventStr = $log['event_type'] ?? '';
+                                $eventClass = 'bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-400';
+                                if (str_contains($eventStr, 'create')) $eventClass = 'bg-green-100 text-green-700 dark:bg-green-900/20';
+                                if (str_contains($eventStr, 'update')) $eventClass = 'bg-blue-100 text-blue-700 dark:bg-blue-900/20';
+                                if (str_contains($eventStr, 'delete')) $eventClass = 'bg-red-100 text-red-700 dark:bg-red-900/20';
+                                ?>
+                                <span class="px-2 py-0.5 text-[8px] font-black rounded uppercase tracking-wider <?php echo $eventClass; ?>">
+                                    <?php echo str_replace('_', ' ', $eventStr); ?>
+                                </span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 dark:bg-gray-800 px-1.5 py-0.5 rounded border border-gray-100 dark:border-gray-700">Action</span>
+                                    <p class="text-[10px] text-gray-600 dark:text-gray-300 font-medium line-clamp-2"><?php echo e($log['action'] ?? '-'); ?></p>
+                                </div>
+                                <div class="flex items-center justify-between text-[8px] font-black text-gray-400 uppercase tracking-widest pt-1">
+                                    <span>Context: <span class="text-gray-900 dark:text-gray-400 ml-1"><?php echo ucfirst(e($log['module'] ?? '-')); ?></span></span>
+                                    <span>Origin: <span class="text-gray-900 dark:text-gray-400 ml-1 font-mono"><?php echo e($log['ip_address'] ?? '-'); ?></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
             
             <!-- Pagination -->
