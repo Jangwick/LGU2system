@@ -442,33 +442,33 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <!-- Analytics Modal -->
 <div id="analyticsModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="flex items-center justify-center min-h-screen p-2 md:p-4">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeAnalyticsModal()"></div>
+        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300" onclick="closeAnalyticsModal()"></div>
         
         <!-- Modal Box -->
-        <div class="relative bg-white dark:bg-slate-900 w-full max-w-6xl rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden transform transition-all animate-modal-in flex flex-col max-h-[92vh] border border-white/20 dark:border-slate-800">
+        <div class="relative bg-white dark:bg-[#0f0f0f] w-full max-w-6xl rounded-3xl md:rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transform transition-all animate-modal-in flex flex-col h-[95vh] md:max-h-[92vh] border border-white/20 dark:border-gray-800">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-red-600 to-red-700 p-8 md:p-10 text-white flex items-center justify-between shrink-0 relative overflow-hidden">
+            <div class="bg-gradient-to-r from-red-600 to-red-700 p-6 md:p-10 text-white flex items-center justify-between shrink-0 relative overflow-hidden">
                 <!-- Decorative elements -->
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                 <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-black/10 rounded-full blur-3xl"></div>
                 
-                <div class="relative z-10 flex items-center gap-6">
-                    <div class="w-16 h-16 bg-white/20 rounded-[2rem] flex items-center justify-center backdrop-blur-xl border border-white/30 shadow-inner group">
-                        <i class="bi bi-bar-chart-line-fill text-3xl group-hover:scale-110 transition-transform duration-500"></i>
+                <div class="relative z-10 flex items-center gap-4 md:gap-6">
+                    <div class="w-12 h-12 md:w-16 md:h-16 bg-white/20 rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center backdrop-blur-xl border border-white/30 shadow-inner group">
+                        <i class="bi bi-bar-chart-line-fill text-2xl md:text-3xl group-hover:scale-110 transition-transform duration-500"></i>
                     </div>
                     <div>
-                        <h2 class="text-3xl font-black tracking-tight leading-none mb-2">Legislative Intelligence</h2>
-                        <div class="flex items-center gap-3">
-                            <span class="text-red-100 text-[10px] font-black uppercase tracking-[0.3em] opacity-80">Session Performance Analytics</span>
-                            <span class="w-1 h-1 bg-white/40 rounded-full"></span>
-                            <span id="modalSessionNum" class="text-white text-[10px] font-black uppercase tracking-widest">Loading...</span>
+                        <h2 class="text-xl md:text-3xl font-black tracking-tight leading-none mb-2">Legislative Intelligence</h2>
+                        <div class="flex flex-wrap items-center gap-2 md:gap-3">
+                            <span class="text-red-100 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-80">Session Performance Analytics</span>
+                            <span class="hidden md:block w-1 h-1 bg-white/40 rounded-full"></span>
+                            <span id="modalSessionNum" class="text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest">Loading...</span>
                         </div>
                     </div>
                 </div>
-                <button onclick="closeAnalyticsModal()" class="relative z-10 w-14 h-14 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-white/20 transition-all group backdrop-blur-md border border-white/10">
-                    <i class="bi bi-x-lg text-xl transition-transform group-hover:rotate-90"></i>
+                <button onclick="closeAnalyticsModal()" class="relative z-10 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 transition-all group backdrop-blur-md border border-white/10">
+                    <i class="bi bi-x-lg text-lg md:text-xl transition-transform group-hover:rotate-90"></i>
                 </button>
             </div>
 

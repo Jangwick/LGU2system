@@ -39,39 +39,39 @@ function hasRoleLocal($roles) {
 <div class="animate-fade-in p-8 md:p-12 space-y-16" style="width: 100%; text-align: left;" data-session-num="<?php echo e($session['session_number']); ?>">
     
     <!-- Hero Info Row (Optimized for Modal/Detail view) -->
-    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%;" class="mb-16 border-b border-slate-100 dark:border-slate-800 pb-16">
+    <div style="width: 100%;" class="mb-10 md:mb-16 border-b border-gray-100 dark:border-gray-800 pb-10 md:pb-16 flex flex-col md:flex-row md:justify-between md:items-end gap-10">
         <!-- Left Side: Identity -->
         <div style="flex: 1 1 0%; text-align: left;">
-            <h1 class="text-5xl md:text-7xl font-black vdm-heading tracking-tighter uppercase leading-[0.75] mb-8 drop-shadow-sm" style="text-align: left;"><?php echo e($session['title']); ?></h1>
+            <h1 class="text-3xl md:text-7xl font-black vdm-heading tracking-tighter uppercase leading-tight md:leading-[0.75] mb-8" style="text-align: left;"><?php echo e($session['title']); ?></h1>
             <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 1rem;">
-                <div class="flex items-center gap-2 px-5 py-2 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">
+                <div class="flex items-center gap-2 px-4 py-1.5 bg-gray-900 text-white rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg">
                     <i class="bi bi-calendar3 text-red-500"></i>
                     <?php echo formatDate($session['session_date']); ?>
                 </div>
-                <div class="flex items-center gap-2 px-5 py-2 bg-white dark:bg-[#2d2d2d] text-slate-900 dark:text-white rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 shadow-lg">
+                <div class="flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest border border-gray-200 dark:border-gray-800 shadow-md">
                     <i class="bi bi-clock-history text-red-500"></i>
                     <?php echo $session['start_time']; ?>
                 </div>
-                <span class="w-2 h-2 bg-slate-200 dark:bg-slate-700 rounded-full"></span>
-                <span class="vdm-text-muted font-black uppercase tracking-[0.25em] text-[10px] opacity-60 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></span>
+                <span class="vdm-text-muted font-black uppercase tracking-[0.2em] text-[10px] opacity-60 flex items-center gap-2">
                     <i class="bi bi-hash text-red-500 text-sm"></i> <?php echo e($session['session_number']); ?>
                 </span>
             </div>
         </div>
 
         <!-- Right Side: Actions -->
-        <div style="flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 1rem; padding-bottom: 0.5rem;">
-             <button onclick="window.print()" class="border shadow-xl px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all flex items-center gap-4 group bg-white hover:bg-slate-50 border-slate-200 text-slate-700 dark:bg-[#2d2d2d] dark:hover:bg-slate-700 dark:border-slate-600 dark:text-slate-200" style="color: inherit;">
+        <div style="flex-shrink: 0;" class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+             <button onclick="window.print()" class="border shadow-lg px-6 md:px-10 py-4 md:py-6 rounded-[1.5rem] md:rounded-[2.5rem] font-black text-[9px] md:text-[10px] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-4 group bg-white hover:bg-gray-50 border-gray-200 text-gray-700 dark:bg-[#1a1a1a] dark:hover:bg-gray-800 dark:border-gray-700 dark:text-gray-200" style="color: inherit;">
                 <i class="bi bi-printer-fill text-xl text-red-500"></i> Print Full Report
             </button>
-            <button class="px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all shadow-2xl flex items-center gap-4 group bg-red-600 hover:bg-red-700 text-white border border-red-600 dark:bg-red-600 dark:hover:bg-red-700 dark:border-red-500 dark:text-white shadow-red-500/20">
+            <button class="px-6 md:px-10 py-4 md:py-6 rounded-[1.5rem] md:rounded-[2.5rem] font-black text-[9px] md:text-[10px] uppercase tracking-[0.15em] transition-all shadow-xl flex items-center justify-center gap-4 group bg-red-600 hover:bg-red-700 text-white border border-red-600 dark:bg-red-600 dark:hover:bg-red-700 dark:border-red-500 dark:text-white shadow-red-500/20">
                 <i class="bi bi-cloud-download-fill text-xl group-hover:translate-y-0.5 transition-transform"></i> Export Intelligence
             </button>
         </div>
     </div>
 
     <!-- Statistics Row -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
         <div class="vdm-card dark:!bg-[#2d2d2d] p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-[#2d2d2d]">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-red-500/5 rounded-full blur-2xl group-hover:bg-red-500/10 transition-all"></div>
             <div class="relative">
@@ -108,7 +108,7 @@ function hasRoleLocal($roles) {
                 </p>
             </div>
         </div>
-        <div class="vdm-card dark:!bg-[#2d2d2d] p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card dark:!bg-[#1a1a1a] p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-[#1a1a1a]">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-slate-500/5 rounded-full blur-2xl group-hover:bg-slate-500/10 transition-all"></div>
             <div class="relative">
                 <p class="text-[10px] vdm-text-muted font-black uppercase tracking-widest mb-5 opacity-50 flex items-center gap-3">
@@ -143,7 +143,7 @@ function hasRoleLocal($roles) {
                 </div>
 
                 <div class="w-full space-y-3">
-                    <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 group hover:border-green-500/30 transition-all">
+                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 group hover:border-green-500/30 transition-all">
                         <span class="flex items-center text-[10px] font-black uppercase tracking-[0.15em] vdm-text-muted"><span class="w-2 h-2 bg-green-500 rounded-full mr-3 shadow-sm"></span> Approvals</span>
                         <span class="font-black vdm-heading text-green-500"><?php echo $summary['total_approve']; ?></span>
                     </div>
@@ -160,8 +160,8 @@ function hasRoleLocal($roles) {
         </div>
 
         <!-- Detailed Table of Decisions -->
-        <div class="lg:col-span-2 vdm-card rounded-[2.5rem] shadow-xl border-none flex flex-col overflow-hidden bg-white dark:!bg-[#2d2d2d]">
-            <div class="p-8 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between bg-slate-50/30 dark:bg-slate-900/30 backdrop-blur-sm">
+        <div class="lg:col-span-2 vdm-card rounded-[2.5rem] shadow-xl border-none flex flex-col overflow-hidden bg-white dark:!bg-[#1a1a1a]">
+            <div class="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/30 dark:bg-gray-900/30 backdrop-blur-sm">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-500/10 text-blue-600 rounded-xl flex items-center justify-center">
                         <i class="bi bi-list-columns-reverse"></i>
@@ -169,13 +169,13 @@ function hasRoleLocal($roles) {
                     <h3 class="font-black vdm-heading text-sm uppercase tracking-widest">Itemized Outcomes</h3>
                 </div>
                 <div class="flex gap-2">
-                    <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-[8px] font-black vdm-text-muted rounded-lg uppercase tracking-widest border border-slate-200 dark:border-slate-700 shadow-sm">Total: <?php echo count($documents); ?></span>
+                    <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-[8px] font-black vdm-text-muted rounded-lg uppercase tracking-widest border border-gray-200 dark:border-gray-700 shadow-sm">Total: <?php echo count($documents); ?></span>
                 </div>
             </div>
             
             <div class="overflow-y-auto flex-1 custom-scrollbar max-h-[550px]">
                 <table class="w-full">
-                    <thead class="text-[9px] vdm-text-muted uppercase font-black tracking-widest bg-slate-50/50 dark:bg-slate-800/50 backdrop-blur-md sticky top-0 z-10 border-b border-slate-50 dark:border-slate-800">
+                    <thead class="text-[9px] vdm-text-muted uppercase font-black tracking-widest bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-md sticky top-0 z-10 border-b border-gray-100 dark:border-gray-800">
                         <tr>
                             <th class="px-10 py-6 text-left">Document & Legislative Identity</th>
                             <th class="px-6 py-6 text-center">Protocol Result</th>
@@ -184,13 +184,13 @@ function hasRoleLocal($roles) {
                             <th class="px-6 py-6 text-center">Abs</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                    <tbody class="divide-y divide-gray-50 dark:divide-gray-800">
                         <?php if (empty($documents)): ?>
                             <tr>
                                 <td colspan="5" class="py-20 text-center">
                                     <div class="flex flex-col items-center">
-                                        <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-4 border border-slate-100 dark:border-slate-700">
-                                            <i class="bi bi-folder-x text-2xl text-slate-300"></i>
+                                        <div class="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-4 border border-gray-100 dark:border-gray-700">
+                                            <i class="bi bi-folder-x text-2xl text-gray-300"></i>
                                         </div>
                                         <p class="text-xs font-black vdm-text-muted uppercase tracking-widest opacity-40">No items registered for this session</p>
                                     </div>
@@ -241,8 +241,8 @@ function hasRoleLocal($roles) {
 
     <!-- Individual Votes Logs (Auditable) -->
     <?php if (hasRoleLocal(['admin', 'secretary'])): ?>
-        <div class="bg-white dark:bg-[#2d2d2d] rounded-[2.5rem] shadow-xl overflow-hidden mb-12 text-slate-900 dark:text-white p-10 border border-slate-100 dark:border-slate-800">
-            <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 border-b border-slate-50 dark:border-slate-800 pb-8">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] shadow-xl overflow-hidden mb-12 text-gray-900 dark:text-white p-6 md:p-10 border border-gray-100 dark:border-gray-800">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 border-b border-gray-50 dark:border-gray-800 pb-8">
                 <div>
                     <h3 class="text-2xl font-black mb-1 flex items-center gap-3 uppercase tracking-tighter vdm-heading">
                         <i class="bi bi-shield-lock-fill text-red-600"></i>
@@ -250,8 +250,8 @@ function hasRoleLocal($roles) {
                     </h3>
                     <p class="vdm-text-muted text-sm font-medium opacity-70">Review specific decisions made by each legislator during this session.</p>
                 </div>
-                <div class="bg-slate-100 dark:bg-slate-800 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-widest italic flex items-center">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest italic flex items-center">
                         <i class="bi bi-info-circle mr-2 text-red-600"></i> Authorized Access Required
                     </span>
                 </div>
@@ -272,17 +272,17 @@ function hasRoleLocal($roles) {
                 
                 if (empty($allVotes)): ?>
                     <div class="col-span-full py-20 text-center">
-                        <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100 dark:border-slate-700">
-                            <i class="bi bi-database-exclamation text-3xl text-slate-300"></i>
+                        <div class="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gray-100 dark:border-gray-700">
+                            <i class="bi bi-database-exclamation text-3xl text-gray-300"></i>
                         </div>
                         <p class="font-black uppercase tracking-widest text-[10px] vdm-text-muted opacity-40">No records found for this session</p>
                     </div>
                 <?php else: ?>
                     <?php foreach ($allVotes as $v): ?>
-                        <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800 hover:border-red-500 transition-all group shadow-sm">
+                        <div class="bg-gray-50/50 dark:bg-gray-800/30 rounded-3xl p-6 border border-gray-100 dark:border-gray-800 hover:border-red-500 transition-all group shadow-sm">
                             <div class="flex items-center justify-between mb-5">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-white dark:bg-slate-700 text-red-600 rounded-2xl flex items-center justify-center font-black text-xl shadow-sm border border-slate-100 dark:border-slate-600">
+                                    <div class="w-12 h-12 bg-white dark:bg-gray-700 text-red-600 rounded-2xl flex items-center justify-center font-black text-xl shadow-sm border border-gray-100 dark:border-gray-600">
                                         <?php echo strtoupper(substr($v['voter_name'], 0, 1)); ?>
                                     </div>
                                     <div>
