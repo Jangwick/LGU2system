@@ -1,14 +1,45 @@
-# Allow access to profile images
-<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
-    Order Allow,Deny
+# Allow direct HTTP access to profile images.
+# This overrides the parent storage/.htaccess deny-all rule.
+
+# Apache 2.4+ – grant access unconditionally at directory level first,
+# then restrict non-image files below.
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+
+# Apache 2.2 fallback
+<IfModule !mod_authz_core.c>
+    Order allow,deny
     Allow from all
-</FilesMatch>
+</IfModule>
 
 # Prevent directory listing
 Options -Indexes
 
-# Prevent access to PHP files
-<FilesMatch "\.php$">
-    Order Deny,Allow
-    Deny from all
+# Deny script execution (PHP, etc.) regardless of Apache version
+<FilesMatch "(?i)\.(php[0-9]?|phtml|pl|py|rb|sh|cgi)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
 </FilesMatch>
+
+# Set correct content-type for images
+<IfModule mod_mime.c>
+    AddType image/jpeg  .jpg .jpeg
+    AddType image/png   .png
+    AddType image/gif   .gif
+    AddType image/webp  .webp
+</IfModule>
+
+# Cache images for 1 week
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 week"
+    ExpiresByType image/png  "access plus 1 week"
+    ExpiresByType image/gif  "access plus 1 week"
+    ExpiresByType image/webp "access plus 1 week"
+</IfModule>

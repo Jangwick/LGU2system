@@ -287,52 +287,7 @@ foreach ($rows as $row) {
 }
 ```
 
-### 4.4 Use Only `REMOTE_ADDR` for Lockout (or Validate Proxy Headers)
-
-```php
-public static function getClientIP(): string {
-    // Only trust REMOTE_ADDR which cannot be spoofed by the client.
-    // If your infrastructure uses a trusted reverse proxy, validate
-    // the proxy's IP before accepting X-Forwarded-For.
-    return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
-}
-```
-
-If the application operates behind a known reverse proxy, validate that `REMOTE_ADDR` matches a trusted proxy IP before reading `HTTP_X_FORWARDED_FOR`.
-
-### 4.5 Fix the Remember Me Cookie
-
-```php
-// Set with httponly, secure, samesite flags
-setcookie('remember_token', $token, [
-    'expires'  => time() + (7 * 24 * 60 * 60),
-    'path'     => '/',
-    'secure'   => true,          // HTTPS only
-    'httponly' => true,          // Not accessible via JavaScript
-    'samesite' => 'Strict',      // Prevents CSRF via cookie
-]);
-
-// Store only a hash of the token in the database
-$stmt->execute([hash('sha256', $token), $userId]);
-```
-
-On validation, retrieve the stored hash and verify with `hash_equals(hash('sha256', $cookieToken), $storedHash)`.
-
-### 4.6 Move Credentials to Environment Variables
-
-Remove all credentials from `config.php`. Instead, use a `.env` file (not committed to version control) or PHP environment variables:
-
-```php
-// modules/core/config/config.php — load from environment
-define('SMTP_PASS',  getenv('SMTP_PASS')  ?: '');
-define('DB_USER',    getenv('DB_USER')    ?: 'root');
-define('DB_PASS',    getenv('DB_PASS')    ?: '');
-define('GEMINI_API_KEY', getenv('GEMINI_API_KEY') ?: '');
-```
-
-Add a `.env.example` file documenting required variables without values, and add `.env` to `.gitignore`.
-
-### 4.7 Use `mime_content_type()` for Server-Side MIME Validation
+### 4.4 Use `mime_content_type()` for Server-Side MIME Validation
 
 Never trust `$_FILES['type']`. Read the actual file content signature:
 
@@ -361,30 +316,7 @@ private function validateFile(array $file): bool {
 }
 ```
 
-### 4.8 Revise Password Policy to Follow NIST SP 800-63B
-
-```php
-// Remove the 14-character cap and unique-character rule.
-// Enforce:
-//   - Minimum 12 characters
-//   - Maximum 128 characters (to prevent DoS via bcrypt long-password attacks)
-//   - Check against a list of commonly breached passwords
-
-if ($passwordLength < 12 || $passwordLength > 128) {
-    echo json_encode(['success' => false,
-        'message' => 'Password must be between 12 and 128 characters.']);
-    exit;
-}
-
-$commonPasswords = ['password123', '123456789', 'qwertyuiop', /* ... */ ];
-if (in_array(strtolower($password), $commonPasswords)) {
-    echo json_encode(['success' => false,
-        'message' => 'This password is too common. Please choose a different one.']);
-    exit;
-}
-```
-
-### 4.9 Persist API Rate Limiting in the Database or Cache
+### 4.5 Persist API Rate Limiting in the Database or Cache
 
 The current in-memory counter resets on every request. Store counts persistently:
 
@@ -413,7 +345,7 @@ private function checkRateLimit(int $apiKeyId): bool {
 }
 ```
 
-### 4.10 Set `APP_ENV` to `production` and Use `config.local.php`
+### 4.6 Set `APP_ENV` to `production` and Use `config.local.php`
 
 In `config.local.php` (not committed), override:
 ```php
@@ -422,7 +354,7 @@ define('APP_ENV', 'production');
 
 Add a deployment check that halts startup if `APP_ENV` is `'development'` and `$_SERVER['HTTP_HOST']` is a public domain.
 
-### 4.11 Standardise `htmlspecialchars()` Usage
+### 4.7 Standardise `htmlspecialchars()` Usage
 
 Create a global helper and use it consistently on every dynamic output:
 
@@ -435,7 +367,7 @@ function e(mixed $value, int $flags = ENT_QUOTES | ENT_SUBSTITUTE, string $encod
 
 Replace all bare `echo $variable` in views with `echo e($variable)`. Apply this to every template file including dashboard widgets, document listings, search results, audit views, and notification displays.
 
-### 4.12 Add OTP Brute-Force Rate Limiting
+### 4.8 Add OTP Brute-Force Rate Limiting
 
 Add an attempt counter to the `VerifyOtpController.php`:
 
@@ -453,7 +385,7 @@ if ($_SESSION['otp_attempts'] >= 5) {
 }
 ```
 
-### 4.13 Use Uniform Error Messages to Prevent User Enumeration
+### 4.9 Use Uniform Error Messages to Prevent User Enumeration
 
 ```php
 // Replace distinct "email not found" vs. "invalid password" messages with a single message
@@ -463,7 +395,7 @@ echo json_encode([
 ]);
 ```
 
-### 4.14 Add Security HTTP Headers
+### 4.10 Add Security HTTP Headers
 
 In a shared header include or `.htaccess`, add the following response headers:
 
@@ -477,7 +409,7 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
 ```
 
-### 4.15 Implement Session Regeneration on Privilege Escalation
+### 4.11 Implement Session Regeneration on Privilege Escalation
 
 After successful OTP verification (privilege increase from unauthenticated → authenticated), regenerate the session ID to prevent session fixation:
 
@@ -495,11 +427,7 @@ session_regenerate_id(true);
 | **CSRF Tokens** | OWASP A01 — Broken Access Control | A government system processes document state changes (create, delete, approve). Without CSRF protection, any malicious website a logged-in staff member visits can silently submit those same actions under their credentials. |
 | **Cryptographically Secure OTP** | NIST SP 800-63B §5.1.3 | Predictable OTPs undermine the entire purpose of MFA. If the second factor can be guessed, it provides no additional security over a single password. |
 | **Hashed OTP Storage** | OWASP A02 — Cryptographic Failures | A SQL injection or database backup leak would expose all active OTPs, allowing an attacker to complete MFA bypass on every currently-pending login. |
-| **Fix IP Spoofing in Lockout** | OWASP A07 — Identification & Authentication Failures | The lockout mechanism is the primary defence against brute-force attacks. If it can be bypassed with a single spoofed header, it provides no real protection. |
-| **Secure Cookie Flags** | OWASP A02 — Cryptographic Failures | Without `httponly`, any XSS vulnerability can steal the remember-me token and create a persistent backdoor. Without `secure`, the token is transmitted in cleartext over HTTP. |
-| **Environment-Based Credentials** | OWASP A05 — Security Misconfiguration | Hardcoded credentials in source code mean every developer, contractor, or code reviewer who accesses the repository has database and email access credentials — and rotating them requires a code change. |
 | **Server-Side MIME Validation** | OWASP A03 — Injection / File Upload Abuse | The current check can be bypassed with a malicious filename and forged Content-Type header, potentially enabling server-side code execution if PHP is later configured to serve files from the storage directory. |
-| **Revised Password Policy** | NIST SP 800-63B §5.1.1 | The current 14-character maximum actively harms security — it prevents passphrases, which are both stronger and easier to remember. The unique-character rule makes the effective password space much smaller. |
 | **Persistent Rate Limiting** | OWASP A07 — Identification & Authentication Failures | An ineffective rate limiter creates a false sense of security. Attackers can make unlimited API calls, enabling credential stuffing, data scraping, and resource exhaustion. |
 | **Production Error Handling** | OWASP A05 — Security Misconfiguration | Stack traces visible in production reveal file paths, database schema, and PHP version — all useful reconnaissance for attackers. |
 | **Consistent Output Encoding** | OWASP A03 — Cross-Site Scripting (XSS) | Stored XSS in a document management tool is high-severity — an attacker who can inject script into a document title, description, or tag can run arbitrary JavaScript in the browser of any administrator who views it. |
