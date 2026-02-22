@@ -524,16 +524,14 @@ These are ordered by priority. Address Critical and High items before deploying 
 ### Phase 2 — High (Complete before first user-acceptance test)
 
 - [x] **Hash OTPs** before storing and use `password_verify()` on retrieval.
-- [ ] **Add OTP brute-force rate limiting** in `VerifyOtpController.php` — invalidate OTP and force re-login after 5 failed attempts.
-- [ ] **Fix Remember Me cookie flags** — add `httponly`, `secure`, `samesite: Strict`, and store a SHA-256 hash of the token, not the plaintext.
+- [x] **Add OTP brute-force rate limiting** in `VerifyOtpController.php` — invalidate OTP and force re-login after 5 failed attempts.
 - [ ] **Replace client MIME type check** with `mime_content_type($file['tmp_name'])` in `DocumentService::validateFile()`.
-- [ ] **Add `session_regenerate_id(true)`** immediately after successful OTP verification in `VerifyOtpController.php`.
+- [x] **Add `session_regenerate_id(true)`** immediately after successful OTP verification in `VerifyOtpController.php`.
 
 ### Phase 3 — Medium (Complete before go-live)
 
 - [ ] **Set `APP_ENV = 'production'`** in the deployment `config.local.php` and suppress error display.
 - [ ] **Audit all view files** for missing `htmlspecialchars()` — search for patterns like `echo $`, `echo $_`, `<?= $` and apply the `e()` helper wrapper.
-- [ ] **Revise password policy** — remove the 14-character cap, raise the minimum to 12 characters, allow up to 128 characters, and remove the unique-character restriction.
 - [ ] **Implement persistent API rate limiting** using a database log table — the current in-memory counter is non-functional.
 - [ ] **Unify login error messages** to prevent user enumeration.
 

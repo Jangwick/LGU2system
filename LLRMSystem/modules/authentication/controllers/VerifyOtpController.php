@@ -36,6 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Brute-force guard: reject immediately if the attempt ceiling has already been hit.
+    // (Defensive check — the session is destroyed on lockout, so $userId would be null on
+    //  subsequent requests, but this handles edge-cases like a same-process retry.)
+    $otpAttempts = $_SESSION['otp_attempts'] ?? 0;
+    if ($otpAttempts >= 5) {
+        session_destroy();
+        echo json_encode(['success' => false, 'message' => 'Too many failed attempts. Please log in again.']);
+        exit;
+    }
+
     try {
         $conn = getDatabase();
         $logger = new Logger($conn);
@@ -68,6 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$userId]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            // Regenerate session ID to prevent session fixation attacks.
+            // The old (pre-authentication) session ID is discarded and a fresh one
+            // is issued now that the user's privilege level has been elevated.
+            session_regenerate_id(true);
+
             // Set final login session
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
@@ -82,8 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$currentSessionId, $userId]);
             $_SESSION['current_session_id'] = $currentSessionId;
 
-            // Clear pending OTP data
+            // Clear pending OTP data and brute-force counter
             unset($_SESSION['otp_pending_user_id']);
+            unset($_SESSION['otp_attempts']);
 
             // Log successful verification
             $logger->logSession($userId, 'LOGIN_SUCCESS_OTP', [
@@ -97,7 +113,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             exit;
         } else {
-            echo json_encode(['success' => false, 'message' => 'Invalid or expired verification code.']);
+            // Increment failed-attempt counter
+            $_SESSION['otp_attempts'] = $otpAttempts + 1;
+
+            if ($_SESSION['otp_attempts'] >= 5) {
+                // Invalidate all pending OTPs for this user and force re-login
+                $stmt = $conn->prepare("UPDATE user_otps SET is_used = 1 WHERE user_id = ? AND is_used = 0");
+                $stmt->execute([$userId]);
+                $logger->logSession($userId, 'OTP_LOCKOUT', [
+                    'failed_attempts' => $_SESSION['otp_attempts']
+                ]);
+                session_destroy();
+                echo json_encode(['success' => false, 'message' => 'Too many failed attempts. Please log in again.']);
+                exit;
+            }
+
+            $remaining = 5 - $_SESSION['otp_attempts'];
+            $logger->logSession($userId, 'OTP_FAILED', [
+                'attempts' => $_SESSION['otp_attempts'],
+                'remaining' => $remaining
+            ]);
+            echo json_encode([
+                'success' => false,
+                'message'  => "Invalid or expired verification code. {$remaining} attempt(s) remaining."
+            ]);
             exit;
         }
     } catch (PDOException $e) {
