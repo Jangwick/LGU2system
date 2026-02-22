@@ -214,10 +214,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             
-            <!-- Desktop Table View -->
-            <div class="hidden md:block overflow-x-auto custom-scrollbar">
+            <!-- Logs Table Container -->
+            <div class="overflow-x-auto custom-scrollbar border-t border-gray-100 dark:border-gray-800">
+                <!-- Desktop Table View (Always Visible for Diagnostic) -->
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    <thead class="bg-gray-50/80 dark:bg-gray-800/80 border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date/Time</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
