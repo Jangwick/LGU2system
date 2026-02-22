@@ -84,7 +84,7 @@
 |---|---|
 | API key validation with database lookup | `modules/core/middleware/ApiAuthMiddleware.php` |
 | API key expiry support | `modules/core/middleware/ApiAuthMiddleware.php` |
-| In-memory rate limiting: 100 requests/minute per key | `modules/core/middleware/ApiAuthMiddleware.php` |
+| In-memory rate limiting: 100 requests/minute per key | `modules/core/middleware/ApiAuthMiddleware.php` — replaced with DB-backed `api_request_log` table |
 | `last_used_at` tracking per key | `modules/core/middleware/ApiAuthMiddleware.php` |
 
 ### 1.9 Audit Logging
@@ -532,7 +532,7 @@ These are ordered by priority. Address Critical and High items before deploying 
 
 - [x] **Set `APP_ENV = 'production'`** in the deployment `config.local.php` and suppress error display.
 - [x] **Audit all view files** for missing `htmlspecialchars()` — search for patterns like `echo $`, `echo $_`, `<?= $` and apply the `e()` helper wrapper.
-- [ ] **Implement persistent API rate limiting** using a database log table — the current in-memory counter is non-functional.
+- [x] **Implement persistent API rate limiting** using a database log table — the current in-memory counter is non-functional.
 - [x] **Unify login error messages** to prevent user enumeration.
 
 ### Phase 4 — Hardening (Ongoing / Post-Launch)

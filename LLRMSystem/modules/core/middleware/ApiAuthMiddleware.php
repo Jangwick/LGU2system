@@ -2,7 +2,6 @@
 
 class ApiAuthMiddleware {
     private $db;
-    private $rateLimits = [];
     
     public function __construct($database) {
         $this->db = $database;
@@ -79,36 +78,42 @@ class ApiAuthMiddleware {
     }
     
     /**
-     * Check rate limiting (max 100 requests per minute per API key)
+     * Check rate limiting (max 100 requests per minute per API key).
+     *
+     * Uses the api_request_log table so the counter persists across PHP
+     * processes.  Each successful check inserts one row and returns true;
+     * if the rolling-window count is already >= 100 it returns false without
+     * inserting.  Rows older than 5 minutes are pruned on every call to
+     * prevent unbounded table growth (the rate window is only 60 seconds,
+     * so anything older is irrelevant).
      */
-    private function checkRateLimit($apiKeyId) {
-        $cacheKey = "rate_limit_{$apiKeyId}";
-        $currentMinute = floor(time() / 60);
-        
-        // Initialize or get current count
-        if (!isset($this->rateLimits[$cacheKey])) {
-            $this->rateLimits[$cacheKey] = [
-                'minute' => $currentMinute,
-                'count' => 0
-            ];
-        }
-        
-        $rateData = &$this->rateLimits[$cacheKey];
-        
-        // Reset if new minute
-        if ($rateData['minute'] !== $currentMinute) {
-            $rateData['minute'] = $currentMinute;
-            $rateData['count'] = 0;
-        }
-        
-        // Check limit (100 requests per minute)
-        if ($rateData['count'] >= 100) {
+    private function checkRateLimit(int $apiKeyId): bool {
+        // Purge stale rows (older than 5 minutes) to keep the table lean.
+        $this->db->prepare("
+            DELETE FROM api_request_log
+            WHERE requested_at < DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+        ")->execute();
+
+        // Count requests in the last 60 seconds for this key.
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) AS cnt
+            FROM api_request_log
+            WHERE api_key_id  = :id
+              AND requested_at > DATE_SUB(NOW(), INTERVAL 1 MINUTE)
+        ");
+        $stmt->execute([':id' => $apiKeyId]);
+        $count = (int) $stmt->fetchColumn();
+
+        if ($count >= 100) {
             return false;
         }
-        
-        // Increment count
-        $rateData['count']++;
-        
+
+        // Record this request.
+        $this->db->prepare("
+            INSERT INTO api_request_log (api_key_id, requested_at)
+            VALUES (:id, NOW())
+        ")->execute([':id' => $apiKeyId]);
+
         return true;
     }
     
