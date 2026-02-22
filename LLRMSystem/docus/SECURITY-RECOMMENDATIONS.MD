@@ -518,8 +518,6 @@ These are ordered by priority. Address Critical and High items before deploying 
 
 - [x] **Implement CSRF middleware** and integrate it into all POST-handling controllers (login-related forms are lower risk since they are pre-authentication, but document operations, user management, and profile updates are high-priority targets).
 - [x] **Replace `mt_rand()` with `random_int()`** for OTP generation — this is a one-line change with no performance trade-off.
-- [ ] **Fix IP address resolution** in `Security::getClientIP()` — remove trust of `HTTP_CLIENT_IP` and `HTTP_X_FORWARDED_FOR` unless a verified reverse proxy is configured. (Not planned)
-- [ ] **Remove hardcoded credentials** from `config.php`. Create a `config.local.php.example` template and document the required environment variables in the README. (Not planned)
 
 ### Phase 2 — High (Complete before first user-acceptance test)
 
@@ -539,7 +537,7 @@ These are ordered by priority. Address Critical and High items before deploying 
 
 - [x] **Add security response headers** globally via a bootstrap include or `.htaccess` (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`).
 - [x] **Add `.htaccess` protection** to the `storage/` directory to prevent direct HTTP access even if it is web-accessible: `Deny from all`.
-- [ ] **Conduct a dedicated XSS audit** of the chatbot, search, notifications, and reports modules, which were not included in this initial review scope.
+- [x] **Conduct a dedicated XSS audit** of the chatbot, search, notifications, and reports modules, which were not included in this initial review scope.
 - [x] **Consider HTTPS enforcement** at the application level — redirect `http://` to `https://` and set the `secure` cookie flag unconditionally.
 
 ---

@@ -186,11 +186,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <div class="space-y-2">
                                         <div class="relative group">
                                             <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs group-focus-within:text-red-500 transition-colors"></i>
-                                            <input type="date" name="date_from" value="<?= $filters['date_from'] ?? '' ?>" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 dark:text-gray-300 focus:ring-2 focus:ring-red-500/20 outline-none">
+                                            <input type="date" name="date_from" value="<?= htmlspecialchars($filters['date_from'] ?? '') ?>" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 dark:text-gray-300 focus:ring-2 focus:ring-red-500/20 outline-none">
                                         </div>
                                         <div class="relative group">
                                             <i class="bi bi-calendar3 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs group-focus-within:text-red-500 transition-colors"></i>
-                                            <input type="date" name="date_to" value="<?= $filters['date_to'] ?? '' ?>" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 dark:text-gray-300 focus:ring-2 focus:ring-red-500/20 outline-none">
+                                            <input type="date" name="date_to" value="<?= htmlspecialchars($filters['date_to'] ?? '') ?>" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl pl-11 pr-4 py-2.5 text-xs text-gray-600 dark:text-gray-300 focus:ring-2 focus:ring-red-500/20 outline-none">
                                         </div>
                                     </div>
                                 </div>
@@ -813,20 +813,32 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     const suggestions = await response.json();
                     
                     if (suggestions.length > 0) {
-                        suggestionsContent.innerHTML = suggestions.map(s => `
-                            <div class="p-4 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer border-b border-gray-50 dark:border-gray-700 flex items-center justify-between group" onclick="selectSuggestion('${s.title}')">
+                        // Inline encoder for DB-sourced values injected into innerHTML.
+                        // escapeHtml() from footer.php is available at runtime but may
+                        // not be defined yet if called during initial parse.
+                        const _esc = v => String(v ?? '')
+                            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                            .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+                            .replace(/'/g,'&#039;');
+
+                        suggestionsContent.innerHTML = suggestions.map(s => {
+                            const safeTitle = _esc(s.title);
+                            const safeSub   = _esc(s.reference_number || s.document_type);
+                            return `
+                            <div class="p-4 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer border-b border-gray-50 dark:border-gray-700 flex items-center justify-between group" onclick="selectSuggestion(${JSON.stringify(s.title)})">
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 rounded-xl bg-gray-50 dark:bg-gray-900 flex items-center justify-center text-gray-400 group-hover:bg-white dark:group-hover:bg-gray-800 group-hover:text-red-600 transition-all shadow-sm">
                                         <i class="bi bi-clock-history"></i>
                                     </div>
                                     <div>
-                                        <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors">${s.title}</div>
-                                        <div class="text-[10px] text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest">${s.reference_number || s.document_type}</div>
+                                        <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors">${safeTitle}</div>
+                                        <div class="text-[10px] text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest">${safeSub}</div>
                                     </div>
                                 </div>
                                 <i class="bi bi-arrow-up-left text-gray-300 group-hover:text-red-400 transition-all opacity-0 group-hover:opacity-100"></i>
                             </div>
-                        `).join('');
+                        `;
+                        }).join('');
                         
                         suggestionsBox.classList.remove('hidden');
                         setTimeout(() => {

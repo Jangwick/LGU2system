@@ -75,8 +75,8 @@
 
             foreach ($suggestionsList as $sugg): 
             ?>
-                <button onclick="sendSuggestion('<?php echo $sugg['query']; ?>')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">
-                    <?php echo $sugg['text']; ?>
+                <button onclick="sendSuggestion('<?php echo htmlspecialchars($sugg['query'], ENT_QUOTES, 'UTF-8'); ?>')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">
+                    <?php echo e($sugg['text']); ?>
                 </button>
             <?php endforeach; ?>
         </div>
@@ -103,6 +103,18 @@
     
     let chatHistory = [];
     let isOpen = false;
+
+    // Client-side HTML encoder. Applied to untrusted text (AI responses,
+    // error strings) BEFORE markdown processing so raw HTML tags are
+    // neutralised while Markdown syntax (* [ ] ( )) still works correctly.
+    function sanitizeForHtml(str) {
+        return String(str ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 
     // Toggle Chat Window
     window.toggleChat = function() {
@@ -229,12 +241,17 @@
     function appendMessage(role, text, shouldScroll = true) {
         const isBot = role === 'bot';
         
-        // Simple Markdown link and bold parser
-        let formattedText = text
+        // HTML-encode first, then apply safe Markdown transformations.
+        // Encoding before the regex pass neutralises any raw HTML/script tags
+        // in AI responses or error strings before they reach the DOM.
+        // The Markdown-relevant characters (* [ ] ( ) \n) are not HTML-special
+        // so the patterns still match on encoded text.
+        let formattedText = sanitizeForHtml(text)
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\[(.*?)\]\((.*?)\)/g, (match, title, url) => {
+            // Restrict to http/https URLs only to block javascript: URIs.
+            .replace(/\[(.*?)\]\((https?:\/\/[^)]+)\)/g, (match, title, url) => {
                 const fullUrl = url.startsWith('http') ? url : `${baseUrl}/${url.replace(/^\//, '')}`;
-                return `<a href="${fullUrl}" class="text-red-600 dark:text-red-400 font-semibold underline hover:bg-red-50 dark:hover:bg-red-900/30">${title}</a>`;
+                return `<a href="${sanitizeForHtml(fullUrl)}" class="text-red-600 dark:text-red-400 font-semibold underline hover:bg-red-50 dark:hover:bg-red-900/30">${title}</a>`;
             })
             .replace(/\n/g, '<br>');
 

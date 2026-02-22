@@ -656,7 +656,7 @@
                     const link = (n.data && n.data.link) ? n.data.link : '';
                     return `
                     <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-800 cursor-pointer notification-item ${n.is_read ? 'opacity-60' : ''}" 
-                         data-id="${n.id}" onclick="handleNotificationClick(${n.id}, '${link}')">
+                         data-id="${n.id}" onclick="handleNotificationClick(${n.id}, ${JSON.stringify(link).replace(/"/g, '&quot;')})">
                         <div class="flex items-start space-x-3">
                             <div class="${getNotificationIconBg(n.type)} rounded-full p-2 flex-shrink-0">
                                 <i class="bi ${getNotificationIcon(n.type)} ${getNotificationIconColor(n.type)}"></i>
@@ -665,7 +665,7 @@
                                 <div class="flex items-center justify-between">
                                     <p class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">${escapeHtml(n.title)}</p>
                                     ${n.priority === 'urgent' || n.priority === 'high' ? 
-                                        `<span class="ml-2 px-1.5 py-0.5 text-xs rounded ${n.priority === 'urgent' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'}">${n.priority}</span>` : ''}
+                                        `<span class="ml-2 px-1.5 py-0.5 text-xs rounded ${n.priority === 'urgent' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'}">${escapeHtml(n.priority)}</span>` : ''}
                                 </div>
                                 <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-2">${escapeHtml(n.message)}</p>
                                 <div class="flex items-center mt-1 text-xs text-gray-400 dark:text-gray-500">
