@@ -1178,38 +1178,77 @@ main::-webkit-scrollbar-thumb:active {
 
 /* Dark Mode Colors - completely separate path via .dark class */
 html.dark {
-    --vdm-heading: #f8fafc; /* Slate 50 */
-    --vdm-label: #cbd5e1;   /* Slate 300 */
-    --vdm-input: #f1f5f9;   /* Slate 100 */
-    --vdm-sub: #cbd5e1;     /* Slate 300 */
-    --vdm-muted: #94a3b8;   /* Slate 400 */
-    --vdm-placeholder: #64748b; /* Slate 500 */
-    --vdm-card-bg: #1e293b; /* Slate 800 - better contrast on slate 950 */
-    --vdm-input-bg: #0f172a; /* Slate 900 */
-    --vdm-card-border: #334155; /* Slate 700 */
-    --vdm-input-border: #1e293b; /* Slate 800 */
-    --vdm-page-bg: #020617;  /* Slate 950 */
-    --vdm-hover-bg: #334155; /* Slate 700 */
-    --vdm-footer-bg: rgba(2, 6, 23, 0.95);
-    --vdm-footer-border: #1e293b;
+    --vdm-heading: #f8fafc;
+    /* Slate 50 */
+    --vdm-label: #cbd5e1;
+    /* Slate 300 */
+    --vdm-input: #f1f5f9;
+    /* Slate 100 */
+    --vdm-sub: #cbd5e1;
+    /* Slate 300 */
+    --vdm-muted: #94a3b8;
+    /* Slate 400 */
+    --vdm-placeholder: #64748b;
+    /* Slate 500 */
+    --vdm-card-bg: #2d2d2d;
+    /* Requested neutral grey */
+    --vdm-input-bg: #1a1a1a;
+    --vdm-card-border: #3d3d3d;
+    --vdm-input-border: #333333;
+    --vdm-page-bg: #0f0f0f;
+    /* Deep neutral black */
+    --vdm-hover-bg: #404040;
+    /* Neutral hover */
+    --vdm-footer-bg: rgba(15, 15, 15, 0.95);
+    --vdm-footer-border: #333333;
 }
 
 /* Custom shadow utility for colored glows in dark mode */
-.dark .shadow-emerald-500\/20 { shadow-color: rgba(16, 185, 129, 0.4); }
-.dark .shadow-amber-400\/30 { shadow-color: rgba(251, 191, 36, 0.4); }
-.dark .shadow-slate-900\/40 { shadow-color: rgba(0, 0, 0, 0.6); }
+.dark .shadow-emerald-500\/20 {
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+}
+
+.dark .shadow-amber-400\/30 {
+    box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.4);
+}
+
+.dark .shadow-slate-900\/40 {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+}
 
 /* --- Text Color Utilities (use !important to prevent bleed) --- */
-.vdm-heading { color: var(--vdm-heading) !important; }
-.vdm-label { color: var(--vdm-label) !important; }
-.vdm-input { color: var(--vdm-input) !important; }
-.vdm-sub { color: var(--vdm-sub) !important; }
-.vdm-muted { color: var(--vdm-muted) !important; }
-.vdm-text-muted { color: var(--vdm-muted) !important; }
+.vdm-heading {
+    color: var(--vdm-heading) !important;
+}
+
+.vdm-label {
+    color: var(--vdm-label) !important;
+}
+
+.vdm-input {
+    color: var(--vdm-input) !important;
+}
+
+.vdm-sub {
+    color: var(--vdm-sub) !important;
+}
+
+.vdm-muted {
+    color: var(--vdm-muted) !important;
+}
+
+.vdm-text-muted {
+    color: var(--vdm-muted) !important;
+}
 
 /* --- Placeholder --- */
-.vdm-input::placeholder { color: var(--vdm-placeholder) !important; }
-.vdm-input::-webkit-input-placeholder { color: var(--vdm-placeholder) !important; }
+.vdm-input::placeholder {
+    color: var(--vdm-placeholder) !important;
+}
+
+.vdm-input::-webkit-input-placeholder {
+    color: var(--vdm-placeholder) !important;
+}
 
 /* --- Container Utilities --- */
 .vdm-card {
@@ -1247,7 +1286,10 @@ html.dark {
    Adding .vdm-form to any container auto-fixes
    text colors for all descendants via CSS variables.
    This prevents Tailwind dark: text from bleeding. */
-.vdm-form h1, .vdm-form h2, .vdm-form h3, .vdm-form h4 {
+.vdm-form h1,
+.vdm-form h2,
+.vdm-form h3,
+.vdm-form h4 {
     color: var(--vdm-heading) !important;
 }
 

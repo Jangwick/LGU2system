@@ -93,7 +93,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         $councilors = dbFetchAll("SELECT id, full_name, position FROM users WHERE role IN ('councilor', 'admin') AND is_active = 1 ORDER BY full_name");
         ?>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
-            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-red-700">
+            <div class="bg-white dark:bg-[#2d2d2d] rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-red-700">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Total Sessions</p>
@@ -105,7 +105,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-green-700">
+            <div class="bg-white dark:bg-[#2d2d2d] rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-green-700">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">In Progress</p>
@@ -117,7 +117,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-indigo-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-indigo-700">
+            <div class="bg-white dark:bg-[#2d2d2d] rounded-xl shadow-md p-4 border-l-4 border-indigo-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-indigo-700">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Scheduled</p>
@@ -129,7 +129,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md p-4 border-l-4 border-purple-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-purple-700">
+            <div class="bg-white dark:bg-[#2d2d2d] rounded-xl shadow-md p-4 border-l-4 border-purple-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-purple-700">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Completed</p>
@@ -143,7 +143,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Search and Filters -->
-        <div class="bg-white dark:bg-slate-900/50 rounded-2xl shadow-md p-6 mb-6 border border-gray-100 dark:border-slate-800 animate-fade-in-up" style="animation-delay: 100ms;">
+        <div class="bg-white dark:bg-[#2d2d2d] rounded-2xl shadow-md p-6 mb-6 border border-gray-100 dark:border-gray-800 animate-fade-in-up" style="animation-delay: 100ms;">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="relative group">
                     <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Search Sessions</label>
@@ -188,7 +188,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Sessions Table -->
-        <div class="bg-white dark:bg-slate-900/50 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-slate-800 animate-fade-in-up" style="animation-delay: 200ms;">
+        <div class="bg-white dark:bg-[#2d2d2d] rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800 animate-fade-in-up" style="animation-delay: 200ms;">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead class="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">

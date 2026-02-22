@@ -44,11 +44,11 @@ function hasRoleLocal($roles) {
         <div style="flex: 1 1 0%; text-align: left;">
             <h1 class="text-5xl md:text-7xl font-black vdm-heading tracking-tighter uppercase leading-[0.75] mb-8 drop-shadow-sm" style="text-align: left;"><?php echo e($session['title']); ?></h1>
             <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 1rem;">
-                <div class="flex items-center gap-2 px-5 py-2 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">
+                <div class="flex items-center gap-2 px-5 py-2 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">
                     <i class="bi bi-calendar3 text-red-500"></i>
                     <?php echo formatDate($session['session_date']); ?>
                 </div>
-                <div class="flex items-center gap-2 px-5 py-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 shadow-lg">
+                <div class="flex items-center gap-2 px-5 py-2 bg-white dark:bg-[#2d2d2d] text-slate-900 dark:text-white rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 shadow-lg">
                     <i class="bi bi-clock-history text-red-500"></i>
                     <?php echo $session['start_time']; ?>
                 </div>
@@ -61,7 +61,7 @@ function hasRoleLocal($roles) {
 
         <!-- Right Side: Actions -->
         <div style="flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 1rem; padding-bottom: 0.5rem;">
-             <button onclick="window.print()" class="border shadow-xl px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all flex items-center gap-4 group bg-white hover:bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600 dark:text-slate-200" style="color: inherit;">
+             <button onclick="window.print()" class="border shadow-xl px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all flex items-center gap-4 group bg-white hover:bg-slate-50 border-slate-200 text-slate-700 dark:bg-[#2d2d2d] dark:hover:bg-slate-700 dark:border-slate-600 dark:text-slate-200" style="color: inherit;">
                 <i class="bi bi-printer-fill text-xl text-red-500"></i> Print Full Report
             </button>
             <button class="px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all shadow-2xl flex items-center gap-4 group bg-red-600 hover:bg-red-700 text-white border border-red-600 dark:bg-red-600 dark:hover:bg-red-700 dark:border-red-500 dark:text-white shadow-red-500/20">
@@ -72,7 +72,7 @@ function hasRoleLocal($roles) {
 
     <!-- Statistics Row -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card dark:!bg-[#2d2d2d] p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-[#2d2d2d]">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-red-500/5 rounded-full blur-2xl group-hover:bg-red-500/10 transition-all"></div>
             <div class="relative">
                 <p class="text-[10px] vdm-text-muted font-black uppercase tracking-widest mb-5 opacity-50 flex items-center gap-3">
@@ -84,7 +84,7 @@ function hasRoleLocal($roles) {
                 </p>
             </div>
         </div>
-        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card dark:!bg-[#2d2d2d] p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-[#2d2d2d]">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-500/5 rounded-full blur-2xl group-hover:bg-green-500/10 transition-all"></div>
             <div class="relative">
                 <p class="text-[10px] text-green-600 dark:text-green-500 font-black uppercase tracking-widest mb-5 flex items-center gap-3">
@@ -96,7 +96,7 @@ function hasRoleLocal($roles) {
                 </div>
             </div>
         </div>
-        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card dark:!bg-[#2d2d2d] p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-[#2d2d2d]">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-500/5 rounded-full blur-2xl group-hover:bg-orange-500/10 transition-all"></div>
             <div class="relative">
                 <p class="text-[10px] text-orange-600 dark:text-orange-500 font-black uppercase tracking-widest mb-5 flex items-center gap-3">
@@ -108,7 +108,7 @@ function hasRoleLocal($roles) {
                 </p>
             </div>
         </div>
-        <div class="vdm-card p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
+        <div class="vdm-card dark:!bg-[#2d2d2d] p-10 rounded-[3rem] shadow-xl border-none relative overflow-hidden group hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-900">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-slate-500/5 rounded-full blur-2xl group-hover:bg-slate-500/10 transition-all"></div>
             <div class="relative">
                 <p class="text-[10px] vdm-text-muted font-black uppercase tracking-widest mb-5 opacity-50 flex items-center gap-3">
@@ -125,8 +125,8 @@ function hasRoleLocal($roles) {
     <!-- Visual Analytics Row -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Global Voting Distribution Chart -->
-        <div class="vdm-card p-10 rounded-[2.5rem] shadow-xl border-none flex flex-col bg-white dark:bg-slate-900">
-            <div class="flex items-center gap-3 mb-10 pb-6 border-b border-slate-50 dark:border-slate-800">
+        <div class="vdm-card p-10 rounded-[2.5rem] shadow-xl border-none flex flex-col bg-white dark:!bg-[#2d2d2d]">
+            <div class="flex items-center gap-3 mb-10 pb-6 border-b border-gray-50 dark:border-gray-800">
                 <div class="w-10 h-10 bg-red-500/10 text-red-600 rounded-xl flex items-center justify-center">
                     <i class="bi bi-pie-chart-fill"></i>
                 </div>
@@ -160,7 +160,7 @@ function hasRoleLocal($roles) {
         </div>
 
         <!-- Detailed Table of Decisions -->
-        <div class="lg:col-span-2 vdm-card rounded-[2.5rem] shadow-xl border-none flex flex-col overflow-hidden bg-white dark:bg-slate-900">
+        <div class="lg:col-span-2 vdm-card rounded-[2.5rem] shadow-xl border-none flex flex-col overflow-hidden bg-white dark:!bg-[#2d2d2d]">
             <div class="p-8 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between bg-slate-50/30 dark:bg-slate-900/30 backdrop-blur-sm">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-500/10 text-blue-600 rounded-xl flex items-center justify-center">
@@ -212,7 +212,7 @@ function hasRoleLocal($roles) {
                                     <td class="px-6 py-6 text-center">
                                         <?php
                                         $status = $doc['voting_status'] ?? 'pending';
-                                        $resClass = $status === 'passed' ? 'bg-green-500/10 text-green-500 border-green-500/20' : ($status === 'failed' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700');
+                                        $resClass = $status === 'passed' ? 'bg-green-500/10 text-green-500 border-green-500/20' : ($status === 'failed' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-slate-100 dark:bg-gray-800 text-slate-400 border-slate-200 dark:border-gray-700');
                                         ?>
                                         <span class="px-4 py-1.5 text-[9px] font-black rounded-lg uppercase tracking-tighter shadow-sm border <?php echo $resClass; ?>">
                                             <?php echo $status; ?>
@@ -241,7 +241,7 @@ function hasRoleLocal($roles) {
 
     <!-- Individual Votes Logs (Auditable) -->
     <?php if (hasRoleLocal(['admin', 'secretary'])): ?>
-        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl overflow-hidden mb-12 text-slate-900 dark:text-white p-10 border border-slate-100 dark:border-slate-800">
+        <div class="bg-white dark:bg-[#2d2d2d] rounded-[2.5rem] shadow-xl overflow-hidden mb-12 text-slate-900 dark:text-white p-10 border border-slate-100 dark:border-slate-800">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 border-b border-slate-50 dark:border-slate-800 pb-8">
                 <div>
                     <h3 class="text-2xl font-black mb-1 flex items-center gap-3 uppercase tracking-tighter vdm-heading">

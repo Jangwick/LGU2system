@@ -154,7 +154,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <i class="bi bi-clock-history text-red-500"></i>
                                 <?php echo $session['start_time']; ?>
                             </div>
-                            <span class="w-2 h-2 bg-slate-200 dark:bg-slate-700 rounded-full"></span>
+                            <span class="w-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full"></span>
                             <span class="vdm-text-muted font-black uppercase tracking-[0.25em] text-[10px] opacity-60 flex items-center gap-2">
                                 <i class="bi bi-hash text-red-500 text-sm"></i> <?php echo e($session['session_number']); ?>
                             </span>
@@ -163,7 +163,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                     <!-- Right Side: Actions -->
                     <div style="flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 1rem; padding-bottom: 0.5rem;">
-                        <button onclick="window.print()" class="border shadow-xl px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all flex items-center gap-4 group bg-white hover:bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600 dark:text-slate-200" style="color: inherit;">
+                        <button onclick="window.print()" class="border shadow-xl px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all flex items-center gap-4 group bg-white hover:bg-gray-50 border-gray-200 text-gray-700 dark:bg-[#2d2d2d] dark:hover:bg-gray-700 dark:border-gray-600 dark:text-gray-200" style="color: inherit;">
                             <i class="bi bi-printer-fill text-xl text-red-500"></i> Print Full Report
                         </button>
                         <button class="px-10 py-6 rounded-[2.5rem] font-black text-[10px] uppercase tracking-[0.15em] transition-all shadow-2xl flex items-center gap-4 group bg-red-600 hover:bg-red-700 text-white border border-red-600 dark:bg-red-600 dark:hover:bg-red-700 dark:border-red-500 dark:text-white shadow-red-500/20">
@@ -244,7 +244,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                         </div>
                         <div class="space-y-4 mt-auto">
-                            <div class="flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800 hover:border-green-500/30 transition-all group/stat">
+                            <div class="flex items-center justify-between p-5 bg-gray-50 dark:bg-[#2d2d2d] rounded-3xl border border-gray-100 dark:border-gray-800 hover:border-green-500/30 transition-all group/stat">
                                 <span class="flex items-center text-[10px] font-black uppercase tracking-widest vdm-text-muted group-hover/stat:text-green-600 transition-colors">
                                     <span class="w-2.5 h-2.5 bg-green-500 rounded-full mr-4 shadow-sm shadow-green-500/20"></span> Approvals
                                 </span>
@@ -333,7 +333,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- Individual Votes Logs (Auditable) -->
                 <?php if (hasRole(['admin', 'secretary'])): ?>
-                    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl overflow-hidden mb-12 text-slate-900 dark:text-white p-10 border border-slate-100 dark:border-slate-800">
+                    <div class="bg-white dark:bg-[#2d2d2d] rounded-[2.5rem] shadow-xl overflow-hidden mb-12 text-gray-900 dark:text-white p-10 border border-gray-200 dark:border-gray-800">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 border-b border-slate-50 dark:border-slate-800 pb-8">
                             <div>
                                 <h3 class="text-2xl font-black mb-1 flex items-center gap-3 uppercase tracking-tighter vdm-heading">
