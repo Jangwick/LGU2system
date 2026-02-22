@@ -210,7 +210,8 @@ class DocumentService {
             throw new Exception("File size exceeds maximum limit of 50MB");
         }
         
-        // Check file type
+        // Check file type using server-side content inspection — never trust
+        // $_FILES['type'], which is supplied by the browser and trivially forgeable.
         $allowedTypes = [
             'application/pdf',
             'application/msword',
@@ -220,9 +221,13 @@ class DocumentService {
             'application/vnd.ms-powerpoint',
             'application/vnd.openxmlformats-officedocument.presentationml.presentation'
         ];
-        
-        if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception("Invalid file type. Only PDF, Word, Excel, and PowerPoint files are allowed");
+
+        $detectedMime = mime_content_type($file['tmp_name']);
+        if (!in_array($detectedMime, $allowedTypes, true)) {
+            $uploadedName = $file['name'] ?? 'unknown';
+            $ext = strtolower(pathinfo($uploadedName, PATHINFO_EXTENSION));
+            $hint = $ext !== '' ? " (uploaded: .$ext, detected type: $detectedMime)" : " (detected type: $detectedMime)";
+            throw new Exception("Invalid file type{$hint}. Only PDF, Word, Excel, and PowerPoint files are allowed.");
         }
         
         return true;

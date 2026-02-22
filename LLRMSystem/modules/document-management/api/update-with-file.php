@@ -1,8 +1,11 @@
 <?php
+ob_start();
+
 session_start();
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
+    ob_clean();
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
 }
@@ -55,6 +58,7 @@ try {
         );
         
         if (!$result['success']) {
+            ob_clean();
             echo json_encode($result);
             exit;
         }
@@ -68,11 +72,13 @@ try {
         );
     }
     
+    ob_clean();
     echo json_encode([
         'success' => true,
         'message' => 'Document updated successfully'
     ]);
 } catch (Exception $e) {
+    ob_clean();
     echo json_encode([
         'success' => false,
         'error' => $e->getMessage()
