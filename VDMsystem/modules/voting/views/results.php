@@ -62,14 +62,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Page Header -->
         <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
-            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
-            <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight">Voting Results</h1>
-                    <p class="text-red-100 text-sm opacity-90 font-medium">Review outcomes, analytics, and historical data of all voting sessions.</p>
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
+            
+            <div class="relative !flex !flex-row items-center !justify-between w-full gap-6">
+                <!-- Left Side: Title & Context -->
+                <div class="flex-1 text-left">
+                    <h1 class="text-2xl md:text-4xl font-black mb-1 p-0 m-0 tracking-tight transition-all duration-500">
+                        Voting Results
+                    </h1>
+                    <p class="text-red-100 text-sm md:text-lg opacity-90 font-medium p-0 m-0 transition-all duration-500">
+                        Review outcomes, analytics, and historical data of all voting sessions.
+                    </p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 w-full md:w-auto text-sm">
+                
+                <!-- Right Side: Action Buttons -->
+                <div class="flex flex-row items-center gap-3 shrink-0">
+                    <a href="sessions.php" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-7 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 text-sm">
                         <i class="bi bi-list-ul mr-2"></i>
                         All Sessions
                     </a>
