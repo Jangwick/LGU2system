@@ -92,7 +92,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         $pendingDocuments = dbFetchAll("SELECT id, doc_number, title, type FROM documents WHERE status = 'pending_vote' ORDER BY created_at DESC");
         $councilors = dbFetchAll("SELECT id, full_name, position FROM users WHERE role IN ('councilor', 'admin') AND is_active = 1 ORDER BY full_name");
         ?>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in-up">
             <div class="bg-white dark:bg-[#2d2d2d] rounded-xl shadow-md p-4 border-l-4 border-red-500 hover:shadow-lg transition-all transform hover:-translate-y-1 dark:border-red-700">
                 <div class="flex items-center justify-between">
                     <div>
@@ -143,8 +143,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Search and Filters -->
-        <div class="bg-white dark:bg-[#2d2d2d] rounded-2xl shadow-md p-6 mb-6 border border-gray-100 dark:border-gray-800 animate-fade-in-up" style="animation-delay: 100ms;">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-2xl shadow-md p-6 mb-6 border border-gray-100 dark:border-gray-800 animate-fade-in-up" style="animation-delay: 100ms;">
+            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="relative group">
                     <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Search Sessions</label>
                     <div class="relative">
@@ -167,12 +167,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Date Range</label>
-                    <div class="flex gap-2">
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2 block">Date Range</label>
+                    <div class="grid grid-cols-2 gap-2">
                         <input type="date" name="date_from" value="<?php echo e($filters['date_from']); ?>" 
-                               class="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                               class="w-full px-2 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none dark:text-white">
                         <input type="date" name="date_to" value="<?php echo e($filters['date_to']); ?>" 
-                               class="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                               class="w-full px-2 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none dark:text-white">
                     </div>
                 </div>
                 
@@ -188,10 +188,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Sessions Table -->
-        <div class="bg-white dark:bg-[#2d2d2d] rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800 animate-fade-in-up" style="animation-delay: 200ms;">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800 animate-fade-in-up" style="animation-delay: 200ms;">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">
+                    <thead class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Session Details</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Schedule</th>
@@ -237,7 +237,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="committee-badge text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded border border-gray-200 dark:border-slate-700">
+                                        <span class="committee-badge text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded border border-gray-200 dark:border-gray-700">
                                             <?php echo e($session['committee_name'] ?? 'Plenary / General'); ?>
                                         </span>
                                     </td>
