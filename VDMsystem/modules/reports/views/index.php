@@ -65,23 +65,23 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Subtle decorative background element -->
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl transition-opacity duration-500 dark:opacity-5"></div>
             
-            <div class="relative flex items-center justify-between gap-4">
+            <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <!-- Left Side: Title & Context -->
                 <div>
                     <h1 class="text-xl md:text-3xl font-black mb-1 tracking-tight transition-all duration-500">
                         Reports & Analytics
                     </h1>
-                    <p class="text-red-100 text-xs md:text-sm opacity-90 font-medium transition-all duration-500">
+                    <p class="text-red-100 text-sm opacity-90 font-medium transition-all duration-500">
                         Legislative performance, voting trends, attendance metrics, and document intelligence.
                     </p>
                 </div>
 
                 <!-- Right Side: Action Buttons -->
-                <div class="shrink-0 flex gap-2">
-                    <button onclick="exportReport()" class="!bg-white/10 hover:!bg-white/20 backdrop-blur-sm text-white px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-white/20">
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <button onclick="exportReport()" class="!bg-white/10 hover:!bg-white/20 backdrop-blur-sm text-white px-4 md:px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-white/20 w-full md:w-auto text-sm">
                         <i class="bi bi-download mr-2"></i> Export
                     </button>
-                    <button onclick="window.print()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-6 py-2.5 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center group border border-red-600">
+                    <button onclick="window.print()" class="!bg-white !text-red-600 hover:!bg-gray-50 px-4 md:px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-500 transform hover:-translate-y-0.5 flex items-center justify-center group border border-red-600 w-full md:w-auto text-sm">
                         <i class="bi bi-printer mr-2"></i> Print
                     </button>
                 </div>
@@ -89,30 +89,30 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Date Range Filter -->
-        <div class="bg-white dark:bg-[#2d2d2d] rounded-2xl shadow-md p-5 mb-6 border border-gray-100 dark:border-gray-700">
-            <form method="GET" class="flex flex-col md:flex-row items-end gap-4">
+        <div class="bg-white dark:bg-[#1a1a1a] rounded-2xl shadow-md p-6 mb-6 border border-gray-100 dark:border-gray-800">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
                 <input type="hidden" name="tab" value="<?php echo e($tab); ?>">
-                <div class="flex-1 w-full">
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Analysis Period</label>
-                    <div class="flex items-center gap-2">
-                        <div class="relative flex-1">
+                <div class="md:col-span-8 lg:col-span-9">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Analysis Period</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-[1fr,auto,1fr] items-center gap-3">
+                        <div class="relative">
                             <i class="bi bi-calendar-event absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input type="date" name="start_date" value="<?php echo $startDate; ?>" 
-                                   class="w-full pl-10 pr-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm text-gray-700 dark:text-gray-300">
+                                   class="w-full pl-10 pr-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm text-gray-700 dark:text-gray-300">
                         </div>
-                        <span class="text-gray-400 font-bold text-sm">to</span>
-                        <div class="relative flex-1">
+                        <span class="text-gray-400 font-bold text-xs text-center">to</span>
+                        <div class="relative">
                             <i class="bi bi-calendar-check absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input type="date" name="end_date" value="<?php echo $endDate; ?>" 
-                                   class="w-full pl-10 pr-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm text-gray-700 dark:text-gray-300">
+                                   class="w-full pl-10 pr-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all text-sm text-gray-700 dark:text-gray-300">
                         </div>
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-md transition-all flex items-center gap-2 text-sm">
+                <div class="md:col-span-4 lg:col-span-3 flex gap-3">
+                    <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-xl font-black shadow-md transition-all flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest">
                         <i class="bi bi-funnel-fill"></i> Analyze
                     </button>
-                    <a href="index.php" class="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all" title="Reset">
+                    <a href="index.php" class="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700" title="Reset">
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </a>
                 </div>
@@ -128,7 +128,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Tab Navigation -->
-        <div class="flex gap-1 mb-6 bg-white dark:bg-[#2d2d2d] rounded-xl p-1 shadow-sm border border-gray-100 dark:border-gray-700 overflow-x-auto">
+        <div class="flex gap-1 mb-6 bg-white dark:bg-[#1a1a1a] rounded-xl p-1 shadow-sm border border-gray-100 dark:border-gray-800 overflow-x-auto custom-scrollbar">
             <?php 
             $tabs = [
                 'overview'    => ['icon' => 'bi-grid-1x2-fill', 'label' => 'Overview'],
@@ -154,9 +154,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <?php if ($tab === 'overview'): ?>
 
         <!-- KPI Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <!-- Sessions -->
-            <div class="bg-white dark:bg-[#2d2d2d] rounded-2xl shadow-md p-5 border-l-4 border-red-600 hover:shadow-lg transition-all">
+            <div class="bg-white dark:bg-[#2d2d2d] rounded-2xl shadow-md p-5 border-l-4 border-red-600 hover:shadow-lg transition-all dark:border-red-700">
                 <div class="flex items-center justify-between mb-3">
                     <div class="bg-red-50 dark:bg-red-500/10 text-red-600 w-11 h-11 rounded-xl flex items-center justify-center">
                         <i class="bi bi-calendar3 text-xl"></i>
