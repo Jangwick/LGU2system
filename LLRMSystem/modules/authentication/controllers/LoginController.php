@@ -30,7 +30,6 @@ if (ob_get_length()) ob_clean();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $remember = isset($_POST['remember']);
     
     // Validate input
     if (empty($email) || empty($password)) {
@@ -104,7 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Save user ID to temporary session for OTP verification
                 $_SESSION['otp_pending_user_id'] = $user['id'];
-                $_SESSION['otp_remember_me'] = $remember;
                 
                 // Send OTP email to the target email (Personal Gmail for Admin)
                 $mailer = new Mailer();

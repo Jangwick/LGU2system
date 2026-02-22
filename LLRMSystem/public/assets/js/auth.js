@@ -30,7 +30,6 @@ if (loginForm) {
         const formData = new FormData(this);
         const email = formData.get('email');
         const password = formData.get('password');
-        const remember = formData.get('remember');
         
         // Basic validation
         if (!email || !password) {

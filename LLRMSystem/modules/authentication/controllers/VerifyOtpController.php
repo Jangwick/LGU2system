@@ -25,7 +25,6 @@ if (ob_get_length()) ob_clean();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $otp = trim($_POST['otp'] ?? '');
     $userId = $_SESSION['otp_pending_user_id'] ?? null;
-    $remember = $_SESSION['otp_remember_me'] ?? false;
 
     if (!$userId) {
         echo json_encode(['success' => false, 'message' => 'Session expired. Please log in again.']);
@@ -76,20 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Clear pending OTP data
             unset($_SESSION['otp_pending_user_id']);
-            unset($_SESSION['otp_remember_me']);
-
-            // Set remember me cookie if needed
-            if ($remember) {
-                $token = bin2hex(random_bytes(32));
-                setcookie('remember_token', $token, time() + (7 * 24 * 60 * 60), '/');
-                $stmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
-                $stmt->execute([$token, $userId]);
-            }
 
             // Log successful verification
             $logger->logSession($userId, 'LOGIN_SUCCESS_OTP', [
-                'email' => $user['email'],
-                'remember_me' => $remember
+                'email' => $user['email']
             ]);
 
             echo json_encode([

@@ -184,12 +184,6 @@ checkAlreadyLoggedIn();
                     </div>
                 </div>
 
-                <!-- Remember Me -->
-                <div class="flex items-center">
-                    <input type="checkbox" id="remember" name="remember" class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                    <label for="remember" class="ml-2 text-xs md:text-sm text-gray-600 cursor-pointer">Remember this device</label>
-                </div>
-
                 <!-- Submit Button -->
                 <button type="submit" 
                         id="submit-btn"
