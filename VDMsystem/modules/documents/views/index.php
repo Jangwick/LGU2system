@@ -2,16 +2,100 @@
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/utils/audit.php';
 
 // Check authentication
 if (!isset($_SESSION['user_id'])) {
     redirectToLogin();
 }
 
-// Get filters
+// Handle search and filters
 $typeFilter = $_GET['type'] ?? '';
 $statusFilter = $_GET['status'] ?? '';
 $searchQuery = $_GET['search'] ?? '';
+
+// Handle upload POST behavior
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && hasRole(['admin', 'secretary', 'encoder'])) {
+    $title = trim($_POST['title'] ?? '');
+    $type = $_POST['type'] ?? '';
+    $summary = trim($_POST['summary'] ?? '');
+    $docNumber = trim($_POST['doc_number'] ?? '');
+    
+    $errors = [];
+    
+    if (empty($title)) $errors[] = "Document title is required.";
+    if (empty($type)) $errors[] = "Document type is required.";
+    
+    // File upload handling
+    $fileName = null;
+    $filePath = null;
+    $fileSize = 0;
+    $fileType = null;
+    
+    if (isset($_FILES['document_file']) && $_FILES['document_file']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = STORAGE_PATH . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR;
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        
+        $tmpName = $_FILES['document_file']['tmp_name'];
+        $originalName = basename($_FILES['document_file']['name']);
+        $fileSize = $_FILES['document_file']['size'];
+        $fileType = $_FILES['document_file']['type'];
+        
+        $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+        $fileName = uniqid('doc_', true) . '.' . $extension;
+        $filePath = 'storage/documents/' . $fileName;
+        
+        if (!move_uploaded_file($tmpName, $uploadDir . $fileName)) {
+            $errors[] = "Failed to move uploaded file.";
+        }
+    }
+    
+    if (empty($errors)) {
+        if (empty($docNumber)) {
+            $year = date('Y');
+            $prefix = strtoupper(substr($type, 0, 3));
+            $count = dbCount('documents', "type = ? AND YEAR(created_at) = ?", [$type, $year]);
+            $docNumber = sprintf("%s-%s-%04d", $prefix, $year, $count + 1);
+        } else {
+            // Check for duplicate doc_number
+            if (dbCount('documents', "doc_number = ?", [$docNumber]) > 0) {
+                $errors[] = "Reference number '$docNumber' already exists in the repository. Please use a unique ID.";
+            }
+        }
+    }
+    
+    if (empty($errors)) {
+        $docData = [
+            'doc_number' => $docNumber,
+            'title' => $title,
+            'description' => $summary,
+            'type' => $type,
+            'author_id' => $_SESSION['user_id'],
+            'status' => 'draft',
+            'file_name' => $originalName ?? null,
+            'file_path' => $filePath,
+            'file_size' => $fileSize,
+            'file_type' => $fileType,
+            'created_by' => $_SESSION['user_id']
+        ];
+        
+        $docId = dbInsert('documents', $docData);
+        if ($docId) {
+            logAudit('document_uploaded', $_SESSION['user_id'], 'documents', 'documents', $docId, "Uploaded document: $title");
+            $_SESSION['flash_success'] = "Document uploaded successfully!";
+            header("Location: index.php");
+            exit;
+        } else {
+            $errors[] = "Database error while saving document.";
+        }
+    }
+    
+    if (!empty($errors)) {
+        $_SESSION['flash_error'] = implode(' ', $errors);
+    }
+}
 
 $where = "1=1";
 $params = [];
@@ -27,7 +111,7 @@ if ($statusFilter) {
 }
 
 if ($searchQuery) {
-    $where .= " AND (d.title LIKE ? OR d.doc_number LIKE ? OR d.summary LIKE ?)";
+    $where .= " AND (d.title LIKE ? OR d.doc_number LIKE ? OR d.description LIKE ?)";
     $params[] = "%$searchQuery%";
     $params[] = "%$searchQuery%";
     $params[] = "%$searchQuery%";
@@ -44,8 +128,17 @@ $documents = dbFetchAll(
     $params
 );
 
+// Get global stats for cards
+$stats = [
+    'total' => dbCount('documents'),
+    'draft' => dbCount('documents', "status = 'draft'"),
+    'pending_vote' => dbCount('documents', "status = 'pending_vote'"),
+    'approved' => dbCount('documents', "status = 'approved'"),
+    'rejected' => dbCount('documents', "status = 'rejected'")
+];
+
 // Get document types for filter
-$documentTypes = ['resolution', 'ordinance', 'agenda', 'minutes', 'committee_report', 'other'];
+$documentTypes = ['resolution', 'ordinance', 'motion', 'bill', 'report', 'other'];
 $statusList = ['draft', 'under_review', 'committee_review', 'pending_vote', 'approved', 'rejected', 'archived'];
 
 $pageTitle = 'Documents';
@@ -67,6 +160,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-6">
+        <!-- Flash Messages -->
+        <?php if (isset($_SESSION['flash_success'])): ?>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6 animate-fade-in" role="alert">
+                <span class="block sm:inline"><?php echo $_SESSION['flash_success']; ?></span>
+                <?php unset($_SESSION['flash_success']); ?>
+            </div>
+        <?php endif; ?>
+        
+        <?php if (isset($_SESSION['flash_error'])): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 animate-fade-in" role="alert">
+                <span class="block sm:inline"><?php echo $_SESSION['flash_error']; ?></span>
+                <?php unset($_SESSION['flash_error']); ?>
+            </div>
+        <?php endif; ?>
+
         <!-- Page Header -->
         <div class="vdm-welcome-banner rounded-lg md:rounded-2xl shadow-xl p-4 md:p-7 mb-6 text-white relative overflow-hidden">
             <div class="absolute -right-16 -top-16 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl"></div>
@@ -130,24 +238,24 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         
         <!-- Quick Stats -->
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-            <div class="bg-white rounded-lg shadow p-3 text-center">
-                <div class="text-2xl font-bold text-gray-800"><?php echo count($documents); ?></div>
+            <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-slate-500">
+                <div class="text-2xl font-bold text-gray-800"><?php echo $stats['total']; ?></div>
                 <div class="text-xs text-gray-500">Total</div>
             </div>
-            <div class="bg-white rounded-lg shadow p-3 text-center">
-                <div class="text-2xl font-bold text-gray-500"><?php echo count(array_filter($documents, fn($d) => $d['status'] === 'draft')); ?></div>
+            <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-gray-400">
+                <div class="text-2xl font-bold text-gray-500"><?php echo $stats['draft']; ?></div>
                 <div class="text-xs text-gray-500">Draft</div>
             </div>
-            <div class="bg-white rounded-lg shadow p-3 text-center">
-                <div class="text-2xl font-bold text-yellow-600"><?php echo count(array_filter($documents, fn($d) => $d['status'] === 'pending_vote')); ?></div>
+            <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-purple-500">
+                <div class="text-2xl font-bold text-purple-600"><?php echo $stats['pending_vote']; ?></div>
                 <div class="text-xs text-gray-500">Pending Vote</div>
             </div>
-            <div class="bg-white rounded-lg shadow p-3 text-center">
-                <div class="text-2xl font-bold text-green-600"><?php echo count(array_filter($documents, fn($d) => $d['status'] === 'approved')); ?></div>
+            <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-green-500">
+                <div class="text-2xl font-bold text-green-600"><?php echo $stats['approved']; ?></div>
                 <div class="text-xs text-gray-500">Approved</div>
             </div>
-            <div class="bg-white rounded-lg shadow p-3 text-center">
-                <div class="text-2xl font-bold text-red-600"><?php echo count(array_filter($documents, fn($d) => $d['status'] === 'rejected')); ?></div>
+            <div class="bg-white rounded-lg shadow p-3 text-center border-t-4 border-red-500">
+                <div class="text-2xl font-bold text-red-600"><?php echo $stats['rejected']; ?></div>
                 <div class="text-xs text-gray-500">Rejected</div>
             </div>
         </div>
@@ -160,9 +268,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <h3 class="text-lg font-medium text-gray-700 mb-2">No Documents Found</h3>
                     <p class="text-gray-500 mb-4">There are no documents matching your criteria.</p>
                     <?php if (hasRole(['admin', 'secretary', 'encoder'])): ?>
-                    <a href="create.php" class="inline-flex items-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                    <button onclick="openUploadModal()" class="inline-flex items-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
                         <i class="bi bi-plus-circle mr-2"></i> Create Document
-                    </a>
+                    </button>
                     <?php endif; ?>
                 </div>
             <?php else: ?>
@@ -268,7 +376,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
             <!-- Modal Content (Scrollable) -->
             <div class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 bg-white dark:bg-slate-950">
-                <form id="upload-form-modal" class="space-y-10">
+                <form id="upload-form-modal" method="POST" enctype="multipart/form-data" class="space-y-10">
                     <!-- File Selection Area -->
                     <div>
                         <h3 class="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-6 flex items-center">
@@ -287,7 +395,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <h4 class="text-xl font-black text-slate-900 dark:text-slate-100 mb-2">Ingest New Document</h4>
                                     <p class="text-sm text-slate-500 dark:text-slate-400 mb-8 max-w-xs mx-auto font-medium lead-relaxed">Drop your legislative files here or browse for local records.</p>
                                     
-                                    <input type="file" id="file-input-modal" name="document_file" accept=".pdf,.doc,.docx" class="hidden" required>
+                                    <input type="file" id="file-input-modal" name="document_file" accept=".pdf,.doc,.docx" class="hidden">
                                     <button type="button" onclick="document.getElementById('file-input-modal').click()" class="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] shadow-xl hover:shadow-slate-200 dark:hover:shadow-none transition-all active:scale-95 inline-flex items-center gap-2">
                                         <i class="bi bi-plus-lg"></i> Choose File
                                     </button>
@@ -337,9 +445,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <option value="">Select Category</option>
                                         <option value="ordinance">Ordinance</option>
                                         <option value="resolution">Resolution</option>
-                                        <option value="agenda">Agenda</option>
-                                        <option value="minutes">Minutes</option>
-                                        <option value="committee_report">Committee Report</option>
+                                        <option value="motion">Motion</option>
+                                        <option value="bill">Bill</option>
+                                        <option value="report">Committee Report</option>
+                                        <option value="other">Other</option>
                                     </select>
                                     <i class="bi bi-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none transition-transform group-focus-within:rotate-180"></i>
                                 </div>
@@ -375,7 +484,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <button type="button" onclick="closeUploadModal()" class="w-full sm:w-auto order-2 sm:order-1 px-10 py-4 text-xs font-black text-slate-400 dark:text-slate-500 hover:text-red-600 transition-all uppercase tracking-[0.2em] bg-transparent">
                             Cancel Upload
                         </button>
-                        <button type="submit" id="upload-submit-btn" class="w-full sm:w-auto order-1 sm:order-2 px-12 py-4.5 bg-red-600 hover:bg-red-700 text-white rounded-[1.5rem] font-black uppercase tracking-[0.15em] text-[11px] shadow-2xl shadow-red-200 dark:shadow-none transition-all active:scale-95 group flex items-center justify-center gap-3">
+                        <button type="submit" class="w-full sm:w-auto order-1 sm:order-2 px-12 py-4.5 bg-red-600 hover:bg-red-700 text-white rounded-[1.5rem] font-black uppercase tracking-[0.15em] text-[11px] shadow-2xl shadow-red-200 dark:shadow-none transition-all active:scale-95 group flex items-center justify-center gap-3">
                             Submit Repository <i class="bi bi-chevron-right group-hover:translate-x-1 transition-transform font-black"></i>
                         </button>
                     </div>
