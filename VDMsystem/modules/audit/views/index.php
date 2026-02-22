@@ -35,7 +35,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 ?>
 
 <!-- Sidebar -->
-<?php include_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
+
+    <!-- Custom Style for Guaranteed Desktop/Mobile Separation -->
+    <style>
+        .vdm-desktop-view { display: none; }
+        .vdm-mobile-view { display: block; }
+
+        @media screen and (min-width: 768px) {
+            .vdm-desktop-view { display: block !important; }
+            .vdm-mobile-view { display: none !important; }
+        }
+    </style>
+
+    <?php include_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
 
 <!-- Main Content Area -->
 <div class="flex-1 flex flex-col overflow-hidden">
@@ -235,9 +247,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             
-            <!-- Logs Table Container -->
-            <div class="overflow-x-auto custom-scrollbar border-t border-gray-100 dark:border-gray-800">
-                <!-- Desktop Table View (Always Visible for Diagnostic) -->
+            <!-- Desktop View: Standalone Full Table (Forced on MD+) -->
+            <div class="vdm-desktop-view overflow-x-auto custom-scrollbar border-t border-gray-100 dark:border-gray-800">
                 <table class="w-full text-left">
                     <thead class="bg-gray-50/80 dark:bg-gray-800/80 border-b border-gray-200 dark:border-gray-700">
                         <tr>
@@ -330,8 +341,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </table>
             </div>
 
-            <!-- Mobile Card View -->
-            <div class="md:hidden divide-y divide-gray-100 dark:divide-gray-800/50">
+            <!-- Mobile View: Standalone Optimized Card List -->
+            <div class="vdm-mobile-view divide-y divide-gray-100 dark:divide-gray-800/50">
                 <?php if (empty($data['logs'])): ?>
                     <div class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
                         <i class="bi bi-inbox text-5xl block mb-3 opacity-20"></i>
