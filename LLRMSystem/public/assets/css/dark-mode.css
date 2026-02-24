@@ -183,17 +183,13 @@
    Document Management - Action Buttons
    ---------------------------------------- */
 
-/* Force transparent background on ALL action buttons and links - highest specificity */
+/* Target icon buttons and table actions that SHOULD be transparent */
 .dark td.px-4 button,
 .dark td.px-4 a,
 .dark td button,
 .dark td a,
-.dark div.flex.items-center.gap-1 button,
-.dark div.flex.items-center.gap-1 a,
-.dark div.flex.justify-end.gap-3 button,
-.dark div.flex.justify-end.gap-3 a,
-.dark button.p-2,
-.dark a.p-2 {
+.dark button.p-2:not([class*="bg-"]),
+.dark a.p-2:not([class*="bg-"]) {
     background-color: transparent !important;
     background-image: none !important;
     background: none !important;

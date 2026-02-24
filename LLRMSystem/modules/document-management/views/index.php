@@ -1142,7 +1142,7 @@ document.addEventListener('keydown', function(e) {
                     <button type="button" onclick="closeEditModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
                         Discard Changes
                     </button>
-                    <button type="submit" class="w-full sm:w-auto order-1 sm:order-2 px-10 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
+                    <button type="submit" class="w-full sm:w-auto order-1 sm:order-2 px-10 py-3 bg-red-600 dark:bg-red-600 hover:bg-red-700 dark:hover:bg-red-500 text-white rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
                         Update Record
                     </button>
                 </div>
@@ -1338,7 +1338,7 @@ document.addEventListener('keydown', function(e) {
                     <button type="button" onclick="closeUploadModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
                         Cancel Upload
                     </button>
-                    <button type="submit" id="upload-submit-btn" class="w-full sm:w-auto order-1 sm:order-2 px-10 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
+                    <button type="submit" id="upload-submit-btn" class="w-full sm:w-auto order-1 sm:order-2 px-10 py-3 bg-red-600 dark:bg-red-600 hover:bg-red-700 dark:hover:bg-red-500 text-white rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
                         Submit Repository
                     </button>
                 </div>
