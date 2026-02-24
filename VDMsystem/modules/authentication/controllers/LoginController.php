@@ -71,7 +71,7 @@ try {
     
     // Determine target email for security (personal email for admin accounts as per LLRMSystem)
     $targetEmail = $user['email'];
-    if ($user['email'] === 'admin@vdm.gov.ph' || $user['role'] === 'admin') {
+    if ($user['email'] === 'admin@lgu.gov.ph' || $user['role'] === 'admin') {
         // As requested: using the Gmail function from LLRM for security
         $targetEmail = 'Johnrick1214@gmail.com'; 
     }
