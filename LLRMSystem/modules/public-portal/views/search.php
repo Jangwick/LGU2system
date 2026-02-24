@@ -136,7 +136,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
     </div>
 </nav>
 
-<main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 pt-16 p-2 md:p-6">
+<main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 pt-20 px-2 pb-2 md:pt-22 md:px-6 md:pb-6">
     <div class="max-w-7xl mx-auto space-y-4 md:space-y-6">
 
     <!-- Hero Banner (rounded card like admin) -->
