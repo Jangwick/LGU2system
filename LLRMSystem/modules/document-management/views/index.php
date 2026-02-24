@@ -918,6 +918,12 @@ function formatSize(bytes) {
 }
 
 function editDocument(id) {
+    // Close the preview modal first if it's open
+    const previewModal = document.getElementById('preview-modal');
+    if (previewModal && !previewModal.classList.contains('hidden')) {
+        closePreviewModal();
+    }
+    
     const modal = document.getElementById('edit-modal');
     const form = document.getElementById('edit-form-modal');
     const modalContainer = modal.querySelector('div');
@@ -1186,7 +1192,7 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 <!-- Edit Document Modal -->
-<div id="edit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
+<div id="edit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100004] flex items-end sm:items-center justify-center sm:p-4">
     <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
@@ -1367,7 +1373,7 @@ document.addEventListener('keydown', function(e) {
 
 
 <!-- Upload Document Modal -->
-<div id="upload-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
+<div id="upload-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100004] flex items-end sm:items-center justify-center sm:p-4">
     <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
