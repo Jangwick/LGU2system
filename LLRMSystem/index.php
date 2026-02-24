@@ -286,18 +286,21 @@ $pageTitle = "Home";
                     <a href="<?php echo LOGIN_URL; ?>" class="text-slate-600 hover:text-red-600 font-black uppercase tracking-widest text-[10px] sm:text-xs transition-all whitespace-nowrap">Sign In</a>
                 </div>
 
-                <div class="hidden lg:flex items-center space-x-8">
-                    <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="text-red-600 hover:text-red-700 font-black text-sm transition-all flex items-center gap-1.5"><i class="bi bi-globe2"></i>Public Portal</a>
-                    <a href="#leadership" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Officials</a>
-                    <a href="#roots" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">History</a>
-                    <a href="#governance" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Governance</a>
-                    <a href="#recognition" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Awards</a>
-                    <a href="#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Infrastructure</a>
-                    <a href="#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Landmarks</a>
-                    <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">News</a>
+                <div class="hidden lg:flex items-center space-x-4 xl:space-x-7">
+                    <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="text-red-600 hover:text-red-700 font-black text-[10px] leading-tight transition-all flex flex-col items-center border-l border-gray-100 pl-3 ml-1 uppercase tracking-tighter">
+                        <span>Public</span>
+                        <span>Portal</span>
+                    </a>
+                    <a href="#leadership" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Officials</a>
+                    <a href="#roots" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">History</a>
+                    <a href="#governance" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Governance</a>
+                    <a href="#recognition" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Awards</a>
+                    <a href="#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Infrastructure</a>
+                    <a href="#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Landmarks</a>
+                    <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">News</a>
                 </div>
-                <div class="flex items-center space-x-2 md:space-x-6">
-                    <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-sm transition-all whitespace-nowrap">Sign In</a>
+                <div class="flex items-center space-x-2 xl:space-x-6">
+                    <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[11px] xl:text-sm transition-all whitespace-nowrap">Sign In</a>
                     <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
                         Get Started
                     </a>
