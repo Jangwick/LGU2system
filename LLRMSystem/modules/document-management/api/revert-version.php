@@ -24,10 +24,15 @@ $fileStorageService = new FileStorageService();
 $logger = new Logger($db);
 $versionService = new VersionService($versionModel, $documentModel, $fileStorageService, $logger);
 
-$data = json_decode(file_get_contents('php://input'), true);
+// Try to get data from POST body first, then fallback to JSON input
+$documentId = $_POST['document_id'] ?? null;
+$versionNumber = $_POST['version_number'] ?? null;
 
-$documentId = $data['document_id'] ?? null;
-$versionNumber = $data['version_number'] ?? null;
+if (!$documentId || !$versionNumber) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $documentId = $data['document_id'] ?? $documentId;
+    $versionNumber = $data['version_number'] ?? $versionNumber;
+}
 
 if (!$documentId || !$versionNumber) {
     echo json_encode(['success' => false, 'error' => 'Missing parameters']);

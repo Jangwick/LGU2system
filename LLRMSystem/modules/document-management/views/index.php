@@ -655,46 +655,77 @@ function viewDocument(id) {
                                 </section>
 
                                 <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 md:p-6">
-                                    <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                                         <span class="w-1.5 h-6 bg-blue-600 rounded-full mr-3"></span>
                                         Version History
                                     </h3>
-                                    <div class="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                                        <p class="text-gray-400 italic text-sm">No previous versions available.</p>
-                                    </div>
+                                    ${res.versions && res.versions.length > 0 ? `
+                                        <div class="space-y-3">
+                                            ${res.versions.map(v => `
+                                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-700">
+                                                    <div class="flex items-center">
+                                                        <div class="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-4">
+                                                            <span class="text-blue-600 font-black text-sm">V${v.version_number}</span>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-sm font-bold text-gray-800 dark:text-gray-200">${v.file_name}</p>
+                                                            <p class="text-[10px] text-gray-500">${formatDateTime(v.created_at)} • ${v.created_by_name}</p>
+                                                        </div>
+                                                    </div>
+                                                    <button onclick="revertToVersion(${doc.id}, ${v.version_number})" class="text-xs font-black uppercase text-blue-600 hover:text-blue-700">Revert</button>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    ` : `
+                                        <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                                            <p class="text-gray-400 italic text-sm">No previous versions available.</p>
+                                        </div>
+                                    `}
                                 </section>
                             </div>
 
                             <!-- Right: Sidebar Information -->
                             <div class="space-y-6">
-                                <section class="bg-white rounded-2xl border border-gray-100 p-6">
-                                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                                         <i class="bi bi-link-45deg mr-2 text-indigo-600"></i>
                                         Related Documents
                                     </h3>
-                                    <div class="text-center py-6">
-                                        <p class="text-gray-400 italic text-sm">No related documents</p>
-                                    </div>
+                                    ${res.related && res.related.length > 0 ? `
+                                        <div class="space-y-3">
+                                            ${res.related.map(r => `
+                                                <a href="javascript:void(0)" onclick="viewDocument(${r.id})" class="block p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
+                                                    <p class="text-xs font-black text-indigo-600 uppercase mb-1">${r.document_type}</p>
+                                                    <p class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-tight">${r.title}</p>
+                                                    <p class="text-[10px] text-gray-500 mt-1">${r.reference_number}</p>
+                                                </a>
+                                            `).join('')}
+                                        </div>
+                                    ` : `
+                                        <div class="text-center py-6">
+                                            <p class="text-gray-400 italic text-sm">No related documents</p>
+                                        </div>
+                                    `}
                                 </section>
 
-                                <section class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                                    <h3 class="text-lg font-bold text-gray-800 mb-5 flex items-center">
+                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-5 flex items-center">
                                         <i class="bi bi-lightning-charge mr-2 text-yellow-500"></i>
                                         Quick Actions
                                     </h3>
                                     <div class="grid gap-3">
-                                        <button class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl border border-gray-100 transition-colors">
+                                        <button onclick="shareDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-share mr-3 text-blue-500"></i> Share Document
                                         </button>
-                                        <button class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl border border-gray-100 transition-colors">
+                                        <button onclick="window.print()" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-printer mr-3 text-gray-500"></i> Print Details
                                         </button>
-                                        <button class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl border border-gray-100 transition-colors">
+                                        <button onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
-                                        <div class="mt-2 pt-2 border-t border-gray-50">
+                                        <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
                                             ${doc.status !== 'approved' ? `
-                                            <button onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                                            <button onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
                                                 <i class="bi bi-trash mr-3"></i> Delete Document
                                             </button>
                                             ` : ''}
@@ -713,6 +744,130 @@ function viewDocument(id) {
             content.innerHTML = `<div class="p-12 text-center text-red-600">Failed to load document details</div>`;
         });
 }
+
+/**
+ * Handle document sharing
+ */
+function shareDocument(id) {
+    const url = window.location.origin + App.apiUrl('documents', `download.php?id=${id}`);
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Share Document',
+            url: url
+        }).catch(err => console.error('Error sharing:', err));
+    } else {
+        // Fallback: Copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Document link copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy link:', err);
+        });
+    }
+}
+
+/**
+ * View document activity history
+ */
+async function viewActivityHistory(id) {
+    const modal = document.getElementById('activity-modal');
+    const content = document.getElementById('activity-content');
+    
+    modal.classList.remove('hidden');
+    content.innerHTML = '<div class="p-8 text-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div></div>';
+    
+    try {
+        const response = await fetch(App.apiUrl('documents', `get_details.php?id=${id}`));
+        const res = await response.json();
+        
+        if (res.success && res.activity) {
+            if (res.activity.length === 0) {
+                content.innerHTML = '<div class="p-8 text-center text-gray-500 italic">No activity recorded for this document.</div>';
+            } else {
+                content.innerHTML = `
+                    <div class="px-6 py-4">
+                        <div class="flow-root">
+                            <ul class="-mb-8">
+                                ${res.activity.map((a, idx) => `
+                                    <li>
+                                        <div class="relative pb-8">
+                                            ${idx !== res.activity.length - 1 ? '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-800"></span>' : ''}
+                                            <div class="relative flex space-x-3">
+                                                <div>
+                                                    <span class="h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white dark:ring-gray-900 ${
+                                                        a.action.includes('upload') || a.action.includes('create') ? 'bg-green-500' :
+                                                        a.action.includes('delete') ? 'bg-red-500' :
+                                                        a.action.includes('update') ? 'bg-blue-500' :
+                                                        a.action.includes('download') ? 'bg-indigo-500' : 'bg-gray-400'
+                                                    }">
+                                                        <i class="bi ${
+                                                            a.action.includes('upload') || a.action.includes('create') ? 'bi-cloud-upload' :
+                                                            a.action.includes('delete') ? 'bi-trash' :
+                                                            a.action.includes('update') ? 'bi-pencil' :
+                                                            a.action.includes('download') ? 'bi-download' : 'bi-eye'
+                                                        } text-white text-xs"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="flex-1 min-w-0 pt-1.5">
+                                                    <div class="flex flex-col">
+                                                        <p class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-tight">${a.action.replace(/_/g, ' ')}</p>
+                                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">${a.description || 'Action performed on document'}</p>
+                                                    </div>
+                                                    <div class="mt-2 flex items-center gap-2">
+                                                        <span class="text-[10px] font-black text-gray-400 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">${a.user_name}</span>
+                                                        <span class="text-[10px] text-gray-400">${formatDateTime(a.created_at)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+        } else {
+            content.innerHTML = `<div class="p-8 text-center text-red-600">${res.error || 'Failed to load activity'}</div>`;
+        }
+    } catch (e) {
+        content.innerHTML = '<div class="p-8 text-center text-red-600">Failed to load activity logs</div>';
+    }
+}
+
+function closeActivityModal() {
+    document.getElementById('activity-modal').classList.add('hidden');
+}
+
+/**
+ * Revert to a specific version
+ */
+async function revertToVersion(docId, version) {
+    if (!confirm(`Are you sure you want to revert to Version ${version}? This will create a new version of the current file.`)) return;
+    
+    try {
+        const formData = new FormData();
+        formData.append('document_id', docId);
+        formData.append('version_number', version);
+        formData.append('csrf_token', App.getCsrfToken());
+
+        const response = await fetch(App.apiUrl('documents', 'revert-version.php'), {
+            method: 'POST',
+            body: formData
+        });
+        
+        const res = await response.json();
+        if (res.success) {
+            alert(res.message);
+            viewDocument(docId); // Refresh the preview
+        } else {
+            alert(res.error || 'Failed to revert version');
+        }
+    } catch (e) {
+        alert('Failed to process revert request');
+    }
+}
+
 
 function closePreviewModal() {
     const modal = document.getElementById('preview-modal');
@@ -817,27 +972,41 @@ function closeEditModal() {
 }
 
 function deleteDocument(id) {
-    if (confirm('Are you sure you want to delete this document?')) {
-        fetch(App.apiUrl('documents', 'delete.php'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: id })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification('Document deleted successfully', 'success');
-                location.reload();
-            } else {
-                showNotification(data.error || 'Failed to delete document', 'error');
-            }
-        })
-        .catch(error => {
-            showNotification('An error occurred', 'error');
-        });
+    console.log('deleteDocument called with id:', id);
+    if (!confirm('Are you sure you want to delete this document? This action cannot be undone.')) {
+        return;
     }
+    
+    // Close the preview modal if open (so user sees the result)
+    const previewModal = document.getElementById('preview-modal');
+    if (previewModal && !previewModal.classList.contains('hidden')) {
+        closePreviewModal();
+    }
+    
+    fetch(App.apiUrl('documents', 'delete.php'), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id })
+    })
+    .then(response => {
+        console.log('Delete response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Delete response data:', data);
+        if (data.success) {
+            showNotification('Document deleted successfully', 'success');
+            setTimeout(() => location.reload(), 500);
+        } else {
+            showNotification(data.error || 'Failed to delete document', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Delete error:', error);
+        showNotification('An error occurred while deleting', 'error');
+    });
 }
 
 function showNotification(message, type) {
@@ -1152,7 +1321,7 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <!-- Document Preview Modal -->
-<div id="preview-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-end sm:items-center justify-center sm:p-4">
+<div id="preview-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100002] flex items-end sm:items-center justify-center sm:p-4">
     <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
@@ -1180,6 +1349,22 @@ document.addEventListener('keydown', function(e) {
         </div>
     </div>
 </div>
+
+<!-- Activity History Modal -->
+<div id="activity-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100003] flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col border border-gray-200 dark:border-gray-800">
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <h3 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Activity History</h3>
+            <button onclick="closeActivityModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div id="activity-content" class="overflow-y-auto flex-1">
+            <!-- Content injected by JS -->
+        </div>
+    </div>
+</div>
+
 
 <!-- Upload Document Modal -->
 <div id="upload-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
@@ -1436,6 +1621,78 @@ document.getElementById('document-date-modal').valueAsDate = new Date();
 const typeSelect = document.getElementById('upload-document-type');
 const dateInput = document.getElementById('document-date-modal');
 const referenceInput = document.getElementById('upload-reference-number');
+
+async function editDocument(id) {
+    try {
+        const response = await fetch(App.apiUrl('documents', `get_details.php?id=${id}`));
+        const res = await response.json();
+        
+        if (res.success) {
+            const doc = res.document;
+            const form = document.getElementById('edit-form-modal');
+            
+            // Fill form fields
+            form.querySelector('[name="document_id"]').value = doc.id;
+            form.querySelector('[name="title"]').value = doc.title;
+            form.querySelector('[name="document_type"]').value = doc.document_type;
+            form.querySelector('[name="reference_number"]').value = doc.reference_number;
+            form.querySelector('[name="document_date"]').value = doc.document_date;
+            form.querySelector('[name="status"]').value = doc.status;
+            form.querySelector('[name="description"]').value = doc.description || '';
+            form.querySelector('[name="tags"]').value = doc.tags || '';
+            
+            openEditModal();
+        } else {
+            alert(res.error || 'Failed to load document details');
+        }
+    } catch (e) {
+        alert('Failed to connect to server');
+    }
+}
+
+async function deleteDocument(id) {
+    if (!confirm('Are you sure you want to delete this document? This will move it to trash.')) return;
+    
+    try {
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('csrf_token', App.getCsrfToken());
+
+        const response = await fetch(App.apiUrl('documents', 'delete.php'), {
+            method: 'POST',
+            body: formData
+        });
+        
+        const res = await response.json();
+        if (res.success) {
+            alert('Document deleted successfully');
+            location.reload();
+        } else {
+            alert(res.error || 'Failed to delete document');
+        }
+    } catch (e) {
+        alert('Failed to process delete request');
+    }
+}
+
+function openEditModal() {
+    const modal = document.getElementById('edit-modal');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.querySelector('div').classList.remove('translate-y-full', 'opacity-0');
+        modal.querySelector('div').classList.add('translate-y-0', 'opacity-100');
+    }, 10);
+}
+
+function closeEditModal() {
+    const modal = document.getElementById('edit-modal');
+    const modalContainer = modal.querySelector('div');
+    modalContainer.classList.add('translate-y-full', 'opacity-0');
+    modalContainer.classList.remove('translate-y-0', 'opacity-100');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
 
 async function autoGenerateReference() {
     const type = typeSelect.value;

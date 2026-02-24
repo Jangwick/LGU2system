@@ -339,4 +339,58 @@ class Document {
         
         return $prefixes[$type] ?? 'DOC';
     }
+    /**
+     * Get document versions
+     */
+    public function getVersions($documentId) {
+        $stmt = $this->db->prepare("
+            SELECT v.*, u.name as created_by_name 
+            FROM document_versions v
+            LEFT JOIN users u ON v.created_by = u.id
+            WHERE v.document_id = :id
+            ORDER BY v.version_number DESC
+        ");
+        $stmt->execute([':id' => $documentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Get related documents
+     */
+    public function getRelated($documentId) {
+        $stmt = $this->db->prepare("
+            SELECT d.id, d.title, d.reference_number, d.document_type, l.link_type
+            FROM document_links l
+            JOIN legislative_documents d ON l.linked_document_id = d.id
+            WHERE l.document_id = ? AND d.deleted_at IS NULL
+            UNION
+            SELECT d.id, d.title, d.reference_number, d.document_type, l.link_type
+            FROM document_links l
+            JOIN legislative_documents d ON l.document_id = d.id
+            WHERE l.linked_document_id = ? AND d.deleted_at IS NULL
+        ");
+        $stmt->execute([$documentId, $documentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Get document activity logs
+     */
+    public function getActivity($documentId) {
+        $stmt = $this->db->prepare("
+            (SELECT 'access' as type, a.access_type as action, a.accessed_at as created_at, u.name as user_name, '' as description
+             FROM document_access_logs a
+             LEFT JOIN users u ON a.user_id = u.id
+             WHERE a.document_id = ?)
+            UNION
+            (SELECT 'activity' as type, l.action, l.created_at, u.name as user_name, l.description
+             FROM activity_logs l
+             LEFT JOIN users u ON l.user_id = u.id
+             WHERE l.table_name = 'documents' AND l.record_id = ?)
+            ORDER BY created_at DESC
+            LIMIT 50
+        ");
+        $stmt->execute([$documentId, $documentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

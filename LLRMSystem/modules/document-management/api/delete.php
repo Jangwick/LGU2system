@@ -18,9 +18,13 @@ require_once __DIR__ . '/../models/Document.php';
 
 $controller = new DocumentController();
 
-// Get JSON input
-$input = json_decode(file_get_contents('php://input'), true);
-$id = $input['id'] ?? null;
+// Get input (support both JSON and Form Data)
+$id = $_POST['id'] ?? null;
+
+if (!$id) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $id = $input['id'] ?? null;
+}
 
 if (!$id) {
     http_response_code(400);

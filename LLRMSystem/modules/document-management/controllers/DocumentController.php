@@ -60,7 +60,19 @@ class DocumentController {
     public function show($id) {
         try {
             $document = $this->documentService->getDocument($id);
-            return ['document' => $document];
+            
+            // Fetch extra info
+            $model = new Document($this->db);
+            $versions = $model->getVersions($id);
+            $related = $model->getRelated($id);
+            $activity = $model->getActivity($id);
+            
+            return [
+                'document' => $document,
+                'versions' => $versions,
+                'related' => $related,
+                'activity' => $activity
+            ];
             
         } catch (Exception $e) {
             return [

@@ -24,7 +24,13 @@ try {
     if (isset($data['error']) && $data['error']) {
         echo json_encode(['error' => $data['message']]);
     } else {
-        echo json_encode(['success' => true, 'document' => $data['document']]);
+        echo json_encode([
+            'success' => true, 
+            'document' => $data['document'],
+            'versions' => $data['versions'],
+            'related' => $data['related'],
+            'activity' => $data['activity']
+        ]);
     }
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
