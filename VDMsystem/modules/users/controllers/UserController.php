@@ -129,6 +129,7 @@ class UserController {
         $insertData = [
             'full_name' => $data['full_name'],
             'email' => $data['email'],
+            'bound_email' => $data['bound_email'] ?? null,
             'username' => $data['username'] ?? null,
             'password' => $hashedPassword,
             'role' => $data['role'],

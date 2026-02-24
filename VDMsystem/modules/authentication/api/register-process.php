@@ -14,8 +14,12 @@ $data = $_POST;
 
 try {
     // Basic validation
-    if (empty($data['full_name']) || empty($data['email']) || empty($data['username']) || empty($data['password'])) {
+    if (empty($data['full_name']) || empty($data['email']) || empty($data['username']) || empty($data['password']) || empty($data['bound_email'])) {
         throw new Exception("All required fields must be filled.");
+    }
+
+    if (!preg_match('/@gmail\.com$/i', $data['bound_email'])) {
+        throw new Exception("Please provide a valid Gmail address for OTP binding.");
     }
 
     if ($data['password'] !== $data['confirm_password']) {
@@ -30,6 +34,13 @@ try {
     $stmt->execute([$data['email']]);
     if ($stmt->fetch()) {
         throw new Exception("Email address is already registered.");
+    }
+
+    // Check if bound_email already exists
+    $stmt = $db->prepare("SELECT id FROM users WHERE bound_email = ?");
+    $stmt->execute([$data['bound_email']]);
+    if ($stmt->fetch()) {
+        throw new Exception("This Gmail address is already bound to another account.");
     }
 
     // Check if username already exists
@@ -47,6 +58,7 @@ try {
     $result = $userController->create([
         'full_name' => $data['full_name'],
         'email' => $data['email'],
+        'bound_email' => $data['bound_email'],
         'username' => $data['username'],
         'password' => $data['password'],
         'role' => $role,

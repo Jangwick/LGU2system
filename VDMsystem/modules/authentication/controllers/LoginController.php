@@ -31,7 +31,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 try {
     // Find user by email
     $user = dbFetchOne(
-        "SELECT id, username, email, password, full_name, role, department, position, is_active, approval_status, last_login 
+        "SELECT id, username, email, bound_email, password, full_name, role, department, position, is_active, approval_status, last_login 
          FROM users WHERE email = ?",
         [$email]
     );
@@ -69,11 +69,12 @@ try {
     // --- OTP IMPLEMENTATION (LLRMSystem Security) ---
     require_once __DIR__ . '/../../core/utils/Mailer.php';
     
-    // Determine target email for security (personal email for admin accounts as per LLRMSystem)
-    $targetEmail = $user['email'];
-    if ($user['email'] === 'admin@lgu.gov.ph' || $user['role'] === 'admin') {
-        // As requested: using the Gmail function from LLRM for security
-        $targetEmail = 'Johnrick1214@gmail.com'; 
+    // Determine target email for security (use bound_email if available, otherwise fallback to login email)
+    $targetEmail = !empty($user['bound_email']) ? $user['bound_email'] : $user['email'];
+    
+    // Fallback for admin if bound_email is somehow not set
+    if (empty($user['bound_email']) && ($user['email'] === 'admin@lgu.gov.ph' || $user['role'] === 'admin')) {
+        $targetEmail = 'rabayalawrencejay@gmail.com'; 
     }
 
     // Generate 6-digit OTP

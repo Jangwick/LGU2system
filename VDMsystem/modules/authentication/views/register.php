@@ -111,6 +111,17 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
 
+                <!-- Bound Gmail -->
+                <div class="input-group">
+                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 transition-all">Bound Gmail (for OTP)</label>
+                    <div class="relative">
+                        <i class="bi bi-google absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="email" name="bound_email" required placeholder="your.name@gmail.com" pattern=".+@gmail\.com$" title="Please enter a valid @gmail.com address"
+                               class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 transition-all font-medium">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 font-medium">This Gmail account will be used to receive your One-Time Password (OTP) when logging in.</p>
+                </div>
+
                 <!-- Row 2: Username & Role -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="input-group">
