@@ -231,4 +231,28 @@ class DocumentController {
             ];
         }
     }
+    /**
+     * Generate reference number for a document type
+     */
+    public function generateReference($type, $year = null) {
+        try {
+            if (empty($type)) {
+                throw new Exception("Document type is required");
+            }
+            
+            $model = new Document($this->db);
+            $referenceNumber = $model->generateReferenceNumber($type, $year);
+            
+            return [
+                'success' => true,
+                'reference_number' => $referenceNumber
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }

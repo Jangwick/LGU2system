@@ -299,15 +299,19 @@ class Document {
     /**
      * Generate reference number
      */
-    public function generateReferenceNumber($type) {
+    /**
+     * Generate reference number
+     */
+    public function generateReferenceNumber($type, $year = null) {
         $prefix = $this->getTypePrefix($type);
-        $year = date('Y');
+        $year = $year ?: date('Y');
         
         $stmt = $this->db->prepare("
             SELECT COUNT(*) as count 
             FROM legislative_documents 
             WHERE document_type = :type 
             AND YEAR(document_date) = :year
+            AND deleted_at IS NULL
         ");
         $stmt->execute([':type' => $type, ':year' => $year]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);

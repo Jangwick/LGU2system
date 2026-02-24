@@ -1262,7 +1262,7 @@ document.addEventListener('keydown', function(e) {
                             </label>
                             <div class="relative group">
                                 <i class="bi bi-bookmark-plus absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
-                                <select name="document_type" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
+                                <select name="document_type" id="upload-document-type" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
                                     <option value="">Select Category</option>
                                     <option value="ordinance">Ordinance</option>
                                     <option value="resolution">Resolution</option>
@@ -1285,7 +1285,7 @@ document.addEventListener('keydown', function(e) {
                             </label>
                             <div class="relative group">
                                 <i class="bi bi-hash absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
-                                <input type="text" name="reference_number" required placeholder="e.g. ORD-2025-042" class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm">
+                                <input type="text" name="reference_number" id="upload-reference-number" required placeholder="e.g. ORD-2025-042" class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm">
                             </div>
                         </div>
                         
@@ -1431,6 +1431,38 @@ function formatFileSizeModal(bytes) {
 
 // Set default date to today
 document.getElementById('document-date-modal').valueAsDate = new Date();
+
+// Auto-generate reference number when document type or date changes
+const typeSelect = document.getElementById('upload-document-type');
+const dateInput = document.getElementById('document-date-modal');
+const referenceInput = document.getElementById('upload-reference-number');
+
+async function autoGenerateReference() {
+    const type = typeSelect.value;
+    const date = dateInput.value;
+    
+    if (!type) return;
+
+    try {
+        const year = date ? new Date(date).getFullYear() : new Date().getFullYear();
+        const originalPlaceholder = referenceInput.placeholder;
+        referenceInput.placeholder = 'Generating...';
+        
+        const response = await fetch(`<?php echo DOCUMENTS_URL; ?>/api/generate_reference.php?type=${type}&year=${year}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            referenceInput.value = result.reference_number;
+        }
+        
+        referenceInput.placeholder = originalPlaceholder;
+    } catch (error) {
+        console.error('Failed to generate reference number:', error);
+    }
+}
+
+typeSelect.addEventListener('change', autoGenerateReference);
+dateInput.addEventListener('change', autoGenerateReference);
 
 // Handle form submission
 document.getElementById('upload-form-modal').addEventListener('submit', async (e) => {

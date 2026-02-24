@@ -59,7 +59,8 @@ class DocumentService {
             
             // Generate reference number if not provided
             if (empty($data['reference_number'])) {
-                $data['reference_number'] = $this->documentModel->generateReferenceNumber($data['document_type']);
+                $year = !empty($data['document_date']) ? date('Y', strtotime($data['document_date'])) : null;
+                $data['reference_number'] = $this->documentModel->generateReferenceNumber($data['document_type'], $year);
             }
             
             // Upload file
