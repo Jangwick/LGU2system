@@ -270,7 +270,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <i class="bi bi-download text-lg"></i>
                         </button>
                         <?php if (in_array($userRole, ['administrator', 'officer'])): ?>
-                        <button class="w-10 h-10 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl transition-all" onclick="bulkDelete()" title="Delete Selected">
+                        <button class="w-10 h-10 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl transition-all" title="Delete Selected">
                             <i class="bi bi-trash text-lg"></i>
                         </button>
                         <?php endif; ?>

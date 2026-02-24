@@ -42,7 +42,7 @@ class DocumentManager {
         this.selectedDocuments = new Set();
         this.init();
     }
-    
+
     init() {
         try {
             this.attachEventListeners();
@@ -54,26 +54,26 @@ class DocumentManager {
             console.error('Error in DocumentManager init:', e);
         }
     }
-    
+
     // Mobile filter toggle functionality
     initializeMobileFilterToggle() {
         const filterToggle = document.getElementById('mobile-filter-toggle');
         const filtersSection = document.getElementById('filters-section');
         const filterToggleIcon = document.getElementById('filter-toggle-icon');
-        
+
         // Auto-show if any filters are active
         const params = new URLSearchParams(window.location.search);
         const hasFilters = Array.from(params.keys()).some(k => ['search', 'type', 'status', 'date_from', 'date_to', 'tags', 'category', 'reference'].includes(k) && params.get(k) !== '');
-        
+
         if (hasFilters && filtersSection && window.innerWidth < 768) {
             filtersSection.classList.remove('hidden');
             if (filterToggleIcon) filterToggleIcon.style.transform = 'rotate(180deg)';
         }
-        
+
         if (filterToggle && filtersSection) {
             filterToggle.addEventListener('click', () => {
                 const isHidden = filtersSection.classList.contains('hidden');
-                
+
                 if (isHidden) {
                     filtersSection.classList.remove('hidden');
                     filtersSection.classList.add('animate-fade-in-up');
@@ -90,55 +90,55 @@ class DocumentManager {
             });
         }
     }
-    
+
     attachEventListeners() {
         // Select all checkbox
         const selectAllCheckbox = document.querySelector('table thead input[type="checkbox"]');
         if (selectAllCheckbox) {
             selectAllCheckbox.addEventListener('change', (e) => this.selectAll(e.target.checked));
         }
-        
+
         // Individual checkboxes
         document.querySelectorAll('.document-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', (e) => this.toggleSelection(e.target));
         });
-        
+
         // Delete buttons
         document.querySelectorAll('[data-action="delete"]').forEach(btn => {
             btn.addEventListener('click', (e) => this.deleteDocument(e.target.dataset.id));
         });
-        
+
         // View buttons
         document.querySelectorAll('[data-action="view"]').forEach(btn => {
             btn.addEventListener('click', (e) => this.viewDocument(e.target.dataset.id));
         });
-        
+
         // Download buttons
         document.querySelectorAll('[data-action="download"]').forEach(btn => {
             btn.addEventListener('click', (e) => this.downloadDocument(e.target.dataset.id));
         });
-        
+
         // Bulk action buttons
-        const bulkDownloadBtn = Array.from(document.querySelectorAll('button')).find(btn => 
-            btn.querySelector('.bi-download') && btn.textContent.includes('Download')
+        const bulkDownloadBtn = Array.from(document.querySelectorAll('button')).find(btn =>
+            btn.querySelector('.bi-download') && (btn.title.includes('Download') || btn.textContent.includes('Download'))
         );
         if (bulkDownloadBtn) {
             bulkDownloadBtn.addEventListener('click', () => this.bulkDownload());
         }
-        
-        const bulkDeleteBtns = Array.from(document.querySelectorAll('button')).filter(btn => 
-            btn.querySelector('.bi-trash') && (btn.textContent.includes('Selected') || btn.textContent.includes('Delete'))
+
+        const bulkDeleteBtns = Array.from(document.querySelectorAll('button')).filter(btn =>
+            btn.querySelector('.bi-trash') && (btn.title.includes('Selected') || btn.title.includes('Delete') || btn.textContent.includes('Selected') || btn.textContent.includes('Delete'))
         );
         bulkDeleteBtns.forEach(btn => {
             btn.addEventListener('click', () => this.bulkDelete());
         });
     }
-    
+
     initializeFilters() {
         const searchInput = document.getElementById('main-search');
         const typeFilter = document.getElementById('type-filter');
         const statusFilter = document.getElementById('status-filter');
-        
+
         if (searchInput) {
             let searchTimeout;
             searchInput.addEventListener('input', (e) => {
@@ -154,11 +154,11 @@ class DocumentManager {
                 }
             });
         }
-        
+
         if (typeFilter) {
             typeFilter.addEventListener('change', () => this.applyFilters());
         }
-        
+
         if (statusFilter) {
             statusFilter.addEventListener('change', () => this.applyFilters());
         }
@@ -167,24 +167,24 @@ class DocumentManager {
         const params = new URLSearchParams(window.location.search);
         const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
         const hasAdvanced = advancedKeys.some(key => params.has(key) && params.get(key) !== '');
-        
+
         if (hasAdvanced) {
             this.toggleAdvancedFilters();
         }
     }
-    
+
     initializeAdvancedFilters() {
         // Handled by inline onclick for reliability
     }
-    
+
     toggleAdvancedFilters() {
         const advancedPanel = document.getElementById('advanced-filters-panel');
         const chevron = document.getElementById('advanced-filters-chevron');
-        
+
         if (!advancedPanel) return;
-        
+
         const isHidden = advancedPanel.classList.contains('hidden');
-        
+
         if (isHidden) {
             advancedPanel.classList.remove('hidden');
             advancedPanel.style.display = 'block'; // Force display if class toggle fails
@@ -206,58 +206,58 @@ class DocumentManager {
         const searchInput = document.getElementById('main-search');
         const typeFilter = document.getElementById('type-filter');
         const statusFilter = document.getElementById('status-filter');
-        
+
         const params = new URLSearchParams(window.location.search);
-        
+
         if (searchInput && searchInput.value) {
             params.set('search', searchInput.value);
         } else {
             params.delete('search');
         }
-        
+
         if (typeFilter && typeFilter.value) {
             params.set('type', typeFilter.value);
         } else {
             params.delete('type');
         }
-        
+
         if (statusFilter && statusFilter.value) {
             params.set('status', statusFilter.value);
         } else {
             params.delete('status');
         }
-        
+
         // Preserve advanced filters if they exist
         const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
         advancedKeys.forEach(key => {
             const val = params.get(key);
             if (val) params.set(key, val);
         });
-        
+
         // Reload page with filters
         window.location.href = window.location.pathname + '?' + params.toString();
     }
 
     applyAdvancedFilters() {
         const params = new URLSearchParams(window.location.search);
-        
+
         const dateFrom = document.getElementById('filter-date-from');
         const dateTo = document.getElementById('filter-date-to');
         const reference = document.getElementById('filter-reference');
         const tags = document.getElementById('filter-tags');
-        
+
         if (dateFrom && dateFrom.value) params.set('date_from', dateFrom.value);
         else params.delete('date_from');
-        
+
         if (dateTo && dateTo.value) params.set('date_to', dateTo.value);
         else params.delete('date_to');
-        
+
         if (reference && reference.value) params.set('reference', reference.value);
         else params.delete('reference');
-        
+
         if (tags && tags.value) params.set('tags', tags.value);
         else params.delete('tags');
-        
+
         window.location.href = window.location.pathname + '?' + params.toString();
     }
 
@@ -265,13 +265,13 @@ class DocumentManager {
         const params = new URLSearchParams(window.location.search);
         const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
         advancedKeys.forEach(key => params.delete(key));
-        
+
         window.location.href = window.location.pathname + '?' + params.toString();
     }
 
     populateAdvancedFilters() {
         const params = new URLSearchParams(window.location.search);
-        
+
         const map = {
             'filter-date-from': 'date_from',
             'filter-date-to': 'date_to',
@@ -280,7 +280,7 @@ class DocumentManager {
             'filter-category': 'category',
             'filter-reference': 'reference'
         };
-        
+
         for (const [id, param] of Object.entries(map)) {
             const el = document.getElementById(id);
             if (el && params.has(param)) {
@@ -288,12 +288,12 @@ class DocumentManager {
             }
         }
     }
-    
+
     createAdvancedFiltersPanel() {
         // This is now handled in the PHP template for better performance
         return document.getElementById('advanced-filters-panel');
     }
-    
+
     selectAll(checked) {
         // Target all document checkboxes (desktop and mobile)
         document.querySelectorAll('.document-checkbox').forEach(checkbox => {
@@ -301,23 +301,23 @@ class DocumentManager {
             this.toggleSelection(checkbox, false); // Pass false to avoid redundant visibility updates
         });
         this.updateBulkActionsVisibility();
-        
+
         // Update both "Select All" checkboxes if they exist
         const topCheckbox = document.getElementById('select-all-top');
         if (topCheckbox) topCheckbox.checked = checked;
     }
-    
+
     toggleSelection(checkbox, updateVisibility = true) {
         const documentId = checkbox.value;
         const desktopRow = checkbox.closest('tr');
         const mobileCard = checkbox.closest('.mobile-doc-card');
-        
+
         if (checkbox.checked) {
             this.selectedDocuments.add(documentId);
             if (!selectedDocuments.includes(documentId)) {
                 selectedDocuments.push(documentId);
             }
-            
+
             // Visual indicators
             if (desktopRow) {
                 desktopRow.classList.add('bg-blue-50', 'dark:bg-blue-900/10');
@@ -328,7 +328,7 @@ class DocumentManager {
         } else {
             this.selectedDocuments.delete(documentId);
             selectedDocuments = selectedDocuments.filter(id => id !== documentId);
-            
+
             // Visual indicators
             if (desktopRow) {
                 desktopRow.classList.remove('bg-blue-50', 'dark:bg-blue-900/10');
@@ -336,16 +336,16 @@ class DocumentManager {
             if (mobileCard) {
                 mobileCard.classList.remove('bg-red-50/50', 'border-l-4', 'border-red-600');
             }
-            
+
             // Uncheck "Select All" if any item is unchecked
             const selectAllTop = document.getElementById('select-all-top');
             if (selectAllTop) selectAllTop.checked = false;
         }
-        
+
         if (updateVisibility) {
             this.updateBulkActionsVisibility();
         }
-        
+
         // Update selection count text
         const countText = document.getElementById('selected-count');
         if (countText) {
@@ -362,45 +362,45 @@ class DocumentManager {
             }
         }
     }
-    
+
     updateBulkActionsVisibility() {
         // More compatible selectors than :has()
-        const bulkDownloadBtn = Array.from(document.querySelectorAll('button')).find(btn => 
-            btn.querySelector('.bi-download') && btn.textContent.includes('Download')
+        const bulkDownloadBtn = Array.from(document.querySelectorAll('button')).find(btn =>
+            btn.querySelector('.bi-download') && (btn.title.includes('Download') || btn.textContent.includes('Download'))
         );
-        const bulkDeleteBtn = Array.from(document.querySelectorAll('button')).filter(btn => 
-            btn.querySelector('.bi-trash') && btn.textContent.includes('Selected')
+        const bulkDeleteBtn = Array.from(document.querySelectorAll('button')).filter(btn =>
+            btn.querySelector('.bi-trash') && (btn.title.includes('Selected') || btn.textContent.includes('Selected'))
         );
-        
+
         const hasSelected = this.selectedDocuments.size > 0;
-        
+
         if (bulkDownloadBtn) {
             bulkDownloadBtn.disabled = !hasSelected;
             bulkDownloadBtn.classList.toggle('opacity-50', !hasSelected);
             bulkDownloadBtn.classList.toggle('cursor-not-allowed', !hasSelected);
         }
-        
+
         bulkDeleteBtn.forEach(btn => {
             btn.disabled = !hasSelected;
             btn.classList.toggle('opacity-50', !hasSelected);
             btn.classList.toggle('cursor-not-allowed', !hasSelected);
         });
     }
-    
+
     async deleteDocument(documentId) {
         if (!confirm('Are you sure you want to delete this document?')) {
             return;
         }
-        
+
         try {
             const response = await fetch(App.apiUrl('documents', 'delete.php'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: documentId })
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 showNotification('Document deleted successfully', 'success');
                 setTimeout(() => location.reload(), 1500);
@@ -412,11 +412,11 @@ class DocumentManager {
             showNotification('An error occurred while deleting', 'error');
         }
     }
-    
+
     viewDocument(documentId) {
         window.location.href = App.config.urls.documents + `/views/view.php?id=${documentId}`;
     }
-    
+
     async downloadDocument(documentId) {
         try {
             showNotification('Preparing download...', 'info');
@@ -426,26 +426,26 @@ class DocumentManager {
             showNotification('Failed to download document', 'error');
         }
     }
-    
+
     async bulkDelete() {
         if (this.selectedDocuments.size === 0) {
             showNotification('No documents selected', 'warning');
             return;
         }
-        
+
         if (!confirm(`Delete ${this.selectedDocuments.size} selected documents? This action cannot be undone.`)) {
             return;
         }
-        
+
         try {
             const response = await fetch(App.apiUrl('documents', 'bulk-delete.php'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ document_ids: Array.from(this.selectedDocuments) })
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 showNotification(result.message, 'success');
                 setTimeout(() => location.reload(), 1500);
@@ -457,15 +457,15 @@ class DocumentManager {
             showNotification('An error occurred', 'error');
         }
     }
-    
+
     async bulkDownload() {
         if (this.selectedDocuments.size === 0) {
             showNotification('No documents selected', 'warning');
             return;
         }
-        
+
         showNotification(`Preparing to download ${this.selectedDocuments.size} document(s)...`, 'info');
-        
+
         // Download each document
         Array.from(this.selectedDocuments).forEach((id, index) => {
             setTimeout(() => {
@@ -497,30 +497,30 @@ function showNotification(message, type = 'info') {
     if (existing) {
         existing.remove();
     }
-    
+
     const colors = {
         success: 'bg-green-500',
         error: 'bg-red-500',
         warning: 'bg-yellow-500',
         info: 'bg-blue-500'
     };
-    
+
     const icons = {
         success: 'bi-check-circle',
         error: 'bi-x-circle',
         warning: 'bi-exclamation-triangle',
         info: 'bi-info-circle'
     };
-    
+
     const toast = document.createElement('div');
     toast.className = `notification-toast fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50 animate-slide-in`;
     toast.innerHTML = `
         <i class="bi ${icons[type]} text-xl"></i>
         <span>${message}</span>
     `;
-    
+
     document.body.appendChild(toast);
-    
+
     // Auto remove after 5 seconds
     setTimeout(() => {
         toast.classList.add('animate-slide-out');
