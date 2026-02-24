@@ -98,20 +98,24 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
     <title>Public Document Portal - <?= APP_NAME ?></title>
     <meta name="description" content="Search and preview approved legislative records from the City Government of Valenzuela.">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Tailwind v4: Use .dark class instead of prefers-color-scheme -->
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:where(.dark, .dark *));
+    </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body{font-family:'Inter',sans-serif}
-        html.dark{color-scheme:dark}html.dark body{background:#0a0a0a;color:#d4d4d4}
+        html.dark{color-scheme:dark}
         .glass-nav{background:rgba(255,255,255,.85);backdrop-filter:blur(16px)}
-        html.dark .glass-nav{background:rgba(10,10,10,.9)}
+        html.dark .glass-nav{background:rgba(3,7,18,.92)}
         .custom-scrollbar::-webkit-scrollbar{width:6px}.custom-scrollbar::-webkit-scrollbar-track{background:transparent}.custom-scrollbar::-webkit-scrollbar-thumb{background:rgba(0,0,0,.1);border-radius:20px}
         @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         .animate-fade-in-up{animation:fadeInUp .5s ease-out forwards}
         .animation-delay-100{animation-delay:.1s;opacity:0}.animation-delay-200{animation-delay:.2s;opacity:0}.animation-delay-300{animation-delay:.3s;opacity:0}.animation-delay-400{animation-delay:.4s;opacity:0}.animation-delay-500{animation-delay:.5s;opacity:0}.animation-delay-600{animation-delay:.6s;opacity:0}.animation-delay-700{animation-delay:.7s;opacity:0}.animation-delay-800{animation-delay:.8s;opacity:0}
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 min-h-screen custom-scrollbar">
+<body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen custom-scrollbar">
 
 <!-- Navigation -->
 <nav class="fixed top-0 w-full z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800">
@@ -132,26 +136,28 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
     </div>
 </nav>
 
-<main class="pt-16">
-    <!-- Hero Banner -->
-    <div class="bg-gradient-to-r from-red-600 to-red-800 px-4 sm:px-6 py-8 md:py-12 text-white relative overflow-hidden">
+<main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 pt-16 p-2 md:p-6">
+    <div class="max-w-7xl mx-auto space-y-4 md:space-y-6">
+
+    <!-- Hero Banner (rounded card like admin) -->
+    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-xl md:rounded-2xl shadow-xl p-5 md:p-10 text-white relative overflow-hidden animate-fade-in-up">
         <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
         <div class="absolute -left-10 -top-10 w-48 h-48 bg-red-400/20 rounded-full blur-2xl"></div>
-        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
             <div>
-                <div class="flex items-center gap-2 text-red-100 font-bold tracking-wider text-[10px] md:text-xs uppercase mb-2"><span class="w-6 md:w-8 h-0.5 bg-red-100/50"></span>Open Access &middot; AI-Powered Intelligence</div>
-                <h1 class="text-2xl md:text-4xl font-black mb-1 italic">Public Document Portal</h1>
+                <div class="flex items-center gap-2 text-red-100 font-bold tracking-wider text-[10px] md:text-xs uppercase mb-2 md:mb-3"><span class="w-6 md:w-8 h-0.5 bg-red-100/50"></span>Open Access &middot; AI-Powered Intelligence</div>
+                <h1 class="text-2xl md:text-4xl font-black mb-1 md:mb-2 italic">Public Document Portal</h1>
                 <p class="text-red-50 text-xs md:text-base max-w-xl opacity-90 font-medium">Search and preview approved legislative records. Hybrid engine combining keywords with semantic understanding.</p>
             </div>
             <div class="flex items-center gap-1.5 bg-black/10 p-1 rounded-lg md:rounded-xl backdrop-blur-md border border-white/10 w-fit">
-                <button class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg bg-white !text-red-700 font-black text-[10px] md:text-sm shadow-lg whitespace-nowrap uppercase tracking-tight">Documents</button>
-                <button class="px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg text-white hover:bg-white/10 font-black text-[10px] md:text-sm transition-all whitespace-nowrap uppercase tracking-tight">Legislations</button>
+                <button class="hero-toggle-btn px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg bg-white !text-red-700 font-black text-[10px] md:text-sm shadow-lg whitespace-nowrap uppercase tracking-tight">Documents</button>
+                <button class="hero-toggle-btn px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg text-white hover:bg-white/10 font-black text-[10px] md:text-sm transition-all whitespace-nowrap uppercase tracking-tight">Legislations</button>
             </div>
         </div>
     </div>
 
     <!-- Mobile Filter Toggle -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-6 lg:hidden">
+    <div class="lg:hidden">
         <button onclick="toggleMobileFilters()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
             <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600"><i class="bi bi-sliders2"></i></div><span class="font-bold text-gray-700 dark:text-gray-200">Refine Search</span></div>
             <i id="filter-chevron" class="bi bi-chevron-down text-gray-400 transition-transform"></i>
@@ -159,7 +165,6 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
     </div>
 
     <!-- Main Layout -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
 
             <!-- Left Sidebar Filters -->
@@ -297,7 +302,8 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                 </div>
             </div>
         </div>
-    </div>
+
+    </div><!-- end max-w-7xl -->
 
     <!-- Footer -->
     <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 mt-8">
