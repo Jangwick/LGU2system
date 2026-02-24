@@ -286,6 +286,7 @@ $pageTitle = "Home";
                 </div>
 
                 <div class="hidden lg:flex items-center space-x-8">
+                    <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="text-red-600 hover:text-red-700 font-black text-sm transition-all flex items-center gap-1.5"><i class="bi bi-globe2"></i>Public Portal</a>
                     <a href="#leadership" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Officials</a>
                     <a href="#roots" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">History</a>
                     <a href="#governance" class="text-gray-600 hover:text-red-600 font-bold text-sm transition-all">Governance</a>
@@ -327,6 +328,10 @@ $pageTitle = "Home";
         <div class="pt-24 pb-12 px-8 flex flex-col items-center space-y-8 text-center animate-slide-in-top">
             <h3 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-2 opacity-50">Quick Links</h3>
             <div class="h-px w-8 bg-red-600/20"></div>
+            
+            <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="mobile-nav-link text-3xl font-black text-red-600 uppercase tracking-tighter hover:text-red-700 transition-colors flex items-center gap-3"><i class="bi bi-globe2"></i>Public Portal</a>
+            
+            <div class="h-px w-16 bg-gray-100 my-0"></div>
             
             <a href="#leadership" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Officials</a>
             <a href="#roots" class="mobile-nav-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Our History</a>
@@ -371,12 +376,12 @@ $pageTitle = "Home";
                     A digital ecosystem for the City Government of Valenzuela to preserve, query, and analyze the legislative DNA of our community.
                 </p>
                 <div data-aos="fade-up" data-aos-delay="300" class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4 px-6 md:px-0">
-                    <a href="<?php echo REGISTER_URL; ?>" class="w-full sm:w-auto btn-modern bg-gray-900 hover:bg-black text-white font-black px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg shadow-2xl">
-                        Start Your Journey
-                        <i class="bi bi-arrow-right-short ml-1 text-2xl align-middle"></i>
+                    <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="w-full sm:w-auto btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg shadow-2xl shadow-red-200/50">
+                        <i class="bi bi-globe2 mr-2"></i>Public Document Portal
                     </a>
-                    <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="w-full sm:w-auto btn-modern bg-white hover:bg-gray-50 text-gray-900 font-bold px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg border border-gray-200 shadow-sm">
-                        View Dashboard
+                    <a href="<?php echo REGISTER_URL; ?>" class="w-full sm:w-auto btn-modern bg-gray-900 hover:bg-black text-white font-black px-8 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl text-base md:text-lg shadow-2xl">
+                        Get Started
+                        <i class="bi bi-arrow-right-short ml-1 text-2xl align-middle"></i>
                     </a>
                 </div>
             </div>
@@ -654,8 +659,8 @@ $pageTitle = "Home";
                 
                 <!-- CTA -->
                 <div class="text-center mt-10 md:mt-14" data-aos="fade-up" data-aos-delay="300">
-                    <a href="<?php echo LOGIN_URL; ?>" class="inline-flex items-center px-8 md:px-10 py-4 md:py-5 bg-gray-900 hover:bg-black text-white font-black rounded-2xl text-sm md:text-base shadow-2xl shadow-gray-900/20 transition-all hover:scale-105">
-                        Try Advanced Search
+                    <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="inline-flex items-center px-8 md:px-10 py-4 md:py-5 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl text-sm md:text-base shadow-2xl shadow-red-600/20 transition-all hover:scale-105">
+                        <i class="bi bi-globe2 mr-2"></i>Try Public Document Portal
                         <i class="bi bi-arrow-right-short ml-1 text-xl"></i>
                     </a>
                 </div>

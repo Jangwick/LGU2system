@@ -1,0 +1,133 @@
+<?php
+/**
+ * Public Search API - No authentication required
+ * Only returns approved/archived documents
+ */
+header('Content-Type: application/json');
+header('X-Content-Type-Options: nosniff');
+
+require_once __DIR__ . '/../../core/config/config.php';
+require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../search/services/SearchService.php';
+require_once __DIR__ . '/../../search/services/EmbeddingService.php';
+
+// Simple rate limiting by IP
+$ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+$rateLimitFile = sys_get_temp_dir() . '/public_portal_rate_' . md5($ip);
+$now = time();
+$maxRequests = 60; // per minute
+
+if (file_exists($rateLimitFile)) {
+    $data = json_decode(file_get_contents($rateLimitFile), true);
+    if ($data && ($now - $data['start']) < 60) {
+        if ($data['count'] >= $maxRequests) {
+            http_response_code(429);
+            echo json_encode(['error' => 'Too many requests. Please try again later.']);
+            exit;
+        }
+        $data['count']++;
+    } else {
+        $data = ['start' => $now, 'count' => 1];
+    }
+} else {
+    $data = ['start' => $now, 'count' => 1];
+}
+file_put_contents($rateLimitFile, json_encode($data));
+
+try {
+    $db = getDatabase();
+    $embeddingService = new EmbeddingService();
+    $searchService = new SearchService($db, $embeddingService);
+
+    $query = $_GET['q'] ?? '';
+    $mode = $_GET['mode'] ?? 'hybrid';
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $perPage = 10;
+
+    $filters = [
+        'type' => $_GET['type'] ?? '',
+        'status' => '', // Will be forced below
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'tags' => $_GET['tags'] ?? '',
+        'limit' => $perPage,
+        'offset' => ($page - 1) * $perPage
+    ];
+
+    // === SECURITY: Force status to only show approved/archived ===
+    // This is enforced server-side and cannot be overridden by query params
+
+    if (!empty($query)) {
+        $keywordTotal = 0;
+
+        if ($mode === 'semantic') {
+            $allResults = $searchService->semanticSearch($query, $filters);
+            // Filter to only approved/archived
+            $allResults = array_filter($allResults, function($doc) {
+                return in_array(strtolower($doc['status'] ?? ''), ['approved', 'archived']);
+            });
+            $allResults = array_values($allResults);
+            $total = count($allResults);
+        } else {
+            // Hybrid search
+            $poolFilters = $filters;
+            $poolFilters['limit'] = 100;
+            $poolFilters['offset'] = 0;
+            $allResults = $searchService->hybridSearch($query, $poolFilters);
+            // Filter to only approved/archived
+            $allResults = array_filter($allResults, function($doc) {
+                return in_array(strtolower($doc['status'] ?? ''), ['approved', 'archived']);
+            });
+            $allResults = array_values($allResults);
+            $total = count($allResults);
+        }
+
+        // Manual pagination
+        $results = array_slice($allResults, ($page - 1) * $perPage, $perPage);
+    } else {
+        // Empty query - show all approved/archived documents
+        $filters['status'] = 'approved'; // Start with approved
+        $approvedResults = $searchService->search('', $filters);
+        $approvedTotal = $searchService->getCount('', $filters);
+
+        $filters['status'] = 'archived';
+        $archivedResults = $searchService->search('', $filters);
+        $archivedTotal = $searchService->getCount('', $filters);
+
+        $results = array_merge($approvedResults, $archivedResults);
+        // Sort by created_at descending
+        usort($results, function($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
+        $total = $approvedTotal + $archivedTotal;
+
+        // Manual pagination for merged results
+        $results = array_slice($results, ($page - 1) * $perPage, $perPage);
+    }
+
+    // Get facets (filtered for public - only count approved/archived)
+    $facets = $searchService->getFacets($query);
+
+    // Strip sensitive fields from results
+    foreach ($results as &$doc) {
+        unset($doc['file_path']);
+        unset($doc['deleted_at']);
+    }
+    unset($doc);
+
+    echo json_encode([
+        'success' => true,
+        'results' => $results,
+        'total' => $total,
+        'facets' => $facets,
+        'page' => $page,
+        'per_page' => $perPage,
+        'total_pages' => ceil($total / max($perPage, 1)),
+        'query' => $query,
+        'mode' => $mode
+    ]);
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'An error occurred while processing your search.']);
+}

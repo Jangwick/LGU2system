@@ -128,6 +128,7 @@ define('AUDIT_URL', BASE_URL . '/modules/audit');
 define('HELP_URL', BASE_URL . '/modules/help');
 define('NOTIFICATIONS_URL', BASE_URL . '/modules/notifications');
 define('INTEGRATION_URL', BASE_URL . '/modules/integration');
+define('PUBLIC_PORTAL_URL', BASE_URL . '/modules/public-portal/views/search.php');
 
 // Common page URLs
 define('LOGIN_URL', AUTH_URL . '/views/login.php');
