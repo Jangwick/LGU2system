@@ -14,11 +14,12 @@ header('Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
 header(
     "Content-Security-Policy: " .
     "default-src 'self'; " .
-    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; " .
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com; " .
+    "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com; " .
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; " .
-    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
-    "img-src 'self' data: blob: https://lacs.spvalenzuela.com; " .
-    "connect-src 'self'; " .
+    "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
+    "img-src 'self' data: blob: https://lacs.spvalenzuela.com https://images.unsplash.com https://valenzuela.gov.ph; " .
+    "connect-src 'self' https://cdn.jsdelivr.net https://static.cloudflareinsights.com; " .
     "frame-ancestors 'self'; " .
     "base-uri 'self'; " .
     "form-action 'self';"

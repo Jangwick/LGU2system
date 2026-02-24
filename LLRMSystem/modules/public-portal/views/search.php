@@ -1,13 +1,31 @@
 <?php
 /**
  * Public Document Portal - Search & Preview
- * No authentication required. Only shows approved/archived documents.
- * Matches admin Advanced Search features minus download/export/status filter.
  */
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../search/services/SearchService.php';
 require_once __DIR__ . '/../../search/services/EmbeddingService.php';
+
+// ── Security Response Headers ────────────────────────────────────────────────
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header(
+    "Content-Security-Policy: " .
+    "default-src 'self'; " .
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com; " .
+    "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com; " .
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; " .
+    "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
+    "img-src 'self' data: blob: https://lacs.spvalenzuela.com https://images.unsplash.com https://valenzuela.gov.ph; " .
+    "connect-src 'self' https://cdn.jsdelivr.net https://static.cloudflareinsights.com; " .
+    "frame-ancestors 'self'; " .
+    "base-uri 'self'; " .
+    "form-action 'self';"
+);
+// ─────────────────────────────────────────────────────────────────────────────
 
 // Handle AJAX suggestions
 if (isset($_GET['action']) && $_GET['action'] === 'suggestions') {
