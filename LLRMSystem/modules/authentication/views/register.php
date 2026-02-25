@@ -163,20 +163,16 @@ require_once __DIR__ . '/../../core/config/config.php';
                             </select>
                         </div>
                         
-                        <!-- Role -->
+                        <!-- Role (auto-assigned as Staff) -->
                         <div class="md:col-span-2">
-                            <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
-                                Role <span class="text-red-500">*</span>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Role
                             </label>
-                            <select id="role" 
-                                    name="role" 
-                                    required
-                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition bg-white">
-                                <option value="">Select Role</option>
-                                <option value="viewer">User/Viewer (Auto-approved)</option>
-                                <option value="staff">Staff (Requires Approval)</option>
-                                <option value="officer">Officer (Requires Approval)</option>
-                            </select>
+                            <input type="hidden" name="role" value="staff">
+                            <div class="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-medium flex items-center">
+                                <i class="bi bi-person-badge mr-2 text-red-500"></i>
+                                Staff <span class="ml-2 text-xs text-amber-600 font-normal">(Requires Admin Approval)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
