@@ -73,6 +73,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($user['full_name'] ?? 'N/A'); ?></h1>
                         <p class="text-red-100 text-lg mb-2"><?php echo htmlspecialchars($user['email']); ?></p>
                         <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                            <?php if (!empty($user['employee_id'])): ?>
+                            <span class="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium border border-white/30">
+                                <i class="bi bi-person-vcard mr-1"></i>
+                                <?php echo htmlspecialchars($user['employee_id']); ?>
+                            </span>
+                            <?php endif; ?>
                             <span class="px-3 py-1 bg-red-500 rounded-full text-sm font-medium">
                                 <i class="bi bi-person-badge mr-1"></i>
                                 <?php echo e(ucfirst($user['role'] ?? 'User')); ?>
@@ -174,6 +180,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             Personal Information
                         </h2>
                         <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Employee ID</label>
+                                <p class="text-gray-900 font-medium">
+                                    <?php if (!empty($user['employee_id'])): ?>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                                            <i class="bi bi-person-vcard mr-1"></i>
+                                            <?php echo htmlspecialchars($user['employee_id']); ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-gray-400 italic">Not assigned</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
                                 <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($user['full_name'] ?? 'N/A'); ?></p>

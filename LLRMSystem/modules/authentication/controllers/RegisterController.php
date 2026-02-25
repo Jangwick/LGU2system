@@ -99,18 +99,31 @@ try {
             exit;
         }
 
+        // Auto-generate Employee ID (format: LGU-YYYY-XXXX)
+        $year = date('Y');
+        $stmt = $conn->prepare("SELECT employee_id FROM users WHERE employee_id LIKE ? ORDER BY employee_id DESC LIMIT 1");
+        $stmt->execute(["LGU-{$year}-%"]);
+        $lastId = $stmt->fetchColumn();
+        if ($lastId) {
+            $lastNum = intval(substr($lastId, -4));
+            $nextNum = $lastNum + 1;
+        } else {
+            $nextNum = 1;
+        }
+        $employeeId = sprintf("LGU-%s-%04d", $year, $nextNum);
+
         // Generate username and hash password
         $username = explode('@', $email)[0];
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // Insert new user
-        // We include name, full_name, email, username, password, department, role, status
-        $sql = "INSERT INTO users (name, full_name, email, username, password, department, role, status, created_at) 
-                VALUES (:name, :full_name, :email, :username, :password, :department, :role, :status, NOW())";
+        $sql = "INSERT INTO users (name, employee_id, full_name, email, username, password, department, role, status, created_at) 
+                VALUES (:name, :employee_id, :full_name, :email, :username, :password, :department, :role, :status, NOW())";
         
         $stmt = $conn->prepare($sql);
         $success = $stmt->execute([
             ':name' => $name,
+            ':employee_id' => $employeeId,
             ':full_name' => $name,
             ':email' => $email,
             ':username' => $username,
@@ -126,6 +139,7 @@ try {
             // Log successful registration
             $logger->logSession($newUserId, 'USER_REGISTERED', [
                 'email' => $email,
+                'employee_id' => $employeeId,
                 'role' => $role,
                 'department' => $department
             ]);

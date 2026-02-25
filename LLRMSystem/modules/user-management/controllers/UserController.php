@@ -53,11 +53,12 @@ class UserController {
         }
         
         if ($filters['search']) {
-            $query .= " AND (name LIKE :search1 OR email LIKE :search2 OR username LIKE :search3)";
+            $query .= " AND (name LIKE :search1 OR email LIKE :search2 OR username LIKE :search3 OR employee_id LIKE :search4)";
             $searchValue = '%' . $filters['search'] . '%';
             $params[':search1'] = $searchValue;
             $params[':search2'] = $searchValue;
             $params[':search3'] = $searchValue;
+            $params[':search4'] = $searchValue;
         }
         
         // Count total
@@ -120,6 +121,9 @@ class UserController {
             return ['success' => false, 'error' => 'Email already exists'];
         }
         
+        // Auto-generate Employee ID (format: LGU-YYYY-XXXX)
+        $employeeId = $this->generateEmployeeId();
+        
         // Generate username from email if not provided
         $username = $data['username'] ?? explode('@', $data['email'])[0];
         
@@ -128,12 +132,13 @@ class UserController {
         
         // Insert user
         $stmt = $this->db->prepare("
-            INSERT INTO users (name, email, username, full_name, password, role, department, status, created_at)
-            VALUES (:name, :email, :username, :full_name, :password, :role, :department, :status, NOW())
+            INSERT INTO users (name, employee_id, email, username, full_name, password, role, department, status, created_at)
+            VALUES (:name, :employee_id, :email, :username, :full_name, :password, :role, :department, :status, NOW())
         ");
         
         $result = $stmt->execute([
             ':name' => $data['name'],
+            ':employee_id' => $employeeId,
             ':email' => $data['email'],
             ':username' => $username,
             ':full_name' => $data['full_name'] ?? $data['name'],
@@ -150,6 +155,7 @@ class UserController {
             $this->logger->logActivity(Logger::ACTION_USER_CREATE, 'users', $newUserId, 
                 "Created new user: {$data['name']} ({$data['email']}) with role: {$data['role']}", [
                 'name' => $data['name'],
+                'employee_id' => $employeeId,
                 'email' => $data['email'],
                 'role' => $data['role'],
                 'department' => $data['department'] ?? null,
@@ -175,6 +181,7 @@ class UserController {
         // Store old values for audit trail
         $oldValues = [
             'name' => $user['name'],
+            'employee_id' => $user['employee_id'] ?? '',
             'email' => $user['email'],
             'full_name' => $user['full_name'] ?? '',
             'role' => $user['role'],
@@ -232,7 +239,7 @@ class UserController {
         }
         
         // Track changes for logging
-        foreach (['name', 'email', 'full_name', 'role', 'department'] as $field) {
+        foreach (['name', 'employee_id', 'email', 'full_name', 'role', 'department'] as $field) {
             if (isset($data[$field])) {
                 $newValues[$field] = $data[$field];
             }
@@ -353,5 +360,22 @@ class UserController {
         $stats['recent_users'] = $stmt->fetchColumn();
         
         return $stats;
+    }
+    
+    /**
+     * Auto-generate Employee ID in format LGU-YYYY-XXXX
+     */
+    private function generateEmployeeId() {
+        $year = date('Y');
+        $stmt = $this->db->prepare("SELECT employee_id FROM users WHERE employee_id LIKE ? ORDER BY employee_id DESC LIMIT 1");
+        $stmt->execute(["LGU-{$year}-%"]);
+        $lastId = $stmt->fetchColumn();
+        if ($lastId) {
+            $lastNum = intval(substr($lastId, -4));
+            $nextNum = $lastNum + 1;
+        } else {
+            $nextNum = 1;
+        }
+        return sprintf("LGU-%s-%04d", $year, $nextNum);
     }
 }

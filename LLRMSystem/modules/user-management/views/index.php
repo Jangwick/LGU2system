@@ -168,6 +168,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -178,7 +179,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php if (empty($data['users'])): ?>
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center">
+                                <td colspan="7" class="px-6 py-12 text-center">
                                     <i class="bi bi-people text-gray-400 text-5xl block mb-3"></i>
                                     <p class="text-gray-500">No users found</p>
                                 </td>
@@ -196,6 +197,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                                 <div class="text-sm text-gray-500"><?php echo htmlspecialchars($user['email']); ?></div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <?php if (!empty($user['employee_id'])): ?>
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                                                <i class="bi bi-person-vcard mr-1"></i>
+                                                <?php echo htmlspecialchars($user['employee_id']); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-xs text-gray-400 italic">Not set</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <?php
@@ -312,16 +323,22 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <input type="hidden" id="userId" name="id">
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div id="employeeIdGroup">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Employee ID</label>
+                    <input type="text" id="userEmployeeId" name="employee_id" class="input-field bg-gray-100 dark:bg-gray-700 cursor-not-allowed" readonly placeholder="Auto-generated on save">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
                     <input type="text" id="userName" name="name" required class="input-field" oninput="document.getElementById('userFullName').value = this.value">
                     <input type="hidden" id="userFullName" name="full_name">
                 </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
                     <input type="email" id="userEmail" name="email" required class="input-field">
                 </div>
-            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
@@ -378,6 +395,8 @@ function openCreateModal() {
     document.getElementById('modalTitle').textContent = 'Add New User';
     document.getElementById('userForm').reset();
     document.getElementById('userId').value = '';
+    document.getElementById('userEmployeeId').value = '';
+    document.getElementById('employeeIdGroup').style.display = 'none';
     document.getElementById('userFullName').value = '';
     document.getElementById('userPassword').required = true;
     document.getElementById('passwordRequired').style.display = 'inline';
@@ -395,6 +414,8 @@ function editUser(id) {
             if (data.success) {
                 document.getElementById('modalTitle').textContent = 'Edit User';
                 document.getElementById('userId').value = data.user.id;
+                document.getElementById('userEmployeeId').value = data.user.employee_id || 'Auto-generated';
+                document.getElementById('employeeIdGroup').style.display = 'block';
                 document.getElementById('userName').value = data.user.full_name || data.user.name;
                 document.getElementById('userFullName').value = data.user.full_name || data.user.name;
                 document.getElementById('userEmail').value = data.user.email;
