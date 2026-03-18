@@ -9,6 +9,11 @@ if (!defined('APP_CONFIG_LOADED')) {
     define('APP_CONFIG_LOADED', true);
 }
 
+// Load local configuration if it exists
+if (file_exists(__DIR__ . '/config.local.php')) {
+    require_once __DIR__ . '/config.local.php';
+}
+
 /**
  * Detect the base directory of the application
  * This works by finding the root directory containing the 'modules' folder
@@ -87,13 +92,13 @@ define('UTILS_PATH', CORE_PATH . DIRECTORY_SEPARATOR . 'utils');
 define('AUTH_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'authentication');
 
 // --- Email Security / OTP Configuration ---
-// For Gmail: Use an App Password (not your main password)
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USER', 'Johnrick1214@gmail.com');
-define('SMTP_PASS', 'imok xero ttaf mypf'); // Gmail App Password
-define('SMTP_FROM', 'Johnrick1214@gmail.com');
-define('SMTP_FROM_NAME', 'LLRM System Security');
+// For Gmail: Use an App Password (not your main password). Set credentials in config.local.php
+if (!defined('SMTP_HOST')) define('SMTP_HOST', 'smtp.gmail.com');
+if (!defined('SMTP_PORT')) define('SMTP_PORT', 587);
+if (!defined('SMTP_USER')) define('SMTP_USER', 'your_email@gmail.com'); // Override in config.local.php
+if (!defined('SMTP_PASS')) define('SMTP_PASS', 'your_app_password');    // Override in config.local.php
+if (!defined('SMTP_FROM')) define('SMTP_FROM', 'your_email@gmail.com'); // Override in config.local.php
+if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', 'LLRM System Security');
 
 // OTP Settings
 define('OTP_EXPIRY_MINUTES', 10);
@@ -288,11 +293,6 @@ define('APP_NAME', 'Legislative Records Management System');
 define('APP_SHORT_NAME', 'LRMS');
 define('APP_VERSION', '1.0.0');
 define('APP_ENV', 'development'); // development, production
-
-// Load local configuration if it exists
-if (file_exists(__DIR__ . '/config.local.php')) {
-    require_once __DIR__ . '/config.local.php';
-}
 
 // Database Configuration Defaults (can be overridden in config.local.php)
 if (!defined('DB_HOST')) define('DB_HOST', '127.0.0.1');
