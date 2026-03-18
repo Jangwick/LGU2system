@@ -115,8 +115,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $logger->logSession($user['id'], 'OTP_GENERATED', [
                     'account_email' => $user['email'],
                     'delivered_to' => $targetEmail,
-                    'method' => 'email'
+                    'method' => 'email',
+                    'email_sent' => $emailSent
                 ]);
+
+                // Check if email was actually sent
+                if (!$emailSent) {
+                    // Clean up the OTP record since email failed
+                    $stmt = $conn->prepare("UPDATE user_otps SET is_used = 1 WHERE user_id = ? AND is_used = 0 AND expires_at > NOW()");
+                    $stmt->execute([$user['id']]);
+                    unset($_SESSION['otp_pending_user_id']);
+                    
+                    error_log("OTP email failed to send to: $targetEmail");
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to send verification code. Please check your email configuration or try again later.'
+                    ]);
+                    exit;
+                }
                 
                 // Return success and requires_otp flag
                 echo json_encode([

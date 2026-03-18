@@ -310,12 +310,16 @@ if (!defined('GEMINI_API_KEY')) {
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
-    // HTTPS is enforced at the web-server level (.htaccess rewrite).
-    // Set the Secure flag unconditionally so session cookies are never
-    // transmitted over plain HTTP, even if a request somehow bypasses
-    // the redirect rule.
-    ini_set('session.cookie_secure', 1);
-    ini_set('session.cookie_samesite', 'Strict');
+    // Only set Secure flag when not on localhost.
+    // On localhost (HTTP), setting cookie_secure=1 prevents the browser
+    // from sending session cookies, which breaks OTP verification flow.
+    $sessionHost = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $isLocalDev = in_array($sessionHost, ['localhost', '127.0.0.1'], true)
+        || str_starts_with($sessionHost, 'localhost:');
+    if (!$isLocalDev) {
+        ini_set('session.cookie_secure', 1);
+    }
+    ini_set('session.cookie_samesite', 'Lax');
 }
 
 // Error reporting based on environment

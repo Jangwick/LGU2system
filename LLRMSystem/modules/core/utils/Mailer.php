@@ -63,6 +63,17 @@ class Mailer {
      * Core send function using PHPMailer
      */
     private function send($to, $subject, $body) {
+        // Pre-flight checks
+        if (empty($this->host) || empty($this->user) || empty($this->pass)) {
+            error_log("PHPMailer Error: SMTP credentials are not configured. Check config.local.php");
+            return false;
+        }
+
+        if (!extension_loaded('openssl')) {
+            error_log("PHPMailer Error: OpenSSL extension is not loaded. SMTP with TLS requires OpenSSL. Enable it in php.ini.");
+            return false;
+        }
+
         $mail = new PHPMailer(true);
 
         try {
@@ -75,8 +86,9 @@ class Mailer {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = $this->port;
             
-            // SMTP Debugging (logs to error_log)
+            // SMTP Debugging — route to error_log for troubleshooting
             $mail->SMTPDebug = SMTP::DEBUG_OFF; 
+            $mail->Debugoutput = 'error_log';
 
             // Recipients
             $mail->setFrom($this->from, $this->fromName);
