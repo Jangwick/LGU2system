@@ -418,98 +418,316 @@ class SuperAdminController {
     public function createBackup() {
         $backupDir = __DIR__ . '/../../../storage/backups';
         if (!is_dir($backupDir)) {
-            mkdir($backupDir, 0755, true);
+            if (!mkdir($backupDir, 0755, true)) {
+                error_log("Failed to create backup directory: $backupDir");
+                return ['success' => false, 'error' => 'Failed to create backup directory'];
+            }
         }
-        
+
         $filename = 'backup_' . date('Y-m-d_H-i-s') . '.sql';
         $filepath = $backupDir . '/' . $filename;
-        
-        // Get database credentials
+
+        // Try PHP-based backup directly (more reliable on Windows/XAMPP)
+        $result = $this->createPHPBackup($filepath);
+
+        if ($result['success']) {
+            return $result;
+        }
+
+        // If PHP backup fails, try mysqldump
         $dbConfig = require __DIR__ . '/../config/database.php';
-        
-        // Use mysqldump if available
+
         $command = sprintf(
-            'mysqldump -h%s -u%s -p%s %s > %s',
+            'mysqldump -h%s -u%s -p%s %s > %s 2>&1',
             $dbConfig['host'],
             $dbConfig['username'],
             $dbConfig['password'],
             $dbConfig['database'],
             $filepath
         );
-        
+
         $output = [];
         $returnCode = 0;
-        exec($command, $output, $returnCode);
-        
-        if ($returnCode === 0) {
+        @exec($command, $output, $returnCode);
+
+        if ($returnCode === 0 && file_exists($filepath) && filesize($filepath) > 0) {
             $this->logger->log($_SESSION['user_id'], 'database_backup', null, "Created database backup: $filename");
             return ['success' => true, 'filename' => $filename];
         }
-        
-        // Fallback: PHP-based backup (simplified)
-        return $this->createPHPBackup($filepath);
+
+        // Return the PHP backup error if both failed
+        return $result;
     }
     
     /**
      * PHP-based backup (fallback)
      */
     private function createPHPBackup($filepath) {
-        $tables = [];
-        $result = $this->db->query("SHOW TABLES");
-        while ($row = $result->fetch(PDO::FETCH_NUM)) {
-            $tables[] = $row[0];
-        }
-        
-        $sql = '';
-        foreach ($tables as $table) {
-            $sql .= "DROP TABLE IF EXISTS $table;\n";
-            
-            $createTable = $this->db->query("SHOW CREATE TABLE $table")->fetch(PDO::FETCH_ASSOC);
-            $sql .= $createTable['Create Table'] . ";\n\n";
-            
-            $rows = $this->db->query("SELECT * FROM $table");
-            while ($row = $rows->fetch(PDO::FETCH_ASSOC)) {
-                $values = array_map(function($val) {
-                    return $val === null ? 'NULL' : "'" . addslashes($val) . "'";
-                }, array_values($row));
-                
-                $sql .= "INSERT INTO $table VALUES (" . implode(', ', $values) . ");\n";
+        try {
+            $tables = [];
+            $result = $this->db->query("SHOW TABLES");
+            if ($result) {
+                while ($row = $result->fetch(PDO::FETCH_NUM)) {
+                    $tables[] = $row[0];
+                }
             }
-            $sql .= "\n\n";
+
+            if (empty($tables)) {
+                return ['success' => false, 'error' => 'No tables found in database'];
+            }
+
+            $sql = '';
+            foreach ($tables as $table) {
+                $sql .= "DROP TABLE IF EXISTS `$table`;\n";
+
+                $createTable = $this->db->query("SHOW CREATE TABLE `$table`")->fetch(PDO::FETCH_ASSOC);
+                if ($createTable && isset($createTable['Create Table'])) {
+                    $sql .= $createTable['Create Table'] . ";\n\n";
+                }
+
+                $rows = $this->db->query("SELECT * FROM `$table`");
+                if ($rows) {
+                    while ($row = $rows->fetch(PDO::FETCH_ASSOC)) {
+                        $values = array_map(function($val) {
+                            return $val === null ? 'NULL' : "'" . addslashes($val) . "'";
+                        }, array_values($row));
+
+                        $sql .= "INSERT INTO `$table` VALUES (" . implode(', ', $values) . ");\n";
+                    }
+                }
+                $sql .= "\n\n";
+            }
+
+            if (file_put_contents($filepath, $sql)) {
+                $this->logger->log($_SESSION['user_id'], 'database_backup', null, "Created PHP backup: " . basename($filepath));
+                return ['success' => true, 'filename' => basename($filepath)];
+            }
+
+            return ['success' => false, 'error' => 'Failed to write backup file'];
+        } catch (Exception $e) {
+            error_log("PHP backup error: " . $e->getMessage());
+            return ['success' => false, 'error' => 'Backup failed: ' . $e->getMessage()];
         }
-        
-        if (file_put_contents($filepath, $sql)) {
-            $this->logger->log($_SESSION['user_id'], 'database_backup', null, "Created PHP backup: " . basename($filepath));
-            return ['success' => true, 'filename' => basename($filepath)];
-        }
-        
-        return ['success' => false, 'error' => 'Failed to create backup'];
     }
     
     /**
-     * Get list of backups
+     * Get list of backups with additional info
      */
     public function getBackups() {
         $backupDir = __DIR__ . '/../../../storage/backups';
         if (!is_dir($backupDir)) {
             return [];
         }
-        
+
         $backups = [];
         foreach (glob($backupDir . '/*.sql') as $file) {
             $backups[] = [
                 'filename' => basename($file),
                 'size' => filesize($file),
-                'created' => date('Y-m-d H:i:s', filemtime($file))
+                'created' => date('Y-m-d H:i:s', filemtime($file)),
+                'verified' => $this->verifyBackup($file)
             ];
         }
-        
+
         // Sort by creation date (newest first)
         usort($backups, function($a, $b) {
             return strtotime($b['created']) - strtotime($a['created']);
         });
-        
+
         return $backups;
+    }
+
+    /**
+     * Verify backup file integrity
+     */
+    private function verifyBackup($filepath) {
+        if (!file_exists($filepath)) {
+            return false;
+        }
+
+        // Check if file is readable and not empty
+        if (!is_readable($filepath) || filesize($filepath) === 0) {
+            return false;
+        }
+
+        // Basic SQL syntax check
+        $content = file_get_contents($filepath);
+        if (empty($content)) {
+            return false;
+        }
+
+        // Check for basic SQL patterns
+        $hasCreateTable = preg_match('/CREATE TABLE/i', $content);
+        $hasInsert = preg_match('/INSERT INTO/i', $content);
+
+        return $hasCreateTable || $hasInsert;
+    }
+
+    /**
+     * Restore database from backup
+     */
+    public function restoreBackup($filename) {
+        $backupDir = __DIR__ . '/../../../storage/backups';
+        $filepath = $backupDir . '/' . $filename;
+
+        if (!file_exists($filepath)) {
+            return ['success' => false, 'error' => 'Backup file not found'];
+        }
+
+        // Verify backup before restore
+        if (!$this->verifyBackup($filepath)) {
+            return ['success' => false, 'error' => 'Backup file is corrupted or invalid'];
+        }
+
+        // Get database credentials
+        $dbConfig = require __DIR__ . '/../config/database.php';
+
+        // Use mysql command if available
+        $command = sprintf(
+            'mysql -h%s -u%s -p%s %s < %s',
+            $dbConfig['host'],
+            $dbConfig['username'],
+            $dbConfig['password'],
+            $dbConfig['database'],
+            $filepath
+        );
+
+        $output = [];
+        $returnCode = 0;
+        exec($command, $output, $returnCode);
+
+        if ($returnCode === 0) {
+            $this->logger->log($_SESSION['user_id'], 'database_restore', null, "Restored database from backup: $filename");
+            return ['success' => true, 'message' => 'Database restored successfully'];
+        }
+
+        // Fallback: PHP-based restore
+        return $this->restoreFromPHP($filepath);
+    }
+
+    /**
+     * PHP-based restore (fallback)
+     */
+    private function restoreFromPHP($filepath) {
+        $sql = file_get_contents($filepath);
+        if (empty($sql)) {
+            return ['success' => false, 'error' => 'Backup file is empty'];
+        }
+
+        // Split SQL into individual statements
+        $statements = explode(';', $sql);
+        $successCount = 0;
+        $errorCount = 0;
+
+        foreach ($statements as $statement) {
+            $statement = trim($statement);
+            if (empty($statement)) {
+                continue;
+            }
+
+            try {
+                $this->db->exec($statement);
+                $successCount++;
+            } catch (PDOException $e) {
+                $errorCount++;
+                error_log("SQL restore error: " . $e->getMessage());
+            }
+        }
+
+        if ($successCount > 0) {
+            $this->logger->log($_SESSION['user_id'], 'database_restore_php', null, "Restored database using PHP method");
+            return ['success' => true, 'message' => "Database restored successfully ($successCount statements executed, $errorCount errors)"];
+        }
+
+        return ['success' => false, 'error' => 'Failed to restore database'];
+    }
+
+    /**
+     * Clean up old backups based on retention policy
+     */
+    public function cleanupOldBackups($retentionDays = 30) {
+        $backupDir = __DIR__ . '/../../../storage/backups';
+        if (!is_dir($backupDir)) {
+            return ['success' => true, 'deleted' => 0];
+        }
+
+        $cutoffDate = date('Y-m-d H:i:s', strtotime("-$retentionDays days"));
+        $deletedCount = 0;
+
+        foreach (glob($backupDir . '/*.sql') as $file) {
+            $fileDate = date('Y-m-d H:i:s', filemtime($file));
+            if (strtotime($fileDate) < strtotime($cutoffDate)) {
+                if (unlink($file)) {
+                    $deletedCount++;
+                    $this->logger->log($_SESSION['user_id'], 'backup_cleanup', null, "Deleted old backup: " . basename($file));
+                }
+            }
+        }
+
+        return ['success' => true, 'deleted' => $deletedCount];
+    }
+
+    /**
+     * Get backup statistics
+     */
+    public function getBackupStats() {
+        $backupDir = __DIR__ . '/../../../storage/backups';
+        if (!is_dir($backupDir)) {
+            return [
+                'total_count' => 0,
+                'total_size' => 0,
+                'total_size_mb' => 0,
+                'latest_backup' => null,
+                'oldest_backup' => null
+            ];
+        }
+
+        $backups = glob($backupDir . '/*.sql');
+        if (empty($backups)) {
+            return [
+                'total_count' => 0,
+                'total_size' => 0,
+                'total_size_mb' => 0,
+                'latest_backup' => null,
+                'oldest_backup' => null
+            ];
+        }
+
+        $totalSize = 0;
+        $latestTime = 0;
+        $oldestTime = PHP_INT_MAX;
+        $latestBackup = null;
+        $oldestBackup = null;
+
+        foreach ($backups as $file) {
+            $size = filesize($file);
+            $totalSize += $size;
+            $time = filemtime($file);
+
+            if ($time > $latestTime) {
+                $latestTime = $time;
+                $latestBackup = basename($file);
+            }
+
+            if ($time < $oldestTime) {
+                $oldestTime = $time;
+                $oldestBackup = basename($file);
+            }
+        }
+
+        return [
+            'total_count' => count($backups),
+            'total_size' => $totalSize,
+            'total_size_mb' => round($totalSize / 1024 / 1024, 2),
+            'latest_backup' => $latestBackup ? [
+                'filename' => $latestBackup,
+                'created' => date('Y-m-d H:i:s', $latestTime)
+            ] : null,
+            'oldest_backup' => $oldestBackup ? [
+                'filename' => $oldestBackup,
+                'created' => date('Y-m-d H:i:s', $oldestTime)
+            ] : null
+        ];
     }
     
     /**

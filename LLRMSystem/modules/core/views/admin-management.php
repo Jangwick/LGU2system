@@ -24,6 +24,10 @@ $params = [
     'per_page' => $_GET['per_page'] ?? 10
 ];
 
+// Get session timeout from system config
+$editableConfig = $controller->getEditableConfig();
+$sessionTimeout = (intval($editableConfig['session_timeout'] ?? 2)) * 60; // Convert minutes to seconds
+
 try {
     $result = $controller->getAdministrators($params);
     $administrators = $result['data'];

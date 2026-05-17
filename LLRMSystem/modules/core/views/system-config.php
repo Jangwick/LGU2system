@@ -15,10 +15,12 @@ $controller = new SuperAdminController();
 try {
     $config = $controller->getSystemConfig();
     $editableConfig = $controller->getEditableConfig();
+    $sessionTimeout = (intval($editableConfig['session_timeout'] ?? 2)) * 60; // Convert minutes to seconds
 } catch (Exception $e) {
     error_log("Error getting system config: " . $e->getMessage());
     $config = [];
     $editableConfig = [];
+    $sessionTimeout = 120; // Default 2 minutes
 }
 
 $config = array_merge([

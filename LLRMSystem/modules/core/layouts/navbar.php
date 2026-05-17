@@ -169,39 +169,45 @@ if (isset($_SESSION['user_id'])) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Session Timeout Countdown - DISABLED
-    // const sessionTimer = document.getElementById('session-timer');
-    // const sessionCountdown = document.getElementById('session-countdown');
-    //
-    // if (sessionTimer && sessionCountdown) {
-    //     let remainingTime = 120; // Fixed 2 minutes
-    //
-    //     function updateCountdown() {
-    //         const minutes = Math.floor(remainingTime / 60);
-    //         const seconds = remainingTime % 60;
-    //         sessionCountdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    //
-    //         // Change color when less than 30 seconds
-    //         if (remainingTime <= 30) {
-    //             sessionTimer.classList.remove('bg-amber-50', 'border-amber-200');
-    //             sessionTimer.classList.add('bg-red-50', 'border-red-200');
-    //             sessionCountdown.classList.remove('text-amber-700');
-    //             sessionCountdown.classList.add('text-red-700');
-    //         }
-    //
-    //         if (remainingTime > 0) {
-    //             remainingTime--;
-    //         } else {
-    //             // Session expired, redirect to login
-    //             window.location.href = '<?php echo AUTH_URL; ?>/views/login.php?error=session_timeout';
-    //         }
-    //     }
-    //
-    //     // Update countdown every second
-    //     const countdownInterval = setInterval(updateCountdown, 1000);
-    //     updateCountdown(); // Initial call
-    // }
-    
+    // Session Timeout Countdown
+    const sessionTimer = document.getElementById('session-timer');
+    const sessionCountdown = document.getElementById('session-countdown');
+
+    if (sessionTimer && sessionCountdown) {
+        // Get session timeout from PHP config or default to 2 minutes (120 seconds)
+        let remainingTime = parseInt(<?php echo isset($sessionTimeout) ? $sessionTimeout : 120; ?>) || 120;
+
+        function updateCountdown() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            sessionCountdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // Change color when less than 30 seconds
+            if (remainingTime <= 30) {
+                sessionTimer.classList.remove('bg-amber-50', 'border-amber-200');
+                sessionTimer.classList.add('bg-red-50', 'border-red-200');
+                sessionCountdown.classList.remove('text-amber-700');
+                sessionCountdown.classList.add('text-red-700');
+            } else {
+                sessionTimer.classList.remove('bg-red-50', 'border-red-200');
+                sessionTimer.classList.add('bg-amber-50', 'border-amber-200');
+                sessionCountdown.classList.remove('text-red-700');
+                sessionCountdown.classList.add('text-amber-700');
+            }
+
+            if (remainingTime > 0) {
+                remainingTime--;
+            } else {
+                // Session expired, redirect to login
+                window.location.href = '<?php echo AUTH_URL; ?>/views/login.php?error=session_timeout';
+            }
+        }
+
+        // Update countdown every second
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+    }
+
     // Profile dropdown toggle only - notifications handled in footer.php
     const notificationsBtn = document.getElementById('notifications-btn');
     const notificationsDropdown = document.getElementById('notifications-dropdown');
