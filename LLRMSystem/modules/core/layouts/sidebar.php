@@ -109,6 +109,11 @@
                 <i class="bi bi-database"></i>
                 <span class="sidebar-text">Database Backup</span>
             </a>
+
+            <a href="<?php echo CORE_URL; ?>/views/audit-logs.php" class="nav-item <?php echo ($currentPage ?? '') === 'audit-logs' ? 'active' : ''; ?>">
+                <i class="bi bi-journal-text"></i>
+                <span class="sidebar-text">Audit Logs</span>
+            </a>
             <?php endif; ?>
             
             <!-- Integration Section - Dropdown (Officer and Admin only) -->

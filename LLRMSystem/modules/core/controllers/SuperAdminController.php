@@ -729,6 +729,124 @@ class SuperAdminController {
             ] : null
         ];
     }
+
+    /**
+     * Get audit logs with filters
+     */
+    public function getAuditLogs($filters = [], $page = 1, $perPage = 20) {
+        $offset = ($page - 1) * $perPage;
+
+        $query = "SELECT al.*, u.full_name, u.email, u.username
+                  FROM activity_logs al
+                  LEFT JOIN users u ON al.user_id = u.id
+                  WHERE 1=1";
+        $params = [];
+
+        if (!empty($filters['user_id'])) {
+            $query .= " AND al.user_id = :user_id";
+            $params[':user_id'] = $filters['user_id'];
+        }
+
+        if (!empty($filters['action'])) {
+            $query .= " AND al.action = :action";
+            $params[':action'] = $filters['action'];
+        }
+
+        if (!empty($filters['table_name'])) {
+            $query .= " AND al.table_name = :table_name";
+            $params[':table_name'] = $filters['table_name'];
+        }
+
+        if (!empty($filters['date_from'])) {
+            $query .= " AND DATE(al.created_at) >= :date_from";
+            $params[':date_from'] = $filters['date_from'];
+        }
+
+        if (!empty($filters['date_to'])) {
+            $query .= " AND DATE(al.created_at) <= :date_to";
+            $params[':date_to'] = $filters['date_to'];
+        }
+
+        if (!empty($filters['search'])) {
+            $query .= " AND (al.description LIKE :search1 OR u.full_name LIKE :search2 OR u.email LIKE :search3)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
+            $params[':search3'] = $searchValue;
+        }
+
+        // Count total
+        $countStmt = $this->db->prepare(str_replace("SELECT al.*, u.full_name, u.email, u.username", "SELECT COUNT(*)", $query));
+        $countStmt->execute($params);
+        $total = $countStmt->fetchColumn();
+
+        // Get paginated results
+        $query .= " ORDER BY al.created_at DESC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($query);
+
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Get filter options
+        $users = $this->getAuditUsers();
+        $actions = $this->getAuditActions();
+        $tables = $this->getAuditTables();
+
+        return [
+            'logs' => $logs,
+            'total' => $total,
+            'page' => $page,
+            'perPage' => $perPage,
+            'totalPages' => ceil($total / $perPage),
+            'filters' => $filters,
+            'users' => $users,
+            'actions' => $actions,
+            'tables' => $tables
+        ];
+    }
+
+    /**
+     * Get unique users from activity logs
+     */
+    private function getAuditUsers() {
+        $stmt = $this->db->query("
+            SELECT DISTINCT u.id, u.full_name, u.email, u.username
+            FROM users u
+            INNER JOIN activity_logs al ON u.id = al.user_id
+            ORDER BY u.full_name
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get unique actions from activity logs
+     */
+    private function getAuditActions() {
+        $stmt = $this->db->query("
+            SELECT DISTINCT action
+            FROM activity_logs
+            ORDER BY action
+        ");
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Get unique table names from activity logs
+     */
+    private function getAuditTables() {
+        $stmt = $this->db->query("
+            SELECT DISTINCT table_name
+            FROM activity_logs
+            ORDER BY table_name
+        ");
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
     
     /**
      * Delete backup

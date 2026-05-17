@@ -63,6 +63,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- System Information -->
+        <form id="configForm" class="space-y-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Server Information (Read-only) -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
@@ -135,8 +136,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-shield-lock mr-2 text-red-600"></i>Security Settings
                 </h2>
-                
-                <form id="configForm" class="space-y-4">
+
+                <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">OTP Expiry (minutes)</label>
                         <input type="number" name="otp_expiry" value="<?= htmlspecialchars($editableConfig['otp_expiry'] ?? '1') ?>" min="1" max="60" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
@@ -149,7 +150,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <span class="text-gray-600 dark:text-gray-400">Encryption</span>
                         <span class="font-mono font-bold text-green-600 dark:text-green-400">AES-256</span>
                     </div>
-                </form>
+                </div>
             </div>
 
             <!-- General Settings (Editable) -->
@@ -157,8 +158,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-gear mr-2 text-red-600"></i>General Settings
                 </h2>
-                
-                <form id="configForm" class="space-y-4">
+
+                <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Site Name</label>
                         <input type="text" name="site_name" value="<?= htmlspecialchars($editableConfig['site_name'] ?? 'Legislative Records Management System') ?>" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
@@ -175,7 +176,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Backup Retention (days)</label>
                         <input type="number" name="backup_retention_days" value="<?= htmlspecialchars($editableConfig['backup_retention_days'] ?? '30') ?>" min="1" max="365" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                     </div>
-                </form>
+                </div>
             </div>
 
             <!-- Maintenance Mode (Editable) -->
@@ -183,8 +184,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-tools mr-2 text-red-600"></i>Maintenance Mode
                 </h2>
-                
-                <form id="configForm" class="space-y-4">
+
+                <div class="space-y-4">
                     <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                         <div>
                             <span class="text-gray-700 dark:text-gray-300 font-medium">Enable Maintenance Mode</span>
@@ -195,9 +196,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                             <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
                         </label>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
+        </form>
 
         <!-- Save Button -->
         <div class="flex justify-end gap-3 mb-6">
