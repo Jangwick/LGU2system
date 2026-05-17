@@ -113,7 +113,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Administrators Table -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-100">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white">Administrators & Super Admins</h2>
                 <span class="text-sm text-gray-500 dark:text-gray-400">

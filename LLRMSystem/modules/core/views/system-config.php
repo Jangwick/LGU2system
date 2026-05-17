@@ -47,14 +47,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
     <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-6">
         <!-- Page Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 relative overflow-hidden">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 relative overflow-hidden animate-fade-in">
             <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
-                <div class="transform transition-all duration-300">
+                <div class="transform transition-all duration-300 animate-slide-in-left">
                     <h1 class="text-2xl md:text-3xl font-bold mb-2">System Configuration</h1>
                     <p class="text-red-100">View and manage system settings</p>
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 animate-slide-in-right">
                     <button onclick="resetConfig()" class="flex items-center px-6 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/20">
                         <i class="bi bi-arrow-counterclockwise mr-2"></i> Reset to Defaults
                     </button>
@@ -65,7 +65,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- System Information -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Server Information (Read-only) -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-cpu mr-2 text-red-600"></i>Server Information
                 </h2>
@@ -179,7 +179,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Maintenance Mode (Editable) -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-500">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-tools mr-2 text-red-600"></i>Maintenance Mode
                 </h2>

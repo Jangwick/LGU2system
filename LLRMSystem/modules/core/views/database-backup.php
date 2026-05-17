@@ -41,14 +41,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
     <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-6">
         <!-- Page Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 relative overflow-hidden">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 relative overflow-hidden animate-fade-in">
             <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
-                <div class="transform transition-all duration-300">
+                <div class="transform transition-all duration-300 animate-slide-in-left">
                     <h1 class="text-2xl md:text-3xl font-bold mb-2">Database Backup & Restore</h1>
                     <p class="text-red-100">Create and manage database backups</p>
                 </div>
-                <div class="flex flex-wrap gap-3">
+                <div class="flex flex-wrap gap-3 animate-slide-in-right">
                     <button onclick="createBackup()" class="flex items-center px-6 py-2.5 bg-white hover:bg-red-50 text-red-600 rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/10">
                         <i class="bi bi-download mr-2"></i> Create Backup
                     </button>
@@ -61,7 +61,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Backup Statistics -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 text-sm">Total Backups</p>
@@ -72,7 +72,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-100">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 text-sm">Total Size</p>
@@ -83,7 +83,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-200">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 text-sm">Latest Backup</p>
@@ -96,7 +96,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-300">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 text-sm">Oldest Backup</p>
@@ -112,7 +112,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Backups List -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-400">
             <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                 <i class="bi bi-hdd-stack mr-2 text-red-600"></i>Available Backups
             </h2>
