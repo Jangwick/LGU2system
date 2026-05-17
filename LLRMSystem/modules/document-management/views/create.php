@@ -102,7 +102,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <option value="hearing">Public Hearing</option>
                                 <option value="consultation">Public Consultation</option>
                                 <option value="research">Research Document</option>
-                                <option value="other">Other</option>
                             </select>
                         </div>
                         

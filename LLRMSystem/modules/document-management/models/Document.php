@@ -183,11 +183,35 @@ class Document {
     }
     
     /**
-     * Permanently delete document
+     * Permanently delete document (Super Admin only)
      */
-    public function forceDelete($id) {
+    public function forceDelete($id, $userId = null) {
+        // Check if user is Super Admin
+        if ($userId === null) {
+            $userId = $_SESSION['user_id'] ?? null;
+        }
+
+        if (!$userId) {
+            return ['success' => false, 'error' => 'User not authenticated'];
+        }
+
+        // Get user role
+        $stmt = $this->db->prepare("SELECT role FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user || strtolower($user['role']) !== 'super_admin') {
+            return ['success' => false, 'error' => 'Only Super Admin can permanently delete documents'];
+        }
+
         $stmt = $this->db->prepare("DELETE FROM legislative_documents WHERE id = :id");
-        return $stmt->execute([':id' => $id]);
+        $result = $stmt->execute([':id' => $id]);
+
+        if ($result) {
+            return ['success' => true];
+        }
+
+        return ['success' => false, 'error' => 'Failed to permanently delete document'];
     }
     
     /**

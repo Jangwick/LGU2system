@@ -113,6 +113,54 @@ class SearchService {
     }
 
     /**
+     * Get related documents when exact match fails
+     */
+    public function getRelatedDocuments($query, $filters = [], $limit = 5) {
+        // Extract keywords from query
+        $keywords = preg_split('/\s+/', $query);
+        $relatedDocs = [];
+
+        foreach ($keywords as $keyword) {
+            if (strlen($keyword) < 3) continue;
+
+            $sql = "SELECT d.id, d.title, d.document_type, d.reference_number
+                    FROM legislative_documents d
+                    WHERE d.deleted_at IS NULL
+                    AND (d.title LIKE :keyword OR d.description LIKE :keyword)";
+
+            $params = [':keyword' => '%' . $keyword . '%'];
+
+            // Apply filters
+            if (!empty($filters['type'])) {
+                if (is_array($filters['type'])) {
+                    $placeholders = implode(',', array_fill(0, count($filters['type']), '?'));
+                    $sql .= " AND d.document_type IN ($placeholders)";
+                    foreach ($filters['type'] as $type) {
+                        $params[] = $type;
+                    }
+                } else {
+                    $sql .= " AND d.document_type = :type";
+                    $params[':type'] = $filters['type'];
+                }
+            }
+
+            $sql .= " LIMIT $limit";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($results as $row) {
+                if (!isset($relatedDocs[$row['id']])) {
+                    $relatedDocs[$row['id']] = $row;
+                }
+            }
+        }
+
+        return array_values($relatedDocs);
+    }
+
+    /**
      * Simple Cosine Similarity calculation
      */
     private function cosineSimilarity($vec1, $vec2) {

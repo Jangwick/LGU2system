@@ -32,6 +32,11 @@ if (!$document) {
     redirect(DOCUMENTS_INDEX_URL);
 }
 
+// Get confidentiality level (default to 'public' if not set)
+$confidentialityLevel = $document['confidentiality_level'] ?? 'public';
+$isConfidential = in_array($confidentialityLevel, ['confidential', 'restricted']);
+
+
 // Check if viewer can access this document (approved/archived/rejected)
 $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
 if ($userRole === 'viewer' && !in_array($document['status'], ['approved', 'archived', 'rejected'])) {
@@ -116,6 +121,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <span class="badge <?= getStatusBadge($document['status']) ?>">
                             <?= e(ucfirst($document['status'])) ?>
                         </span>
+                        <?php if ($confidentialityLevel !== 'public'): ?>
+                        <span class="badge <?= $isConfidential ? 'badge-danger' : 'badge-warning' ?>">
+                            <i class="bi bi-shield-lock mr-1"></i><?= e(ucfirst($confidentialityLevel)) ?>
+                        </span>
+                        <?php endif; ?>
                     </div>
                     <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1">Reference: <span class="font-mono font-semibold"><?= e($document['reference_number']) ?></span></p>
                     <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
@@ -124,10 +134,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-2 sm:gap-3">
+                    <?php if ($isConfidential): ?>
+                    <button onclick="promptPasswordForDownload()" 
+                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-500 transition text-center text-sm sm:text-base shadow-md">
+                        <i class="bi bi-shield-lock mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock & Download</span><span class="xs:hidden">Unlock</span>
+                    </button>
+                    <?php else: ?>
                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>" 
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-download mr-1 sm:mr-2"></i><span class="hidden xs:inline">Download</span><span class="xs:hidden">DL</span>
                     </a>
+                    <?php endif; ?>
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     $isDocOwner = ($document['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
@@ -467,6 +484,36 @@ function shareDocument() {
 
 function printDocument() {
     window.print();
+}
+
+function promptPasswordForDownload() {
+    const password = prompt('This document is confidential. Please enter your password to download:');
+    if (password) {
+        // Send password to server for verification
+        fetch('<?php echo DOCUMENTS_URL; ?>/api/verify-document-access.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                document_id: <?= $document['id'] ?>,
+                password: password
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Password verified, proceed to download
+                window.location.href = '<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>&token=' + data.token;
+            } else {
+                alert('Incorrect password. Access denied.');
+            }
+        })
+        .catch(error => {
+            alert('Error verifying password. Please try again.');
+        });
+    }
 }
 
 function viewHistory() {

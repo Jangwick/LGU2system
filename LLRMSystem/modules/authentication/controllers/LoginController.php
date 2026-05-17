@@ -88,10 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 // Determine target email for OTP
-                $targetEmail = $user['email'];
-                if ($user['email'] === 'admin@lgu.gov.ph') {
-                    // Redirect admin OTP to the configured system email 
-                    // instead of the hardcoded one to prevent leaks
+                // Use personal_email if available, otherwise use login email
+                $targetEmail = !empty($user['personal_email']) ? $user['personal_email'] : $user['email'];
+                
+                // Special handling for admin@lgu.gov.ph to redirect to configured system email
+                if ($user['email'] === 'admin@lgu.gov.ph' && empty($user['personal_email'])) {
                     $targetEmail = defined('SMTP_USER') ? SMTP_USER : 'admin@lgu.gov.ph';
                 }
 

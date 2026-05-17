@@ -371,12 +371,13 @@ const docTypeChart = new Chart(document.getElementById('documentsByTypeChart'), 
 
 // Documents by Status Chart
 const docStatusChart = new Chart(document.getElementById('documentsByStatusChart'), {
-    type: 'pie',
+    type: 'doughnut',
     data: {
         labels: <?php echo json_encode(array_column($documentsByStatus, 'status')); ?>,
         datasets: [{
             data: <?php echo json_encode(array_column($documentsByStatus, 'count')); ?>,
-            backgroundColor: [chartColors.green, chartColors.yellow, chartColors.blue, chartColors.red, chartColors.purple]
+            backgroundColor: [chartColors.green, chartColors.yellow, chartColors.blue, chartColors.red, chartColors.purple],
+            cutout: '60%'
         }]
     },
     options: {

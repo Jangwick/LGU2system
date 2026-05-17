@@ -78,6 +78,14 @@ if (isset($_SESSION['user_id'])) {
             <!-- Right Side Actions -->
             <div class="flex items-center flex-shrink-0 space-x-0.5 md:space-x-4">
                 
+                <!-- Session Timeout Countdown -->
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <div id="session-timer" class="hidden md:flex items-center space-x-1 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg" title="Session auto-logout countdown">
+                    <i class="bi bi-clock text-amber-600 text-sm"></i>
+                    <span id="session-countdown" class="text-xs font-semibold text-amber-700">2:00</span>
+                </div>
+                <?php endif; ?>
+                
                 <!-- Dark/Light Mode Toggle -->
                 <button id="theme-toggle" class="flex w-7 h-7 md:w-10 md:h-10 items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
                     <i class="bi bi-moon-fill text-base md:text-xl dark-mode-icon"></i>
@@ -161,6 +169,39 @@ if (isset($_SESSION['user_id'])) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Session Timeout Countdown
+    const sessionTimer = document.getElementById('session-timer');
+    const sessionCountdown = document.getElementById('session-countdown');
+    
+    if (sessionTimer && sessionCountdown) {
+        let remainingTime = <?php echo isset($_SESSION['session_timeout_remaining']) ? $_SESSION['session_timeout_remaining'] : 120; ?>;
+        
+        function updateCountdown() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            sessionCountdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when less than 30 seconds
+            if (remainingTime <= 30) {
+                sessionTimer.classList.remove('bg-amber-50', 'border-amber-200');
+                sessionTimer.classList.add('bg-red-50', 'border-red-200');
+                sessionCountdown.classList.remove('text-amber-700');
+                sessionCountdown.classList.add('text-red-700');
+            }
+            
+            if (remainingTime > 0) {
+                remainingTime--;
+            } else {
+                // Session expired, redirect to login
+                window.location.href = '<?php echo AUTH_URL; ?>/views/login.php?error=session_timeout';
+            }
+        }
+        
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+    }
+    
     // Profile dropdown toggle only - notifications handled in footer.php
     const notificationsBtn = document.getElementById('notifications-btn');
     const notificationsDropdown = document.getElementById('notifications-dropdown');

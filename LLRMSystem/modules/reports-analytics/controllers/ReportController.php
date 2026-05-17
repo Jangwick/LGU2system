@@ -86,7 +86,7 @@ class ReportController {
                 DATE_FORMAT(created_at, '%Y-%m') as month,
                 COUNT(*) as count
             FROM legislative_documents
-            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 60 MONTH)
             AND deleted_at IS NULL
             GROUP BY month
             ORDER BY month ASC
@@ -295,7 +295,7 @@ class ReportController {
                 COUNT(*) as new_documents,
                 SUM(file_size) as storage_added
             FROM legislative_documents
-            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 60 MONTH)
             AND deleted_at IS NULL
             GROUP BY month
             ORDER BY month ASC

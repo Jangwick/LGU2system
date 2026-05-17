@@ -167,7 +167,7 @@ checkAlreadyLoggedIn();
                         <label for="password" class="block text-sm font-medium text-gray-700">
                             <i class="bi bi-lock mr-1"></i>Password
                         </label>
-                        <a href="forgot-password.php" class="text-xs md:text-sm font-semibold text-red-600 hover:text-red-700 transition">Forgot?</a>
+                        <a href="forgot-password.php" id="forgot-password-link" class="text-xs md:text-sm font-semibold text-red-600 hover:text-red-700 transition">Forgot?</a>
                     </div>
                     <div class="relative group">
                         <input type="password" 
@@ -266,6 +266,35 @@ checkAlreadyLoggedIn();
             const backToLoginBtn = document.getElementById('back-to-login');
             const resendOtpBtn = document.getElementById('resend-otp');
             const countdownSpan = document.getElementById('countdown');
+            const emailInput = document.getElementById('email');
+            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            
+            // Check if email belongs to admin/super admin and hide forgot password link
+            emailInput?.addEventListener('blur', async function() {
+                const email = this.value.trim();
+                if (email && email.includes('@')) {
+                    try {
+                        const response = await fetch('<?php echo AUTH_URL; ?>/controllers/CheckUserRoleController.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ email: email })
+                        });
+                        
+                        const data = await response.json();
+                        if (data.is_admin) {
+                            forgotPasswordLink.style.display = 'none';
+                        } else {
+                            forgotPasswordLink.style.display = 'inline';
+                        }
+                    } catch (error) {
+                        // If check fails, show link by default
+                        forgotPasswordLink.style.display = 'inline';
+                    }
+                }
+            });
             
             // Toggle password functionality (fixed for new IDs)
             document.getElementById('toggle-password')?.addEventListener('click', function() {

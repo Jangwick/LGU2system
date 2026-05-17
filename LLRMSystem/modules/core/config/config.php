@@ -101,8 +101,11 @@ if (!defined('SMTP_FROM')) define('SMTP_FROM', 'your_email@gmail.com'); // Overr
 if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', 'LLRM System Security');
 
 // OTP Settings
-define('OTP_EXPIRY_MINUTES', 10);
+define('OTP_EXPIRY_MINUTES', 1); // Reduced from 10 to 1 minute for security
 define('OTP_RESEND_COOLDOWN', 60); // Seconds
+
+// Session Timeout Settings
+define('SESSION_TIMEOUT_MINUTES', 2); // Auto-logout after 2 minutes of inactivity
 // ------------------------------------------
 
 define('DASHBOARD_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'dashboard');

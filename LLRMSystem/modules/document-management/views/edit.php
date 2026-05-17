@@ -107,11 +107,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <option value="session" <?= $document['document_type'] === 'session' ? 'selected' : '' ?>>Session Minutes</option>
                                     <option value="agenda" <?= $document['document_type'] === 'agenda' ? 'selected' : '' ?>>Agenda</option>
                                     <option value="committee" <?= $document['document_type'] === 'committee' ? 'selected' : '' ?>>Committee Report</option>
-                                    <option value="voting" <?= $document['document_type'] === 'voting' ? 'selected' : '' ?>>Voting Record</option>
                                     <option value="hearing" <?= $document['document_type'] === 'hearing' ? 'selected' : '' ?>>Public Hearing</option>
-                                    <option value="archive" <?= $document['document_type'] === 'archive' ? 'selected' : '' ?>>Archive</option>
-                                    <option value="consultation" <?= $document['document_type'] === 'consultation' ? 'selected' : '' ?>>Consultation</option>
-                                    <option value="research" <?= $document['document_type'] === 'research' ? 'selected' : '' ?>>Research Paper</option>
+                                    <option value="consultation" <?= $document['document_type'] === 'consultation' ? 'selected' : '' ?>>Public Consultation</option>
+                                    <option value="research" <?= $document['document_type'] === 'research' ? 'selected' : '' ?>>Research Document</option>
                                 </select>
                             </div>
 

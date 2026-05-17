@@ -8,27 +8,31 @@ class PermissionMiddleware {
         'viewer' => 1,
         'staff' => 2,
         'officer' => 3,
-        'administrator' => 4
+        'administrator' => 4,
+        'super_admin' => 5
     ];
     
     // Permission definitions
     private $permissions = [
-        'document.view' => ['viewer', 'staff', 'officer', 'administrator'],
-        'document.create' => ['staff', 'officer', 'administrator'],
-        'document.edit' => ['staff', 'officer', 'administrator'],
-        'document.delete' => ['officer', 'administrator'],
-        'document.restore' => ['administrator'],
-        'document.download' => ['viewer', 'staff', 'officer', 'administrator'],
-        'tag.create' => ['staff', 'officer', 'administrator'],
-        'tag.edit' => ['officer', 'administrator'],
-        'tag.delete' => ['administrator'],
-        'version.create' => ['staff', 'officer', 'administrator'],
-        'version.revert' => ['officer', 'administrator'],
-        'link.create' => ['staff', 'officer', 'administrator'],
-        'link.delete' => ['officer', 'administrator'],
-        'audit.view' => ['administrator'],
-        'user.manage' => ['administrator'],
-        'api.manage' => ['administrator']
+        'document.view' => ['viewer', 'staff', 'officer', 'administrator', 'super_admin'],
+        'document.create' => ['staff', 'officer', 'administrator', 'super_admin'],
+        'document.edit' => ['staff', 'officer', 'administrator', 'super_admin'],
+        'document.delete' => ['officer', 'administrator', 'super_admin'],
+        'document.restore' => ['administrator', 'super_admin'],
+        'document.download' => ['viewer', 'staff', 'officer', 'administrator', 'super_admin'],
+        'tag.create' => ['staff', 'officer', 'administrator', 'super_admin'],
+        'tag.edit' => ['officer', 'administrator', 'super_admin'],
+        'tag.delete' => ['administrator', 'super_admin'],
+        'version.create' => ['staff', 'officer', 'administrator', 'super_admin'],
+        'version.revert' => ['officer', 'administrator', 'super_admin'],
+        'link.create' => ['staff', 'officer', 'administrator', 'super_admin'],
+        'link.delete' => ['officer', 'administrator', 'super_admin'],
+        'audit.view' => ['administrator', 'super_admin'],
+        'user.manage' => ['administrator', 'super_admin'],
+        'admin.manage' => ['super_admin'],
+        'system.config' => ['super_admin'],
+        'database.backup' => ['super_admin'],
+        'api.manage' => ['administrator', 'super_admin']
     ];
     
     public function __construct($database) {
@@ -132,6 +136,11 @@ class PermissionMiddleware {
         
         $userRole = $this->getUserRole($userId);
         
+        // Super Admins can access everything
+        if ($userRole === 'super_admin') {
+            return true;
+        }
+
         // Administrators can access everything
         if ($userRole === 'administrator') {
             return true;
@@ -200,6 +209,8 @@ class PermissionMiddleware {
         $roleMap = [
             'admin' => 'administrator',
             'administrator' => 'administrator',
+            'superadmin' => 'super_admin',
+            'super_admin' => 'super_admin',
             'officer' => 'officer',
             'staff' => 'staff',
             'viewer' => 'viewer',

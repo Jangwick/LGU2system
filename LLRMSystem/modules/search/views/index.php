@@ -151,13 +151,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             return 0;
                                         };
 
-                                        foreach($types as $value => $label): 
-                                            $checked = ($filters['type'] ?? '') === $value ? 'checked' : '';
+                                        foreach($types as $value => $label):
+                                            $checked = is_array($filters['type'] ?? '') ? (in_array($value, $filters['type']) ? 'checked' : '') : (($filters['type'] ?? '') === $value ? 'checked' : '');
                                             $count = $getFacetCount($value);
                                         ?>
                                         <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer group transition-all <?= $checked ? 'bg-red-50 dark:bg-red-900/10 ring-1 ring-red-100 dark:ring-red-900/30' : '' ?>">
                                             <div class="flex items-center gap-3">
-                                                <input type="radio" name="type" value="<?= $value ?>" <?= $checked ?> class="w-4 h-4 rounded-full border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500/20 bg-white dark:bg-gray-700">
+                                                <input type="checkbox" name="type[]" value="<?= $value ?>" <?= $checked ?> class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500/20 bg-white dark:bg-gray-700">
                                                 <span class="text-sm font-bold <?= $checked ? 'text-red-700 dark:text-red-400' : 'text-gray-600 dark:text-gray-400' ?> group-hover:text-red-600 dark:group-hover:text-red-400"><?= $label ?></span>
                                             </div>
                                             <span class="text-[10px] font-black <?= $checked ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500' ?> px-2 py-0.5 rounded-full transition-all">
@@ -896,7 +896,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 });
 
                 if (filterForm) {
-                    filterForm.querySelectorAll('input[type="radio"], input[type="date"], select').forEach(el => {
+                    filterForm.querySelectorAll('input[type="checkbox"], input[type="radio"], input[type="date"], select').forEach(el => {
                         el.addEventListener('change', (e) => {
                             updateResults();
                         });
