@@ -19,9 +19,18 @@ class SuperAdminController {
     }
     
     /**
-     * Get all administrators
+     * Get all administrators with search, filter, pagination, and sorting
      */
-    public function getAdministrators() {
+    public function getAdministrators($params = []) {
+        $search = $params['search'] ?? null;
+        $roleFilter = $params['role'] ?? null;
+        $statusFilter = $params['status'] ?? null;
+        $departmentFilter = $params['department'] ?? null;
+        $sortBy = $params['sort_by'] ?? 'created_at';
+        $sortOrder = $params['sort_order'] ?? 'DESC';
+        $page = $params['page'] ?? 1;
+        $perPage = $params['per_page'] ?? 10;
+
         // Check if last_login column exists
         $columns = $this->db->query("SHOW COLUMNS FROM users")->fetchAll(PDO::FETCH_ASSOC);
         $hasLastLogin = false;
@@ -37,13 +46,68 @@ class SuperAdminController {
             $selectColumns .= ", last_login";
         }
 
-        $stmt = $this->db->query("
-            SELECT $selectColumns
-            FROM users
-            WHERE role IN ('administrator', 'super_admin')
-            ORDER BY created_at DESC
-        ");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Build query
+        $whereConditions = ["role IN ('administrator', 'super_admin')"];
+        $queryParams = [];
+
+        if ($search) {
+            $whereConditions[] = "(full_name LIKE ? OR email LIKE ? OR employee_id LIKE ?)";
+            $queryParams[] = "%$search%";
+            $queryParams[] = "%$search%";
+            $queryParams[] = "%$search%";
+        }
+
+        if ($roleFilter && in_array($roleFilter, ['administrator', 'super_admin'])) {
+            $whereConditions[] = "role = ?";
+            $queryParams[] = $roleFilter;
+        }
+
+        if ($statusFilter && in_array($statusFilter, ['active', 'inactive'])) {
+            $whereConditions[] = "status = ?";
+            $queryParams[] = $statusFilter;
+        }
+
+        if ($departmentFilter) {
+            $whereConditions[] = "department LIKE ?";
+            $queryParams[] = "%$departmentFilter%";
+        }
+
+        $whereClause = implode(' AND ', $whereConditions);
+
+        // Get total count
+        $countQuery = "SELECT COUNT(*) FROM users WHERE $whereClause";
+        $countStmt = $this->db->prepare($countQuery);
+        $countStmt->execute($queryParams);
+        $totalCount = $countStmt->fetchColumn();
+
+        // Get paginated results
+        $allowedSortColumns = ['id', 'full_name', 'email', 'role', 'status', 'department', 'created_at'];
+        if ($hasLastLogin) {
+            $allowedSortColumns[] = 'last_login';
+        }
+
+        if (!in_array($sortBy, $allowedSortColumns)) {
+            $sortBy = 'created_at';
+        }
+
+        $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
+
+        $offset = ($page - 1) * $perPage;
+        $query = "SELECT $selectColumns FROM users WHERE $whereClause ORDER BY $sortBy $sortOrder LIMIT ? OFFSET ?";
+        $queryParams[] = $perPage;
+        $queryParams[] = $offset;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($queryParams);
+        $administrators = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return [
+            'data' => $administrators,
+            'total' => $totalCount,
+            'page' => $page,
+            'per_page' => $perPage,
+            'total_pages' => ceil($totalCount / $perPage)
+        ];
     }
     
     /**
@@ -80,28 +144,159 @@ class SuperAdminController {
         $stmt = $this->db->prepare("SELECT role FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$user) {
             return ['success' => false, 'error' => 'User not found'];
         }
-        
+
         if ($user['role'] === 'super_admin') {
             return ['success' => false, 'error' => 'Cannot demote Super Admin'];
         }
-        
+
         if ($user['role'] !== 'administrator') {
             return ['success' => false, 'error' => 'User is not an administrator'];
         }
-        
+
         $stmt = $this->db->prepare("UPDATE users SET role = 'staff' WHERE id = ?");
         $result = $stmt->execute([$userId]);
-        
+
         if ($result) {
             $this->logger->log($_SESSION['user_id'], 'user_demoted', $userId, "Demoted user from administrator role");
             return ['success' => true];
         }
-        
+
         return ['success' => false, 'error' => 'Failed to demote user'];
+    }
+
+    /**
+     * Promote user to Super Admin
+     */
+    public function promoteToSuperAdmin($userId) {
+        $stmt = $this->db->prepare("SELECT role FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return ['success' => false, 'error' => 'User not found'];
+        }
+
+        if ($user['role'] === 'super_admin') {
+            return ['success' => false, 'error' => 'User is already Super Admin'];
+        }
+
+        $stmt = $this->db->prepare("UPDATE users SET role = 'super_admin' WHERE id = ?");
+        $result = $stmt->execute([$userId]);
+
+        if ($result) {
+            $this->logger->log($_SESSION['user_id'], 'user_promoted_to_super', $userId, "Promoted user to Super Admin role");
+            return ['success' => true];
+        }
+
+        return ['success' => false, 'error' => 'Failed to promote user'];
+    }
+
+    /**
+     * Activate user account
+     */
+    public function activateUser($userId) {
+        $stmt = $this->db->prepare("SELECT role FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return ['success' => false, 'error' => 'User not found'];
+        }
+
+        if ($user['role'] === 'super_admin') {
+            return ['success' => false, 'error' => 'Cannot modify Super Admin status'];
+        }
+
+        $stmt = $this->db->prepare("UPDATE users SET status = 'active' WHERE id = ?");
+        $result = $stmt->execute([$userId]);
+
+        if ($result) {
+            $this->logger->log($_SESSION['user_id'], 'user_activated', $userId, "Activated user account");
+            return ['success' => true];
+        }
+
+        return ['success' => false, 'error' => 'Failed to activate user'];
+    }
+
+    /**
+     * Deactivate user account
+     */
+    public function deactivateUser($userId) {
+        $stmt = $this->db->prepare("SELECT id, role FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return ['success' => false, 'error' => 'User not found'];
+        }
+
+        if ($user['id'] == $_SESSION['user_id']) {
+            return ['success' => false, 'error' => 'Cannot deactivate your own account'];
+        }
+
+        if ($user['role'] === 'super_admin') {
+            return ['success' => false, 'error' => 'Cannot modify Super Admin status'];
+        }
+
+        $stmt = $this->db->prepare("UPDATE users SET status = 'inactive' WHERE id = ?");
+        $result = $stmt->execute([$userId]);
+
+        if ($result) {
+            $this->logger->log($_SESSION['user_id'], 'user_deactivated', $userId, "Deactivated user account");
+            return ['success' => true];
+        }
+
+        return ['success' => false, 'error' => 'Failed to deactivate user'];
+    }
+
+    /**
+     * Delete user (soft delete)
+     */
+    public function deleteUser($userId) {
+        $stmt = $this->db->prepare("SELECT id, role FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return ['success' => false, 'error' => 'User not found'];
+        }
+
+        if ($user['id'] == $_SESSION['user_id']) {
+            return ['success' => false, 'error' => 'Cannot delete your own account'];
+        }
+
+        if ($user['role'] === 'super_admin') {
+            return ['success' => false, 'error' => 'Cannot delete Super Admin'];
+        }
+
+        // Check if deleted_at column exists
+        $columns = $this->db->query("SHOW COLUMNS FROM users")->fetchAll(PDO::FETCH_ASSOC);
+        $hasDeletedAt = false;
+        foreach ($columns as $col) {
+            if ($col['Field'] === 'deleted_at') {
+                $hasDeletedAt = true;
+                break;
+            }
+        }
+
+        if ($hasDeletedAt) {
+            $stmt = $this->db->prepare("UPDATE users SET deleted_at = NOW() WHERE id = ?");
+            $result = $stmt->execute([$userId]);
+        } else {
+            $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
+            $result = $stmt->execute([$userId]);
+        }
+
+        if ($result) {
+            $this->logger->log($_SESSION['user_id'], 'user_deleted', $userId, "Deleted user account");
+            return ['success' => true];
+        }
+
+        return ['success' => false, 'error' => 'Failed to delete user'];
     }
     
     /**
@@ -135,12 +330,86 @@ class SuperAdminController {
     }
     
     /**
+     * Get editable system configuration
+     */
+    public function getEditableConfig() {
+        $config = [];
+
+        // Check if system_settings table exists
+        $tables = $this->db->query("SHOW TABLES LIKE 'system_settings'")->fetchAll(PDO::FETCH_ASSOC);
+        $hasSettingsTable = count($tables) > 0;
+
+        if ($hasSettingsTable) {
+            $stmt = $this->db->query("SELECT setting_key, setting_value FROM system_settings");
+            $settings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($settings as $setting) {
+                $config[$setting['setting_key']] = $setting['setting_value'];
+            }
+        }
+
+        // Default values
+        $defaults = [
+            'session_timeout' => '2',
+            'otp_expiry' => '1',
+            'max_file_size' => '10',
+            'allowed_file_types' => 'pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png',
+            'maintenance_mode' => '0',
+            'site_name' => 'Legislative Records Management System',
+            'backup_retention_days' => '30'
+        ];
+
+        return array_merge($defaults, $config);
+    }
+
+    /**
      * Update system configuration
      */
     public function updateSystemConfig($configData) {
-        // For now, this is a placeholder
-        // In a real implementation, this would update a system_settings table
-        return ['success' => true, 'message' => 'Configuration updated'];
+        // Check if system_settings table exists
+        $tables = $this->db->query("SHOW TABLES LIKE 'system_settings'")->fetchAll(PDO::FETCH_ASSOC);
+        $hasSettingsTable = count($tables) > 0;
+
+        // Create table if it doesn't exist
+        if (!$hasSettingsTable) {
+            $this->db->query("
+                CREATE TABLE IF NOT EXISTS system_settings (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    setting_key VARCHAR(100) UNIQUE NOT NULL,
+                    setting_value TEXT,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    updated_by INT
+                )
+            ");
+        }
+
+        // Update each setting
+        foreach ($configData as $key => $value) {
+            $stmt = $this->db->prepare("
+                INSERT INTO system_settings (setting_key, setting_value, updated_by)
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE setting_value = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+            ");
+            $stmt->execute([$key, $value, $_SESSION['user_id'], $value, $_SESSION['user_id']]);
+        }
+
+        $this->logger->log($_SESSION['user_id'], 'config_updated', null, "Updated system configuration");
+
+        return ['success' => true, 'message' => 'Configuration updated successfully'];
+    }
+
+    /**
+     * Reset system configuration to defaults
+     */
+    public function resetSystemConfig() {
+        // Check if system_settings table exists
+        $tables = $this->db->query("SHOW TABLES LIKE 'system_settings'")->fetchAll(PDO::FETCH_ASSOC);
+        if (count($tables) > 0) {
+            $this->db->query("TRUNCATE TABLE system_settings");
+        }
+
+        $this->logger->log($_SESSION['user_id'], 'config_reset', null, "Reset system configuration to defaults");
+
+        return ['success' => true, 'message' => 'Configuration reset to defaults'];
     }
     
     /**
