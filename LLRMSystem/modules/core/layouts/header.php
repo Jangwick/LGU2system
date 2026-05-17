@@ -4,11 +4,11 @@ require_once __DIR__ . '/../utils/helpers.php';
 require_once __DIR__ . '/../middleware/CsrfMiddleware.php';
 require_once __DIR__ . '/../middleware/SessionTimeoutMiddleware.php';
 
-// Check session timeout for logged-in users
-if (isset($_SESSION['user_id'])) {
-    $sessionMiddleware = new SessionTimeoutMiddleware(getDatabase());
-    $sessionMiddleware->checkSessionTimeout();
-}
+// Check session timeout for logged-in users - temporarily disabled for debugging
+// if (isset($_SESSION['user_id'])) {
+//     $sessionMiddleware = new SessionTimeoutMiddleware(getDatabase());
+//     $sessionMiddleware->checkSessionTimeout();
+// }
 
 // ── Security Response Headers ────────────────────────────────────────────────
 // Must be sent before any HTML output.

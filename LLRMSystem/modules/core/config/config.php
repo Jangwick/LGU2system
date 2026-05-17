@@ -126,6 +126,7 @@ define('IMAGES_URL', ASSETS_URL . '/images');
 
 // Module URLs
 define('AUTH_URL', BASE_URL . '/modules/authentication');
+define('CORE_URL', BASE_URL . '/modules/core');
 define('DASHBOARD_URL', BASE_URL . '/modules/dashboard');
 define('DOCUMENTS_URL', BASE_URL . '/modules/document-management');
 define('RESEARCH_URL', BASE_URL . '/modules/research-analysis');

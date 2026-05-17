@@ -95,17 +95,17 @@
                 <p class="px-4 text-xs font-semibold text-purple-300 uppercase tracking-wider">Super Admin</p>
             </div>
 
-            <a href="<?php echo BASE_URL; ?>/modules/core/views/admin-management.php" class="nav-item <?php echo ($currentPage ?? '') === 'admin-management' ? 'active' : ''; ?>">
+            <a href="<?php echo CORE_URL; ?>/views/admin-management.php" class="nav-item <?php echo ($currentPage ?? '') === 'admin-management' ? 'active' : ''; ?>">
                 <i class="bi bi-shield-lock"></i>
                 <span class="sidebar-text">Admin Management</span>
             </a>
 
-            <a href="<?php echo BASE_URL; ?>/modules/core/views/system-config.php" class="nav-item <?php echo ($currentPage ?? '') === 'system-config' ? 'active' : ''; ?>">
+            <a href="<?php echo CORE_URL; ?>/views/system-config.php" class="nav-item <?php echo ($currentPage ?? '') === 'system-config' ? 'active' : ''; ?>">
                 <i class="bi bi-gear"></i>
                 <span class="sidebar-text">System Config</span>
             </a>
 
-            <a href="<?php echo BASE_URL; ?>/modules/core/views/database-backup.php" class="nav-item <?php echo ($currentPage ?? '') === 'database-backup' ? 'active' : ''; ?>">
+            <a href="<?php echo CORE_URL; ?>/views/database-backup.php" class="nav-item <?php echo ($currentPage ?? '') === 'database-backup' ? 'active' : ''; ?>">
                 <i class="bi bi-database"></i>
                 <span class="sidebar-text">Database Backup</span>
             </a>

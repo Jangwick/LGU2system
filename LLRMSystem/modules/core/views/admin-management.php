@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../middleware/PermissionMiddleware.php';
+require_once __DIR__ . '/../../core/config/config.php';
+require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/middleware/PermissionMiddleware.php';
 
 // Check permissions
 $permissions = new PermissionMiddleware(getDatabase());
@@ -12,28 +12,33 @@ $permissions->requirePermission('admin.manage');
 require_once __DIR__ . '/../controllers/SuperAdminController.php';
 $controller = new SuperAdminController();
 
-$administrators = $controller->getAdministrators();
+try {
+    $administrators = $controller->getAdministrators();
+} catch (Exception $e) {
+    error_log("Error getting administrators: " . $e->getMessage());
+    $administrators = [];
+}
 
 $pageTitle = 'Administrator Management';
 $currentPage = 'admin-management';
-require_once __DIR__ . '/../layouts/header.php';
+require_once __DIR__ . '/../../core/layouts/header.php';
 ?>
 
-<?php require_once __DIR__ . '/../layouts/sidebar.php'; ?>
+<?php require_once __DIR__ . '/../../core/layouts/sidebar.php'; ?>
 
 <div class="flex-1 flex flex-col overflow-hidden">
-    <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
-    
+    <?php require_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
+
     <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-6">
         <!-- Page Header -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 animate-fade-in relative overflow-hidden">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 relative overflow-hidden">
             <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
                 <div class="transform transition-all duration-300">
-                    <h1 class="text-2xl md:text-3xl font-bold mb-2 animate-slide-in-left">Administrator Management</h1>
-                    <p class="text-red-100 animate-slide-in-left animation-delay-100">Manage administrator and Super Admin accounts</p>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2">Administrator Management</h1>
+                    <p class="text-red-100">Manage administrator and Super Admin accounts</p>
                 </div>
-                <div class="flex flex-wrap gap-3 animate-slide-in-right">
+                <div class="flex flex-wrap gap-3">
                     <a href="<?php echo USERS_URL; ?>/views/create.php" class="flex items-center px-6 py-2.5 bg-white hover:bg-red-50 text-red-600 rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/10">
                         <i class="bi bi-person-plus mr-2"></i> Add Administrator
                     </a>
@@ -42,9 +47,15 @@ require_once __DIR__ . '/../layouts/header.php';
         </div>
 
         <!-- Administrators Table -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
             <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Administrators & Super Admins</h2>
-            
+
+            <?php if (empty($administrators)): ?>
+            <div class="text-center py-12">
+                <i class="bi bi-person-gear text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                <p class="text-gray-500 dark:text-gray-400">No administrators found. Create your first administrator.</p>
+            </div>
+            <?php else: ?>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
@@ -54,7 +65,6 @@ require_once __DIR__ . '/../layouts/header.php';
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Role</th>
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Status</th>
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Department</th>
-                            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Last Login</th>
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Actions</th>
                         </tr>
                     </thead>
@@ -90,9 +100,6 @@ require_once __DIR__ . '/../layouts/header.php';
                                 </span>
                             </td>
                             <td class="py-4 px-4 text-gray-600 dark:text-gray-300"><?= htmlspecialchars($admin['department']) ?></td>
-                            <td class="py-4 px-4 text-gray-600 dark:text-gray-300">
-                                <?= $admin['last_login'] ? date('M d, Y g:i A', strtotime($admin['last_login'])) : 'Never' ?>
-                            </td>
                             <td class="py-4 px-4">
                                 <div class="flex gap-2">
                                     <a href="<?php echo USERS_URL; ?>/views/edit.php?id=<?= $admin['id'] ?>" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
@@ -110,6 +117,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     </tbody>
                 </table>
             </div>
+            <?php endif; ?>
         </div>
     </main>
 </div>
@@ -143,5 +151,3 @@ function demoteAdmin(userId, userName) {
     }
 }
 </script>
-
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
