@@ -298,6 +298,89 @@ class SuperAdminController {
 
         return ['success' => false, 'error' => 'Failed to delete user'];
     }
+
+    /**
+     * Update administrator details
+     */
+    public function updateAdministrator($userId, $data) {
+        $stmt = $this->db->prepare("SELECT id, role FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return ['success' => false, 'error' => 'User not found'];
+        }
+
+        // Prevent modifying Super Admin role
+        if ($user['role'] === 'super_admin' && isset($data['role']) && $data['role'] !== 'super_admin') {
+            return ['success' => false, 'error' => 'Cannot change Super Admin role'];
+        }
+
+        // Prevent modifying Super Admin status
+        if ($user['role'] === 'super_admin' && isset($data['status']) && $data['status'] !== 'active') {
+            return ['success' => false, 'error' => 'Cannot modify Super Admin status'];
+        }
+
+        // Check if email already exists for another user
+        if (isset($data['email'])) {
+            $stmt = $this->db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+            $stmt->execute([$data['email'], $userId]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'error' => 'Email already in use'];
+            }
+        }
+
+        // Build update query
+        $updateFields = [];
+        $params = [];
+
+        if (isset($data['full_name'])) {
+            $updateFields[] = "full_name = ?";
+            $params[] = $data['full_name'];
+        }
+
+        if (isset($data['email'])) {
+            $updateFields[] = "email = ?";
+            $params[] = $data['email'];
+        }
+
+        if (isset($data['employee_id'])) {
+            $updateFields[] = "employee_id = ?";
+            $params[] = $data['employee_id'];
+        }
+
+        if (isset($data['department'])) {
+            $updateFields[] = "department = ?";
+            $params[] = $data['department'];
+        }
+
+        if (isset($data['role']) && $user['role'] !== 'super_admin') {
+            $updateFields[] = "role = ?";
+            $params[] = $data['role'];
+        }
+
+        if (isset($data['status']) && $user['role'] !== 'super_admin') {
+            $updateFields[] = "status = ?";
+            $params[] = $data['status'];
+        }
+
+        if (empty($updateFields)) {
+            return ['success' => false, 'error' => 'No fields to update'];
+        }
+
+        $params[] = $userId;
+        $query = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE id = ?";
+
+        $stmt = $this->db->prepare($query);
+        $result = $stmt->execute($params);
+
+        if ($result) {
+            $this->logger->log($_SESSION['user_id'], 'user_updated', $userId, "Updated administrator details");
+            return ['success' => true];
+        }
+
+        return ['success' => false, 'error' => 'Failed to update administrator'];
+    }
     
     /**
      * Get system configuration

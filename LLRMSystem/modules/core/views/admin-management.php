@@ -189,7 +189,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                             </td>
                             <td class="py-4 px-4">
                                 <div class="flex gap-2">
-                                    <a href="<?php echo USERS_URL; ?>/views/edit.php?id=<?= $admin['id'] ?>" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors" title="Edit">
+                                    <a href="<?php echo CORE_URL; ?>/views/edit-administrator.php?id=<?= $admin['id'] ?>" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <?php if ($admin['role'] === 'administrator'): ?>
@@ -453,3 +453,26 @@ function exportToCSV() {
     window.location.href = '<?php echo BASE_URL; ?>/modules/core/api/admin-management.php?' + params.toString();
 }
 </script>
+
+<script>
+// Sidebar Toggle Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const toggleIcon = document.getElementById('sidebar-toggle-icon');
+    
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('sidebar-collapsed');
+            sidebar.classList.toggle('sidebar-expanded');
+            
+            // Rotate icon animation
+            if (toggleIcon) {
+                toggleIcon.classList.toggle('rotate-180');
+            }
+        });
+    }
+});
+</script>
+</div>

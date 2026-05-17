@@ -261,3 +261,26 @@ function clearFilters() {
     window.location.href = '?';
 }
 </script>
+
+<script>
+// Sidebar Toggle Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const toggleIcon = document.getElementById('sidebar-toggle-icon');
+    
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('sidebar-collapsed');
+            sidebar.classList.toggle('sidebar-expanded');
+            
+            // Rotate icon animation
+            if (toggleIcon) {
+                toggleIcon.classList.toggle('rotate-180');
+            }
+        });
+    }
+});
+</script>
+</div>

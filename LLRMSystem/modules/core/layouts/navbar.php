@@ -23,7 +23,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="flex items-center flex-shrink-0">
                 <!-- Sidebar Toggle Button (Desktop) -->
                 <button id="sidebar-toggle" class="hidden md:flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-red-600 focus:outline-none transition-all duration-200" title="Toggle Sidebar">
-                    <i class="bi bi-layout-sidebar-inset text-xl"></i>
+                    <i id="sidebar-toggle-icon" class="bi bi-layout-sidebar-inset text-xl transition-transform duration-300"></i>
                 </button>
                 
                 <!-- Mobile Menu Button -->
@@ -80,9 +80,9 @@ if (isset($_SESSION['user_id'])) {
                 
                 <!-- Session Timeout Countdown -->
                 <?php if (isset($_SESSION['user_id'])): ?>
-                <div id="session-timer" class="hidden md:flex items-center space-x-1 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg" title="Session auto-logout countdown">
-                    <i class="bi bi-clock text-amber-600 text-sm"></i>
-                    <span id="session-countdown" class="text-xs font-semibold text-amber-700">2:00</span>
+                <div id="session-timer" class="hidden md:flex items-center space-x-1 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg" title="Session auto-logout countdown">
+                    <i class="bi bi-clock text-amber-600 dark:text-amber-400 text-sm"></i>
+                    <span id="session-countdown" class="text-xs font-semibold text-amber-700 dark:text-amber-300">2:00</span>
                 </div>
                 <?php endif; ?>
                 
@@ -184,15 +184,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Change color when less than 30 seconds
             if (remainingTime <= 30) {
-                sessionTimer.classList.remove('bg-amber-50', 'border-amber-200');
-                sessionTimer.classList.add('bg-red-50', 'border-red-200');
-                sessionCountdown.classList.remove('text-amber-700');
-                sessionCountdown.classList.add('text-red-700');
+                sessionTimer.classList.remove('bg-amber-50', 'dark:bg-amber-900/30', 'border-amber-200', 'dark:border-amber-700');
+                sessionTimer.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-700');
+                sessionCountdown.classList.remove('text-amber-700', 'dark:text-amber-300');
+                sessionCountdown.classList.add('text-red-700', 'dark:text-red-300');
             } else {
-                sessionTimer.classList.remove('bg-red-50', 'border-red-200');
-                sessionTimer.classList.add('bg-amber-50', 'border-amber-200');
-                sessionCountdown.classList.remove('text-red-700');
-                sessionCountdown.classList.add('text-amber-700');
+                sessionTimer.classList.remove('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-700');
+                sessionTimer.classList.add('bg-amber-50', 'dark:bg-amber-900/30', 'border-amber-200', 'dark:border-amber-700');
+                sessionCountdown.classList.remove('text-red-700', 'dark:text-red-300');
+                sessionCountdown.classList.add('text-amber-700', 'dark:text-amber-300');
             }
 
             if (remainingTime > 0) {
