@@ -475,4 +475,135 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- Mobile Sidebar Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden opacity-0 pointer-events-none transition-all duration-300 ease-out"></div>
+
+<!-- Mobile Sidebar -->
+<div id="mobile-sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:hidden w-72 bg-gradient-to-b from-red-800 to-red-900 text-white z-50 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden flex flex-col shadow-2xl">
+    <!-- Mobile sidebar header -->
+    <div class="p-4 border-b border-red-700/50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white rounded-full p-1.5 shadow-lg">
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-9 h-9 object-contain">
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight">LRMS</h1>
+                    <p class="text-xs text-red-200">Legislative Records</p>
+                </div>
+            </div>
+            <button id="close-mobile-sidebar" class="text-white/80 p-2 hover:bg-red-700/50 hover:text-white rounded-lg transition-all duration-200 hover:rotate-90">
+                <i class="bi bi-x-lg text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav class="flex-1 py-4 px-3 overflow-y-auto">
+        <?php
+        $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+        ?>
+
+        <!-- Dashboard -->
+        <a href="<?php echo DASHBOARD_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1">
+            <i class="bi bi-speedometer2 mr-3 text-lg"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <!-- Documents Section -->
+        <div class="mt-4 mb-2 px-4">
+            <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Documents</p>
+        </div>
+
+        <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1">
+            <i class="bi bi-file-earmark-text mr-3 text-lg"></i>
+            <span>All Documents</span>
+        </a>
+
+        <a href="<?php echo SEARCH_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1">
+            <i class="bi bi-search mr-3 text-lg"></i>
+            <span>Advanced Search</span>
+        </a>
+
+        <!-- Super Admin Section - Super Admin Only -->
+        <?php if ($userRole === 'super_admin'): ?>
+        <div class="mt-4 mb-2 px-4">
+            <p class="text-xs font-semibold text-purple-300/80 uppercase tracking-wider">Super Admin</p>
+        </div>
+
+        <a href="<?php echo CORE_URL; ?>/views/admin-management.php" class="flex items-center px-4 py-3 text-white bg-red-700 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1">
+            <i class="bi bi-shield-lock mr-3 text-lg"></i>
+            <span>Admin Management</span>
+        </a>
+
+        <a href="<?php echo CORE_URL; ?>/views/system-config.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1">
+            <i class="bi bi-gear mr-3 text-lg"></i>
+            <span>System Config</span>
+        </a>
+
+        <a href="<?php echo CORE_URL; ?>/views/database-backup.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1">
+            <i class="bi bi-database mr-3 text-lg"></i>
+            <span>Database Backup</span>
+        </a>
+
+        <a href="<?php echo CORE_URL; ?>/views/audit-logs.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1">
+            <i class="bi bi-journal-text mr-3 text-lg"></i>
+            <span>Audit Logs</span>
+        </a>
+        <?php endif; ?>
+    </nav>
+</div>
+
+<script>
+// Mobile Sidebar Functionality
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileSidebar = document.getElementById('mobile-sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
+
+if (mobileMenuBtn && mobileSidebar) {
+    mobileMenuBtn.addEventListener('click', function() {
+        // Animate overlay
+        sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        sidebarOverlay.classList.add('opacity-100', 'pointer-events-auto');
+
+        // Animate sidebar with stagger effect for menu items
+        setTimeout(() => {
+            mobileSidebar.classList.remove('-translate-x-full');
+            mobileSidebar.classList.add('translate-x-0');
+
+            // Animate menu items
+            const menuItems = mobileSidebar.querySelectorAll('nav a, nav > div');
+            menuItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.3s ease-out';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 50 + (index * 30));
+            });
+        }, 10);
+    });
+}
+
+if (closeMobileSidebar && mobileSidebar) {
+    closeMobileSidebar.addEventListener('click', function() {
+        mobileSidebar.classList.remove('translate-x-0');
+        mobileSidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+        sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+    });
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', function() {
+        mobileSidebar.classList.remove('translate-x-0');
+        mobileSidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+        sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+    });
+}
+</script>
 </div>

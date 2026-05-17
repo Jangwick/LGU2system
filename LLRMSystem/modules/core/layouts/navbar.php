@@ -80,9 +80,9 @@ if (isset($_SESSION['user_id'])) {
                 
                 <!-- Session Timeout Countdown -->
                 <?php if (isset($_SESSION['user_id'])): ?>
-                <div id="session-timer" class="hidden md:flex items-center space-x-1 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg" title="Session auto-logout countdown">
-                    <i class="bi bi-clock text-amber-600 dark:text-amber-400 text-sm"></i>
-                    <span id="session-countdown" class="text-xs font-semibold text-amber-700 dark:text-amber-300">2:00</span>
+                <div id="session-timer" class="flex items-center space-x-1 px-2 py-1 md:px-3 md:py-1.5 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg" title="Session auto-logout countdown">
+                    <i class="bi bi-clock text-amber-600 dark:text-amber-400 text-xs md:text-sm"></i>
+                    <span id="session-countdown" class="text-[10px] md:text-xs font-semibold text-amber-700 dark:text-amber-300">2:00</span>
                 </div>
                 <?php endif; ?>
                 

@@ -224,6 +224,33 @@
             </a>
             <?php endif; ?>
 
+            <!-- Super Admin Section - Super Admin Only -->
+            <?php if ($userRole === 'super_admin'): ?>
+            <div class="mt-4 mb-2 px-4">
+                <p class="text-xs font-semibold text-purple-300/80 uppercase tracking-wider">Super Admin</p>
+            </div>
+
+            <a href="<?php echo CORE_URL; ?>/views/admin-management.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'admin-management' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-shield-lock mr-3 text-lg"></i>
+                <span>Admin Management</span>
+            </a>
+
+            <a href="<?php echo CORE_URL; ?>/views/system-config.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'system-config' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-gear mr-3 text-lg"></i>
+                <span>System Config</span>
+            </a>
+
+            <a href="<?php echo CORE_URL; ?>/views/database-backup.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'database-backup' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-database mr-3 text-lg"></i>
+                <span>Database Backup</span>
+            </a>
+
+            <a href="<?php echo CORE_URL; ?>/views/audit-logs.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'audit-logs' ? 'bg-red-700' : ''; ?>">
+                <i class="bi bi-journal-text mr-3 text-lg"></i>
+                <span>Audit Logs</span>
+            </a>
+            <?php endif; ?>
+
             <!-- Integration Section - Mobile -->
             <?php if (in_array($userRole, ['officer', 'administrator', 'admin'])): ?>
             <div class="mt-4 mb-2 px-4">
