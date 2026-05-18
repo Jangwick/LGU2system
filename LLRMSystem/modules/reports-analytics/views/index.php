@@ -36,11 +36,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <p class="text-red-100 animate-slide-in-left animation-delay-100">Comprehensive insights and statistical analysis</p>
                 </div>
                 <div class="flex flex-wrap gap-3 animate-slide-in-right">
-                    <button onclick="showExportModal()" class="flex items-center px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/10">
-                        <i class="bi bi-download mr-2 group-hover:animate-bounce"></i> Export Reports
+                    <button onclick="showExportModal()" class="no-ripple inline-flex items-center justify-center px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm border border-white/10 min-w-[160px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                        <i class="bi bi-download mr-2"></i> Export Reports
                     </button>
-                    <button onclick="window.print()" class="flex items-center px-6 py-2.5 !bg-white hover:!bg-red-50 !text-red-600 rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-transparent">
-                        <i class="bi bi-printer mr-2 transition-transform"></i> Print
+                    <button onclick="window.print()" class="no-ripple inline-flex items-center justify-center px-6 py-2.5 !bg-white hover:!bg-red-50 !text-red-600 rounded-xl font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm border border-transparent min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                        <i class="bi bi-printer mr-2"></i> Print
                     </button>
                 </div>
             </div>

@@ -24,8 +24,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <h1 class="text-2xl font-bold mb-2">User Management</h1>
                     <p class="text-red-100 animation-delay-100">Manage system users and permissions</p>
                 </div>
-                <button onclick="openCreateModal()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="add-user-btn bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-all shadow-md flex items-center transform hover:scale-105 hover:shadow-lg active:scale-95 animate-slide-in-right">
-                    <i class="bi bi-person-plus mr-2"></i> Add New User
+                <button onclick="openCreateModal()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="add-user-btn no-ripple inline-flex items-center justify-center bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-shadow shadow-md min-w-[150px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none animate-slide-in-right">
+                    <i class="bi bi-plus-circle mr-2"></i> Add User
                 </button>
             </div>
         </div>
@@ -257,12 +257,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button onclick="editUser(<?php echo $user['id']; ?>)" style="background:none;border:none;" class="text-red-600 hover:text-red-700 mr-3 transition-all duration-200 hover:scale-110 cursor-pointer">
-                                            <i class="bi bi-pencil"></i> Edit
+                                        <button onclick="editUser(<?php echo $user['id']; ?>)" style="background:none;border:none;" class="no-ripple text-red-600 hover:text-red-700 mr-3 transition-colors duration-200 cursor-pointer inline-flex items-center justify-center min-w-[32px] h-8 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                                                <i class="bi bi-pencil text-lg"></i>
                                         </button>
-                                        <button onclick="deleteUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['name']); ?>')" 
-                                                style="background:none;border:none;" class="text-red-600 hover:text-red-900 transition-all duration-200 hover:scale-110 cursor-pointer">
-                                            <i class="bi bi-trash"></i> Delete
+                                        <button onclick="deleteUser(<?php echo $user['id']; ?>)"
+                                                style="background:none;border:none;" class="no-ripple text-red-600 hover:text-red-900 transition-colors duration-200 cursor-pointer inline-flex items-center justify-center min-w-[32px] h-8 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                                                <i class="bi bi-trash text-lg"></i>
                                         </button>
                                     </td>
                                 </tr>

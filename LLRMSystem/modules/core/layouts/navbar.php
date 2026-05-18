@@ -92,14 +92,14 @@ if (isset($_SESSION['user_id'])) {
                 <?php endif; ?>
                 
                 <!-- Dark/Light Mode Toggle -->
-                <button id="theme-toggle" class="flex w-7 h-7 md:w-10 md:h-10 items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
+                <button id="theme-toggle" class="no-ripple inline-flex items-center justify-center w-7 h-7 md:w-10 md:h-10 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors overflow-hidden min-w-[28px] md:min-w-[40px] flex-shrink-0 transform-none hover:transform-none active:transform-none">
                     <i class="bi bi-moon-fill text-base md:text-xl dark-mode-icon"></i>
                     <i class="bi bi-sun-fill text-lg light-mode-icon hidden"></i>
                 </button>
                 
                 <!-- Notifications -->
                 <div class="relative" id="notifications-container">
-                    <button id="notifications-btn" class="relative w-7 h-7 md:w-10 md:h-10 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition overflow-hidden">
+                    <button id="notifications-btn" class="no-ripple inline-flex items-center justify-center relative w-7 h-7 md:w-10 md:h-10 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors overflow-hidden min-w-[28px] md:min-w-[40px] flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-bell text-base md:text-xl"></i>
                         <span id="notification-badge" class="hidden absolute top-0 right-0 min-w-[12px] h-[12px] md:min-w-[18px] md:h-[18px] bg-red-500 rounded-full text-white text-[8px] md:text-xs font-bold items-center justify-center px-0.5">0</span>
                     </button>
@@ -126,7 +126,7 @@ if (isset($_SESSION['user_id'])) {
                 
                 <!-- User Profile Dropdown -->
                 <div class="relative">
-                    <button id="profile-btn" class="flex items-center space-x-1 md:space-x-3 p-1 md:p-2 hover:bg-gray-100 rounded-lg transition shrink-0">
+                    <button id="profile-btn" class="no-ripple inline-flex items-center space-x-1 md:space-x-3 p-1 md:p-2 hover:bg-gray-100 rounded-lg transition-colors shrink-0 min-w-[120px] h-12 transform-none hover:transform-none active:transform-none">
                         <?php if (!empty($navProfilePicture)): ?>
                             <img src="<?php echo BASE_URL; ?>/storage/profiles/<?php echo htmlspecialchars($navProfilePicture); ?>" 
                                  alt="Profile" 

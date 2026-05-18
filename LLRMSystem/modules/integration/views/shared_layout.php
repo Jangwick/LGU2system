@@ -67,7 +67,7 @@ function getIntFileIconBg($mimeType, $fileName = '') {
                     <p class="text-red-100 mt-2 opacity-90">External data automatically synced from legislative partners.</p>
                 </div>
                 <div class="flex gap-3">
-                    <button id="simulateSyncBtn" onclick="openSimulatorModal()" class="bg-white text-red-700 px-5 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-all shadow-sm flex items-center transform hover:scale-105">
+                    <button id="simulateSyncBtn" onclick="openSimulatorModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-700 px-5 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-shadow shadow-sm min-w-[160px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-cpu mr-2"></i> Simulate Sync
                     </button>
                 </div>
