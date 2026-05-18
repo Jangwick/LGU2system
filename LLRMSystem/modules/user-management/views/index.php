@@ -24,8 +24,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <h1 class="text-2xl font-bold mb-2">User Management</h1>
                     <p class="text-red-100 animation-delay-100">Manage system users and permissions</p>
                 </div>
-                <button onclick="openCreateModal()" style="background-color: #ffffff !important; color: #dc2626 !important;" class="add-user-btn no-ripple inline-flex items-center justify-center bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-shadow shadow-md min-w-[150px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none animate-slide-in-right">
-                    <i class="bi bi-plus-circle mr-2"></i> Add User
+                <button onclick="openCreateModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md min-w-[160px] h-12 flex-shrink-0 animate-slide-in-right border-2 border-red-600">
+                    <i class="bi bi-person-plus-fill mr-2 text-xl"></i> Add User
                 </button>
             </div>
         </div>
@@ -282,12 +282,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button onclick="editUser(<?php echo $user['id']; ?>)" style="background:none;border:none;" class="no-ripple text-red-600 hover:text-red-700 mr-3 transition-colors duration-200 cursor-pointer inline-flex items-center justify-center min-w-[32px] h-8 flex-shrink-0 transform-none hover:transform-none active:transform-none">
-                                                <i class="bi bi-pencil text-lg"></i>
+                                        <button onclick="viewUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
+                                            <i class="bi bi-eye mr-1"></i> View
                                         </button>
-                                        <button onclick="deleteUser(<?php echo $user['id']; ?>)"
-                                                style="background:none;border:none;" class="no-ripple text-red-600 hover:text-red-900 transition-colors duration-200 cursor-pointer inline-flex items-center justify-center min-w-[32px] h-8 flex-shrink-0 transform-none hover:transform-none active:transform-none">
-                                                <i class="bi bi-trash text-lg"></i>
+                                        <button onclick="editUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-amber-50 text-amber-600 hover:bg-amber-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
+                                            <i class="bi bi-pencil mr-1"></i> Edit
+                                        </button>
+                                        <button onclick="deleteUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md">
+                                            <i class="bi bi-trash mr-1"></i> Delete
                                         </button>
                                     </td>
                                 </tr>
@@ -335,83 +337,143 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Create/Edit User Modal -->
-<div id="userModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md">
-        <div class="flex justify-between items-center mb-4">
-            <h3 id="modalTitle" class="text-xl font-semibold text-gray-900 dark:text-gray-100">Add New User</h3>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
-                <i class="bi bi-x-lg text-2xl"></i>
+<div id="userModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+    <div class="relative mx-auto p-6 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md my-8">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                    <i id="modalIcon" class="bi bi-person-plus-fill text-red-600 dark:text-red-400 text-xl"></i>
+                </div>
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 dark:text-gray-100">Add New User</h3>
+            </div>
+            <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all">
+                <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
         
         <form id="userForm" onsubmit="saveUser(event)">
             <input type="hidden" id="userId" name="id">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div id="employeeIdGroup">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Employee ID</label>
-                    <input type="text" id="userEmployeeId" name="employee_id" class="input-field bg-gray-100 dark:bg-gray-700 cursor-not-allowed" readonly placeholder="Auto-generated on save">
+            <div class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div id="employeeIdGroup" class="hidden">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Employee ID</label>
+                        <div class="relative">
+                            <i class="bi bi-person-vcard absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="userEmployeeId" name="employee_id" class="w-full pl-11 pr-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 cursor-not-allowed focus:outline-none" readonly placeholder="Auto-generated on save">
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
+                        <div class="relative">
+                            <i class="bi bi-person absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="userName" name="name" required class="w-full pl-11 pr-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" oninput="document.getElementById('userFullName').value = this.value" placeholder="Enter full name">
+                            <input type="hidden" id="userFullName" name="full_name">
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email *</label>
+                        <div class="relative">
+                            <i class="bi bi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="userEmail" name="email" required class="w-full pl-11 pr-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" placeholder="user@example.com">
+                        </div>
+                    </div>
+                
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Username</label>
+                        <div class="relative">
+                            <i class="bi bi-at absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="userUsername" name="username" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" placeholder="Username">
+                        </div>
+                    </div>
+                </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
-                    <input type="text" id="userName" name="name" required class="input-field" oninput="document.getElementById('userFullName').value = this.value">
-                    <input type="hidden" id="userFullName" name="full_name">
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Password <span id="passwordRequired" class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <i class="bi bi-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" id="userPassword" name="password" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" placeholder="Enter password">
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Leave blank to keep current password (when editing)</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Role *</label>
+                        <div class="relative">
+                            <i class="bi bi-shield absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <select id="userRole" name="role" required class="w-full pl-11 pr-10 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
+                                <option value="viewer">Viewer</option>
+                                <option value="staff">Staff</option>
+                                <option value="officer">Officer</option>
+                            </select>
+                            <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                        </div>
+                        <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 font-medium">Only Super Admin can assign Administrator role</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Department</label>
+                        <div class="relative">
+                            <i class="bi bi-building absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="userDepartment" name="department" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" placeholder="Department name">
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Status *</label>
+                    <div class="relative">
+                        <i class="bi bi-toggle-on absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <select id="userStatus" name="status" required class="w-full pl-11 pr-10 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
+                            <option value="active">Active (Approved)</option>
+                            <option value="pending">Pending Approval</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="suspended">Suspended (Denied)</option>
+                        </select>
+                        <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                    </div>
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
-                    <input type="email" id="userEmail" name="email" required class="input-field">
-                </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Username</label>
-                    <input type="text" id="userUsername" name="username" class="input-field">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password <span id="passwordRequired">*</span></label>
-                    <input type="password" id="userPassword" name="password" class="input-field">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave blank to keep current password (when editing)</p>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role *</label>
-                    <select id="userRole" name="role" required class="input-field">
-                        <option value="viewer">Viewer</option>
-                        <option value="staff">Staff</option>
-                        <option value="officer">Officer</option>
-                    </select>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Only Super Admin can assign Administrator role</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
-                    <input type="text" id="userDepartment" name="department" class="input-field">
-                </div>
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status *</label>
-                <select id="userStatus" name="status" required class="input-field">
-                    <option value="active">Active (Approved)</option>
-                    <option value="pending">Pending Approval</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="suspended">Suspended (Denied)</option>
-                </select>
-            </div>
-            
-            <div class="flex justify-end gap-3 mt-6">
-                <button type="button" onclick="closeModal()" class="px-6 py-2 border-2 border-gray-400 dark:border-gray-600 text-gray-800 dark:text-gray-300 hover:!bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-semibold transition-all">
+            <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <button type="button" onclick="closeModal()" class="no-ripple px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95">
                     Cancel
                 </button>
-                <button type="submit" style="background-color: #dc2626 !important; color: #ffffff !important;" class="px-6 py-2 rounded-lg font-semibold transition-all hover:opacity-90">
-                    <i class="bi bi-save mr-2"></i> Save User
+                <button type="submit" class="no-ripple px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center">
+                    <i class="bi bi-check-circle mr-2"></i> Save User
                 </button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- View User Modal -->
+<div id="viewUserModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+    <div class="relative mx-auto p-6 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md my-8">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                    <i class="bi bi-person-fill text-red-600 dark:text-red-400 text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">User Details</h3>
+            </div>
+            <button onclick="closeViewModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all">
+                <i class="bi bi-x-lg text-xl"></i>
+            </button>
+        </div>
+        
+        <div id="viewUserContent" class="space-y-5">
+            <!-- User details will be loaded here -->
+        </div>
+        
+        <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <button onclick="closeViewModal()" class="no-ripple px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+                Close
+            </button>
+        </div>
     </div>
 </div>
 
@@ -473,10 +535,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function openCreateModal() {
     document.getElementById('modalTitle').textContent = 'Add New User';
+    document.getElementById('modalIcon').className = 'bi bi-person-plus-fill text-red-600 dark:text-red-400 text-xl';
     document.getElementById('userForm').reset();
     document.getElementById('userId').value = '';
     document.getElementById('userEmployeeId').value = '';
-    document.getElementById('employeeIdGroup').style.display = 'none';
+    document.getElementById('employeeIdGroup').classList.add('hidden');
     document.getElementById('userFullName').value = '';
     document.getElementById('userPassword').required = true;
     document.getElementById('passwordRequired').style.display = 'inline';
@@ -493,9 +556,10 @@ function editUser(id) {
         .then(data => {
             if (data.success) {
                 document.getElementById('modalTitle').textContent = 'Edit User';
+                document.getElementById('modalIcon').className = 'bi bi-pencil-square text-amber-600 dark:text-amber-400 text-xl';
                 document.getElementById('userId').value = data.user.id;
                 document.getElementById('userEmployeeId').value = data.user.employee_id || 'Auto-generated';
-                document.getElementById('employeeIdGroup').style.display = 'block';
+                document.getElementById('employeeIdGroup').classList.remove('hidden');
                 document.getElementById('userName').value = data.user.full_name || data.user.name;
                 document.getElementById('userFullName').value = data.user.full_name || data.user.name;
                 document.getElementById('userEmail').value = data.user.email;
@@ -514,6 +578,98 @@ function editUser(id) {
         .catch(error => {
             alert('Network error: ' + error);
         });
+}
+
+function viewUser(id) {
+    fetch(App.apiUrl('users', `get-user.php?id=${id}`))
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const user = data.user;
+                const statusColors = {
+                    'active': 'bg-green-100 text-green-800',
+                    'inactive': 'bg-gray-100 text-gray-800',
+                    'suspended': 'bg-red-100 text-red-800',
+                    'pending': 'bg-amber-100 text-amber-800'
+                };
+                const statusClass = statusColors[user.status] || 'bg-gray-100 text-gray-800';
+                
+                const roleColors = {
+                    'administrator': 'bg-purple-100 text-purple-800',
+                    'officer': 'bg-blue-100 text-blue-800',
+                    'staff': 'bg-green-100 text-green-800',
+                    'viewer': 'bg-gray-100 text-gray-800'
+                };
+                const roleClass = roleColors[user.role] || 'bg-gray-100 text-gray-800';
+                
+                document.getElementById('viewUserContent').innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 font-medium">
+                                ${user.full_name || user.name || 'N/A'}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 font-medium">
+                                ${user.email || 'N/A'}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Employee ID</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 font-medium">
+                                ${user.employee_id || 'N/A'}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Username</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 font-medium">
+                                ${user.username || 'N/A'}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Role</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${roleClass}">
+                                    ${user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'N/A'}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                                    ${user.status ? user.status.charAt(0).toUpperCase() + user.status.slice(1) : 'N/A'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Department</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 font-medium">
+                                ${user.department || 'N/A'}
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Created At</label>
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 font-medium">
+                                ${user.created_at ? new Date(user.created_at).toLocaleString() : 'N/A'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('viewUserModal').classList.remove('hidden');
+            } else {
+                alert('Error: ' + (data.error || 'Failed to load user'));
+            }
+        })
+        .catch(error => {
+            alert('Network error: ' + error);
+        });
+}
+
+function closeViewModal() {
+    document.getElementById('viewUserModal').classList.add('hidden');
 }
 
 function saveUser(event) {
