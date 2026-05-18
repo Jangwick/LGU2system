@@ -195,6 +195,31 @@ class DocumentService {
     }
     
     /**
+     * Approve document
+     */
+    public function approveDocument($id) {
+        // Check if document exists
+        $document = $this->documentModel->getById($id);
+        if (!$document) {
+            throw new Exception("Document not found");
+        }
+        
+        // Update document status to approved
+        $success = $this->documentModel->update($id, ['status' => 'approved']);
+        
+        if ($success) {
+            $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_UPDATE, $document['title'], [
+                'status_change' => ['from' => $document['status'] ?? '', 'to' => 'approved']
+            ], ['status' => $document['status'] ?? '']);
+        }
+        
+        return [
+            'success' => $success,
+            'message' => $success ? 'Document approved successfully' : 'Failed to approve document'
+        ];
+    }
+    
+    /**
      * Delete document
      */
     public function deleteDocument($id) {

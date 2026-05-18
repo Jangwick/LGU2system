@@ -771,17 +771,21 @@ function viewDocument(id) {
                                         Quick Actions
                                     </h3>
                                     <div class="grid gap-3">
+                                        ${currentUserRole === 'viewer' ? `
+                                        <button onclick="approveDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-green-700 dark:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-700 transition-colors">
+                                            <i class="bi bi-check-circle mr-3 text-green-500"></i> Approve Document
+                                        </button>
+                                        ` : `
                                         <button onclick="shareDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-share mr-3 text-blue-500"></i> Share Document
                                         </button>
-                                        ${currentUserRole !== 'viewer' ? `
                                         <button onclick="window.print()" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-printer mr-3 text-gray-500"></i> Print Details
                                         </button>
                                         <button onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
-                                        ` : ''}
+                                        `}
                                         <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
                                             ${doc.status !== 'approved' ? `
                                             <button onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
@@ -823,6 +827,39 @@ function shareDocument(id) {
             console.error('Failed to copy link:', err);
         });
     }
+}
+
+/**
+ * Approve document
+ */
+function approveDocument(id) {
+    if (!confirm('Are you sure you want to approve this document?')) {
+        return;
+    }
+    
+    fetch(App.apiUrl('documents', 'api/approve.php'), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Document approved successfully', 'success');
+            // Refresh document list
+            loadDocuments();
+            // Close preview modal
+            closePreviewModal();
+        } else {
+            showToast(data.error || 'Failed to approve document', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error approving document:', error);
+        showToast('An error occurred while approving the document', 'error');
+    });
 }
 
 /**
