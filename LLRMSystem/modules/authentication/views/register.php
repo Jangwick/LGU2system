@@ -146,21 +146,27 @@ require_once __DIR__ . '/../../core/config/config.php';
                         </div>
                         
                         <!-- Department -->
-                        <div>
+                        <div class="relative z-30">
                             <label for="department" class="block text-sm font-medium text-gray-700 mb-1">
                                 Department <span class="text-red-500">*</span>
                             </label>
-                            <select id="department" 
-                                    name="department" 
-                                    required
-                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition bg-white">
-                                <option value="">Select Department</option>
-                                <option value="Legislative Office">Legislative Office</option>
-                                <option value="Mayor's Office">Mayor's Office</option>
-                                <option value="Legal Department">Legal Department</option>
-                                <option value="Records Management">Records Management</option>
-                                <option value="IT Department">IT Department</option>
-                            </select>
+                            <div class="relative custom-select-container">
+                                <div id="department-trigger" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition bg-white cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                                    <span id="department-value">Select Department</span>
+                                    <i class="bi bi-chevron-down text-gray-400"></i>
+                                </div>
+                                <div id="department-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                                    <div class="p-2 space-y-1">
+                                        <div class="department-option px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer text-sm font-bold text-gray-700 transition-colors" data-value="">Select Department</div>
+                                        <div class="department-option px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer text-sm font-bold text-gray-700 transition-colors" data-value="Legislative Office">Legislative Office</div>
+                                        <div class="department-option px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer text-sm font-bold text-gray-700 transition-colors" data-value="Mayor's Office">Mayor's Office</div>
+                                        <div class="department-option px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer text-sm font-bold text-gray-700 transition-colors" data-value="Legal Department">Legal Department</div>
+                                        <div class="department-option px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer text-sm font-bold text-gray-700 transition-colors" data-value="Records Management">Records Management</div>
+                                        <div class="department-option px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer text-sm font-bold text-gray-700 transition-colors" data-value="IT Department">IT Department</div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="department" name="department" required>
+                            </div>
                         </div>
                         
                         <!-- Role (auto-assigned as Staff) -->
@@ -278,6 +284,50 @@ require_once __DIR__ . '/../../core/config/config.php';
     <script src="<?php echo asset('js/config.js'); ?>"></script>
     <script src="<?php echo asset('js/auth.js'); ?>"></script>
     <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+        });
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('department-trigger', 'department-dropdown', 'department-value', 'department', '.department-option', 'Select Department');
+});
+
         // Password visibility toggles
         document.getElementById('toggle-password')?.addEventListener('click', function() {
             const field = document.getElementById('password');

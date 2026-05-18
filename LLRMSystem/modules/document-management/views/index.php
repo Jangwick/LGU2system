@@ -166,39 +166,57 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- Document Type Filter -->
-                <div>
+                <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Document Type</label>
-                    <select id="type-filter" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 hover:border-red-300 dark:hover:border-red-900">
-                        <option value="">All Types</option>
-                        <?php 
-                        $types = ['ordinance', 'resolution', 'session', 'agenda', 'committee', 'other'];
-                        $selectedType = $_GET['type'] ?? '';
-                        foreach ($types as $t): ?>
-                            <option value="<?php echo $t; ?>" <?php echo $selectedType === $t ? 'selected' : ''; ?>>
-                                <?php echo ucfirst($t === 'session' ? 'session minutes' : $t); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="type-filter-trigger" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 hover:border-red-300 dark:hover:border-red-900 cursor-pointer flex items-center justify-between">
+                            <span id="type-filter-value">All Types</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="type-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="type-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Types</div>
+                                <?php 
+                                $types = ['ordinance', 'resolution', 'session', 'agenda', 'committee', 'other'];
+                                $selectedType = $_GET['type'] ?? '';
+                                foreach ($types as $t): ?>
+                                    <div class="type-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo $t; ?>">
+                                        <?php echo ucfirst($t === 'session' ? 'session minutes' : $t); ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" id="type-filter-input" name="type" value="<?php echo $selectedType; ?>">
+                    </div>
                 </div>
                 
                 <!-- Status Filter -->
-                <div>
+                <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                    <select id="status-filter" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                        <option value="">All Status</option>
-                        <?php 
-                        $statuses = [
-                            'draft' => 'Draft',
-                            'pending' => 'Pending Review',
-                            'approved' => 'Approved'
-                        ];
-                        $selectedStatus = $_GET['status'] ?? '';
-                        foreach ($statuses as $val => $label): ?>
-                            <option value="<?php echo $val; ?>" <?php echo $selectedStatus === $val ? 'selected' : ''; ?>>
-                                <?php echo $label; ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="status-filter-trigger" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 cursor-pointer flex items-center justify-between">
+                            <span id="status-filter-value">All Status</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="status-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Status</div>
+                                <?php 
+                                $statuses = [
+                                    'draft' => 'Draft',
+                                    'pending' => 'Pending Review',
+                                    'approved' => 'Approved'
+                                ];
+                                $selectedStatus = $_GET['status'] ?? '';
+                                foreach ($statuses as $value => $label): ?>
+                                    <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo $value; ?>">
+                                        <?php echo $label; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" id="status-filter-input" name="status" value="<?php echo $selectedStatus; ?>">
+                    </div>
                 </div>
             </div>
             
@@ -1447,24 +1465,30 @@ document.addEventListener('keydown', function(e) {
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                         <!-- Document Type -->
-                        <div class="space-y-1.5">
+                        <div class="space-y-1.5 relative z-30">
                             <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
                                 Document Type <span class="text-red-500">*</span>
                             </label>
-                            <div class="relative group">
-                                <i class="bi bi-bookmark-plus absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
-                                <select name="document_type" id="upload-document-type" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
-                                    <option value="">Select Category</option>
-                                    <option value="ordinance">Ordinance</option>
-                                    <option value="resolution">Resolution</option>
-                                    <option value="session">Session Minutes</option>
-                                    <option value="agenda">Agenda</option>
-                                    <option value="committee">Committee Report</option>
-                                    <option value="hearing">Public Hearing</option>
-                                    <option value="consultation">Public Consultation</option>
-                                    <option value="research">Research Document</option>
-                                </select>
-                                <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                            <div class="relative group custom-select-container">
+                                <i class="bi bi-bookmark-plus absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 z-10"></i>
+                                <div id="upload-document-type-trigger" class="w-full pl-11 pr-10 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm cursor-pointer flex items-center justify-between">
+                                    <span id="upload-document-type-value">Select Category</span>
+                                    <i class="bi bi-chevron-down text-gray-400 text-xs"></i>
+                                </div>
+                                <div id="upload-document-type-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                                    <div class="p-2 space-y-1">
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">Select Category</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="ordinance">Ordinance</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="resolution">Resolution</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="session">Session Minutes</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="agenda">Agenda</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="committee">Committee Report</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="hearing">Public Hearing</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="consultation">Public Consultation</div>
+                                        <div class="upload-document-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="research">Research Document</div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="document_type" id="upload-document-type-input" required>
                             </div>
                         </div>
                         
@@ -1507,18 +1531,24 @@ document.addEventListener('keydown', function(e) {
                         </div>
                         
                         <!-- Status -->
-                        <div class="space-y-1.5">
+                        <div class="space-y-1.5 relative z-30">
                             <label class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
                                 Initial Status <span class="text-red-500">*</span>
                             </label>
-                            <div class="relative group">
-                                <i class="bi bi-activity absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
-                                <select name="status" id="status-modal" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
-                                    <option value="draft">Draft</option>
-                                    <option value="published">Published</option>
-                                    <option value="archived">Archived</option>
-                                </select>
-                                <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                            <div class="relative group custom-select-container">
+                                <i class="bi bi-activity absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 z-10"></i>
+                                <div id="status-modal-trigger" class="w-full pl-11 pr-10 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm cursor-pointer flex items-center justify-between">
+                                    <span id="status-modal-value">Draft</span>
+                                    <i class="bi bi-chevron-down text-gray-400 text-xs"></i>
+                                </div>
+                                <div id="status-modal-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                                    <div class="p-2 space-y-1">
+                                        <div class="status-modal-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="draft">Draft</div>
+                                        <div class="status-modal-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="published">Published</div>
+                                        <div class="status-modal-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="archived">Archived</div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="status" id="status-modal-input" required value="draft">
                             </div>
                         </div>
                     </div>
@@ -1541,6 +1571,62 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    // Set initial value
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    // Toggle dropdown
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    // Handle option selection
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+            
+            // Trigger filter change event
+            hiddenInput.dispatchEvent(new Event('change'));
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+// Initialize custom dropdowns when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('type-filter-trigger', 'type-filter-dropdown', 'type-filter-value', 'type-filter-input', '.type-filter-option', 'All Types');
+    initCustomDropdown('status-filter-trigger', 'status-filter-dropdown', 'status-filter-value', 'status-filter-input', '.status-filter-option', 'All Status');
+    initCustomDropdown('upload-document-type-trigger', 'upload-document-type-dropdown', 'upload-document-type-value', 'upload-document-type-input', '.upload-document-type-option', 'Select Category');
+    initCustomDropdown('status-modal-trigger', 'status-modal-dropdown', 'status-modal-value', 'status-modal-input', '.status-modal-option', 'Draft');
+});
+
 // Modal File Upload Handling
 const dropZoneModal = document.getElementById('drop-zone-modal');
 const fileInputModal = document.getElementById('file-input-modal');

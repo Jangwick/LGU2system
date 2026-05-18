@@ -224,13 +224,22 @@ function getIntFileIconBg($mimeType, $fileName = '') {
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div>
+                <div class="relative z-30">
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Source System</label>
-                    <select name="source_system" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg text-sm">
-                        <option>Sangguniang Office App</option>
-                        <option>Public Records Portal</option>
-                        <option>External Research DB</option>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="source-system-trigger" class="w-full border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg text-sm px-4 py-3 cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="source-system-value">Sangguniang Office App</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="source-system-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="source-system-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="Sangguniang Office App">Sangguniang Office App</div>
+                                <div class="source-system-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="Public Records Portal">Public Records Portal</div>
+                                <div class="source-system-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="External Research DB">External Research DB</div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="source_system" id="source-system-input" value="Sangguniang Office App">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">External Ref #</label>
@@ -275,6 +284,50 @@ function getIntFileIconBg($mimeType, $fileName = '') {
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+        });
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('source-system-trigger', 'source-system-dropdown', 'source-system-value', 'source-system-input', '.source-system-option', 'Sangguniang Office App');
+});
+
 function openSimulatorModal() {
     document.getElementById('simulatorModal').classList.remove('hidden');
     document.getElementById('simulatorModal').classList.add('flex');

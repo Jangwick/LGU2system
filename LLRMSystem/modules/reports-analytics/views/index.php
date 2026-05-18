@@ -251,25 +251,43 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         
         <form method="GET" action="<?php echo REPORTS_URL; ?>/api/export.php" class="p-6">
             <div class="space-y-5">
-                <div>
+                <div class="relative z-30">
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Report Type</label>
-                    <select name="report_type" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all shadow-sm hover:border-red-400 dark:hover:border-gray-600" required>
-                        <option value="">Select Report...</option>
-                        <option value="user_activity">User Activity Report</option>
-                        <option value="document_access">Document Access Report</option>
-                        <option value="top_uploaders">Top Uploaders Report</option>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="report-type-trigger" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all shadow-sm hover:border-red-400 dark:hover:border-gray-600 cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="report-type-value">Select Report...</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="report-type-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="report-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">Select Report...</div>
+                                <div class="report-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="user_activity">User Activity Report</div>
+                                <div class="report-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="document_access">Document Access Report</div>
+                                <div class="report-type-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="top_uploaders">Top Uploaders Report</div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="report_type" id="report-type-input" required>
+                    </div>
                 </div>
                 
-                <div>
+                <div class="relative z-30">
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Export Format</label>
-                    <select name="format" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all shadow-sm hover:border-red-400 dark:hover:border-gray-600" required>
-                        <option value="">Select Format...</option>
-                        <option value="pdf">PDF Document</option>
-                        <option value="excel">Excel Spreadsheet (.xlsx)</option>
-                        <option value="word">Word Document (.docx)</option>
-                        <option value="csv">CSV File</option>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="export-format-trigger" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all shadow-sm hover:border-red-400 dark:hover:border-gray-600 cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="export-format-value">Select Format...</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="export-format-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="export-format-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">Select Format...</div>
+                                <div class="export-format-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="pdf">PDF Document</div>
+                                <div class="export-format-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="excel">Excel Spreadsheet (.xlsx)</div>
+                                <div class="export-format-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="word">Word Document (.docx)</div>
+                                <div class="export-format-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="csv">CSV File</div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="format" id="export-format-input" required>
+                    </div>
                 </div>
                 
                 <div class="pt-2">
@@ -303,6 +321,57 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    // Set initial value
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    // Toggle dropdown
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    // Handle option selection
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+// Initialize custom dropdowns when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('report-type-trigger', 'report-type-dropdown', 'report-type-value', 'report-type-input', '.report-type-option', 'Select Report...');
+    initCustomDropdown('export-format-trigger', 'export-format-dropdown', 'export-format-value', 'export-format-input', '.export-format-option', 'Select Format...');
+});
+
 // Chart.js configurations
 const chartColors = {
     blue: 'rgb(59, 130, 246)',

@@ -91,20 +91,38 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <?php if ($user['role'] !== 'super_admin'): ?>
-                    <div>
+                    <div class="relative z-30">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role</label>
-                        <select name="role" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-                            <option value="administrator" <?= $user['role'] === 'administrator' ? 'selected' : '' ?>>Administrator</option>
-                            <option value="staff" <?= $user['role'] === 'staff' ? 'selected' : '' ?>>Staff</option>
-                        </select>
+                        <div class="relative custom-select-container">
+                            <div id="role-trigger" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                                <span id="role-value"><?= $user['role'] === 'administrator' ? 'Administrator' : 'Staff' ?></span>
+                                <i class="bi bi-chevron-down text-gray-400"></i>
+                            </div>
+                            <div id="role-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                                <div class="p-2 space-y-1">
+                                    <div class="role-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="administrator">Administrator</div>
+                                    <div class="role-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="staff">Staff</div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="role" id="role-input" value="<?= $user['role'] ?>">
+                        </div>
                     </div>
 
-                    <div>
+                    <div class="relative z-30">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                        <select name="status" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-                            <option value="active" <?= $user['status'] === 'active' ? 'selected' : '' ?>>Active</option>
-                            <option value="inactive" <?= $user['status'] === 'inactive' ? 'selected' : '' ?>>Inactive</option>
-                        </select>
+                        <div class="relative custom-select-container">
+                            <div id="status-trigger" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                                <span id="status-value"><?= ucfirst($user['status']) ?></span>
+                                <i class="bi bi-chevron-down text-gray-400"></i>
+                            </div>
+                            <div id="status-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                                <div class="p-2 space-y-1">
+                                    <div class="status-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="active">Active</div>
+                                    <div class="status-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="inactive">Inactive</div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="status" id="status-input" value="<?= $user['status'] ?>">
+                        </div>
                     </div>
                     <?php else: ?>
                     <div>
@@ -280,6 +298,51 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+        });
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('role-trigger', 'role-dropdown', 'role-value', 'role-input', '.role-option', 'Administrator');
+    initCustomDropdown('status-trigger', 'status-dropdown', 'status-value', 'status-input', '.status-option', 'Active');
+});
+
 // Mobile Sidebar Functionality
 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 const mobileSidebar = document.getElementById('mobile-sidebar');

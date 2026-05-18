@@ -81,21 +81,39 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search</label>
                     <input type="text" id="searchInput" placeholder="Name, email, or employee ID" value="<?= htmlspecialchars($params['search'] ?? '') ?>" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                 </div>
-                <div>
+                <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role</label>
-                    <select id="roleFilter" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-                        <option value="">All Roles</option>
-                        <option value="administrator" <?= ($params['role'] ?? '') === 'administrator' ? 'selected' : '' ?>>Administrator</option>
-                        <option value="super_admin" <?= ($params['role'] ?? '') === 'super_admin' ? 'selected' : '' ?>>Super Admin</option>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="role-filter-trigger" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="role-filter-value">All Roles</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="role-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Roles</div>
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="administrator">Administrator</div>
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="super_admin">Super Admin</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="roleFilter" value="<?= ($params['role'] ?? '') ?>">
+                    </div>
                 </div>
-                <div>
+                <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                    <select id="statusFilter" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-                        <option value="">All Status</option>
-                        <option value="active" <?= ($params['status'] ?? '') === 'active' ? 'selected' : '' ?>>Active</option>
-                        <option value="inactive" <?= ($params['status'] ?? '') === 'inactive' ? 'selected' : '' ?>>Inactive</option>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="status-filter-trigger" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-700 dark:text-white cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="status-filter-value">All Status</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="status-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Status</div>
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="active">Active</div>
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="inactive">Inactive</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="statusFilter" value="<?= ($params['status'] ?? '') ?>">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
@@ -556,6 +574,51 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+        });
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('role-filter-trigger', 'role-filter-dropdown', 'role-filter-value', 'roleFilter', '.role-filter-option', 'All Roles');
+    initCustomDropdown('status-filter-trigger', 'status-filter-dropdown', 'status-filter-value', 'statusFilter', '.status-filter-option', 'All Status');
+});
+
 // Mobile Sidebar Functionality
 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 const mobileSidebar = document.getElementById('mobile-sidebar');

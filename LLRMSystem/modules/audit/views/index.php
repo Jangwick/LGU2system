@@ -94,43 +94,67 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Filters -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 md:p-6 mb-6 animate-fade-in-up">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 md:p-6 mb-6 animate-fade-in-up pb-12">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-                <div class="lg:col-span-2">
+                <div class="lg:col-span-2 relative z-50">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User</label>
-                    <select name="user_id" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
-                        <option value="">All Users</option>
-                        <?php foreach ($data['users'] as $user): ?>
-                            <option value="<?php echo $user['id']; ?>" 
-                                    <?php echo $data['filters']['user_id'] == $user['id'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($user['full_name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="user-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="user-select-value">All Users</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="user-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="user-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Users</div>
+                                <?php foreach ($data['users'] as $user): ?>
+                                    <div class="user-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo $user['id']; ?>">
+                                        <?php echo htmlspecialchars($user['full_name']); ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" name="user_id" id="user_id_input" value="<?php echo $data['filters']['user_id'] ?? ''; ?>">
+                    </div>
                 </div>
-                <div>
+                <div class="relative z-50">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Action</label>
-                    <select name="action" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
-                        <option value="">All Actions</option>
-                        <?php foreach ($data['actions'] as $action): ?>
-                            <option value="<?php echo e($action); ?>" 
-                                    <?php echo $data['filters']['action'] == $action ? 'selected' : ''; ?>>
-                                <?php echo e(ucfirst($action ?? '')); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="action-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="action-select-value">All Actions</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="action-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="action-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Actions</div>
+                                <?php foreach ($data['actions'] as $action): ?>
+                                    <div class="action-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo e($action); ?>">
+                                        <?php echo e(ucfirst($action ?? '')); ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" name="action" id="action_input" value="<?php echo $data['filters']['action'] ?? ''; ?>">
+                    </div>
                 </div>
-                <div>
+                <div class="relative z-50">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Table</label>
-                    <select name="table_name" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all">
-                        <option value="">All Tables</option>
-                        <?php foreach ($data['tables'] as $table): ?>
-                            <option value="<?php echo e($table); ?>" 
-                                    <?php echo $data['filters']['table_name'] == $table ? 'selected' : ''; ?>>
-                                <?php echo e(str_replace('_', ' ', ucfirst($table ?? ''))); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="table-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="table-select-value">All Tables</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="table-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="table-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Tables</div>
+                                <?php foreach ($data['tables'] as $table): ?>
+                                    <div class="table-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo e($table); ?>">
+                                        <?php echo e(str_replace('_', ' ', ucfirst($table ?? ''))); ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" name="table_name" id="table_name_input" value="<?php echo $data['filters']['table_name'] ?? ''; ?>">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date From</label>
@@ -146,7 +170,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 <div class="flex items-end">
                     <button type="submit" 
-                            class="w-full px-4 py-3.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                            class="no-ripple inline-flex items-center justify-center w-full px-4 py-3.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-colors gap-2 min-w-[120px] h-12 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-funnel"></i> Filter
                     </button>
                 </div>
@@ -164,12 +188,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <div class="flex gap-2">
                         <button type="submit" 
-                                class="flex-1 sm:flex-none px-6 py-3 bg-gray-800 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white font-semibold rounded-lg shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                class="no-ripple inline-flex items-center justify-center flex-1 sm:flex-none px-6 py-3 bg-gray-800 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white font-semibold rounded-lg shadow-md transition-colors gap-2 min-w-[100px] h-12 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                             Search
                         </button>
                         <?php if (!empty($data['filters']['search'])): ?>
                             <a href="?" 
-                               class="px-5 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 rounded-xl transition-all flex items-center justify-center transform active:scale-95">
+                               class="no-ripple inline-flex items-center justify-center px-5 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 rounded-xl transition-colors min-w-[48px] h-12 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                                 <i class="bi bi-x-lg"></i>
                             </a>
                         <?php endif; ?>
@@ -314,6 +338,69 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    // Set initial value
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    // Toggle dropdown
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    // Handle option selection
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+// Initialize all custom dropdowns
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('user-select-trigger', 'user-select-dropdown', 'user-select-value', 'user_id_input', '.user-option', 'All Users');
+    initCustomDropdown('action-select-trigger', 'action-select-dropdown', 'action-select-value', 'action_input', '.action-option', 'All Actions');
+    initCustomDropdown('table-select-trigger', 'table-select-dropdown', 'table-select-value', 'table_name_input', '.table-option', 'All Tables');
+});
+
+// Handle filter and search forms without page refresh
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.querySelector('form[method="GET"]');
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams(formData).toString();
+            window.location.href = '?' + params;
+        });
+    }
+});
+
 // Handle export CSV
 document.querySelector('a[href*="export=csv"]')?.addEventListener('click', function(e) {
     // Let the link work normally for download

@@ -92,36 +92,62 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Filters -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
+                <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                    <select name="role" class="input-field">
-                        <option value="">All Roles</option>
-                        <option value="administrator" <?php echo $data['filters']['role'] == 'administrator' ? 'selected' : ''; ?>>Administrator</option>
-                        <option value="officer" <?php echo $data['filters']['role'] == 'officer' ? 'selected' : ''; ?>>Officer</option>
-                        <option value="staff" <?php echo $data['filters']['role'] == 'staff' ? 'selected' : ''; ?>>Staff</option>
-                        <option value="viewer" <?php echo $data['filters']['role'] == 'viewer' ? 'selected' : ''; ?>>Viewer</option>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="role-filter-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="role-filter-value">All Roles</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="role-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Roles</div>
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="administrator">Administrator</div>
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="officer">Officer</div>
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="staff">Staff</div>
+                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="viewer">Viewer</div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="role" id="role-filter-input" value="<?php echo $data['filters']['role'] ?? ''; ?>">
+                    </div>
                 </div>
-                <div>
+                <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select name="status" class="input-field">
-                        <option value="">All Status</option>
-                        <option value="active" <?php echo $data['filters']['status'] == 'active' ? 'selected' : ''; ?>>Active</option>
-                        <option value="inactive" <?php echo $data['filters']['status'] == 'inactive' ? 'selected' : ''; ?>>Inactive</option>
-                        <option value="suspended" <?php echo $data['filters']['status'] == 'suspended' ? 'selected' : ''; ?>>Suspended</option>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="status-filter-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="status-filter-value">All Status</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="status-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Status</div>
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="active">Active</div>
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="inactive">Inactive</div>
+                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="suspended">Suspended</div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="status" id="status-filter-input" value="<?php echo $data['filters']['status'] ?? ''; ?>">
+                    </div>
                 </div>
-                <div>
+                <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                    <select name="department" class="input-field">
-                        <option value="">All Departments</option>
-                        <?php foreach ($data['departments'] as $dept): ?>
-                            <option value="<?php echo htmlspecialchars($dept); ?>" 
-                                    <?php echo $data['filters']['department'] == $dept ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($dept); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="relative custom-select-container">
+                        <div id="department-filter-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                            <span id="department-filter-value">All Departments</span>
+                            <i class="bi bi-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="department-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                            <div class="p-2 space-y-1">
+                                <div class="department-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Departments</div>
+                                <?php foreach ($data['departments'] as $dept): ?>
+                                    <div class="department-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo htmlspecialchars($dept); ?>">
+                                        <?php echo htmlspecialchars($dept); ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" name="department" id="department-filter-input" value="<?php echo $data['filters']['department'] ?? ''; ?>">
+                    </div>
                 </div>
                 <div class="flex items-end">
                     <button type="submit" class="w-full btn-primary">
@@ -391,6 +417,61 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    // Set initial value
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    // Toggle dropdown
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    // Handle option selection
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+            
+            // Trigger filter change
+            hiddenInput.closest('form').dispatchEvent(new Event('submit'));
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+// Initialize custom dropdowns when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('role-filter-trigger', 'role-filter-dropdown', 'role-filter-value', 'role-filter-input', '.role-filter-option', 'All Roles');
+    initCustomDropdown('status-filter-trigger', 'status-filter-dropdown', 'status-filter-value', 'status-filter-input', '.status-filter-option', 'All Status');
+    initCustomDropdown('department-filter-trigger', 'department-filter-dropdown', 'department-filter-value', 'department-filter-input', '.department-filter-option', 'All Departments');
+});
+
 function openCreateModal() {
     document.getElementById('modalTitle').textContent = 'Add New User';
     document.getElementById('userForm').reset();

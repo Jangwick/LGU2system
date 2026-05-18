@@ -350,16 +350,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             
-            <div>
+            <div class="relative z-30">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select name="category" class="input-field" required>
-                    <option value="">Select category...</option>
-                    <option value="technical">Technical Issue</option>
-                    <option value="account">Account Problem</option>
-                    <option value="document">Document Management</option>
-                    <option value="feature">Feature Request</option>
-                    <option value="other">Other</option>
-                </select>
+                <div class="relative custom-select-container">
+                    <div id="category-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
+                        <span id="category-value">Select category...</span>
+                        <i class="bi bi-chevron-down text-gray-400"></i>
+                    </div>
+                    <div id="category-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                        <div class="p-2 space-y-1">
+                            <div class="category-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">Select category...</div>
+                            <div class="category-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="technical">Technical Issue</div>
+                            <div class="category-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="account">Account Problem</div>
+                            <div class="category-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="document">Document Management</div>
+                            <div class="category-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="feature">Feature Request</div>
+                            <div class="category-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="other">Other</div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="category" id="category-input" required>
+                </div>
             </div>
             
             <div>
@@ -425,6 +434,56 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <script>
+// Custom Dropdown Helper Function
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const valueDisplay = document.getElementById(valueId);
+    const hiddenInput = document.getElementById(inputId);
+    const options = document.querySelectorAll(optionClass);
+    
+    if (!trigger || !dropdown || !valueDisplay || !hiddenInput) return;
+    
+    // Set initial value
+    const selectedValue = hiddenInput.value;
+    if (selectedValue) {
+        const selectedOption = document.querySelector(`${optionClass}[data-value="${selectedValue}"]`);
+        if (selectedOption) {
+            valueDisplay.textContent = selectedOption.textContent;
+        }
+    }
+    
+    // Toggle dropdown
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    // Handle option selection
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            valueDisplay.textContent = text;
+            hiddenInput.value = value;
+            dropdown.classList.add('hidden');
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+// Initialize custom dropdowns when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initCustomDropdown('category-trigger', 'category-dropdown', 'category-value', 'category-input', '.category-option', 'Select category...');
+});
+
 function toggleFAQ(id) {
     const content = document.getElementById(`faq-content-${id}`);
     const icon = document.getElementById(`faq-icon-${id}`);
