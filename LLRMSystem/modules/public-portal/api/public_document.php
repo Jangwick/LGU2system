@@ -1,7 +1,7 @@
 <?php
 /**
  * Public Document Details API - No authentication required
- * Only returns details for approved/archived documents
+ * Only returns details for approved documents
  * Never exposes file_path
  */
 header('Content-Type: application/json');
@@ -29,7 +29,7 @@ try {
         LEFT JOIN users u ON d.uploaded_by = u.id
         WHERE d.id = :id
           AND d.deleted_at IS NULL
-          AND d.status IN ('approved', 'archived')
+          AND d.status IN ('approved')
     ");
 
     $stmt->execute([':id' => (int)$id]);

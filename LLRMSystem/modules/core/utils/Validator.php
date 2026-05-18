@@ -106,7 +106,7 @@ class Validator {
      * Validate document status
      */
     public function documentStatus($field, $message = null) {
-        $allowedStatuses = ['draft', 'pending', 'approved', 'rejected', 'archived', 'superseded'];
+        $allowedStatuses = ['draft', 'pending', 'approved', 'rejected', 'superseded'];
         return $this->in($field, $allowedStatuses, $message ?? 'Invalid document status');
     }
     

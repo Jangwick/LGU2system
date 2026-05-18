@@ -41,8 +41,7 @@ function getStatusBadgeClass($status) {
         'approved' => 'badge-success',
         'pending' => 'badge-warning',
         'draft' => 'badge-secondary',
-        'rejected' => 'badge-danger',
-        'archived' => 'badge-gray'
+        'rejected' => 'badge-danger'
     ];
     return 'badge ' . ($badges[strtolower($status)] ?? 'badge-info');
 }
@@ -182,7 +181,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="approved">Approved</div>
                                                 <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="pending">Pending</div>
                                                 <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="draft">Draft</div>
-                                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="archived">Archived</div>
                                             </div>
                                         </div>
                                         <input type="hidden" name="status" id="status-filter-input" value="<?= ($filters['status'] ?? '') ?>">

@@ -275,8 +275,7 @@ class DashboardController {
             'draft' => 'badge-secondary',
             'pending' => 'badge-warning',
             'approved' => 'badge-success',
-            'rejected' => 'badge-danger',
-            'archived' => 'badge-info'
+            'rejected' => 'badge-danger'
         ];
         
         return $classes[$status] ?? 'badge-secondary';

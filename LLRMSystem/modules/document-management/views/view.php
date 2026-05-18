@@ -38,11 +38,11 @@ $isConfidential = in_array($confidentialityLevel, ['confidential', 'restricted']
 $isEncrypted = $document['is_encrypted'] ?? false;
 
 
-// Check if viewer can access this document (approved/archived/rejected)
+// Check if viewer can access this document (approved/rejected)
 $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-if ($userRole === 'viewer' && !in_array($document['status'], ['approved', 'archived', 'rejected'])) {
+if ($userRole === 'viewer' && !in_array($document['status'], ['approved', 'rejected'])) {
     require_once __DIR__ . '/../../core/config/config.php';
-    $_SESSION['error_message'] = 'Access denied. Viewers can only view approved, archived, and rejected documents.';
+    $_SESSION['error_message'] = 'Access denied. Viewers can only view approved and rejected documents.';
     redirect(DOCUMENTS_INDEX_URL);
 }
 
@@ -66,7 +66,6 @@ function getStatusBadge($status) {
         'pending' => 'badge-warning',
         'approved' => 'badge-success',
         'rejected' => 'badge-danger',
-        'archived' => 'badge-gray',
         'superseded' => 'badge-purple'
     ];
     return $badges[$status] ?? 'badge-secondary';

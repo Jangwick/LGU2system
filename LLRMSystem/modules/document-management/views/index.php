@@ -60,8 +60,7 @@ function getStatusBadge($status) {
         'draft' => '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
         'pending' => '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
         'approved' => '<span class="badge badge-success"><i class="bi bi-check-circle mr-1"></i>Approved</span>',
-        'rejected' => '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>',
-        'archived' => '<span class="badge badge-gray"><i class="bi bi-archive mr-1"></i>Archived</span>'
+        'rejected' => '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>'
     ];
     return $badges[$status] ?? '<span class="badge badge-info">' . ucfirst($status) . '</span>';
 }
@@ -908,8 +907,7 @@ function getStatusBadgeHTML(status) {
         'draft': '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
         'pending': '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
         'approved': '<span class="badge badge-success"><i class="bi bi-check-circle mr-1"></i>Approved</span>',
-        'rejected': '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>',
-        'archived': '<span class="badge badge-gray"><i class="bi bi-archive mr-1"></i>Archived</span>'
+        'rejected': '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>'
     };
     return badges[s] || `<span class="badge badge-info">${status}</span>`;
 }
@@ -1545,7 +1543,6 @@ document.addEventListener('keydown', function(e) {
                                     <div class="p-2 space-y-1">
                                         <div class="status-modal-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="draft">Draft</div>
                                         <div class="status-modal-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="published">Published</div>
-                                        <div class="status-modal-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="archived">Archived</div>
                                     </div>
                                 </div>
                                 <input type="hidden" name="status" id="status-modal-input" required value="draft">

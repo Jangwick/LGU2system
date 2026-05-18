@@ -39,9 +39,9 @@ class Document {
         
         $params = [];
         
-        // Role-based filtering: Viewers can see approved, archived, and rejected documents
+        // Role-based filtering: Viewers can see approved and rejected documents
         if (!empty($filters['user_role']) && $filters['user_role'] === 'viewer') {
-            $sql .= " AND d.status IN ('approved', 'archived', 'rejected')";
+            $sql .= " AND d.status IN ('approved', 'rejected')";
         }
         
         // Apply filters

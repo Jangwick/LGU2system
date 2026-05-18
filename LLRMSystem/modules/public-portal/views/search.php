@@ -35,7 +35,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'suggestions') {
     $q = $_GET['q'] ?? '';
     if (strlen($q) >= 2) {
         $suggestions = $searchService->getSuggestions($q, 10);
-        // Filter to only approved/archived
+        // Filter to only approved
         $filtered = [];
         foreach ($suggestions as $s) {
             // getSuggestions doesn't return status, so we return all - the actual search filters by status
@@ -74,17 +74,15 @@ try {
             $pf = $filters; $pf['limit'] = 100; $pf['offset'] = 0;
             $allResults = $searchService->hybridSearch($query, $pf);
         }
-        $allResults = array_values(array_filter($allResults, fn($d) => in_array(strtolower($d['status'] ?? ''), ['approved', 'archived'])));
+        $allResults = array_values(array_filter($allResults, fn($d) => in_array(strtolower($d['status'] ?? ''), ['approved'])));
         $total = count($allResults);
         $results = array_slice($allResults, ($page - 1) * $perPage, $perPage);
     } else {
         $f1 = $filters; $f1['status'] = 'approved';
         $r1 = $searchService->search('', $f1); $t1 = $searchService->getCount('', $f1);
-        $f2 = $filters; $f2['status'] = 'archived';
-        $r2 = $searchService->search('', $f2); $t2 = $searchService->getCount('', $f2);
-        $all = array_merge($r1, $r2);
+        $all = $r1;
         usort($all, fn($a,$b) => strtotime($b['created_at']) - strtotime($a['created_at']));
-        $total = $t1 + $t2;
+        $total = $t1;
         $results = array_slice($all, ($page - 1) * $perPage, $perPage);
     }
 } catch (Exception $e) { $results = []; $total = 0; }
@@ -97,7 +95,7 @@ function getPublicTypeIcon($t) {
     return $i[strtolower($t)] ?? 'bi-file-earmark text-gray-600 dark:text-gray-400';
 }
 function getPublicStatusBadge($s) {
-    $b = ['approved'=>'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800','archived'=>'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'];
+    $b = ['approved'=>'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800'];
     return $b[strtolower($s)] ?? 'bg-gray-100 text-gray-600 border-gray-200';
 }
 function getFacetCount($facets, $type) {
@@ -235,7 +233,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                     </div>
                 </div>
                 <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 shadow-sm">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed"><i class="bi bi-info-circle text-red-500 mr-1"></i>This portal shows only <strong>approved</strong> and <strong>archived</strong> records. For full access, please <a href="<?= LOGIN_URL ?>" class="text-red-600 font-bold hover:underline">sign in</a>.</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed"><i class="bi bi-info-circle text-red-500 mr-1"></i>This portal shows only <strong>approved</strong> records. For full access, please <a href="<?= LOGIN_URL ?>" class="text-red-600 font-bold hover:underline">sign in</a>.</p>
                 </div>
             </aside>
 

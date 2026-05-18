@@ -134,7 +134,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <option value="pending" <?= $document['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
                                 <option value="approved" <?= $document['status'] === 'approved' ? 'selected' : '' ?>>Approved</option>
                                 <option value="rejected" <?= $document['status'] === 'rejected' ? 'selected' : '' ?>>Rejected</option>
-                                <option value="archived" <?= $document['status'] === 'archived' ? 'selected' : '' ?>>Archived</option>
                                 <option value="superseded" <?= $document['status'] === 'superseded' ? 'selected' : '' ?>>Superseded</option>
                             </select>
                         </div>

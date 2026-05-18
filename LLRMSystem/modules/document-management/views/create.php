@@ -181,7 +181,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <option value="draft">Draft</option>
                                 <option value="pending">Pending Review</option>
                                 <option value="approved">Approved</option>
-                                <option value="archived">Archived</option>
                             </select>
                         </div>
                     </div>

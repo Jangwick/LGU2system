@@ -154,16 +154,16 @@ class PermissionMiddleware {
         // Staff can edit their own documents or view any approved documents
         if ($userRole === 'staff') {
             if ($action === 'view') {
-                return in_array($document['status'], ['approved', 'archived', 'pending']);
+                return in_array($document['status'], ['approved', 'pending']);
             }
             if (in_array($action, ['edit', 'delete'])) {
                 return $document['uploaded_by'] == $userId;
             }
         }
         
-        // Viewers can only view approved/archived documents
+        // Viewers can only view approved documents
         if ($userRole === 'viewer') {
-            return $action === 'view' && in_array($document['status'], ['approved', 'archived']);
+            return $action === 'view' && in_array($document['status'], ['approved']);
         }
         
         return false;

@@ -54,7 +54,7 @@ try {
         'offset' => ($page - 1) * $perPage
     ];
 
-    // === SECURITY: Force status to only show approved/archived ===
+    // === SECURITY: Force status to only show approved ===
     // This is enforced server-side and cannot be overridden by query params
 
     if (!empty($query)) {
@@ -62,9 +62,9 @@ try {
 
         if ($mode === 'semantic') {
             $allResults = $searchService->semanticSearch($query, $filters);
-            // Filter to only approved/archived
+            // Filter to only approved
             $allResults = array_filter($allResults, function($doc) {
-                return in_array(strtolower($doc['status'] ?? ''), ['approved', 'archived']);
+                return in_array(strtolower($doc['status'] ?? ''), ['approved']);
             });
             $allResults = array_values($allResults);
             $total = count($allResults);
@@ -74,9 +74,9 @@ try {
             $poolFilters['limit'] = 100;
             $poolFilters['offset'] = 0;
             $allResults = $searchService->hybridSearch($query, $poolFilters);
-            // Filter to only approved/archived
+            // Filter to only approved
             $allResults = array_filter($allResults, function($doc) {
-                return in_array(strtolower($doc['status'] ?? ''), ['approved', 'archived']);
+                return in_array(strtolower($doc['status'] ?? ''), ['approved']);
             });
             $allResults = array_values($allResults);
             $total = count($allResults);
@@ -85,27 +85,20 @@ try {
         // Manual pagination
         $results = array_slice($allResults, ($page - 1) * $perPage, $perPage);
     } else {
-        // Empty query - show all approved/archived documents
-        $filters['status'] = 'approved'; // Start with approved
-        $approvedResults = $searchService->search('', $filters);
-        $approvedTotal = $searchService->getCount('', $filters);
-
-        $filters['status'] = 'archived';
-        $archivedResults = $searchService->search('', $filters);
-        $archivedTotal = $searchService->getCount('', $filters);
-
-        $results = array_merge($approvedResults, $archivedResults);
+        // Empty query - show all approved documents
+        $filters['status'] = 'approved';
+        $results = $searchService->search('', $filters);
+        $total = $searchService->getCount('', $filters);
         // Sort by created_at descending
         usort($results, function($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
-        $total = $approvedTotal + $archivedTotal;
 
-        // Manual pagination for merged results
+        // Manual pagination for results
         $results = array_slice($results, ($page - 1) * $perPage, $perPage);
     }
 
-    // Get facets (filtered for public - only count approved/archived)
+    // Get facets (filtered for public - only count approved)
     $facets = $searchService->getFacets($query);
 
     // Strip sensitive fields from results
