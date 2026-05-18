@@ -60,6 +60,11 @@ class DocumentController {
     public function show($id) {
         try {
             $document = $this->documentService->getDocument($id);
+            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+            
+            if ($userRole === 'viewer' && !in_array($document['status'] ?? '', ['approved', 'rejected'], true)) {
+                throw new Exception("Access denied. Viewers can only view approved and rejected documents.");
+            }
             
             // Fetch extra info
             $model = new Document($this->db);

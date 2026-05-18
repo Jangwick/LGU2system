@@ -35,7 +35,8 @@ class SearchController {
             'date_to' => $_GET['date_to'] ?? '',
             'tags' => $_GET['tags'] ?? '',
             'limit' => $perPage,
-            'offset' => ($page - 1) * $perPage
+            'offset' => ($page - 1) * $perPage,
+            'user_role' => strtolower(trim($_SESSION['user_role'] ?? 'viewer'))
         ];
         
         // Handle different search modes

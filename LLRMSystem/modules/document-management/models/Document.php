@@ -287,6 +287,11 @@ class Document {
         $sql = "SELECT COUNT(*) as total FROM legislative_documents WHERE deleted_at IS NULL";
         $params = [];
         
+        // Role-based filtering: Viewers can see approved and rejected documents
+        if (!empty($filters['user_role']) && $filters['user_role'] === 'viewer') {
+            $sql .= " AND status IN ('approved', 'rejected')";
+        }
+        
         if (!empty($filters['search'])) {
             $sql .= " AND (title LIKE :search1 OR reference_number LIKE :search2 OR description LIKE :search3)";
             $searchValue = '%' . $filters['search'] . '%';

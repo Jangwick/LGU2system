@@ -43,6 +43,9 @@ class SearchService {
                 WHERE d.deleted_at IS NULL";
         
         $params = [];
+        if (!empty($filters['user_role']) && $filters['user_role'] === 'viewer') {
+            $sql .= " AND d.status IN ('approved', 'rejected')";
+        }
         if (!empty($filters['type'])) {
             $this->applyTypeFilter($sql, $params, $filters['type']);
         }
@@ -228,6 +231,9 @@ class SearchService {
                 WHERE d.deleted_at IS NULL";
         
         $params = [];
+        if (!empty($filters['user_role']) && $filters['user_role'] === 'viewer') {
+            $sql .= " AND d.status IN ('approved', 'rejected')";
+        }
         
         // Text search using LIKE (more compatible than FULLTEXT)
         if (!empty($query)) {
@@ -424,6 +430,9 @@ class SearchService {
                 WHERE d.deleted_at IS NULL";
         
         $params = [];
+        if (!empty($filters['user_role']) && $filters['user_role'] === 'viewer') {
+            $sql .= " AND d.status IN ('approved', 'rejected')";
+        }
         
         // Use the same LIKE logic as search() for consistency
         if (!empty($query)) {
