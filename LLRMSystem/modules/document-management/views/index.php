@@ -105,7 +105,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </button>
                     <?php endif; ?>
                     <div class="relative" id="export-dropdown">
-                        <button onclick="toggleExportMenu()" class="flex items-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm">
+                        <button onclick="toggleExportMenu()" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                             <i class="bi bi-download mr-2"></i>
                             Export
                             <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>
