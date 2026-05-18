@@ -32,12 +32,12 @@
     </footer>
     
     <!-- Back to Top Button -->
-    <button id="back-to-top" 
-            style="position: fixed; bottom: 90px; right: 26px; z-index: 99999; width: 46px; height: 46px; background-color: #dc2626; color: white; border-radius: 50%; border: 3px solid #ffffff; cursor: pointer; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); display: none; align-items: center; justify-content: center; transition: all 0.3s ease;"
+    <button id="back-to-top" class="no-ripple"
+            style="position: fixed; bottom: 90px; right: 26px; z-index: 99999; width: 46px; height: 46px; background-color: #dc2626; color: white; border-radius: 50%; border: 3px solid #ffffff; cursor: pointer; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); display: none; align-items: center; justify-content: center;"
             title="Back to top"
             aria-label="Scroll to top">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16" style="pointer-events: none;">
+            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
         </svg>
     </button>
     
@@ -92,18 +92,6 @@
         
         // Add click handler
         btn.onclick = scrollToTop;
-        
-        // Add hover effect
-        btn.onmouseover = function() { 
-            this.style.backgroundColor = '#b91c1c'; 
-            this.style.transform = 'scale(1.1)';
-            this.style.boxShadow = '0 6px 20px rgba(220, 38, 38, 0.6)';
-        };
-        btn.onmouseout = function() { 
-            this.style.backgroundColor = '#dc2626'; 
-            this.style.transform = 'scale(1)';
-            this.style.boxShadow = '0 4px 15px rgba(220, 38, 38, 0.5)';
-        };
         
         // Listen for scroll on window
         window.addEventListener('scroll', checkScroll, { passive: true });

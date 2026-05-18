@@ -1137,6 +1137,24 @@ nav ul li a.bg-red-600 {
     z-index: 9999;
 }
 
+#back-to-top,
+#back-to-top:hover,
+#back-to-top:active,
+#back-to-top:focus {
+    transform: none !important;
+    outline: none !important;
+}
+
+#back-to-top svg,
+#back-to-top:active svg,
+#back-to-top:focus svg {
+    transform: none !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+}
+
 #back-to-top.translate-y-0 {
     transform: translateY(0) !important;
 }
