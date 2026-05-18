@@ -99,7 +99,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button onclick="openUploadModal()" class="flex items-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm">
+                    <button onclick="openUploadModal()" class="no-ripple inline-flex items-center justify-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[165px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-plus-circle mr-2"></i>
                         Upload Document
                     </button>
@@ -1410,7 +1410,7 @@ document.addEventListener('keydown', function(e) {
                             <p class="text-lg font-black text-gray-900 dark:text-gray-100 mb-2">Ingest New Document</p>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 max-w-xs mx-auto">Drop your legislative files here or browse for local records.</p>
                             <input type="file" id="file-input-modal" name="document_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="hidden" required>
-                            <button type="button" onclick="document.getElementById('file-input-modal').click()" class="bg-gray-900 dark:bg-black text-white px-10 py-3.5 rounded-xl font-black uppercase tracking-[0.15em] text-[11px] shadow-xl transition transform active:scale-95 inline-flex items-center">
+                            <button type="button" onclick="event.stopPropagation(); document.getElementById('file-input-modal').click()" class="no-ripple bg-gray-900 dark:bg-black text-white px-10 py-3.5 rounded-xl font-black uppercase tracking-[0.15em] text-[11px] shadow-xl transition-colors inline-flex items-center justify-center min-w-[170px] h-12 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                                 <i class="bi bi-plus-lg mr-2 font-black"></i> Choose File
                             </button>
                             <p class="text-[10px] text-gray-400 mt-8 uppercase tracking-widest font-bold">
