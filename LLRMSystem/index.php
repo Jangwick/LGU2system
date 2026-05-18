@@ -313,10 +313,10 @@ $pageTitle = "Home";
     </nav>
 
     <!-- Floating Mobile Toggle -->
-    <button id="mobile-landing-toggle" class="lg:hidden fixed top-[70px] left-1/2 -translate-x-1/2 z-40 p-2 text-gray-900 bg-white/90 backdrop-blur-md border border-gray-100 rounded-xl shadow-xl hover:bg-gray-50 transition-all flex items-center justify-center animate-bounce-in min-w-[60px]">
+    <button id="mobile-landing-toggle" class="lg:hidden fixed top-[55px] left-1/2 -translate-x-1/2 z-40 p-1.5 text-gray-900 bg-white/90 backdrop-blur-md border-x border-b border-gray-100 rounded-b-lg shadow-xl hover:bg-gray-50 transition-all flex items-center justify-center animate-bounce-in min-w-[48px]">
         <div class="flex flex-col items-center">
-            <i class="bi bi-list text-lg leading-none mb-1"></i>
-            <span class="text-[8px] font-black uppercase tracking-tighter leading-none">Menu</span>
+            <i class="bi bi-list text-base leading-none mb-0.5"></i>
+            <span class="text-[7px] font-black uppercase tracking-tighter leading-none">Menu</span>
         </div>
     </button>
     
