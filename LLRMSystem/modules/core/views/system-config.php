@@ -92,7 +92,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Database Information (Read-only) -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-database mr-2 text-red-600"></i>Database Information
                 </h2>
@@ -114,7 +114,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Document Statistics (Read-only) -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-file-earmark-text mr-2 text-red-600"></i>Document Statistics
                 </h2>
@@ -132,7 +132,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Security Settings (Editable) -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-shield-lock mr-2 text-red-600"></i>Security Settings
                 </h2>
@@ -154,7 +154,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- General Settings (Editable) -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-gear mr-2 text-red-600"></i>General Settings
                 </h2>
@@ -180,7 +180,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
 
             <!-- Maintenance Mode (Editable) -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-500">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                     <i class="bi bi-tools mr-2 text-red-600"></i>Maintenance Mode
                 </h2>

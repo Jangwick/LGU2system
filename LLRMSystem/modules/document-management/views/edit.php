@@ -65,7 +65,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 md:p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 md:p-6 animate-fade-in">
         <div class="max-w-4xl mx-auto">
             <!-- Back Button -->
             <div class="mb-4 flex animate-fade-in">

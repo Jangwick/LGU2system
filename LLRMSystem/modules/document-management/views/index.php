@@ -88,7 +88,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-6 animate-fade-in">
         <!-- Header Section -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -154,7 +154,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </button>
         
         <!-- Filters Section -->
-        <div id="filters-section" class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up animation-delay-100 hidden md:block border border-transparent dark:border-gray-800">
+        <div id="filters-section" class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="sm:col-span-2 md:col-span-2">
@@ -271,7 +271,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Documents Table -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200 border border-transparent dark:border-gray-700">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up border border-transparent dark:border-gray-700">
             <!-- Table Header Actions -->
             <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
                 <div class="flex flex-wrap items-center justify-between gap-y-4">
@@ -410,8 +410,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                             $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
                                             $isApproved = ($doc['status'] ?? '') === 'approved';
-                                            $canEdit = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                                            $canDelete = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                            $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                            $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
                                             <button class="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
@@ -482,7 +482,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                     $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
                                     $isApproved = ($doc['status'] ?? '') === 'approved';
-                                    $canEdit = (in_array($userRole, ['administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                    $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                     $canDelete = $canEdit; // Same policy for mobile
                                     ?>
                                     <?php if ($canEdit): ?>

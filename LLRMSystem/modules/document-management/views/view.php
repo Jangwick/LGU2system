@@ -103,7 +103,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php include_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
     
-    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 md:p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 md:p-6 animate-fade-in">
         <!-- Back Button -->
         <div class="mb-4 flex animate-fade-in">
             <a href="<?= DOCUMENTS_INDEX_URL ?>" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:border-red-100 dark:hover:border-red-900/40 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all shadow-sm group">
@@ -169,7 +169,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-4 md:space-y-6">
                 <!-- Document Details -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100 <?= $isEncrypted ? 'blur-sm opacity-75' : '' ?>" <?= $isEncrypted ? 'title="This document is encrypted"' : '' ?>>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up <?= $isEncrypted ? 'blur-sm opacity-75' : '' ?>" <?= $isEncrypted ? 'title="This document is encrypted"' : '' ?>>
                     <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">Document Information</h2>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -221,7 +221,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
 
                 <!-- Version History -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-200">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up">
                     <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Version History</h2>
                     
                     <?php if (empty($versions)): ?>
