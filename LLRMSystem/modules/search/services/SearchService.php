@@ -44,8 +44,7 @@ class SearchService {
         
         $params = [];
         if (!empty($filters['type'])) {
-            $sql .= " AND d.document_type = :type";
-            $params[':type'] = $filters['type'];
+            $this->applyTypeFilter($sql, $params, $filters['type']);
         }
         if (!empty($filters['status'])) {
             $sql .= " AND d.status = :status";
@@ -242,8 +241,7 @@ class SearchService {
         
         // Apply filters
         if (!empty($filters['type'])) {
-            $sql .= " AND d.document_type = :type";
-            $params[':type'] = $filters['type'];
+            $this->applyTypeFilter($sql, $params, $filters['type']);
         }
         
         if (!empty($filters['status'])) {
@@ -438,8 +436,7 @@ class SearchService {
         }
         
         if (!empty($filters['type'])) {
-            $sql .= " AND d.document_type = :type";
-            $params[':type'] = $filters['type'];
+            $this->applyTypeFilter($sql, $params, $filters['type']);
         }
         
         if (!empty($filters['status'])) {
@@ -465,5 +462,26 @@ class SearchService {
         
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int)$result['total'];
+    }
+
+    private function applyTypeFilter(&$sql, &$params, $typeFilter) {
+        if (is_array($typeFilter)) {
+            $types = array_values(array_filter($typeFilter, 'strlen'));
+
+            if (!empty($types)) {
+                $placeholders = [];
+
+                foreach ($types as $index => $type) {
+                    $placeholder = ':type' . $index;
+                    $placeholders[] = $placeholder;
+                    $params[$placeholder] = $type;
+                }
+
+                $sql .= " AND d.document_type IN (" . implode(',', $placeholders) . ")";
+            }
+        } else {
+            $sql .= " AND d.document_type = :type";
+            $params[':type'] = $typeFilter;
+        }
     }
 }

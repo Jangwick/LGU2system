@@ -136,8 +136,8 @@ class DocumentManager {
 
     initializeFilters() {
         const searchInput = document.getElementById('main-search');
-        const typeFilter = document.getElementById('type-filter');
-        const statusFilter = document.getElementById('status-filter');
+        const typeFilter = document.getElementById('type-filter-input') || document.getElementById('type-filter');
+        const statusFilter = document.getElementById('status-filter-input') || document.getElementById('status-filter');
 
         if (searchInput) {
             let searchTimeout;
@@ -204,8 +204,8 @@ class DocumentManager {
 
     applyFilters() {
         const searchInput = document.getElementById('main-search');
-        const typeFilter = document.getElementById('type-filter');
-        const statusFilter = document.getElementById('status-filter');
+        const typeFilter = document.getElementById('type-filter-input') || document.getElementById('type-filter');
+        const statusFilter = document.getElementById('status-filter-input') || document.getElementById('status-filter');
 
         const params = new URLSearchParams(window.location.search);
 

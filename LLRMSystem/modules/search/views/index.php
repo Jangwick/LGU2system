@@ -816,10 +816,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const filterData = new FormData(filterForm);
                 const mainData = new FormData(mainForm);
-                const params = new URLSearchParams(filterData);
+                const params = new URLSearchParams();
+                
+                // Handle checkbox arrays manually
+                const checkboxes = filterForm.querySelectorAll('input[type="checkbox"][name="type[]"]:checked');
+                const typeValues = Array.from(checkboxes).map(cb => cb.value);
+                typeValues.forEach(val => params.append('type[]', val));
+                
+                // Handle other form fields
+                for (const [key, value] of filterData.entries()) {
+                    if (key !== 'type[]') {
+                        params.set(key, value);
+                    }
+                }
+                
+                // Merge main form data
                 for (const [key, value] of mainData.entries()) {
                     params.set(key, value);
                 }
+                
                 params.set('page', page);
                 
                 const url = `${window.location.pathname}?${params.toString()}`;

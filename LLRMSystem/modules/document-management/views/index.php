@@ -1625,6 +1625,40 @@ document.addEventListener('DOMContentLoaded', function() {
     initCustomDropdown('status-filter-trigger', 'status-filter-dropdown', 'status-filter-value', 'status-filter-input', '.status-filter-option', 'All Status');
     initCustomDropdown('upload-document-type-trigger', 'upload-document-type-dropdown', 'upload-document-type-value', 'upload-document-type-input', '.upload-document-type-option', 'Select Category');
     initCustomDropdown('status-modal-trigger', 'status-modal-dropdown', 'status-modal-value', 'status-modal-input', '.status-modal-option', 'Draft');
+    
+    // Add event listeners for filter inputs to trigger form submission
+    const typeFilterInput = document.getElementById('type-filter-input');
+    const statusFilterInput = document.getElementById('status-filter-input');
+    
+    if (typeFilterInput) {
+        typeFilterInput.addEventListener('change', function() {
+            // Get current URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            // Update type parameter
+            if (this.value) {
+                urlParams.set('type', this.value);
+            } else {
+                urlParams.delete('type');
+            }
+            // Reload page with new parameters
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        });
+    }
+    
+    if (statusFilterInput) {
+        statusFilterInput.addEventListener('change', function() {
+            // Get current URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            // Update status parameter
+            if (this.value) {
+                urlParams.set('status', this.value);
+            } else {
+                urlParams.delete('status');
+            }
+            // Reload page with new parameters
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        });
+    }
 });
 
 // Modal File Upload Handling
