@@ -1463,7 +1463,6 @@ document.addEventListener('keydown', function(e) {
                                     <option value="hearing">Public Hearing</option>
                                     <option value="consultation">Public Consultation</option>
                                     <option value="research">Research Document</option>
-                                    <option value="other">Other</option>
                                 </select>
                                 <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                             </div>
