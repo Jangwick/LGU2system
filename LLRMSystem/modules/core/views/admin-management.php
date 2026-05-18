@@ -54,7 +54,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 <div class="flex-1 flex flex-col overflow-hidden">
     <?php require_once __DIR__ . '/../../core/layouts/navbar.php'; ?>
 
-    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 p-6 animate-fade-in">
         <!-- Page Header -->
         <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl shadow-xl p-8 mb-6 text-white transform hover:scale-[1.01] transition-all duration-300 relative overflow-hidden">
             <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -75,7 +75,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Search and Filter -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6 animate-fade-in-up">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search</label>
@@ -130,7 +130,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Administrators Table -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up animation-delay-100">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 animate-fade-in-up">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white">Administrators & Super Admins</h2>
                 <span class="text-sm text-gray-500 dark:text-gray-400">
