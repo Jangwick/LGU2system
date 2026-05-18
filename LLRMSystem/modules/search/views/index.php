@@ -182,7 +182,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <div class="p-2 space-y-1">
                                                 <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Statuses</div>
                                                 <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="approved">Approved</div>
-                                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="pending">Pending</div>
                                                 <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="draft">Draft</div>
                                             </div>
                                         </div>
@@ -205,7 +204,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </div>
                                 </div>
 
-                                <button type="submit" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                                <button type="submit" class="no-ripple w-full h-12 min-h-12 max-h-12 overflow-hidden px-4 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-lg shadow-red-600/20 transition-colors flex items-center justify-center gap-2 transform-none hover:transform-none active:transform-none flex-shrink-0">
                                     <i class="bi bi-funnel-fill"></i> Apply Filters
                                 </button>
                             </form>
