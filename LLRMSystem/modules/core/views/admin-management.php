@@ -92,7 +92,6 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                             <div class="p-2 space-y-1">
                                 <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Roles</div>
                                 <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="administrator">Administrator</div>
-                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="super_admin">Super Admin</div>
                             </div>
                         </div>
                         <input type="hidden" id="roleFilter" value="<?= ($params['role'] ?? '') ?>">

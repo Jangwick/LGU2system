@@ -33,8 +33,8 @@ class UserController {
         $perPage = 20;
         $offset = ($page - 1) * $perPage;
         
-        // Build query
-        $query = "SELECT * FROM users WHERE 1=1";
+        // Build query - Exclude super_admin from user management list as they are higher authority
+        $query = "SELECT * FROM users WHERE role != 'super_admin'";
         $params = [];
         
         if ($filters['role']) {

@@ -46,8 +46,8 @@ class SuperAdminController {
             $selectColumns .= ", last_login";
         }
 
-        // Build query
-        $whereConditions = ["role IN ('administrator', 'super_admin')"];
+        // Build query - Exclude super_admin from admin management list as they are higher authority
+        $whereConditions = ["role = 'administrator'"];
         $queryParams = [];
 
         if ($search) {
@@ -57,7 +57,7 @@ class SuperAdminController {
             $queryParams[] = "%$search%";
         }
 
-        if ($roleFilter && in_array($roleFilter, ['administrator', 'super_admin'])) {
+        if ($roleFilter && $roleFilter === 'administrator') {
             $whereConditions[] = "role = ?";
             $queryParams[] = $roleFilter;
         }
