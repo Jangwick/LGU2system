@@ -344,25 +344,54 @@ class Document {
     /**
      * Generate reference number
      */
-    /**
-     * Generate reference number
-     */
     public function generateReferenceNumber($type, $year = null) {
         $prefix = $this->getTypePrefix($type);
         $year = $year ?: date('Y');
         
+        // Get the highest reference number for this type and year
         $stmt = $this->db->prepare("
-            SELECT COUNT(*) as count 
+            SELECT reference_number 
             FROM legislative_documents 
             WHERE document_type = :type 
             AND YEAR(document_date) = :year
             AND deleted_at IS NULL
+            AND reference_number LIKE :pattern
+            ORDER BY reference_number DESC 
+            LIMIT 1
         ");
-        $stmt->execute([':type' => $type, ':year' => $year]);
+        $pattern = "{$prefix}-{$year}-%";
+        $stmt->execute([':type' => $type, ':year' => $year, ':pattern' => $pattern]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        $number = str_pad($result['count'] + 1, 3, '0', STR_PAD_LEFT);
-        return "{$prefix}-{$year}-{$number}";
+        if ($result) {
+            // Extract the number from the existing reference number
+            preg_match("/{$prefix}-{$year}-(\d+)/", $result['reference_number'], $matches);
+            $lastNumber = isset($matches[1]) ? (int)$matches[1] : 0;
+            $number = $lastNumber + 1;
+        } else {
+            $number = 1;
+        }
+        
+        // Ensure the generated reference number doesn't already exist
+        do {
+            $candidate = str_pad($number, 3, '0', STR_PAD_LEFT);
+            $referenceNumber = "{$prefix}-{$year}-{$candidate}";
+            
+            $checkStmt = $this->db->prepare("
+                SELECT COUNT(*) as count 
+                FROM legislative_documents 
+                WHERE reference_number = :ref
+                AND deleted_at IS NULL
+            ");
+            $checkStmt->execute([':ref' => $referenceNumber]);
+            $exists = $checkStmt->fetchColumn();
+            
+            if ($exists) {
+                $number++;
+            }
+        } while ($exists);
+        
+        return $referenceNumber;
     }
     
     /**

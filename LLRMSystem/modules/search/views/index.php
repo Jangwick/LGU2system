@@ -4,6 +4,9 @@ require_once __DIR__ . '/../../core/config/config.php';
 
 checkAuth();
 
+// Get user role for access control
+$userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+
 // Load controller
 require_once __DIR__ . '/../controllers/SearchController.php';
 $controller = new SearchController();
@@ -284,9 +287,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
                                     <?= e(ucfirst($mode)) ?> Engine
                                 </div>
+                                <?php if ($userRole !== 'viewer'): ?>
                                 <button onclick="exportResults()" class="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest transition-all">
                                     <i class="bi bi-download text-red-600 dark:text-red-500"></i> Export CSV
                                 </button>
+                                <?php endif; ?>
                             </div>
                             <div class="flex items-center gap-2 self-end sm:self-auto">
                                 <button onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
@@ -367,9 +372,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                     <button onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 dark:bg-black hover:bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn">
                                                         <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
                                                     </button>
+                                                    <?php if ($userRole !== 'viewer'): ?>
                                                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-10 h-10 rounded-xl bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
                                                         <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
                                                     </a>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -495,12 +502,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
 
                                 <div class="space-y-3 pb-6 md:pb-0">
+                                    <?php if ($userRole !== 'viewer'): ?>
                                     <a id="preview-download-btn" href="#" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
                                         <i class="bi bi-download text-base"></i> Download Document
                                     </a>
-                                    <a id="preview-full-view" href="#" class="w-full py-4 bg-gray-900 dark:bg-black hover:bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-gray-200 dark:shadow-none transition-all flex items-center justify-center gap-2 transform active:scale-95">
-                                        <i class="bi bi-fullscreen text-base"></i> Detailed View
-                                    </a>
+                                    <?php endif; ?>
+                                    <button type="button" onclick="closePreview()" class="no-ripple w-full h-14 min-h-14 px-4 bg-gray-900 dark:bg-black hover:bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-gray-200 dark:shadow-none transition-colors flex items-center justify-center gap-2 transform-none hover:transform-none active:transform-none flex-shrink-0">
+                                        <i class="bi bi-x-lg text-base"></i> Close Preview
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -768,8 +777,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
 
                         // Buttons
-                        document.getElementById('preview-download-btn').href = `<?= BASE_URL ?>/modules/document-management/api/download.php?id=${doc.id}`;
-                        document.getElementById('preview-full-view').href = `<?= BASE_URL ?>/modules/document-management/views/view.php?id=${doc.id}`;
+                        const downloadBtn = document.getElementById('preview-download-btn');
+                        if (downloadBtn) {
+                            downloadBtn.href = `<?= BASE_URL ?>/modules/document-management/api/download.php?id=${doc.id}`;
+                        }
+                        // Detailed view button removed - now closes preview instead
                     } else {
                         showToast(result.error || "Failed to load document details", "error");
                         closePreview();

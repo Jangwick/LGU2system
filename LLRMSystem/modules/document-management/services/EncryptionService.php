@@ -1,19 +1,58 @@
 <?php
 
 class EncryptionService {
-    private $encryptionKey;
+    private $masterKey;
     private $cipherMethod;
     
     public function __construct() {
         // Use a 32-byte key for AES-256
-        $this->encryptionKey = defined('ENCRYPTION_KEY') ? ENCRYPTION_KEY : hash('sha256', 'default-encryption-key-change-in-production', true);
+        $this->masterKey = defined('ENCRYPTION_KEY') ? ENCRYPTION_KEY : hash('sha256', 'default-encryption-key-change-in-production', true);
         $this->cipherMethod = 'AES-256-CBC';
     }
     
     /**
-     * Encrypt file content
+     * Generate a random encryption key for a file
      */
-    public function encryptFile($filePath) {
+    public function generateFileKey() {
+        return random_bytes(32); // 256-bit key
+    }
+    
+    /**
+     * Encrypt a file key with the master key
+     */
+    public function encryptFileKey($fileKey) {
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->cipherMethod));
+        $encrypted = openssl_encrypt($fileKey, $this->cipherMethod, $this->masterKey, 0, $iv);
+        
+        if ($encrypted === false) {
+            return ['success' => false, 'error' => 'Key encryption failed'];
+        }
+        
+        return ['success' => true, 'encrypted_key' => base64_encode($iv . $encrypted)];
+    }
+    
+    /**
+     * Decrypt a file key with the master key
+     */
+    public function decryptFileKey($encryptedKey) {
+        $encryptedKey = base64_decode($encryptedKey);
+        $ivLength = openssl_cipher_iv_length($this->cipherMethod);
+        $iv = substr($encryptedKey, 0, $ivLength);
+        $encrypted = substr($encryptedKey, $ivLength);
+        
+        $decrypted = openssl_decrypt($encrypted, $this->cipherMethod, $this->masterKey, 0, $iv);
+        
+        if ($decrypted === false) {
+            return ['success' => false, 'error' => 'Key decryption failed'];
+        }
+        
+        return ['success' => true, 'file_key' => $decrypted];
+    }
+    
+    /**
+     * Encrypt file content with a specific key
+     */
+    public function encryptFile($filePath, $fileKey = null) {
         if (!file_exists($filePath)) {
             return ['success' => false, 'error' => 'File not found'];
         }
@@ -23,8 +62,11 @@ class EncryptionService {
             return ['success' => false, 'error' => 'Failed to read file'];
         }
         
+        // Use provided file key or master key for backward compatibility
+        $key = $fileKey ?? $this->masterKey;
+        
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->cipherMethod));
-        $encrypted = openssl_encrypt($fileContent, $this->cipherMethod, $this->encryptionKey, 0, $iv);
+        $encrypted = openssl_encrypt($fileContent, $this->cipherMethod, $key, 0, $iv);
         
         if ($encrypted === false) {
             return ['success' => false, 'error' => 'Encryption failed'];
@@ -44,9 +86,9 @@ class EncryptionService {
     }
     
     /**
-     * Decrypt file content
+     * Decrypt file content with a specific key
      */
-    public function decryptFile($filePath) {
+    public function decryptFile($filePath, $fileKey = null) {
         if (!file_exists($filePath)) {
             return ['success' => false, 'error' => 'File not found'];
         }
@@ -61,7 +103,10 @@ class EncryptionService {
         $iv = substr($encryptedData, 0, $ivLength);
         $encrypted = substr($encryptedData, $ivLength);
         
-        $decrypted = openssl_decrypt($encrypted, $this->cipherMethod, $this->encryptionKey, 0, $iv);
+        // Use provided file key or master key for backward compatibility
+        $key = $fileKey ?? $this->masterKey;
+        
+        $decrypted = openssl_decrypt($encrypted, $this->cipherMethod, $key, 0, $iv);
         
         if ($decrypted === false) {
             return ['success' => false, 'error' => 'Decryption failed'];
@@ -93,7 +138,7 @@ class EncryptionService {
      */
     public function encryptData($data) {
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->cipherMethod));
-        $encrypted = openssl_encrypt($data, $this->cipherMethod, $this->encryptionKey, 0, $iv);
+        $encrypted = openssl_encrypt($data, $this->cipherMethod, $this->masterKey, 0, $iv);
         
         if ($encrypted === false) {
             return ['success' => false, 'error' => 'Encryption failed'];
@@ -111,7 +156,7 @@ class EncryptionService {
         $iv = substr($encryptedData, 0, $ivLength);
         $encrypted = substr($encryptedData, $ivLength);
         
-        $decrypted = openssl_decrypt($encrypted, $this->cipherMethod, $this->encryptionKey, 0, $iv);
+        $decrypted = openssl_decrypt($encrypted, $this->cipherMethod, $this->masterKey, 0, $iv);
         
         if ($decrypted === false) {
             return ['success' => false, 'error' => 'Decryption failed'];

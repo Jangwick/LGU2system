@@ -16,6 +16,9 @@ $breadcrumbs = [
     ['label' => 'Documents']
 ];
 
+// Get user role for JavaScript
+$userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+
 // Helper functions
 function getFileTypeByExt($fileName) {
     $ext = strtolower(pathinfo($fileName ?: '', PATHINFO_EXTENSION));
@@ -103,6 +106,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         Upload Document
                     </button>
                     <?php endif; ?>
+                    <?php if ($userRole !== 'viewer'): ?>
                     <div class="relative" id="export-dropdown">
                         <button onclick="toggleExportMenu()" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                             <i class="bi bi-download mr-2"></i>
@@ -135,6 +139,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </button>
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -283,9 +288,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     
                     <!-- Right: Bulk Actions -->
                     <div class="flex items-center gap-2">
+                        <?php if ($userRole !== 'viewer'): ?>
                         <button class="w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl transition-all" title="Download Selected">
                             <i class="bi bi-download text-lg"></i>
                         </button>
+                        <?php endif; ?>
                         <?php if (in_array($userRole, ['administrator', 'officer'])): ?>
                         <button class="w-10 h-10 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl transition-all" title="Delete Selected">
                             <i class="bi bi-trash text-lg"></i>
@@ -391,9 +398,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <button class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
+                                            <?php 
+                                            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                                            if ($userRole !== 'viewer'): 
+                                            ?>
                                             <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors" title="Download">
                                                 <i class="bi bi-download"></i>
                                             </a>
+                                            <?php endif; ?>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                             $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
@@ -458,9 +470,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <button class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-eye"></i>
                                     </button>
+                                    <?php 
+                                    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                                    if ($userRole !== 'viewer'): 
+                                    ?>
                                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-9 h-9 flex items-center justify-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl transition-all active:scale-90" title="Download">
                                         <i class="bi bi-download"></i>
                                     </a>
+                                    <?php endif; ?>
                                     <?php 
                                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                     $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
@@ -542,6 +559,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <script src="<?php echo asset('js/documents.js'); ?>?v=<?php echo time(); ?>"></script>
 <script>
+// User role for access control
+const currentUserRole = '<?php echo $userRole; ?>';
+
 // Essential Global Handlers (Redefined here for reliability)
 function toggleAdvancedFilters() {
     const panel = document.getElementById('advanced-filters-panel');
@@ -620,14 +640,34 @@ function viewDocument(id) {
                                 </div>
                             </div>
                             <div class="flex flex-row md:flex-row items-center gap-3">
+                                ${currentUserRole !== 'viewer' ? `
                                 <a href="${App.apiUrl('documents', `download.php?id=${doc.id}`)}" class="flex-1 sm:flex-none justify-center bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[11px] flex items-center shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
                                     <i class="bi bi-download mr-2 text-base"></i> Download
                                 </a>
+                                ` : ''}
+                                ${currentUserRole !== 'viewer' ? `
                                 <button onclick="editDocument(${doc.id})" class="flex-1 sm:flex-none justify-center bg-gray-900 dark:bg-black hover:bg-black text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[11px] flex items-center shadow-lg transition-all active:scale-95">
                                     <i class="bi bi-pencil-square mr-2 text-base"></i> Edit
                                 </button>
+                                ` : ''}
                             </div>
                         </div>
+
+                        ${currentUserRole === 'viewer' ? `
+                        <div class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 rounded-r-xl p-4 mb-6">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-info-circle-fill text-amber-500 text-xl"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="text-sm font-black text-amber-800 dark:text-amber-200 uppercase tracking-widest mb-1">View-Only Access</h4>
+                                    <p class="text-sm text-amber-700 dark:text-amber-300">
+                                        Your account has view-only access. You can view document details but cannot download or edit files. Contact an administrator if you need download permissions.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
 
                         <!-- Main Content Grid -->
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -734,12 +774,14 @@ function viewDocument(id) {
                                         <button onclick="shareDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-share mr-3 text-blue-500"></i> Share Document
                                         </button>
+                                        ${currentUserRole !== 'viewer' ? `
                                         <button onclick="window.print()" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-printer mr-3 text-gray-500"></i> Print Details
                                         </button>
                                         <button onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
+                                        ` : ''}
                                         <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
                                             ${doc.status !== 'approved' ? `
                                             <button onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
@@ -1360,7 +1402,7 @@ document.addEventListener('keydown', function(e) {
                     <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest">Document Preview</h3>
                 </div>
             </div>
-            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all">
+            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -1377,7 +1419,7 @@ document.addEventListener('keydown', function(e) {
     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col border border-gray-200 dark:border-gray-800">
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <h3 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Activity History</h3>
-            <button onclick="closeActivityModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <button onclick="closeActivityModal()" class="text-gray-400 hover:text-gray-600 transition-colors transform-none">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -1402,7 +1444,7 @@ document.addEventListener('keydown', function(e) {
                 <i class="bi bi-cloud-arrow-up mr-3 text-red-600"></i>
                 Upload Repository
             </h2>
-            <button onclick="closeUploadModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all">
+            <button onclick="closeUploadModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all transform-none">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
@@ -1569,7 +1611,7 @@ document.addEventListener('keydown', function(e) {
 
 <script>
 // Custom Dropdown Helper Function
-function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue) {
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue, onChangeCallback = null) {
     const trigger = document.getElementById(triggerId);
     const dropdown = document.getElementById(dropdownId);
     const valueDisplay = document.getElementById(valueId);
@@ -1605,6 +1647,11 @@ function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass
             
             // Trigger filter change event
             hiddenInput.dispatchEvent(new Event('change'));
+            
+            // Call onChange callback if provided
+            if (onChangeCallback && typeof onChangeCallback === 'function') {
+                onChangeCallback(value);
+            }
         });
     });
     
@@ -1620,7 +1667,7 @@ function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass
 document.addEventListener('DOMContentLoaded', function() {
     initCustomDropdown('type-filter-trigger', 'type-filter-dropdown', 'type-filter-value', 'type-filter-input', '.type-filter-option', 'All Types');
     initCustomDropdown('status-filter-trigger', 'status-filter-dropdown', 'status-filter-value', 'status-filter-input', '.status-filter-option', 'All Status');
-    initCustomDropdown('upload-document-type-trigger', 'upload-document-type-dropdown', 'upload-document-type-value', 'upload-document-type-input', '.upload-document-type-option', 'Select Category');
+    initCustomDropdown('upload-document-type-trigger', 'upload-document-type-dropdown', 'upload-document-type-value', 'upload-document-type-input', '.upload-document-type-option', 'Select Category', autoGenerateReference);
     initCustomDropdown('status-modal-trigger', 'status-modal-dropdown', 'status-modal-value', 'status-modal-input', '.status-modal-option', 'Draft');
     
     // Add event listeners for filter inputs to trigger form submission
@@ -1740,7 +1787,7 @@ function formatFileSizeModal(bytes) {
 document.getElementById('document-date-modal').valueAsDate = new Date();
 
 // Auto-generate reference number when document type or date changes
-const typeSelect = document.getElementById('upload-document-type');
+const typeSelect = document.getElementById('upload-document-type-input');
 const dateInput = document.getElementById('document-date-modal');
 const referenceInput = document.getElementById('upload-reference-number');
 
@@ -1840,7 +1887,7 @@ async function autoGenerateReference() {
     }
 }
 
-typeSelect.addEventListener('change', autoGenerateReference);
+// Event listeners are now handled by the custom dropdown callback
 dateInput.addEventListener('change', autoGenerateReference);
 
 // Handle form submission

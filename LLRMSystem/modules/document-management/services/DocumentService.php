@@ -99,14 +99,21 @@ class DocumentService {
             // Upload file
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
 
-            // Encrypt the file (all documents should be encrypted)
-            // TEMPORARILY DISABLED TO DEBUG
-            /*
-            $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
+            // Generate a unique file key for this document
+            $fileKey = $this->encryptionService->generateFileKey();
+            
+            // Encrypt the file with the unique file key
+            $encryptionResult = $this->encryptionService->encryptFile($fileData['path'], $fileKey);
             if (!$encryptionResult['success']) {
                 throw new Exception("File encryption failed: " . $encryptionResult['error']);
             }
-            */
+            
+            // Encrypt the file key with the master key for storage
+            $keyEncryptionResult = $this->encryptionService->encryptFileKey($fileKey);
+            if (!$keyEncryptionResult['success']) {
+                throw new Exception("File key encryption failed: " . $keyEncryptionResult['error']);
+            }
+            $encryptedFileKey = $keyEncryptionResult['encrypted_key'];
 
             // Prepare document data
             $documentData = [
@@ -123,7 +130,9 @@ class DocumentService {
                 'file_type' => $fileData['type'],
                 'source_module' => $data['source_module'] ?? 'manual',
                 'source_id' => $data['source_id'] ?? null,
-                'uploaded_by' => $_SESSION['user_id']
+                'uploaded_by' => $_SESSION['user_id'],
+                'is_encrypted' => true,
+                'encryption_key' => $encryptedFileKey
             ];
             
             // Create document record
@@ -215,7 +224,7 @@ class DocumentService {
     }
     
     /**
-     * Download document
+     * Download document with access control
      */
     public function downloadDocument($id) {
         $document = $this->documentModel->getById($id);
@@ -224,10 +233,27 @@ class DocumentService {
             throw new Exception("Document not found");
         }
         
+        // Check user permissions for decryption
+        if (!$this->canDecryptDocument($document, $_SESSION['user_id'], strtolower(trim($_SESSION['user_role'] ?? '')))) {
+            throw new Exception("You do not have permission to access this document");
+        }
+        
         // Decrypt file if encrypted
         $filePath = $document['file_path'];
         if ($document['is_encrypted'] ?? false) {
-            $decryptionResult = $this->encryptionService->decryptFile($filePath);
+            // Decrypt the file key first
+            if (!empty($document['encryption_key'])) {
+                $keyDecryptionResult = $this->encryptionService->decryptFileKey($document['encryption_key']);
+                if (!$keyDecryptionResult['success']) {
+                    throw new Exception("File key decryption failed: " . $keyDecryptionResult['error']);
+                }
+                $fileKey = $keyDecryptionResult['file_key'];
+            } else {
+                // Fallback to master key for backward compatibility
+                $fileKey = null;
+            }
+            
+            $decryptionResult = $this->encryptionService->decryptFile($filePath, $fileKey);
             if (!$decryptionResult['success']) {
                 throw new Exception("File decryption failed: " . $decryptionResult['error']);
             }
@@ -249,6 +275,38 @@ class DocumentService {
             'name' => $document['file_name'],
             'type' => $document['file_type']
         ];
+    }
+    
+    /**
+     * Check if user has permission to decrypt a document
+     */
+    private function canDecryptDocument($document, $userId, $userRole) {
+        // Viewers cannot download any documents - view only
+        if ($userRole === 'viewer') {
+            return false;
+        }
+        
+        // Super admins can access all documents
+        if ($userRole === 'superadmin' || $userRole === 'super_admin') {
+            return true;
+        }
+        
+        // Officers can access all documents
+        if ($userRole === 'officer') {
+            return true;
+        }
+        
+        // Admins can access all documents
+        if ($userRole === 'admin' || $userRole === 'administrator') {
+            return true;
+        }
+        
+        // Staff can access approved and pending documents
+        if ($userRole === 'staff') {
+            return in_array($document['status'] ?? '', ['approved', 'pending']);
+        }
+        
+        return false;
     }
     
     /**

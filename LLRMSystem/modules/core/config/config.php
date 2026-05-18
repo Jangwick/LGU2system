@@ -310,6 +310,19 @@ if (!defined('GEMINI_API_KEY')) {
     define('GEMINI_API_KEY', ''); // Fallback to empty if not defined in local config
 }
 
+// Encryption Configuration
+// Master encryption key for file encryption
+// Priority: Environment variable > config.local.php > fallback
+if (!defined('ENCRYPTION_KEY')) {
+    $envKey = getenv('ENCRYPTION_KEY');
+    if ($envKey !== false && $envKey !== '') {
+        define('ENCRYPTION_KEY', $envKey);
+    } else {
+        // Fallback - should be overridden in config.local.php or environment
+        define('ENCRYPTION_KEY', hash('sha256', 'default-encryption-key-change-in-production', true));
+    }
+}
+
 // Session configuration
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
