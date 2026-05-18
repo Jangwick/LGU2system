@@ -12,7 +12,8 @@ try {
     $input = json_decode(file_get_contents('php://input'), true);
     $documentId = $input['document_id'] ?? null;
     $password = $input['password'] ?? null;
-    
+    $action = $input['action'] ?? 'download';
+
     if (!$documentId || !$password) {
         echo json_encode(['success' => false, 'error' => 'Missing required fields']);
         exit;

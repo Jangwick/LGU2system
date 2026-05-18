@@ -18,6 +18,13 @@ $logger = new Logger($db);
 $exportType = $_GET['export_type'] ?? 'list'; // 'list' or 'files'
 $format = $_GET['format'] ?? 'csv';
 
+// Validate format - only CSV and PDF allowed for list exports
+if ($exportType === 'list' && !in_array(strtolower($format), ['csv', 'pdf'])) {
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Invalid export format. Only CSV and PDF exports are supported.']);
+    exit;
+}
+
 // Get document IDs for bulk export (comma-separated)
 $documentIds = isset($_GET['ids']) ? explode(',', $_GET['ids']) : [];
 
@@ -83,11 +90,11 @@ if ($exportType === 'files') {
     // Export document list
     if ($format === 'csv') {
         exportCSV($documents);
-    } elseif ($format === 'excel') {
-        exportExcel($documents);
     } else {
+        // PDF export requires TCPDF or DOMPDF library
+        // For now, fallback to CSV with a note
         header('Content-Type: application/json');
-        echo json_encode(['error' => 'Invalid export format']);
+        echo json_encode(['error' => 'PDF export requires TCPDF or DOMPDF library. Please install the library first. Use CSV format instead.']);
     }
 }
 

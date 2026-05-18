@@ -126,7 +126,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Timeline Chart -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-700 group">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Document Upload Timeline (Last 12 Months)</h3>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Document Upload Timeline (Last 5 Years)</h3>
             <div class="relative" style="height: 300px;">
                 <canvas id="timelineChart"></canvas>
             </div>

@@ -27,6 +27,11 @@ $format = $_GET['format'] ?? 'csv';
 $startDate = $_GET['start_date'] ?? null;
 $endDate = $_GET['end_date'] ?? null;
 
+// Validate format - only CSV and PDF allowed
+if (!in_array(strtolower($format), ['csv', 'pdf'])) {
+    die('Invalid format. Only CSV and PDF exports are supported.');
+}
+
 // Get report data
 switch ($reportType) {
     case 'user_activity':
@@ -64,12 +69,6 @@ $logger->logActivity(Logger::ACTION_REPORT_EXPORT, 'reports', null,
 switch ($format) {
     case 'pdf':
         exportToPDF($data, $reportTitle, $reportType, $startDate, $endDate);
-        break;
-    case 'excel':
-        exportToExcel($data, $reportTitle, $reportType);
-        break;
-    case 'word':
-        exportToWord($data, $reportTitle, $reportType, $startDate, $endDate);
         break;
     case 'csv':
     default:

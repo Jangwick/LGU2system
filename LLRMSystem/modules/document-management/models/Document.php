@@ -8,6 +8,27 @@ class Document {
     }
     
     /**
+     * Validate document naming convention
+     * Format: [Type]-[ReferenceNumber]: [Title]
+     * Example: Ordinance-10173: Data Privacy Act
+     */
+    public function validateNamingConvention($title, $documentType, $referenceNumber) {
+        // Expected format: [Type]-[ReferenceNumber]: [Title]
+        $expectedPrefix = ucfirst($documentType) . '-' . $referenceNumber . ': ';
+        
+        // Check if title starts with the expected prefix
+        if (strpos($title, $expectedPrefix) !== 0) {
+            return [
+                'valid' => false,
+                'error' => 'Title must follow naming convention: ' . $expectedPrefix . '[Your Title]',
+                'expected_format' => $expectedPrefix
+            ];
+        }
+        
+        return ['valid' => true];
+    }
+
+    /**
      * Get all documents with filters
      */
     public function getAll($filters = []) {

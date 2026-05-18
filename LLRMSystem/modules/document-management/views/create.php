@@ -104,7 +104,20 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <option value="research">Research Document</option>
                             </select>
                         </div>
-                        
+
+                        <!-- Confidentiality Level -->
+                        <div>
+                            <label for="confidentiality-level" class="block text-sm font-medium text-gray-700 mb-2">
+                                Confidentiality Level
+                            </label>
+                            <select id="confidentiality-level" name="confidentiality_level" class="input-field">
+                                <option value="public" selected>Public</option>
+                                <option value="internal">Internal</option>
+                                <option value="confidential">Confidential</option>
+                                <option value="restricted">Restricted</option>
+                            </select>
+                        </div>
+
                         <!-- Reference Number -->
                         <div>
                             <label for="reference-number" class="block text-sm font-medium text-gray-700 mb-2">
@@ -123,12 +136,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
                                 Document Title <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" 
-                                   id="title" 
-                                   name="title" 
+                            <input type="text"
+                                   id="title"
+                                   name="title"
                                    required
                                    placeholder="Enter document title"
                                    class="input-field">
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="bi bi-info-circle mr-1"></i>
+                                Recommended format: [Type]-[ReferenceNumber]: [Title] (e.g., Committee-COM-2026-001: Annual Report)
+                            </p>
                         </div>
                         
                         <!-- Description -->
@@ -265,21 +282,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 
                 <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
-                    <a href="index.php" class="btn-secondary text-center order-3 sm:order-1">
-                        <i class="bi bi-x-circle mr-1 sm:mr-2"></i>
-                        Cancel
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+                    <a href="index.php" class="btn-secondary text-center">
+                        <i class="bi bi-x-circle mr-1 sm:mr-2"></i>Cancel
                     </a>
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 order-1 sm:order-2">
-                        <button type="submit" name="action" value="draft" class="btn-outline text-sm sm:text-base">
-                            <i class="bi bi-save mr-1 sm:mr-2"></i>
-                            Save as Draft
-                        </button>
-                        <button type="submit" name="action" value="upload" class="btn-primary text-sm sm:text-base">
-                            <i class="bi bi-cloud-upload mr-1 sm:mr-2"></i>
-                            Upload Document
-                        </button>
-                    </div>
+                    <button type="submit" id="submit-btn" class="flex-1 bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transform transition-all active:scale-95 shadow-lg">
+                        <i class="bi bi-upload mr-2"></i>Upload Document
+                    </button>
+                    <button type="button" onclick="printForm()" class="flex-1 bg-gray-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 transform transition-all active:scale-95 shadow-lg">
+                        <i class="bi bi-printer mr-2"></i>Print Form
+                    </button>
                 </div>
             </form>
         </div>
@@ -290,6 +302,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <script src="/public/assets/js/upload.js"></script>
 <script>
+    // Print form function
+    function printForm() {
+        window.print();
+    }
+
     // File input handling
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');

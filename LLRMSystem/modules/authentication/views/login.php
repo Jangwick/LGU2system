@@ -167,7 +167,7 @@ checkAlreadyLoggedIn();
                         <label for="password" class="block text-sm font-medium text-gray-700">
                             <i class="bi bi-lock mr-1"></i>Password
                         </label>
-                        <a href="forgot-password.php" id="forgot-password-link" class="text-xs md:text-sm font-semibold text-red-600 hover:text-red-700 transition">Forgot?</a>
+                        <a href="forgot-password.php" id="forgot-password-link" class="text-xs md:text-sm font-semibold text-red-600 hover:text-red-700 transition" style="display: none;">Forgot?</a>
                     </div>
                     <div class="relative group">
                         <input type="password" 

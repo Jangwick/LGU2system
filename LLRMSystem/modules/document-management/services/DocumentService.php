@@ -1,14 +1,20 @@
 <?php
 
+require_once __DIR__ . '/EncryptionService.php';
+
 class DocumentService {
     private $documentModel;
     private $fileStorageService;
     private $logger;
+    private $encryptionService;
+    private $db;
     
     public function __construct($documentModel, $fileStorageService, $logger) {
         $this->documentModel = $documentModel;
         $this->fileStorageService = $fileStorageService;
         $this->logger = $logger;
+        $this->encryptionService = new EncryptionService();
+        $this->db = getDatabase();
     }
     
     /**
@@ -56,16 +62,52 @@ class DocumentService {
         try {
             // Validate file
             $this->validateFile($file);
-            
+
             // Generate reference number if not provided
             if (empty($data['reference_number'])) {
                 $year = !empty($data['document_date']) ? date('Y', strtotime($data['document_date'])) : null;
                 $data['reference_number'] = $this->documentModel->generateReferenceNumber($data['document_type'], $year);
             }
-            
+
+            // Validate naming convention (optional - only if user wants to follow it)
+            // Commented out to make it optional - users can choose to follow the convention
+            /*
+            $namingValidation = $this->documentModel->validateNamingConvention(
+                $data['title'],
+                $data['document_type'],
+                $data['reference_number']
+            );
+            if (!$namingValidation['valid']) {
+                return [
+                    'success' => false,
+                    'error' => $namingValidation['error'],
+                    'expected_format' => $namingValidation['expected_format']
+                ];
+            }
+            */
+
+            // Validate reference number uniqueness
+            $stmt = $this->db->prepare("SELECT id FROM legislative_documents WHERE reference_number = ?");
+            $stmt->execute([$data['reference_number']]);
+            if ($stmt->fetch()) {
+                return [
+                    'success' => false,
+                    'error' => 'Reference number already exists. Please use a different reference number.'
+                ];
+            }
+
             // Upload file
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
-            
+
+            // Encrypt the file (all documents should be encrypted)
+            // TEMPORARILY DISABLED TO DEBUG
+            /*
+            $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
+            if (!$encryptionResult['success']) {
+                throw new Exception("File encryption failed: " . $encryptionResult['error']);
+            }
+            */
+
             // Prepare document data
             $documentData = [
                 'reference_number' => $data['reference_number'],
@@ -182,6 +224,19 @@ class DocumentService {
             throw new Exception("Document not found");
         }
         
+        // Decrypt file if encrypted
+        $filePath = $document['file_path'];
+        if ($document['is_encrypted'] ?? false) {
+            $decryptionResult = $this->encryptionService->decryptFile($filePath);
+            if (!$decryptionResult['success']) {
+                throw new Exception("File decryption failed: " . $decryptionResult['error']);
+            }
+            // Save decrypted content to temporary file for download
+            $tempPath = sys_get_temp_dir() . '/' . basename($filePath);
+            file_put_contents($tempPath, $decryptionResult['content']);
+            $filePath = $tempPath;
+        }
+        
         // Log download with enhanced logging
         $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_DOWNLOAD, $document['title'], [
             'file_name' => $document['file_name'],
@@ -190,7 +245,7 @@ class DocumentService {
         $this->logger->logAccess($id, $_SESSION['user_id'], 'download');
         
         return [
-            'path' => $document['file_path'],
+            'path' => $filePath,
             'name' => $document['file_name'],
             'type' => $document['file_type']
         ];

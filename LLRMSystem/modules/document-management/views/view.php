@@ -35,6 +35,7 @@ if (!$document) {
 // Get confidentiality level (default to 'public' if not set)
 $confidentialityLevel = $document['confidentiality_level'] ?? 'public';
 $isConfidential = in_array($confidentialityLevel, ['confidential', 'restricted']);
+$isEncrypted = $document['is_encrypted'] ?? false;
 
 
 // Check if viewer can access this document (approved/archived/rejected)
@@ -134,10 +135,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-2 sm:gap-3">
-                    <?php if ($isConfidential): ?>
-                    <button onclick="promptPasswordForDownload()" 
+                    <?php if ($isConfidential || $isEncrypted): ?>
+                    <button onclick="promptPasswordForAccess('view')" 
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-500 transition text-center text-sm sm:text-base shadow-md">
-                        <i class="bi bi-shield-lock mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock & Download</span><span class="xs:hidden">Unlock</span>
+                        <i class="bi bi-shield-lock mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock to View</span><span class="xs:hidden">Unlock</span>
+                    </button>
+                    <button onclick="promptPasswordForAccess('download')" 
+                       class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition text-center text-sm sm:text-base shadow-md">
+                        <i class="bi bi-download mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock & Download</span><span class="xs:hidden">DL</span>
                     </button>
                     <?php else: ?>
                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>" 
@@ -165,7 +170,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-4 md:space-y-6">
                 <!-- Document Details -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-100 <?= $isEncrypted ? 'blur-sm opacity-75' : '' ?>" <?= $isEncrypted ? 'title="This document is encrypted"' : '' ?>>
                     <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">Document Information</h2>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -486,8 +491,8 @@ function printDocument() {
     window.print();
 }
 
-function promptPasswordForDownload() {
-    const password = prompt('This document is confidential. Please enter your password to download:');
+function promptPasswordForAccess(action) {
+    const password = prompt('This document is <?= $isConfidential ? 'confidential' : 'encrypted' ?>. Please enter your password to ' + action + ':');
     if (password) {
         // Send password to server for verification
         fetch('<?php echo DOCUMENTS_URL; ?>/api/verify-document-access.php', {
@@ -498,14 +503,21 @@ function promptPasswordForDownload() {
             },
             body: JSON.stringify({
                 document_id: <?= $document['id'] ?>,
-                password: password
+                password: password,
+                action: action
             })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Password verified, proceed to download
-                window.location.href = '<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>&token=' + data.token;
+                // Password verified, proceed with action
+                if (action === 'download') {
+                    window.location.href = '<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>&token=' + data.token;
+                } else if (action === 'view') {
+                    // Remove blur effect and show document details
+                    document.querySelector('.blur-sm')?.classList.remove('blur-sm', 'opacity-75');
+                    alert('Document unlocked. You can now view the details.');
+                }
             } else {
                 alert('Incorrect password. Access denied.');
             }
@@ -514,6 +526,10 @@ function promptPasswordForDownload() {
             alert('Error verifying password. Please try again.');
         });
     }
+}
+
+function promptPasswordForDownload() {
+    promptPasswordForAccess('download');
 }
 
 function viewHistory() {

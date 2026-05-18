@@ -107,9 +107,8 @@ main::-webkit-scrollbar-thumb:active {
 .document-checkbox:checked {
     background-color: #dc2626;
     border-color: #dc2626;
-}
     border-radius: 4px;
-    cursor: grab;
+    cursor: pointer;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover,
@@ -1785,10 +1784,52 @@ nav ul li a.bg-red-600 {
     
     /* Add active states instead */
     button:active, a:active, .clickable:active {
+    transform: scale(0.98);
+}
+
+/* Button Ripple Effect */
+button {
+    position: relative;
+    overflow: hidden;
+}
+
+button .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Button Loading Spinner */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    button:active, a:active, .clickable:active {
         transform: scale(0.98);
         opacity: 0.9;
     }
-    
+
     /* Disable hover dropdowns, use click instead */
     .dropdown:hover .dropdown-menu {
         display: none;
@@ -1799,35 +1840,51 @@ nav ul li a.bg-red-600 {
 @media print {
     /* Hide non-essential elements */
     #sidebar, nav, #mobile-sidebar, #sidebar-overlay,
-    .no-print, button, .btn-primary, .btn-outline,
-    #toast-container, .modal {
+    .btn-secondary, button:not([type="submit"]), .no-print {
         display: none !important;
     }
-    
-    /* Full width content */
-    main, .flex-1 {
+
+    /* Ensure main content takes full width */
+    main, .container {
         width: 100% !important;
-        margin: 0 !important;
+        max-width: 100% !important;
         padding: 0 !important;
+        margin: 0 !important;
     }
-    
-    /* Preserve backgrounds for badges */
-    .badge, .bg-green-100, .bg-red-100, .bg-yellow-100 {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+
+    /* Remove shadows and backgrounds for cleaner print */
+    .bg-white, .bg-gray-50, .shadow-md, .shadow-lg {
+        box-shadow: none !important;
+        background: white !important;
     }
-    
+
+    /* Ensure text is black for printing */
+    * {
+        color: black !important;
+    }
+
+    /* Show only submit button in forms */
+    button[type="submit"] {
+        display: inline-block !important;
+    }
+
+    /* Remove hover effects */
+    *:hover {
+        box-shadow: none !important;
+        transform: none !important;
+    }
+
     /* Page breaks */
     .page-break {
         page-break-before: always;
     }
-    
+
     /* Table styling for print */
     table {
         width: 100%;
         border-collapse: collapse;
     }
-    
+
     th, td {
         border: 1px solid #ddd;
         padding: 8px;
@@ -1915,4 +1972,5 @@ nav ul li a.bg-red-600 {
 
 .gap-responsive {
     gap: clamp(0.5rem, 2vw, 1.5rem);
+}
 }

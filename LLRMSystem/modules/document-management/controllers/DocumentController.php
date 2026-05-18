@@ -104,12 +104,17 @@ class DocumentController {
                 throw new Exception("No file uploaded");
             }
             
+            $status = strtolower(trim($_POST['status'] ?? 'draft'));
+            if ($status === 'published') {
+                $status = 'approved';
+            }
+
             // Prepare data
             $data = [
                 'title' => $_POST['title'] ?? '',
                 'document_type' => $_POST['document_type'] ?? '',
                 'document_date' => $_POST['document_date'] ?? date('Y-m-d'),
-                'status' => $_POST['status'] ?? 'draft',
+                'status' => $status,
                 'description' => $_POST['description'] ?? '',
                 'tags' => $_POST['tags'] ?? '',
                 'reference_number' => $_POST['reference_number'] ?? ''
@@ -147,7 +152,8 @@ class DocumentController {
                 'document_date' => $_POST['document_date'] ?? '',
                 'status' => $_POST['status'] ?? '',
                 'description' => $_POST['description'] ?? '',
-                'tags' => $_POST['tags'] ?? ''
+                'tags' => $_POST['tags'] ?? '',
+                'confidentiality_level' => $_POST['confidentiality_level'] ?? 'public'
             ];
             
             $result = $this->documentService->updateDocument($id, $data);

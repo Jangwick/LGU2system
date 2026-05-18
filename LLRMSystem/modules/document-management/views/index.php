@@ -1515,9 +1515,9 @@ document.addEventListener('keydown', function(e) {
                             <div class="relative group">
                                 <i class="bi bi-activity absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500"></i>
                                 <select name="status" id="status-modal" required class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all font-bold text-sm appearance-none">
-                                    <option value="Draft">Draft</option>
-                                    <option value="Published">Published</option>
-                                    <option value="Archived">Archived</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="published">Published</option>
+                                    <option value="archived">Archived</option>
                                 </select>
                                 <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                             </div>

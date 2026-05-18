@@ -156,6 +156,29 @@ class Validator {
         }
         return $this;
     }
+
+    /**
+     * Validate reference number uniqueness
+     */
+    public function uniqueReferenceNumber($field, $db, $excludeId = null, $message = null) {
+        if (isset($this->data[$field])) {
+            $sql = "SELECT id FROM legislative_documents WHERE reference_number = ?";
+            $params = [$this->data[$field]];
+
+            if ($excludeId) {
+                $sql .= " AND id != ?";
+                $params[] = $excludeId;
+            }
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+
+            if ($stmt->fetch()) {
+                $this->errors[$field] = $message ?? 'Reference number already exists';
+            }
+        }
+        return $this;
+    }
     
     /**
      * Custom validation callback

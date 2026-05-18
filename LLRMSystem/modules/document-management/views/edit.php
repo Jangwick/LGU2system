@@ -114,18 +114,29 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status *</label>
-                                <select name="status"
-                                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
-                                        required>
-                                    <option value="draft" <?= $document['status'] === 'draft' ? 'selected' : '' ?>>Draft</option>
-                                    <option value="pending" <?= $document['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
-                                    <option value="approved" <?= $document['status'] === 'approved' ? 'selected' : '' ?>>Approved</option>
-                                    <option value="rejected" <?= $document['status'] === 'rejected' ? 'selected' : '' ?>>Rejected</option>
-                                    <option value="archived" <?= $document['status'] === 'archived' ? 'selected' : '' ?>>Archived</option>
-                                    <option value="superseded" <?= $document['status'] === 'superseded' ? 'selected' : '' ?>>Superseded</option>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confidentiality Level</label>
+                                <select name="confidentiality_level"
+                                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
+                                    <option value="public" <?= ($document['confidentiality_level'] ?? 'public') === 'public' ? 'selected' : '' ?>>Public</option>
+                                    <option value="internal" <?= ($document['confidentiality_level'] ?? 'public') === 'internal' ? 'selected' : '' ?>>Internal</option>
+                                    <option value="confidential" <?= ($document['confidentiality_level'] ?? 'public') === 'confidential' ? 'selected' : '' ?>>Confidential</option>
+                                    <option value="restricted" <?= ($document['confidentiality_level'] ?? 'public') === 'restricted' ? 'selected' : '' ?>>Restricted</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status *</label>
+                            <select name="status"
+                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
+                                    required>
+                                <option value="draft" <?= $document['status'] === 'draft' ? 'selected' : '' ?>>Draft</option>
+                                <option value="pending" <?= $document['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
+                                <option value="approved" <?= $document['status'] === 'approved' ? 'selected' : '' ?>>Approved</option>
+                                <option value="rejected" <?= $document['status'] === 'rejected' ? 'selected' : '' ?>>Rejected</option>
+                                <option value="archived" <?= $document['status'] === 'archived' ? 'selected' : '' ?>>Archived</option>
+                                <option value="superseded" <?= $document['status'] === 'superseded' ? 'selected' : '' ?>>Superseded</option>
+                            </select>
                         </div>
 
                         <div>
