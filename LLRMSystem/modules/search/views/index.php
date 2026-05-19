@@ -293,11 +293,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php endif; ?>
                             </div>
                             <div class="flex items-center gap-2 self-end sm:self-auto">
-                                <button onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
-                                    <i class="bi bi-grid-fill"></i>
+                                <button onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
+                                    <i class="bi bi-grid-fill leading-none pointer-events-none"></i>
                                 </button>
-                                <button onclick="setView('list')" id="view-list" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm">
-                                    <i class="bi bi-list-task"></i>
+                                <button onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm">
+                                    <i class="bi bi-list-task leading-none pointer-events-none"></i>
                                 </button>
                             </div>
                         </div>
@@ -317,15 +317,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php foreach ($results as $index => $doc): 
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
-                                <div class="group bg-white dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900/50 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
-                                    <div class="flex flex-col md:flex-row gap-6">
+                                <div class="result-card group bg-white dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900/50 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
+                                    <div class="result-card-inner flex flex-col md:flex-row gap-6">
                                         <!-- Doc Icon -->
                                         <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-700 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 group-hover:border-red-100 dark:group-hover:border-red-900 transition-all duration-300">
                                             <i class="bi <?= getTypeIcon($doc['document_type']) ?>"></i>
                                         </div>
 
                                         <!-- Doc Info -->
-                                        <div class="flex-1 min-w-0">
+                                        <div class="result-card-body flex-1 min-w-0">
                                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                                 <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest <?= getStatusBadgeClass($doc['status']) ?>">
                                                     <?= e($doc['status']) ?>
@@ -350,7 +350,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?>
                                             </p>
 
-                                            <div class="flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 dark:border-gray-700 pt-5">
+                                            <div class="result-card-footer flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 dark:border-gray-700 pt-5">
                                                 <div class="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
                                                     <i class="bi bi-calendar-event text-red-500 dark:text-red-400 text-sm"></i>
                                                     <?= date('M d, Y', strtotime($doc['created_at'])) ?>
@@ -609,7 +609,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (view === 'grid') {
                     resultsList.classList.remove('space-y-4');
-                    resultsList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4');
+                    resultsList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
                     gridBtn.classList.add('bg-red-50', 'border-red-200', 'text-red-600');
@@ -617,10 +617,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     listBtn.classList.remove('bg-red-50', 'border-red-200', 'text-red-600');
                     listBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-400');
                     
-                    // Update items
-                    resultsList.querySelectorAll('.group > div').forEach(item => {
+                    resultsList.querySelectorAll('.result-card').forEach(card => {
+                        card.classList.add('h-full');
+                    });
+
+                    resultsList.querySelectorAll('.result-card-inner').forEach(item => {
                         item.classList.remove('md:flex-row');
-                        item.classList.add('flex-col');
+                        item.classList.add('flex-col', 'h-full');
+                    });
+
+                    resultsList.querySelectorAll('.result-card-body').forEach(body => {
+                        body.classList.add('flex', 'flex-col', 'h-full');
+                    });
+
+                    resultsList.querySelectorAll('.result-card-footer').forEach(footer => {
+                        footer.classList.add('mt-auto');
                     });
                     
                     // Adjust uploader/date section for grid
@@ -635,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 } else {
                     resultsList.classList.add('space-y-4');
-                    resultsList.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4');
+                    resultsList.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
                     listBtn.classList.add('bg-red-50', 'border-red-200', 'text-red-600');
@@ -643,10 +654,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     gridBtn.classList.remove('bg-red-50', 'border-red-200', 'text-red-600');
                     gridBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-400');
                     
-                    // Update items
-                    resultsList.querySelectorAll('.group > div').forEach(item => {
+                    resultsList.querySelectorAll('.result-card').forEach(card => {
+                        card.classList.remove('h-full');
+                    });
+
+                    resultsList.querySelectorAll('.result-card-inner').forEach(item => {
                         item.classList.add('md:flex-row');
-                        item.classList.remove('flex-col');
+                        item.classList.remove('flex-col', 'h-full');
+                    });
+
+                    resultsList.querySelectorAll('.result-card-body').forEach(body => {
+                        body.classList.remove('flex', 'flex-col', 'h-full');
+                    });
+
+                    resultsList.querySelectorAll('.result-card-footer').forEach(footer => {
+                        footer.classList.remove('mt-auto');
                     });
 
                     // Restore classes
