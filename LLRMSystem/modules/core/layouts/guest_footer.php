@@ -50,3 +50,78 @@
         </div>
     </div>
 </footer>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" class="no-ripple fixed z-[999999] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95"
+        style="display: none; position: fixed; bottom: 2rem; right: 1.5rem; left: auto; width: 3.5rem; height: 3.5rem;"
+        title="Back to top"
+        aria-label="Scroll to top">
+    <i class="bi bi-arrow-up text-2xl leading-none pointer-events-none"></i>
+</button>
+
+<script>
+// Back to Top Button - Immediate execution
+(function() {
+    var btn = document.getElementById('back-to-top');
+    if (!btn) return;
+
+    function checkScroll() {
+        var scrolled = false;
+
+        // Check window scroll
+        if (window.pageYOffset > 100 || document.documentElement.scrollTop > 100) {
+            scrolled = true;
+        }
+
+        // Check main element scroll
+        var main = document.querySelector('main');
+        if (main && main.scrollTop > 100) {
+            scrolled = true;
+        }
+
+        // Check any overflow-y-auto elements
+        var scrollables = document.querySelectorAll('.overflow-y-auto');
+        scrollables.forEach(function(el) {
+            if (el.scrollTop > 100) {
+                scrolled = true;
+            }
+        });
+
+        btn.style.display = scrolled ? 'flex' : 'none';
+    }
+
+    function scrollToTop() {
+        // Scroll window
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Scroll main element
+        var main = document.querySelector('main');
+        if (main) main.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Scroll any overflow-y-auto elements
+        document.querySelectorAll('.overflow-y-auto').forEach(function(el) {
+            el.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // Add click handler
+    btn.onclick = scrollToTop;
+
+    // Listen for scroll on window
+    window.addEventListener('scroll', checkScroll, { passive: true });
+
+    // Listen for scroll on main
+    var main = document.querySelector('main');
+    if (main) {
+        main.addEventListener('scroll', checkScroll, { passive: true });
+    }
+
+    // Listen for scroll on overflow-y-auto elements
+    document.querySelectorAll('.overflow-y-auto').forEach(function(el) {
+        el.addEventListener('scroll', checkScroll, { passive: true });
+    });
+
+    // Initial check
+    checkScroll();
+})();
+</script>

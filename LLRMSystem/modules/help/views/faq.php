@@ -125,8 +125,8 @@ function toggleFaq(button) {
     const isHidden = content.classList.contains('hidden');
 
     // Close all other FAQs in this list
-    const allFaqs = document.querySelectorAll('#faq-list .bg-white > div');
-    const allIcons = document.querySelectorAll('#faq-list .bg-white i.bi-dash-lg');
+    const allFaqs = document.querySelectorAll('#faq-list .bg-white > div:last-child');
+    const allIcons = document.querySelectorAll('#faq-list .bg-white button i');
     
     allFaqs.forEach(faq => {
         if (!faq.classList.contains('hidden')) {

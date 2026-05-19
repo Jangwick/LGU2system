@@ -328,6 +328,13 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
             <p class="text-xs text-gray-400 mt-2">Need full access? <a href="<?= LOGIN_URL ?>" class="text-red-600 font-bold hover:underline">Sign in</a> or contact the administrator.</p>
         </div>
     </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="no-ripple fixed bottom-24 right-6 md:bottom-24 md:right-6 z-[9999] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
+            title="Back to top"
+            aria-label="Scroll to top">
+        <i class="bi bi-arrow-up text-xl md:text-base leading-none pointer-events-none"></i>
+    </button>
 </main>
 
 <!-- Preview Modal (identical to admin but without Download/Detailed View buttons) -->
@@ -411,7 +418,10 @@ function closePreview(){const o=document.getElementById('preview-overlay'),c=doc
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closePreview();});
 document.getElementById('preview-overlay')?.addEventListener('click',closePreview);
 
-document.addEventListener('DOMContentLoaded',function(){setView(currentView);searchInput?.addEventListener('input',e=>{clearTimeout(queryTimer);queryTimer=setTimeout(()=>showSuggestions(e.target.value),300);});document.addEventListener('click',e=>{if(!suggestionsBox?.contains(e.target)&&e.target!==searchInput)hideSuggestions();});if(filterForm){filterForm.querySelectorAll('input[type="radio"],input[type="date"],select').forEach(el=>{el.addEventListener('change',()=>updateResults());});filterForm.addEventListener('submit',e=>{e.preventDefault();updateResults();});}if(mainForm){mainForm.addEventListener('submit',e=>{e.preventDefault();updateResults();});}});
+document.addEventListener('DOMContentLoaded',function(){setView(currentView);searchInput?.addEventListener('input',e=>{clearTimeout(queryTimer);queryTimer=setTimeout(()=>showSuggestions(e.target.value),300);});document.addEventListener('click',e=>{if(!suggestionsBox?.contains(e.target)&&e.target!==searchInput)hideSuggestions();});if(filterForm){filterForm.querySelectorAll('input[type="radio"],input[type="date"],select').forEach(el=>{el.addEventListener('change',()=>updateResults());});filterForm.addEventListener('submit',e=>{e.preventDefault();updateResults();});}if(mainForm){mainForm.addEventListener('submit',e=>{e.preventDefault();updateResults();});}
+
+// Back to Top Button
+(function(){const btn=document.getElementById('back-to-top');if(!btn)return;function checkScroll(){let scrolled=false;if(window.pageYOffset>200||document.documentElement.scrollTop>200)scrolled=true;const main=document.querySelector('main');if(main&&main.scrollTop>200)scrolled=true;document.querySelectorAll('.overflow-y-auto').forEach(el=>{if(el.scrollTop>200)scrolled=true;});if(scrolled){btn.classList.remove('hidden');btn.classList.add('flex');}else{btn.classList.add('hidden');btn.classList.remove('flex');}}function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});const main=document.querySelector('main');if(main)main.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.scrollTo({top:0,behavior:'smooth'}));}btn.onclick=scrollToTop;window.addEventListener('scroll',checkScroll,{passive:true});const main=document.querySelector('main');if(main)main.addEventListener('scroll',checkScroll,{passive:true});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.addEventListener('scroll',checkScroll,{passive:true}));checkScroll();})();
 </script>
 </body>
 </html>

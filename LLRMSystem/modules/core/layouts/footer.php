@@ -32,13 +32,11 @@
     </footer>
     
     <!-- Back to Top Button -->
-    <button id="back-to-top" class="no-ripple"
-            style="position: fixed; bottom: 90px; right: 26px; z-index: 99999; width: 46px; height: 46px; background-color: #dc2626; color: white; border-radius: 50%; border: 3px solid #ffffff; cursor: pointer; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); display: none; align-items: center; justify-content: center;"
+    <button id="back-to-top" class="no-ripple fixed z-[999999] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95"
+            style="display: flex; bottom: 2rem; right: 1rem; width: 3.5rem; height: 3.5rem;"
             title="Back to top"
             aria-label="Scroll to top">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16" style="pointer-events: none;">
-            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
-        </svg>
+        <i class="bi bi-arrow-up text-2xl leading-none pointer-events-none"></i>
     </button>
     
     <script>
@@ -69,11 +67,7 @@
                 }
             });
             
-            if (scrolled) {
-                btn.style.display = 'flex';
-            } else {
-                btn.style.display = 'none';
-            }
+            btn.style.display = scrolled ? 'flex' : 'none';
         }
         
         function scrollToTop() {

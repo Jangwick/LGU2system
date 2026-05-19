@@ -294,4 +294,3 @@ function toggleFaq(btn) {
         <?php include_once __DIR__ . '/../../core/layouts/guest_footer.php'; ?>
     <?php endif; ?>
 
-
