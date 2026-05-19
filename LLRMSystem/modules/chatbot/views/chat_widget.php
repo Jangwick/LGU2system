@@ -1,13 +1,13 @@
 <!-- Chatbot Widget -->
 <div id="chatbot-container" class="fixed bottom-6 right-6 z-[100001] font-sans">
     <!-- Chat Bubble (Toggle Button) -->
-    <button id="chatbot-toggle" class="bg-red-600 hover:bg-red-700 text-white rounded-full w-14 h-14 shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 group relative">
+    <button id="chatbot-toggle" class="bg-red-600 hover:bg-red-700 text-white rounded-full w-14 h-14 shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 group relative overflow-hidden">
         <div class="absolute -top-1 -right-1 flex h-4 w-4">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
         </div>
-        <i class="bi bi-chat-text-fill text-2xl group-hover:hidden"></i>
-        <i class="bi bi-x-lg text-2xl hidden group-hover:block"></i>
+        <i id="chatbot-open-icon" class="bi bi-chat-text-fill text-2xl absolute inset-0 flex items-center justify-center transition-opacity duration-200 opacity-100"></i>
+        <i id="chatbot-close-icon" class="bi bi-x-lg text-2xl absolute inset-0 flex items-center justify-center transition-opacity duration-200 opacity-0 pointer-events-none"></i>
     </button>
 
     <!-- Chat Window -->
@@ -100,6 +100,8 @@
     const chatInput = document.getElementById('chatbot-input');
     const chatMessages = document.getElementById('chatbot-messages');
     const suggestions = document.getElementById('chatbot-suggestions');
+    const openIcon = document.getElementById('chatbot-open-icon');
+    const closeIcon = document.getElementById('chatbot-close-icon');
     
     let chatHistory = [];
     let isOpen = false;
@@ -120,6 +122,10 @@
     window.toggleChat = function() {
         isOpen = !isOpen;
         if (isOpen) {
+            openIcon.classList.remove('opacity-100');
+            openIcon.classList.add('opacity-0');
+            closeIcon.classList.remove('opacity-0');
+            closeIcon.classList.add('opacity-100');
             chatWindow.classList.remove('hidden');
             setTimeout(() => {
                 chatWindow.classList.remove('scale-0', 'opacity-0');
@@ -129,6 +135,10 @@
             // Save state
             sessionStorage.setItem('chatbot_open', 'true');
         } else {
+            closeIcon.classList.remove('opacity-100');
+            closeIcon.classList.add('opacity-0');
+            openIcon.classList.remove('opacity-0');
+            openIcon.classList.add('opacity-100');
             chatWindow.classList.remove('scale-100', 'opacity-100');
             chatWindow.classList.add('scale-0', 'opacity-0');
             setTimeout(() => chatWindow.classList.add('hidden'), 300);
