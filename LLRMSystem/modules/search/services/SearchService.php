@@ -144,9 +144,10 @@ class SearchService {
                 }
             }
 
-            $sql .= " LIMIT $limit";
+            $sql .= " LIMIT :limit";
 
             $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
             $stmt->execute($params);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

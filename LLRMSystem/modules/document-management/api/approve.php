@@ -5,13 +5,17 @@
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/middleware/auth.php';
+require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 require_once __DIR__ . '/../services/DocumentService.php';
 require_once __DIR__ . '/../controllers/DocumentController.php';
+
+// CSRF protection
+CsrfMiddleware::requireValidToken();
 
 // CORS headers for API
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-CSRF-Token');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);

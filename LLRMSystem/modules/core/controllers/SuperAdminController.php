@@ -507,14 +507,25 @@ class SuperAdminController {
             }
         }
 
-        $filename = 'backup_' . date('Y-m-d_H-i-s') . '.sql';
+        $filename = 'backup_' . date('Y-m-d_H-i-s') . '.sql.enc';
         $filepath = $backupDir . '/' . $filename;
+        $tempFile = $backupDir . '/temp_' . basename($filename, '.enc');
 
         // Try PHP-based backup directly (more reliable on Windows/XAMPP)
-        $result = $this->createPHPBackup($filepath);
+        $result = $this->createPHPBackup($tempFile);
 
         if ($result['success']) {
-            return $result;
+            // Encrypt the backup
+            if ($this->encryptBackup($tempFile, $filepath)) {
+                // Delete unencrypted temp file
+                @unlink($tempFile);
+                $this->logger->log($_SESSION['user_id'], 'database_backup', null, "Created encrypted database backup: $filename");
+                return ['success' => true, 'filename' => $filename, 'encrypted' => true];
+            } else {
+                // Keep unencrypted if encryption fails
+                @rename($tempFile, str_replace('.enc', '', $filepath));
+                return ['success' => true, 'filename' => str_replace('.enc', '', $filename), 'encrypted' => false, 'warning' => 'Encryption failed, backup stored unencrypted'];
+            }
         }
 
         // If PHP backup fails, try mysqldump
@@ -526,20 +537,91 @@ class SuperAdminController {
             $dbConfig['username'],
             $dbConfig['password'],
             $dbConfig['database'],
-            $filepath
+            $tempFile
         );
 
         $output = [];
         $returnCode = 0;
         @exec($command, $output, $returnCode);
 
-        if ($returnCode === 0 && file_exists($filepath) && filesize($filepath) > 0) {
-            $this->logger->log($_SESSION['user_id'], 'database_backup', null, "Created database backup: $filename");
-            return ['success' => true, 'filename' => $filename];
+        if ($returnCode === 0 && file_exists($tempFile) && filesize($tempFile) > 0) {
+            // Encrypt the backup
+            if ($this->encryptBackup($tempFile, $filepath)) {
+                @unlink($tempFile);
+                $this->logger->log($_SESSION['user_id'], 'database_backup', null, "Created encrypted database backup: $filename");
+                return ['success' => true, 'filename' => $filename, 'encrypted' => true];
+            } else {
+                @rename($tempFile, str_replace('.enc', '', $filepath));
+                return ['success' => true, 'filename' => str_replace('.enc', '', $filename), 'encrypted' => false, 'warning' => 'Encryption failed, backup stored unencrypted'];
+            }
         }
+
+        // Clean up temp file
+        @unlink($tempFile);
 
         // Return the PHP backup error if both failed
         return $result;
+    }
+
+    /**
+     * Encrypt backup file using AES-256-CBC
+     */
+    private function encryptBackup($sourceFile, $destFile) {
+        if (!file_exists($sourceFile)) {
+            return false;
+        }
+
+        $data = file_get_contents($sourceFile);
+        if ($data === false) {
+            return false;
+        }
+
+        // Get encryption key from config or generate one
+        $encryptionKey = defined('BACKUP_ENCRYPTION_KEY') ? BACKUP_ENCRYPTION_KEY : (defined('ENCRYPTION_KEY') ? ENCRYPTION_KEY : 'default-backup-key-change-in-production');
+
+        // Generate random IV
+        $iv = random_bytes(16);
+
+        // Encrypt data
+        $encrypted = openssl_encrypt($data, 'AES-256-CBC', $encryptionKey, 0, $iv);
+
+        if ($encrypted === false) {
+            return false;
+        }
+
+        // Write IV + encrypted data to file
+        $fileData = $iv . $encrypted;
+        return file_put_contents($destFile, $fileData) !== false;
+    }
+
+    /**
+     * Decrypt backup file
+     */
+    private function decryptBackup($sourceFile, $destFile) {
+        if (!file_exists($sourceFile)) {
+            return false;
+        }
+
+        $fileData = file_get_contents($sourceFile);
+        if ($fileData === false) {
+            return false;
+        }
+
+        // Get encryption key
+        $encryptionKey = defined('BACKUP_ENCRYPTION_KEY') ? BACKUP_ENCRYPTION_KEY : (defined('ENCRYPTION_KEY') ? ENCRYPTION_KEY : 'default-backup-key-change-in-production');
+
+        // Extract IV (first 16 bytes)
+        $iv = substr($fileData, 0, 16);
+        $encrypted = substr($fileData, 16);
+
+        // Decrypt data
+        $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $encryptionKey, 0, $iv);
+
+        if ($decrypted === false) {
+            return false;
+        }
+
+        return file_put_contents($destFile, $decrypted) !== false;
     }
     
     /**
@@ -603,12 +685,22 @@ class SuperAdminController {
         }
 
         $backups = [];
-        foreach (glob($backupDir . '/*.sql') as $file) {
+        // Handle both .sql and .sql.enc files
+        foreach (glob($backupDir . '/*.sql*') as $file) {
+            $filename = basename($file);
+            // Skip temp files
+            if (str_starts_with($filename, 'temp_')) {
+                continue;
+            }
+            
+            $isEncrypted = str_ends_with($filename, '.enc');
+            
             $backups[] = [
-                'filename' => basename($file),
+                'filename' => $filename,
                 'size' => filesize($file),
                 'created' => date('Y-m-d H:i:s', filemtime($file)),
-                'verified' => $this->verifyBackup($file)
+                'verified' => $isEncrypted ? true : $this->verifyBackup($file),
+                'encrypted' => $isEncrypted
             ];
         }
 
@@ -657,8 +749,24 @@ class SuperAdminController {
             return ['success' => false, 'error' => 'Backup file not found'];
         }
 
+        // Check if backup is encrypted
+        $isEncrypted = str_ends_with($filename, '.enc');
+        $restoreFile = $filepath;
+
+        if ($isEncrypted) {
+            // Decrypt to temp file
+            $tempFile = $backupDir . '/temp_restore_' . time() . '.sql';
+            if (!$this->decryptBackup($filepath, $tempFile)) {
+                return ['success' => false, 'error' => 'Failed to decrypt backup file'];
+            }
+            $restoreFile = $tempFile;
+        }
+
         // Verify backup before restore
-        if (!$this->verifyBackup($filepath)) {
+        if (!$this->verifyBackup($restoreFile)) {
+            if ($isEncrypted) {
+                @unlink($restoreFile);
+            }
             return ['success' => false, 'error' => 'Backup file is corrupted or invalid'];
         }
 
@@ -672,12 +780,17 @@ class SuperAdminController {
             $dbConfig['username'],
             $dbConfig['password'],
             $dbConfig['database'],
-            $filepath
+            $restoreFile
         );
 
         $output = [];
         $returnCode = 0;
         exec($command, $output, $returnCode);
+
+        // Clean up temp file if it was decrypted
+        if ($isEncrypted) {
+            @unlink($restoreFile);
+        }
 
         if ($returnCode === 0) {
             $this->logger->log($_SESSION['user_id'], 'database_restore', null, "Restored database from backup: $filename");
@@ -685,15 +798,18 @@ class SuperAdminController {
         }
 
         // Fallback: PHP-based restore
-        return $this->restoreFromPHP($filepath);
+        return $this->restoreFromPHP($restoreFile, $isEncrypted);
     }
 
     /**
      * PHP-based restore (fallback)
      */
-    private function restoreFromPHP($filepath) {
+    private function restoreFromPHP($filepath, $isTempFile = false) {
         $sql = file_get_contents($filepath);
         if (empty($sql)) {
+            if ($isTempFile) {
+                @unlink($filepath);
+            }
             return ['success' => false, 'error' => 'Backup file is empty'];
         }
 
@@ -715,6 +831,11 @@ class SuperAdminController {
                 $errorCount++;
                 error_log("SQL restore error: " . $e->getMessage());
             }
+        }
+
+        // Clean up temp file
+        if ($isTempFile) {
+            @unlink($filepath);
         }
 
         if ($successCount > 0) {
@@ -765,7 +886,7 @@ class SuperAdminController {
             ];
         }
 
-        $backups = glob($backupDir . '/*.sql');
+        $backups = glob($backupDir . '/*.sql*');
         if (empty($backups)) {
             return [
                 'total_count' => 0,
@@ -783,18 +904,24 @@ class SuperAdminController {
         $oldestBackup = null;
 
         foreach ($backups as $file) {
+            $filename = basename($file);
+            // Skip temp files
+            if (str_starts_with($filename, 'temp_')) {
+                continue;
+            }
+            
             $size = filesize($file);
             $totalSize += $size;
             $time = filemtime($file);
 
             if ($time > $latestTime) {
                 $latestTime = $time;
-                $latestBackup = basename($file);
+                $latestBackup = $filename;
             }
 
             if ($time < $oldestTime) {
                 $oldestTime = $time;
-                $oldestBackup = basename($file);
+                $oldestBackup = $filename;
             }
         }
 
@@ -811,6 +938,106 @@ class SuperAdminController {
                 'created' => date('Y-m-d H:i:s', $oldestTime)
             ] : null
         ];
+    }
+
+    /**
+     * Get database health and monitoring metrics
+     */
+    public function getDatabaseHealth() {
+        $health = [
+            'status' => 'healthy',
+            'checks' => [],
+            'metrics' => []
+        ];
+
+        try {
+            // Check database connection
+            $this->db->query("SELECT 1");
+            $health['checks']['connection'] = ['status' => 'pass', 'message' => 'Database connection successful'];
+        } catch (Exception $e) {
+            $health['checks']['connection'] = ['status' => 'fail', 'message' => 'Database connection failed: ' . $e->getMessage()];
+            $health['status'] = 'critical';
+        }
+
+        try {
+            // Check database size
+            $size = $this->db->query("
+                SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) as size_mb
+                FROM information_schema.tables
+                WHERE table_schema = DATABASE()
+            ")->fetchColumn();
+            $health['metrics']['database_size_mb'] = $size;
+        } catch (Exception $e) {
+            $health['checks']['size_query'] = ['status' => 'fail', 'message' => 'Failed to query database size'];
+        }
+
+        try {
+            // Check active connections
+            $connections = $this->db->query("SHOW STATUS LIKE 'Threads_connected'")->fetch(PDO::FETCH_ASSOC);
+            $health['metrics']['active_connections'] = $connections['Value'] ?? 0;
+            
+            // Check if connections are excessive
+            $maxConnections = $this->db->query("SHOW VARIABLES LIKE 'max_connections'")->fetch(PDO::FETCH_ASSOC);
+            $max = $maxConnections['Value'] ?? 151;
+            $usage = ($connections['Value'] / $max) * 100;
+            
+            if ($usage > 80) {
+                $health['checks']['connections'] = ['status' => 'warning', 'message' => 'High connection usage: ' . round($usage) . '%'];
+                if ($health['status'] === 'healthy') {
+                    $health['status'] = 'warning';
+                }
+            } else {
+                $health['checks']['connections'] = ['status' => 'pass', 'message' => 'Connection usage normal: ' . round($usage) . '%'];
+            }
+        } catch (Exception $e) {
+            $health['checks']['connections'] = ['status' => 'fail', 'message' => 'Failed to check connections'];
+        }
+
+        try {
+            // Check for slow queries
+            $slowQueries = $this->db->query("SHOW STATUS LIKE 'Slow_queries'")->fetch(PDO::FETCH_ASSOC);
+            $health['metrics']['slow_queries'] = $slowQueries['Value'] ?? 0;
+        } catch (Exception $e) {
+            $health['checks']['slow_queries'] = ['status' => 'fail', 'message' => 'Failed to check slow queries'];
+        }
+
+        try {
+            // Check last backup age
+            $backupDir = __DIR__ . '/../../../storage/backups';
+            $backups = glob($backupDir . '/*.sql*');
+            if (!empty($backups)) {
+                $latestTime = 0;
+                foreach ($backups as $file) {
+                    $filename = basename($file);
+                    if (!str_starts_with($filename, 'temp_')) {
+                        $time = filemtime($file);
+                        if ($time > $latestTime) {
+                            $latestTime = $time;
+                        }
+                    }
+                }
+                $hoursSinceBackup = (time() - $latestTime) / 3600;
+                $health['metrics']['hours_since_last_backup'] = round($hoursSinceBackup, 1);
+                
+                if ($hoursSinceBackup > 48) {
+                    $health['checks']['backup_age'] = ['status' => 'warning', 'message' => 'Last backup is ' . round($hoursSinceBackup) . ' hours old'];
+                    if ($health['status'] === 'healthy') {
+                        $health['status'] = 'warning';
+                    }
+                } else {
+                    $health['checks']['backup_age'] = ['status' => 'pass', 'message' => 'Last backup is ' . round($hoursSinceBackup) . ' hours old'];
+                }
+            } else {
+                $health['checks']['backup_age'] = ['status' => 'warning', 'message' => 'No backups found'];
+                if ($health['status'] === 'healthy') {
+                    $health['status'] = 'warning';
+                }
+            }
+        } catch (Exception $e) {
+            $health['checks']['backup_age'] = ['status' => 'fail', 'message' => 'Failed to check backup age'];
+        }
+
+        return $health;
     }
 
     /**

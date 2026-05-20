@@ -104,15 +104,26 @@ class Security {
     }
 
     /**
-     * Get client IP address accurately
+     * Get client IP address
+     * 
+     * SECURITY NOTE: By default, we only trust REMOTE_ADDR to prevent IP spoofing.
+     * Forwarded headers (HTTP_CLIENT_IP, HTTP_X_FORWARDED_FOR) can be easily forged
+     * and should only be trusted if behind a known trusted proxy/load balancer.
+     * 
+     * To enable trusted proxy mode, define TRUST_PROXY_IPS in config.local.php:
+     * define('TRUST_PROXY_IPS', true);
      */
     public static function getClientIP() {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            return $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        // Only trust forwarded headers if explicitly configured (behind trusted proxy)
+        if (defined('TRUST_PROXY_IPS') && TRUST_PROXY_IPS === true) {
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                return $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                return $_SERVER['HTTP_X_FORWARDED_FOR'];
+            }
         }
+        
+        // Default: only trust REMOTE_ADDR (cannot be spoofed by client)
+        return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
     }
 }

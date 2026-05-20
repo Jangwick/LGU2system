@@ -1,39 +1,13 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../utils/helpers.php';
-require_once __DIR__ . '/../middleware/CsrfMiddleware.php';
-require_once __DIR__ . '/../middleware/SessionTimeoutMiddleware.php';
+require_once __DIR__ . '/../bootstrap/security.php';
 
-// Check session timeout for logged-in users - temporarily disabled for debugging
-// if (isset($_SESSION['user_id'])) {
-//     $sessionMiddleware = new SessionTimeoutMiddleware(getDatabase());
-//     $sessionMiddleware->checkSessionTimeout();
-// }
+// Initialize security for authenticated requests
+initializeAuthenticatedSecurity();
 
-// ── Security Response Headers ────────────────────────────────────────────────
-// Must be sent before any HTML output.
-header('X-Content-Type-Options: nosniff');
-header('X-Frame-Options: SAMEORIGIN');
-header('X-XSS-Protection: 1; mode=block');
-header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()');
-// Content Security Policy.
-// 'unsafe-inline' is required because the application contains many inline
-// <script> blocks and Tailwind CSS Browser injects <style> tags at runtime.
-// Future hardening: move inline scripts to external files and adopt a
-// nonce-based CSP to eliminate 'unsafe-inline' from script-src.
-header(
-    "Content-Security-Policy: " .
-    "default-src 'self'; " .
-    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; " .
-    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; " .
-    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
-    "img-src 'self' data: blob: https://lacs.spvalenzuela.com; " .
-    "connect-src 'self'; " .
-    "frame-ancestors 'self'; " .
-    "base-uri 'self'; " .
-    "form-action 'self';"
-);
+// ── Security Response Headers are now managed by security bootstrap ─────────
+// Headers are sent by initializeAuthenticatedSecurity() in security.php
 // ─────────────────────────────────────────────────────────────────────────────
 ?>
 <!DOCTYPE html>

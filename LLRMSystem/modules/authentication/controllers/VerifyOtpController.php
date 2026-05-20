@@ -9,15 +9,19 @@ ini_set('display_errors', 0);
 
 ob_start();
 
-session_start();
-
-// Set JSON header
-header('Content-Type: application/json');
-
 // Include configuration
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/bootstrap/security.php';
+
+// Initialize security (includes secure session configuration)
+initializePublicSecurity();
+
+// Include remaining dependencies
 require_once __DIR__ . '/../../core/utils/Logger.php';
+
+// Set JSON header
+header('Content-Type: application/json');
 
 // Clear any output buffer
 if (ob_get_length()) ob_clean();
