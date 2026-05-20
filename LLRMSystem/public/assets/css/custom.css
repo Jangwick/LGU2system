@@ -1134,7 +1134,10 @@ nav ul li a.bg-red-600 {
 
 /* Back to Top Button */
 #back-to-top {
-    z-index: 9999;
+    z-index: 999999 !important;
+    position: fixed !important;
+    right: 1.5rem !important;
+    bottom: 6rem !important;
 }
 
 #back-to-top,
@@ -1165,6 +1168,15 @@ nav ul li a.bg-red-600 {
 
 /* Mobile adjustments for back to top button */
 @media (max-width: 768px) {
+    #back-to-top {
+        right: 1.5rem !important;
+        bottom: 6rem !important;
+        width: 3rem !important;
+        height: 3rem !important;
+        min-width: 3rem !important;
+        min-height: 3rem !important;
+    }
+
     #back-to-top i {
         font-size: 1rem;
     }

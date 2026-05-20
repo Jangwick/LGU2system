@@ -488,3 +488,5 @@ if (sidebarOverlay) {
 }
 </script>
 </div>
+
+<?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>

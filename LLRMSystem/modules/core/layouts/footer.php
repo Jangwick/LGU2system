@@ -32,11 +32,10 @@
     </footer>
     
     <!-- Back to Top Button -->
-    <button id="back-to-top" class="no-ripple fixed z-[999999] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95"
-            style="display: flex; bottom: 2rem; right: 1rem; width: 3.5rem; height: 3.5rem;"
+    <button id="back-to-top" class="no-ripple fixed bottom-24 right-6 md:bottom-24 md:right-6 z-[999999] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
             title="Back to top"
             aria-label="Scroll to top">
-        <i class="bi bi-arrow-up text-2xl leading-none pointer-events-none"></i>
+        <i class="bi bi-arrow-up text-xl md:text-base leading-none pointer-events-none"></i>
     </button>
     
     <script>
@@ -67,7 +66,13 @@
                 }
             });
             
-            btn.style.display = scrolled ? 'flex' : 'none';
+            if (scrolled) {
+                btn.classList.remove('hidden');
+                btn.classList.add('flex');
+            } else {
+                btn.classList.add('hidden');
+                btn.classList.remove('flex');
+            }
         }
         
         function scrollToTop() {
