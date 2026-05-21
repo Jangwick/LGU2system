@@ -284,13 +284,13 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button type="button" onclick="viewUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
+                                        <button type="button" onclick="viewUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                             <i class="bi bi-eye mr-1"></i> View
                                         </button>
-                                        <button type="button" onclick="editUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-amber-50 text-amber-600 hover:bg-amber-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
+                                        <button type="button" onclick="editUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                             <i class="bi bi-pencil mr-1"></i> Edit
                                         </button>
-                                        <button type="button" onclick="deleteUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md">
+                                        <button type="button" onclick="deleteUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                             <i class="bi bi-trash mr-1"></i> Delete
                                         </button>
                                     </td>
