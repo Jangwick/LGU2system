@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <h1 class="text-2xl font-bold mb-2">User Management</h1>
                     <p class="text-red-100 animation-delay-100">Manage system users and permissions</p>
                 </div>
-                <button type="button" onclick="openCreateModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md min-w-[160px] h-12 flex-shrink-0 animate-slide-in-right border-2 border-red-600">
+                <button type="button" onclick="openCreateModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-600 dark:!bg-white dark:!text-red-700 dark:hover:!bg-red-50 px-6 py-3 rounded-xl font-bold hover:bg-red-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md min-w-[160px] h-12 flex-shrink-0 animate-slide-in-right border-2 border-red-600">
                     <i class="bi bi-person-plus-fill mr-2 text-xl"></i> Add User
                 </button>
             </div>
@@ -123,7 +123,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="w-full btn-primary">
+                    <button type="submit" class="w-full btn-primary bg-red-600 dark:bg-red-700 text-white">
                         <i class="bi bi-funnel mr-1"></i> Filter
                     </button>
                 </div>
@@ -163,7 +163,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                            class="flex-1 input-field" 
                            placeholder="Search by name, email, username..." 
                            value="<?php echo htmlspecialchars($data['filters']['search'] ?? ''); ?>">
-                    <button type="submit" class="btn-primary">
+                    <button type="submit" class="btn-primary bg-red-600 dark:bg-red-700 text-white">
                         <i class="bi bi-search"></i> Search
                     </button>
                     <?php if (!empty($data['filters']['search'])): ?>
