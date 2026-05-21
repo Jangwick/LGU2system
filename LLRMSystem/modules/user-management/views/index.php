@@ -189,19 +189,19 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             <div class="overflow-x-auto drag-scroll" id="users-table-scroll">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Employee ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Department</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                         <?php if (empty($data['users'])): ?>
                             <tr>
                                 <td colspan="7" class="px-6 py-12 text-center">
@@ -237,15 +237,15 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php
                                         $userRole = strtolower(trim($user['role'] ?? ''));
                                         $roleClass = match($userRole) {
-                                            'administrator', 'admin' => 'bg-purple-100 text-purple-800',
-                                            'officer', 'manager' => 'bg-blue-100 text-blue-800',
-                                            'staff' => 'bg-green-100 text-green-800',
-                                            'viewer', 'user' => 'bg-gray-100 text-gray-800',
-                                            default => 'bg-gray-100 text-gray-800 text-opacity-70'
+                                            'administrator', 'admin' => 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800 dark:border',
+                                            'officer', 'manager' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800 dark:border',
+                                            'staff' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800 dark:border',
+                                            'viewer', 'user' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:border',
+                                            default => 'bg-gray-100 text-gray-800 text-opacity-70 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:border'
                                         };
                                         ?>
                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $roleClass; ?> transition-transform duration-200 hover:scale-105">
-                                            <?php 
+                                            <?php
                                             if (empty($userRole)) {
                                                 echo '<span class="flex items-center text-red-500 font-bold"><i class="bi bi-exclamation-triangle-fill mr-1"></i>Unassigned</span>';
                                             } else {
@@ -266,16 +266,18 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <?php
-                                        $statusClass = match($user['status']) {
-                                            'active' => 'bg-green-100 text-green-800',
-                                            'inactive' => 'bg-gray-100 text-gray-800',
-                                            'suspended' => 'bg-red-100 text-red-800',
-                                            'pending' => 'bg-amber-100 text-amber-800',
-                                            default => 'bg-gray-100 text-gray-800'
+                                        $statusLower = strtolower($user['status'] ?? '');
+                                        $statusClass = match($statusLower) {
+                                            'active' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800 dark:border',
+                                            'inactive' => 'status-badge-inactive',
+                                            'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800 dark:border',
+                                            'pending' => 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 dark:border',
+                                            default => 'status-badge-inactive'
                                         };
+                                        $statusText = $statusLower === '' ? 'Inactive' : ucfirst($statusLower);
                                         ?>
                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $statusClass; ?> transition-transform duration-200 hover:scale-105">
-                                            <?php echo e(ucfirst($user['status'])); ?>
+                                            <?php echo htmlspecialchars($statusText); ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">

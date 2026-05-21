@@ -936,6 +936,18 @@ main::-webkit-scrollbar-thumb:active {
     color: #808080 !important;
 }
 
+.status-badge-inactive {
+    background-color: #f3f4f6;
+    color: #1f2937;
+    border: 1px solid #d1d5db;
+}
+
+.dark .status-badge-inactive {
+    background-color: #374151;
+    color: #f9fafb;
+    border-color: #6b7280;
+}
+
 /* Dark Mode - Hover States */
 .dark .hover\:bg-gray-50:hover,
 .dark .hover\:bg-gray-100:hover {
