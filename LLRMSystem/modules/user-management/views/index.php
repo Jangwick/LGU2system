@@ -90,60 +90,34 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500 relative z-[100]">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="relative z-40">
+                <div class="relative">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
                     <div class="relative custom-select-container">
                         <div id="role-filter-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
                             <span id="role-filter-value">All Roles</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
                         </div>
-                        <div id="role-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
-                            <div class="p-2 space-y-1">
-                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Roles</div>
-                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="officer">Officer</div>
-                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="staff">Staff</div>
-                                <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="viewer">Viewer</div>
-                            </div>
-                        </div>
                         <input type="hidden" name="role" id="role-filter-input" value="<?php echo $data['filters']['role'] ?? ''; ?>">
                     </div>
                 </div>
-                <div class="relative z-40">
+                <div class="relative">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                     <div class="relative custom-select-container">
                         <div id="status-filter-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
                             <span id="status-filter-value">All Status</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
                         </div>
-                        <div id="status-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
-                            <div class="p-2 space-y-1">
-                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Status</div>
-                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="active">Active</div>
-                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="inactive">Inactive</div>
-                                <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="suspended">Suspended</div>
-                            </div>
-                        </div>
                         <input type="hidden" name="status" id="status-filter-input" value="<?php echo $data['filters']['status'] ?? ''; ?>">
                     </div>
                 </div>
-                <div class="relative z-40">
+                <div class="relative">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
                     <div class="relative custom-select-container">
                         <div id="department-filter-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
                             <span id="department-filter-value">All Departments</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
-                        </div>
-                        <div id="department-filter-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
-                            <div class="p-2 space-y-1">
-                                <div class="department-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Departments</div>
-                                <?php foreach ($data['departments'] as $dept): ?>
-                                    <div class="department-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo htmlspecialchars($dept); ?>">
-                                        <?php echo htmlspecialchars($dept); ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
                         </div>
                         <input type="hidden" name="department" id="department-filter-input" value="<?php echo $data['filters']['department'] ?? ''; ?>">
                     </div>
@@ -155,6 +129,33 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </form>
             
+            <!-- Filter Dropdowns -->
+            <div id="role-filter-dropdown" class="hidden absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[1000] max-h-64 overflow-y-auto w-64">
+                <div class="p-2 space-y-1">
+                    <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Roles</div>
+                    <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="officer">Officer</div>
+                    <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="staff">Staff</div>
+                    <div class="role-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="viewer">Viewer</div>
+                </div>
+            </div>
+            <div id="status-filter-dropdown" class="hidden absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[1000] max-h-64 overflow-y-auto w-64">
+                <div class="p-2 space-y-1">
+                    <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Status</div>
+                    <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="active">Active</div>
+                    <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="inactive">Inactive</div>
+                    <div class="status-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="suspended">Suspended</div>
+                </div>
+            </div>
+            <div id="department-filter-dropdown" class="hidden absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[1000] max-h-64 overflow-y-auto w-64">
+                <div class="p-2 space-y-1">
+                    <div class="department-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Departments</div>
+                    <?php foreach ($data['departments'] as $dept): ?>
+                        <div class="department-filter-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="<?php echo htmlspecialchars($dept); ?>">
+                            <?php echo htmlspecialchars($dept); ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
             <!-- Search -->
             <form method="GET" class="mt-4">
                 <div class="flex gap-2">
@@ -175,7 +176,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Users Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600 relative z-0">
             <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">
@@ -499,10 +500,25 @@ function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass
         }
     }
     
-    // Toggle dropdown
+    // Toggle dropdown and position it
     trigger.addEventListener('click', function(e) {
         e.stopPropagation();
-        dropdown.classList.toggle('hidden');
+        
+        const isHidden = dropdown.classList.contains('hidden');
+        
+        if (isHidden) {
+            // Position the dropdown below the trigger
+            const rect = trigger.getBoundingClientRect();
+            const filterContainer = document.querySelector('.relative.z-\\[100\\]');
+            const containerRect = filterContainer.getBoundingClientRect();
+            
+            dropdown.style.top = (rect.bottom - containerRect.top + 4) + 'px';
+            dropdown.style.left = (rect.left - containerRect.left) + 'px';
+            
+            dropdown.classList.remove('hidden');
+        } else {
+            dropdown.classList.add('hidden');
+        }
     });
     
     // Handle option selection
