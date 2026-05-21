@@ -193,7 +193,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Employee ID</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -225,12 +225,12 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <?php if (!empty($user['employee_id'])): ?>
-                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">
                                                 <i class="bi bi-person-vcard mr-1"></i>
                                                 <?php echo htmlspecialchars($user['employee_id']); ?>
                                             </span>
                                         <?php else: ?>
-                                            <span class="text-xs text-gray-400 italic">Not set</span>
+                                            <span class="text-xs text-gray-400 dark:text-gray-500 italic">Not set</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
