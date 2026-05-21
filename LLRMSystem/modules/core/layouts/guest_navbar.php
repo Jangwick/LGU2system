@@ -62,7 +62,7 @@ $currentGuestPage = $currentGuestPage ?? '';
                 </a>
                 
                 <!-- Dark/Light Mode Toggle -->
-                <button id="guest-darkmode-btn" onclick="toggleGuestDarkMode()" class="hero-toggle-btn w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white transition-all shadow-sm" aria-label="Toggle dark mode">
+                <button type="button" id="guest-darkmode-btn" onclick="toggleGuestDarkMode()" class="hero-toggle-btn w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white transition-all shadow-sm" aria-label="Toggle dark mode">
                     <i class="bi bi-moon-fill guest-dark-icon text-gray-500 text-lg"></i>
                     <i class="bi bi-sun-fill guest-light-icon text-yellow-400 text-lg" style="display:none"></i>
                 </button>

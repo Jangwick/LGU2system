@@ -231,10 +231,10 @@ class SearchManager {
                                 ${doc.tags?.map(tag => `<span class="badge badge-info">${tag}</span>`).join('') || ''}
                             </div>
                             <div class="flex gap-2">
-                                <button onclick="viewDocument(${doc.id})" class="px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg">
+                                <button type="button" onclick="viewDocument(${doc.id})" class="px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg">
                                     <i class="bi bi-eye mr-1"></i>View
                                 </button>
-                                <button onclick="downloadDocument(${doc.id})" class="px-3 py-1.5 text-sm text-green-600 hover:bg-green-50 rounded-lg">
+                                <button type="button" onclick="downloadDocument(${doc.id})" class="px-3 py-1.5 text-sm text-green-600 hover:bg-green-50 rounded-lg">
                                     <i class="bi bi-download mr-1"></i>Download
                                 </button>
                             </div>

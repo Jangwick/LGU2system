@@ -304,7 +304,7 @@ $pageTitle = "Home";
                     <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
                         Get Started
                     </a>
-                    <button onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                    <button type="button" onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                         <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                     </button>
                 </div>
@@ -351,7 +351,7 @@ $pageTitle = "Home";
             <a href="<?php echo HELP_URL; ?>/views/terms.php" class="mobile-nav-link text-lg font-bold text-gray-400 uppercase tracking-wider hover:text-red-600 transition-colors">Terms</a>
             
             <div class="flex flex-col items-center space-y-3">
-                <button onclick="toggleDarkMode()" class="dark-toggle w-14 h-14 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-600 hover:border-red-200 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                <button type="button" onclick="toggleDarkMode()" class="dark-toggle w-14 h-14 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-600 hover:border-red-200 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                     <i id="darkModeIconMobile" class="bi bi-moon-fill text-xl"></i>
                 </button>
                 <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Theme</span>
@@ -460,10 +460,10 @@ $pageTitle = "Home";
                 <!-- Toggle Buttons -->
                 <div class="flex justify-center mb-6 md:mb-8">
                     <div class="inline-flex bg-white rounded-full p-1.5 shadow-lg border border-gray-100">
-                        <button onclick="showSearchMode('light')" id="search-light-btn" class="px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-gray-900 text-white shadow-md">
+                        <button type="button" onclick="showSearchMode('light')" id="search-light-btn" class="px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-gray-900 text-white shadow-md">
                             <i class="bi bi-sun-fill mr-1.5"></i>Light
                         </button>
-                        <button onclick="showSearchMode('dark')" id="search-dark-btn" class="px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 text-gray-500 hover:text-gray-900">
+                        <button type="button" onclick="showSearchMode('dark')" id="search-dark-btn" class="px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 text-gray-500 hover:text-gray-900">
                             <i class="bi bi-moon-fill mr-1.5"></i>Dark
                         </button>
                     </div>
@@ -1593,7 +1593,7 @@ $pageTitle = "Home";
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeOfficialModal()"></div>
         <div class="flex min-h-full items-center justify-center p-4 md:p-8">
             <div class="bg-white rounded-[32px] md:rounded-[50px] shadow-2xl w-full max-w-2xl overflow-hidden relative animate-modal-up">
-                <button onclick="closeOfficialModal()" class="absolute top-4 right-4 md:top-8 md:right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-white/80 backdrop-blur-md md:bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center shadow-lg">
+                <button type="button" onclick="closeOfficialModal()" class="absolute top-4 right-4 md:top-8 md:right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-white/80 backdrop-blur-md md:bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center shadow-lg">
                     <i class="bi bi-x-lg"></i>
                 </button>
                 

@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <button onclick="toggleChat()" class="text-white/80 hover:text-white transition p-1.5 hover:bg-white/10 rounded-lg bg-transparent border-none">
+            <button type="button" onclick="toggleChat()" class="text-white/80 hover:text-white transition p-1.5 hover:bg-white/10 rounded-lg bg-transparent border-none">
                 <i class="bi bi-dash-lg text-xl leading-none"></i>
             </button>
         </div>
@@ -75,7 +75,7 @@
 
             foreach ($suggestionsList as $sugg): 
             ?>
-                <button onclick="sendSuggestion('<?php echo htmlspecialchars($sugg['query'], ENT_QUOTES, 'UTF-8'); ?>')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">
+                <button type="button" onclick="sendSuggestion('<?php echo htmlspecialchars($sugg['query'], ENT_QUOTES, 'UTF-8'); ?>')" class="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-200 dark:hover:border-red-700 transition">
                     <?php echo e($sugg['text']); ?>
                 </button>
             <?php endforeach; ?>

@@ -67,7 +67,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <a href="<?php echo USERS_URL; ?>/views/create.php" class="flex items-center px-6 py-2.5 bg-white hover:bg-red-50 text-red-600 rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/10">
                         <i class="bi bi-person-plus mr-2"></i> Add Administrator
                     </a>
-                    <button onclick="exportToCSV()" class="flex items-center px-6 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/20">
+                    <button type="button" onclick="exportToCSV()" class="flex items-center px-6 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/20">
                         <i class="bi bi-download mr-2"></i> Export CSV
                     </button>
                 </div>
@@ -120,10 +120,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             <div class="mt-4 flex gap-2">
-                <button onclick="applyFilters()" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+                <button type="button" onclick="applyFilters()" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
                     <i class="bi bi-search mr-2"></i> Apply Filters
                 </button>
-                <button onclick="clearFilters()" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors">
+                <button type="button" onclick="clearFilters()" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors">
                     <i class="bi bi-x-circle mr-2"></i> Clear
                 </button>
             </div>
@@ -210,24 +210,24 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <?php if ($admin['role'] === 'administrator'): ?>
-                                    <button onclick="promoteToSuperAdmin(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-purple-100 dark:bg-purple-900/40 hover:bg-purple-200 dark:hover:bg-purple-900/60 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-medium transition-colors" title="Promote to Super Admin">
+                                    <button type="button" onclick="promoteToSuperAdmin(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-purple-100 dark:bg-purple-900/40 hover:bg-purple-200 dark:hover:bg-purple-900/60 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-medium transition-colors" title="Promote to Super Admin">
                                         <i class="bi bi-arrow-up"></i>
                                     </button>
-                                    <button onclick="demoteAdmin(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-orange-100 dark:bg-orange-900/40 hover:bg-orange-200 dark:hover:bg-orange-900/60 text-orange-700 dark:text-orange-300 rounded-lg text-sm font-medium transition-colors" title="Demote to Staff">
+                                    <button type="button" onclick="demoteAdmin(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-orange-100 dark:bg-orange-900/40 hover:bg-orange-200 dark:hover:bg-orange-900/60 text-orange-700 dark:text-orange-300 rounded-lg text-sm font-medium transition-colors" title="Demote to Staff">
                                         <i class="bi bi-arrow-down"></i>
                                     </button>
                                     <?php endif; ?>
                                     <?php if ($admin['status'] === 'active' && $admin['role'] !== 'super_admin'): ?>
-                                    <button onclick="deactivateUser(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-700 dark:text-red-300 rounded-lg text-sm font-medium transition-colors" title="Deactivate">
+                                    <button type="button" onclick="deactivateUser(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-700 dark:text-red-300 rounded-lg text-sm font-medium transition-colors" title="Deactivate">
                                         <i class="bi bi-dash-circle"></i>
                                     </button>
                                     <?php elseif ($admin['status'] === 'inactive' && $admin['role'] !== 'super_admin'): ?>
-                                    <button onclick="activateUser(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60 text-green-700 dark:text-green-300 rounded-lg text-sm font-medium transition-colors" title="Activate">
+                                    <button type="button" onclick="activateUser(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60 text-green-700 dark:text-green-300 rounded-lg text-sm font-medium transition-colors" title="Activate">
                                         <i class="bi bi-check-circle"></i>
                                     </button>
                                     <?php endif; ?>
                                     <?php if ($admin['role'] !== 'super_admin'): ?>
-                                    <button onclick="deleteUser(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-red-200 dark:hover:bg-red-900/60 text-gray-700 dark:text-gray-300 hover:text-red-700 rounded-lg text-sm font-medium transition-colors" title="Delete">
+                                    <button type="button" onclick="deleteUser(<?= $admin['id'] ?>, '<?= htmlspecialchars($admin['full_name']) ?>')" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-red-200 dark:hover:bg-red-900/60 text-gray-700 dark:text-gray-300 hover:text-red-700 rounded-lg text-sm font-medium transition-colors" title="Delete">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                     <?php endif; ?>
@@ -247,7 +247,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 <div class="flex gap-2">
                     <?php if ($page > 1): ?>
-                    <button onclick="goToPage(<?= $page - 1 ?>)" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
+                    <button type="button" onclick="goToPage(<?= $page - 1 ?>)" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
                         Previous
                     </button>
                     <?php endif; ?>
@@ -257,7 +257,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <?= $i ?>
                     </button>
                     <?php elseif ($i == 1 || $i == $totalPages || abs($i - $page) <= 2): ?>
-                    <button onclick="goToPage(<?= $i ?>)" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
+                    <button type="button" onclick="goToPage(<?= $i ?>)" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
                         <?= $i ?>
                     </button>
                     <?php elseif ($i == $page - 3 || $i == $page + 3): ?>
@@ -265,7 +265,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <?php endif; ?>
                     <?php endfor; ?>
                     <?php if ($page < $totalPages): ?>
-                    <button onclick="goToPage(<?= $page + 1 ?>)" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
+                    <button type="button" onclick="goToPage(<?= $page + 1 ?>)" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
                         Next
                     </button>
                     <?php endif; ?>

@@ -255,7 +255,7 @@ function exportCSV($documents) {
     echo '<h1 class="text-2xl font-bold text-gray-800">Document Export</h1>';
     echo '<p class="text-gray-600 mt-1">Total Documents: ' . count($documents) . '</p>';
     echo '</div>';
-    echo '<button onclick="downloadCSV()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">';
+    echo '<button type="button" onclick="downloadCSV()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">';
     echo '<i class="bi bi-download"></i> Download CSV';
     echo '</button>';
     echo '</div>';

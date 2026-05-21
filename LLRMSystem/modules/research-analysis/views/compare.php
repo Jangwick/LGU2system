@@ -30,7 +30,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 line-tight">Law Comparison Tool</h1>
                     <p class="text-gray-600 dark:text-gray-400">Analyze differences between ordinances and resolutions side-by-side.</p>
                 </div>
-                <button onclick="openSelectModal()" class="bg-red-600 dark:bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center shadow-md">
+                <button type="button" onclick="openSelectModal()" class="bg-red-600 dark:bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center shadow-md">
                     <i class="bi bi-plus-lg mr-2"></i> Add Document to Compare
                 </button>
             </div>
@@ -42,11 +42,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">No documents selected</h3>
                     <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm mx-auto text-lg leading-relaxed">Select two or more documents to begin side-by-side analysis.</p>
-                    <button onclick="openSelectModal()" class="bg-red-600 dark:bg-red-700 text-white px-10 py-3 rounded-xl font-bold hover:bg-red-700 dark:hover:bg-red-600 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
+                    <button type="button" onclick="openSelectModal()" class="bg-red-600 dark:bg-red-700 text-white px-10 py-3 rounded-xl font-bold hover:bg-red-700 dark:hover:bg-red-600 transition-all shadow-lg hover:shadow-xl active:scale-95">Select Documents</button>
                 </div>
             <?php else: ?>
                 <div class="mb-8 flex justify-center">
-                    <button onclick="generateSmartComparison()" id="smart-compare-btn" 
+                    <button type="button" onclick="generateSmartComparison()" id="smart-compare-btn" 
                             class="bg-red-800 dark:bg-red-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-red-700 dark:hover:bg-red-600 transition-all flex items-center group">
                         <i class="bi bi-cpu mr-3 group-hover:animate-spin"></i> Generate Smart Analysis
                     </button>
@@ -58,7 +58,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                             <h3 id="analysis-title" class="text-xl font-bold text-gray-900 flex items-center">
                                 <i class="bi bi-graph-up-arrow mr-3 text-red-800"></i> Smart Legislative Analysis
                             </h3>
-                            <button onclick="document.getElementById('analysis-container').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                            <button type="button" onclick="document.getElementById('analysis-container').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         </div>
@@ -77,7 +77,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <h4 class="font-bold text-gray-900 line-clamp-2"><?= htmlspecialchars($doc['title']) ?></h4>
                                         <p class="text-xs text-gray-500 font-mono mt-1"><?= e($doc['reference_number']) ?></p>
                                     </div>
-                                    <button onclick="removeDocument(<?= $doc['id'] ?>)" class="text-gray-400 hover:text-red-500">
+                                    <button type="button" onclick="removeDocument(<?= $doc['id'] ?>)" class="text-gray-400 hover:text-red-500">
                                         <i class="bi bi-x-lg"></i>
                                     </button>
                                 </div>
@@ -152,7 +152,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 <h3 class="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
                     <i class="bi bi-file-earmark-plus mr-2 text-red-600"></i> Add to Comparison
                 </h3>
-                <button onclick="closeSelectModal()" class="hero-toggle-btn w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all">
+                <button type="button" onclick="closeSelectModal()" class="hero-toggle-btn w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all">
                     <i class="bi bi-x-lg text-xl"></i>
                 </button>
             </div>
@@ -173,7 +173,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
             <!-- Footer -->
             <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-                <button onclick="closeSelectModal()" class="w-full md:w-auto md:float-right px-6 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 font-bold transition-all text-sm">
+                <button type="button" onclick="closeSelectModal()" class="w-full md:w-auto md:float-right px-6 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 font-bold transition-all text-sm">
                     Cancel
                 </button>
             </div>

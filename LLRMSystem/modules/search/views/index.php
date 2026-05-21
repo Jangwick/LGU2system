@@ -103,7 +103,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- Mobile Filter Toggle -->
                 <div class="lg:hidden mb-4">
-                    <button onclick="toggleMobileFilters()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
+                    <button type="button" onclick="toggleMobileFilters()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-500">
                                 <i class="bi bi-sliders2"></i>
@@ -293,10 +293,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php endif; ?>
                             </div>
                             <div class="flex items-center gap-2 self-end sm:self-auto">
-                                <button onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
+                                <button type="button" onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
                                     <i class="bi bi-grid-fill leading-none pointer-events-none"></i>
                                 </button>
-                                <button onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm">
+                                <button type="button" onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm">
                                     <i class="bi bi-list-task leading-none pointer-events-none"></i>
                                 </button>
                             </div>
@@ -368,7 +368,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 </div>
 
                                                 <div class="card-actions ml-auto flex items-center gap-3">
-                                                    <button onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 dark:bg-black hover:bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn">
+                                                    <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 dark:bg-black hover:bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn">
                                                         <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
                                                     </button>
                                                     <?php if ($userRole !== 'viewer'): ?>
@@ -387,19 +387,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php if ($totalPages > 1): ?>
                                 <div id="pagination" class="flex items-center justify-center gap-2 pt-8">
                                     <?php if ($page > 1): ?>
-                                        <button onclick="changePage(<?= $page - 1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all shadow-sm">
+                                        <button type="button" onclick="changePage(<?= $page - 1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all shadow-sm">
                                             <i class="bi bi-chevron-left"></i>
                                         </button>
                                     <?php endif; ?>
 
                                     <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                                        <button onclick="changePage(<?= $i ?>)" class="w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm <?= $i === $page ? 'bg-red-600 text-white border-red-600' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400' ?>">
+                                        <button type="button" onclick="changePage(<?= $i ?>)" class="w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm <?= $i === $page ? 'bg-red-600 text-white border-red-600' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400' ?>">
                                             <?= $i ?>
                                         </button>
                                     <?php endfor; ?>
 
                                     <?php if ($page < $totalPages): ?>
-                                        <button onclick="changePage(<?= $page + 1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all shadow-sm">
+                                        <button type="button" onclick="changePage(<?= $page + 1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all shadow-sm">
                                             <i class="bi bi-chevron-right"></i>
                                         </button>
                                     <?php endif; ?>
@@ -436,7 +436,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <p id="modal-subtitle" class="text-red-100 text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">Reference ID: ---</p>
                             </div>
                         </div>
-                        <button onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all flex-shrink-0 -mt-1 md:mt-0">
+                        <button type="button" onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all flex-shrink-0 -mt-1 md:mt-0">
                             <i class="bi bi-x-lg text-lg text-white"></i>
                         </button>
                     </div>

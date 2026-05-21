@@ -172,7 +172,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </h2>
                     
                     <div class="space-y-3">
-                        <button onclick="window.location.href='<?php echo USERS_URL; ?>/views/profile.php'" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
+                        <button type="button" onclick="window.location.href='<?php echo USERS_URL; ?>/views/profile.php'" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="font-medium text-gray-800">Change Password</p>
@@ -202,7 +202,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                         </button>
                         
-                        <button onclick="confirmDataExport()" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
+                        <button type="button" onclick="confirmDataExport()" class="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="font-medium text-gray-800">Export My Data</p>
@@ -225,7 +225,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div class="danger-zone-item p-4 bg-red-50 rounded-lg">
                             <p class="font-medium text-gray-800 mb-2">Deactivate Account</p>
                             <p class="text-sm text-gray-600 mb-3">Temporarily disable your account. You can reactivate it anytime.</p>
-                            <button onclick="confirmDeactivate()" class="btn-warning text-sm">
+                            <button type="button" onclick="confirmDeactivate()" class="btn-warning text-sm">
                                 <i class="bi bi-pause-circle mr-2"></i>Deactivate Account
                             </button>
                         </div>
@@ -233,7 +233,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div class="danger-zone-item p-4 bg-red-50 rounded-lg">
                             <p class="font-medium text-gray-800 mb-2">Delete Account</p>
                             <p class="text-sm text-gray-600 mb-3">Permanently delete your account and all associated data. This action cannot be undone.</p>
-                            <button onclick="confirmDelete()" class="btn-danger text-sm">
+                            <button type="button" onclick="confirmDelete()" class="btn-danger text-sm">
                                 <i class="bi bi-trash mr-2"></i>Delete Account
                             </button>
                         </div>

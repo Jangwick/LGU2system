@@ -139,7 +139,7 @@ $pageTitle = "City News & Updates";
                         </div>
 
                         <div class="mt-6 flex flex-wrap items-center gap-3">
-                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                            <button type="button" onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
                                 <span class="btn-text">Read Full Article</span>
                                 <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
                             </button>
@@ -173,7 +173,7 @@ $pageTitle = "City News & Updates";
                         </div>
 
                         <div class="mt-6 flex flex-wrap items-center gap-3">
-                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                            <button type="button" onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
                                 <span class="btn-text">Read Full Article</span>
                                 <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
                             </button>
@@ -207,7 +207,7 @@ $pageTitle = "City News & Updates";
                         </div>
 
                         <div class="mt-6 flex flex-wrap items-center gap-3">
-                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                            <button type="button" onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
                                 <span class="btn-text">Read Full Article</span>
                                 <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
                             </button>
@@ -241,7 +241,7 @@ $pageTitle = "City News & Updates";
                         </div>
 
                         <div class="mt-6 flex flex-wrap items-center gap-3">
-                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                            <button type="button" onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
                                 <span class="btn-text">Read Full Article</span>
                                 <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
                             </button>
@@ -275,7 +275,7 @@ $pageTitle = "City News & Updates";
                         </div>
 
                         <div class="mt-6 flex flex-wrap items-center gap-3">
-                            <button onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
+                            <button type="button" onclick="toggleArticle(this)" class="news-toggle-btn inline-flex items-center px-8 py-4 bg-[#0a111a] text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all">
                                 <span class="btn-text">Read Full Article</span>
                                 <i class="bi bi-arrow-down ml-2 btn-icon transition-transform duration-300"></i>
                             </button>

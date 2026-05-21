@@ -175,7 +175,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="space-y-3" id="support-faqs">
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">I forgot my password. How do I reset it?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -185,7 +185,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">My account is locked. What should I do?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -195,7 +195,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">I can't upload a document. What's wrong?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -205,7 +205,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">How do I request access to additional features?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -215,7 +215,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">The system is running slowly. What can I do?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -225,7 +225,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">How do I update my profile information?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -235,7 +235,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Can I suggest a new feature?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>

@@ -278,7 +278,7 @@ $pageTitle = "Infrastructure Projects";
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeProjectModal()"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="bg-white rounded-[50px] shadow-2xl w-full max-w-4xl overflow-hidden relative animate-modal-up">
-                <button onclick="closeProjectModal()" class="absolute top-8 right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center">
+                <button type="button" onclick="closeProjectModal()" class="absolute top-8 right-8 text-gray-400 hover:text-red-600 transition-colors z-10 bg-gray-50 h-10 w-10 rounded-full flex items-center justify-center">
                     <i class="bi bi-x-lg"></i>
                 </button>
                 
@@ -312,7 +312,7 @@ $pageTitle = "Infrastructure Projects";
                         </div>
 
                         <div class="mt-12">
-                            <button onclick="closeProjectModal()" class="w-full py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:bg-black transition-all">
+                            <button type="button" onclick="closeProjectModal()" class="w-full py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:bg-black transition-all">
                                 Close Project Overview
                             </button>
                         </div>

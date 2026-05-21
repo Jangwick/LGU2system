@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <h1 class="text-2xl font-bold mb-2">User Management</h1>
                     <p class="text-red-100 animation-delay-100">Manage system users and permissions</p>
                 </div>
-                <button onclick="openCreateModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md min-w-[160px] h-12 flex-shrink-0 animate-slide-in-right border-2 border-red-600">
+                <button type="button" onclick="openCreateModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md min-w-[160px] h-12 flex-shrink-0 animate-slide-in-right border-2 border-red-600">
                     <i class="bi bi-person-plus-fill mr-2 text-xl"></i> Add User
                 </button>
             </div>
@@ -282,13 +282,13 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button onclick="viewUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
+                                        <button type="button" onclick="viewUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
                                             <i class="bi bi-eye mr-1"></i> View
                                         </button>
-                                        <button onclick="editUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-amber-50 text-amber-600 hover:bg-amber-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
+                                        <button type="button" onclick="editUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-amber-50 text-amber-600 hover:bg-amber-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md">
                                             <i class="bi bi-pencil mr-1"></i> Edit
                                         </button>
-                                        <button onclick="deleteUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md">
+                                        <button type="button" onclick="deleteUser(<?php echo $user['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md">
                                             <i class="bi bi-trash mr-1"></i> Delete
                                         </button>
                                     </td>
@@ -346,7 +346,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 dark:text-gray-100">Add New User</h3>
             </div>
-            <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all">
+            <button type="button" onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all">
                 <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
@@ -460,7 +460,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">User Details</h3>
             </div>
-            <button onclick="closeViewModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all">
+            <button type="button" onclick="closeViewModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all">
                 <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
@@ -470,7 +470,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <button onclick="closeViewModal()" class="no-ripple px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+            <button type="button" onclick="closeViewModal()" class="no-ripple px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
                 Close
             </button>
         </div>

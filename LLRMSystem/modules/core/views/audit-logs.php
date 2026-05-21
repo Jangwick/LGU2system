@@ -151,10 +151,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
             </div>
             <div class="flex gap-3 mt-4">
-                <button onclick="applyFilters()" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+                <button type="button" onclick="applyFilters()" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
                     <i class="bi bi-search mr-2"></i> Apply Filters
                 </button>
-                <button onclick="clearFilters()" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors">
+                <button type="button" onclick="clearFilters()" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors">
                     <i class="bi bi-x-circle mr-2"></i> Clear
                 </button>
             </div>

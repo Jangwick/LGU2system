@@ -245,7 +245,7 @@
             </div>
             
             <div class="px-2">
-                <button onclick="toggleMobileDropdown('integrationMobileDropdown')" 
+                <button type="button" onclick="toggleMobileDropdown('integrationMobileDropdown')" 
                         style="background-color: #991b1b !important;"
                         class="w-full flex items-center justify-between px-4 py-3 text-white hover:brightness-125 rounded-lg transition-all duration-200 group">
                     <div class="flex items-center">
@@ -308,7 +308,7 @@
 
             <!-- Theme Toggle - Hidden on mobile (already in navbar), visible on larger sidebar -->
             <div class="mt-6 px-4 pt-6 border-t border-red-700/30 hidden md:block">
-                <button onclick="document.getElementById('theme-toggle').click();" class="w-full flex items-center justify-between px-4 py-3 bg-red-900/40 text-white rounded-xl border border-red-700/30 hover:bg-red-700/50 transition-all group">
+                <button type="button" onclick="document.getElementById('theme-toggle').click();" class="w-full flex items-center justify-between px-4 py-3 bg-red-900/40 text-white rounded-xl border border-red-700/30 hover:bg-red-700/50 transition-all group">
                     <div class="flex items-center">
                         <i class="bi bi-moon-fill mr-3 text-lg dark-mode-icon"></i>
                         <i class="bi bi-sun-fill mr-3 text-lg light-mode-icon hidden"></i>

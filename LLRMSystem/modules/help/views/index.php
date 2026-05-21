@@ -52,7 +52,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-red-600 transition-colors">User Guide</h3>
                         <p class="text-sm text-gray-600 mb-4">Step-by-step instructions for using LRMS</p>
-                        <button onclick="showUserGuide()" class="text-red-600 hover:text-red-700 font-medium text-sm">
+                        <button type="button" onclick="showUserGuide()" class="text-red-600 hover:text-red-700 font-medium text-sm">
                             Learn More <i class="bi bi-arrow-right ml-1"></i>
                         </button>
                     </div>
@@ -65,7 +65,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors">Video Tutorials</h3>
                         <p class="text-sm text-gray-600 mb-4">Watch video guides and walkthroughs</p>
-                        <button onclick="showVideoTutorials()" class="text-green-600 hover:text-green-700 font-medium text-sm">
+                        <button type="button" onclick="showVideoTutorials()" class="text-green-600 hover:text-green-700 font-medium text-sm">
                             Watch Now <i class="bi bi-arrow-right ml-1"></i>
                         </button>
                     </div>
@@ -78,7 +78,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">Contact Support</h3>
                         <p class="text-sm text-gray-600 mb-4">Get in touch with our support team</p>
-                        <button onclick="openContactModal()" class="text-purple-600 hover:text-purple-700 font-medium text-sm">
+                        <button type="button" onclick="openContactModal()" class="text-purple-600 hover:text-purple-700 font-medium text-sm">
                             Contact Us <i class="bi bi-arrow-right ml-1"></i>
                         </button>
                     </div>
@@ -98,7 +98,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div class="space-y-3">
                             <!-- FAQ Item -->
                             <div class="border border-gray-200 rounded-lg">
-                                <button onclick="toggleFAQ(1)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
+                                <button type="button" onclick="toggleFAQ(1)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
                                     <span class="font-medium text-gray-800">How do I upload a document?</span>
                                     <i class="bi bi-chevron-down text-gray-400" id="faq-icon-1"></i>
                                 </button>
@@ -115,7 +115,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                             
                             <div class="border border-gray-200 rounded-lg">
-                                <button onclick="toggleFAQ(2)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
+                                <button type="button" onclick="toggleFAQ(2)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
                                     <span class="font-medium text-gray-800">How do I search for documents?</span>
                                     <i class="bi bi-chevron-down text-gray-400" id="faq-icon-2"></i>
                                 </button>
@@ -129,7 +129,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                             
                             <div class="border border-gray-200 rounded-lg">
-                                <button onclick="toggleFAQ(3)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
+                                <button type="button" onclick="toggleFAQ(3)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
                                     <span class="font-medium text-gray-800">How do I change my password?</span>
                                     <i class="bi bi-chevron-down text-gray-400" id="faq-icon-3"></i>
                                 </button>
@@ -146,7 +146,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                             
                             <div class="border border-gray-200 rounded-lg">
-                                <button onclick="toggleFAQ(4)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
+                                <button type="button" onclick="toggleFAQ(4)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
                                     <span class="font-medium text-gray-800">What file types are supported?</span>
                                     <i class="bi bi-chevron-down text-gray-400" id="faq-icon-4"></i>
                                 </button>
@@ -163,7 +163,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                             
                             <div class="border border-gray-200 rounded-lg">
-                                <button onclick="toggleFAQ(5)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
+                                <button type="button" onclick="toggleFAQ(5)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
                                     <span class="font-medium text-gray-800">How do I generate reports?</span>
                                     <i class="bi bi-chevron-down text-gray-400" id="faq-icon-5"></i>
                                 </button>
@@ -180,7 +180,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
                             
                             <div class="border border-gray-200 rounded-lg">
-                                <button onclick="toggleFAQ(6)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
+                                <button type="button" onclick="toggleFAQ(6)" class="w-full text-left p-4 flex items-center justify-between hover:bg-gray-50">
                                     <span class="font-medium text-gray-800">What are document permissions?</span>
                                     <i class="bi bi-chevron-down text-gray-400" id="faq-icon-6"></i>
                                 </button>
@@ -316,7 +316,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-md p-6 text-white animate-fade-in-up animation-delay-900 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         <h2 class="text-lg font-bold mb-2">Have Feedback?</h2>
                         <p class="text-sm text-red-100 mb-4">Help us improve LRMS by sharing your thoughts</p>
-                        <button onclick="openFeedbackModal()" class="w-full bg-white text-red-600 font-semibold py-2 px-4 rounded-lg hover:bg-red-50 transition">
+                        <button type="button" onclick="openFeedbackModal()" class="w-full bg-white text-red-600 font-semibold py-2 px-4 rounded-lg hover:bg-red-50 transition">
                             <i class="bi bi-chat-square-text mr-2"></i>Submit Feedback
                         </button>
                     </div>
@@ -333,7 +333,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-lg bg-white">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-gray-900">Contact Support</h3>
-            <button onclick="closeContactModal()" class="text-gray-400 hover:text-gray-600">
+            <button type="button" onclick="closeContactModal()" class="text-gray-400 hover:text-gray-600">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
         </div>
@@ -398,7 +398,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-lg bg-white">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-gray-900">Submit Feedback</h3>
-            <button onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-600">
+            <button type="button" onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-600">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
         </div>

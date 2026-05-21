@@ -135,11 +135,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 <div class="flex flex-wrap gap-2 sm:gap-3">
                     <?php if ($isConfidential || $isEncrypted): ?>
-                    <button onclick="promptPasswordForAccess('view')" 
+                    <button type="button" onclick="promptPasswordForAccess('view')" 
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-shield-lock mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock to View</span><span class="xs:hidden">Unlock</span>
                     </button>
-                    <button onclick="promptPasswordForAccess('download')" 
+                    <button type="button" onclick="promptPasswordForAccess('download')" 
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-download mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock & Download</span><span class="xs:hidden">DL</span>
                     </button>
@@ -247,12 +247,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
                             </div>
                             <div class="flex gap-2">
-                                <button onclick="downloadVersion(<?= $version['id'] ?>)" 
+                                <button type="button" onclick="downloadVersion(<?= $version['id'] ?>)" 
                                         class="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded">
                                     <i class="bi bi-download"></i>
                                 </button>
                                 <?php if (in_array($userRole, ['administrator', 'admin', 'officer'])): ?>
-                                <button onclick="revertVersion(<?= $document['id'] ?>, <?= $version['version_number'] ?>)" 
+                                <button type="button" onclick="revertVersion(<?= $document['id'] ?>, <?= $version['version_number'] ?>)" 
                                         class="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                                     <i class="bi bi-arrow-counterclockwise"></i> Revert
                                 </button>
@@ -315,13 +315,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">Quick Actions</h2>
                     
                     <div class="grid grid-cols-2 sm:grid-cols-1 gap-2">
-                        <button onclick="shareDocument()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition flex items-center text-gray-700 dark:text-gray-200">
+                        <button type="button" onclick="shareDocument()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition flex items-center text-gray-700 dark:text-gray-200">
                             <i class="bi bi-share mr-2 text-gray-600 dark:text-gray-400"></i><span class="hidden xs:inline">Share </span>Document
                         </button>
-                        <button onclick="printDocument()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition flex items-center text-gray-700 dark:text-gray-200">
+                        <button type="button" onclick="printDocument()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition flex items-center text-gray-700 dark:text-gray-200">
                             <i class="bi bi-printer mr-2 text-gray-600 dark:text-gray-400"></i><span class="hidden xs:inline">Print </span>Document
                         </button>
-                        <button onclick="viewHistory()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 rounded-lg transition flex items-center">
+                        <button type="button" onclick="viewHistory()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 rounded-lg transition flex items-center">
                             <i class="bi bi-clock-history mr-2 text-gray-600"></i><span class="hidden xs:inline">Activity </span>History
                         </button>
                         <?php 
@@ -329,7 +329,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         if ($canDelete): 
                         ?>
                         <hr class="my-2 col-span-2 sm:col-span-1">
-                        <button onclick="deleteDocument(<?= $document['id'] ?>)" 
+                        <button type="button" onclick="deleteDocument(<?= $document['id'] ?>)" 
                                 class="col-span-2 sm:col-span-1 px-3 sm:px-4 py-2 text-left text-xs sm:text-sm text-red-600 hover:bg-red-50 rounded-lg transition flex items-center">
                             <i class="bi bi-trash mr-2"></i>Delete Document
                         </button>
@@ -344,14 +344,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </h2>
                     
                     <div class="space-y-3">
-                        <button onclick="generateAISummary(<?= $document['id'] ?>)" 
+                        <button type="button" onclick="generateAISummary(<?= $document['id'] ?>)" 
                                 id="summarize-btn"
                                 class="w-full px-4 py-3 bg-red-600 dark:bg-red-700 text-white dark:text-white rounded-xl hover:bg-red-700 dark:hover:bg-red-600 transition shadow-sm flex items-center justify-center font-bold group">
                             <i class="bi bi-magic mr-2 group-hover:animate-pulse text-white dark:text-white"></i> 
                             <span class="text-white dark:text-white">Summarize with AI</span>
                         </button>
                         
-                        <button onclick="findSimilarDocs(<?= $document['id'] ?>)" 
+                        <button type="button" onclick="findSimilarDocs(<?= $document['id'] ?>)" 
                                 id="similar-btn"
                                 class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition shadow-sm flex items-center justify-center font-bold">
                             <i class="bi bi-diagram-3 mr-2"></i> Find Similar Documents

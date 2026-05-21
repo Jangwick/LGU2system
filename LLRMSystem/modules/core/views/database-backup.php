@@ -49,10 +49,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <p class="text-red-100">Create and manage database backups</p>
                 </div>
                 <div class="flex flex-wrap gap-3 animate-slide-in-right">
-                    <button onclick="createBackup()" class="flex items-center px-6 py-2.5 bg-white hover:bg-red-50 text-red-600 rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/10">
+                    <button type="button" onclick="createBackup()" class="flex items-center px-6 py-2.5 bg-white hover:bg-red-50 text-red-600 rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/10">
                         <i class="bi bi-download mr-2"></i> Create Backup
                     </button>
-                    <button onclick="cleanupBackups()" class="flex items-center px-6 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/20">
+                    <button type="button" onclick="cleanupBackups()" class="flex items-center px-6 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/20">
                         <i class="bi bi-trash3 mr-2"></i> Cleanup Old
                     </button>
                 </div>
@@ -166,11 +166,11 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                         <i class="bi bi-download"></i>
                                     </a>
                                     <?php if ($backup['verified']): ?>
-                                    <button onclick="restoreBackup('<?= htmlspecialchars($backup['filename']) ?>')" class="px-3 py-1.5 bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60 text-green-700 dark:text-green-300 rounded-lg text-sm font-medium transition-colors" title="Restore">
+                                    <button type="button" onclick="restoreBackup('<?= htmlspecialchars($backup['filename']) ?>')" class="px-3 py-1.5 bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60 text-green-700 dark:text-green-300 rounded-lg text-sm font-medium transition-colors" title="Restore">
                                         <i class="bi bi-arrow-counterclockwise"></i>
                                     </button>
                                     <?php endif; ?>
-                                    <button onclick="deleteBackup('<?= htmlspecialchars($backup['filename']) ?>')" class="px-3 py-1.5 bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-700 dark:text-red-300 rounded-lg text-sm font-medium transition-colors" title="Delete">
+                                    <button type="button" onclick="deleteBackup('<?= htmlspecialchars($backup['filename']) ?>')" class="px-3 py-1.5 bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-700 dark:text-red-300 rounded-lg text-sm font-medium transition-colors" title="Delete">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>

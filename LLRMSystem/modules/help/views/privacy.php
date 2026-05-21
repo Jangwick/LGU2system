@@ -198,7 +198,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="space-y-3" id="privacy-faqs">
                     
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Who can see my personal information?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -208,7 +208,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Is my password stored securely?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -218,7 +218,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">What happens to my data if my account is deactivated?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -228,7 +228,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Does the system track my activity?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -238,7 +238,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Can I download a copy of my data?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -248,7 +248,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Is this system compliant with the Data Privacy Act?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>

@@ -138,7 +138,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-800">Document Uploads (Last 7 Days)</h2>
-                    <button onclick="location.reload()" class="text-gray-500 hover:text-gray-700 text-sm" title="Refresh">
+                    <button type="button" onclick="location.reload()" class="text-gray-500 hover:text-gray-700 text-sm" title="Refresh">
                         <i class="bi bi-arrow-clockwise"></i>
                     </button>
                 </div>

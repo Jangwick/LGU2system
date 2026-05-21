@@ -36,10 +36,10 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <p class="text-red-100 animate-slide-in-left animation-delay-100">Comprehensive insights and statistical analysis</p>
                 </div>
                 <div class="flex flex-wrap gap-3 animate-slide-in-right">
-                    <button onclick="showExportModal()" class="no-ripple inline-flex items-center justify-center px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm border border-white/10 min-w-[160px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                    <button type="button" onclick="showExportModal()" class="no-ripple inline-flex items-center justify-center px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm border border-white/10 min-w-[160px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-download mr-2"></i> Export Reports
                     </button>
-                    <button onclick="window.print()" class="no-ripple inline-flex items-center justify-center px-6 py-2.5 !bg-white hover:!bg-red-50 !text-red-600 rounded-xl font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm border border-transparent min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                    <button type="button" onclick="window.print()" class="no-ripple inline-flex items-center justify-center px-6 py-2.5 !bg-white hover:!bg-red-50 !text-red-600 rounded-xl font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm border border-transparent min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-printer mr-2"></i> Print
                     </button>
                 </div>
@@ -244,7 +244,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Export Report</h3>
             </div>
-            <button onclick="closeExportModal()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-all">
+            <button type="button" onclick="closeExportModal()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-100 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-all">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>

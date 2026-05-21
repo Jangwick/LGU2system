@@ -60,7 +60,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php echo e(strtoupper(substr($user['full_name'] ?? $user['email'], 0, 2))); ?>
                             </div>
                         <?php endif; ?>
-                        <button onclick="document.getElementById('avatar-upload').click()" 
+                        <button type="button" onclick="document.getElementById('avatar-upload').click()" 
                                 class="absolute bottom-0 right-0 bg-red-500 hover:bg-red-600 rounded-full p-3 shadow-lg transition-all transform hover:scale-110 active:scale-95"
                                 title="Upload profile picture">
                             <i class="bi bi-camera text-white"></i>
@@ -97,7 +97,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     
                     <!-- Quick Actions -->
                     <div class="flex gap-3 animate-slide-in-right animation-delay-100">
-                        <button onclick="openEditModal()" class="no-ripple btn-outline border-white text-white hover:bg-white hover:text-red-600 inline-flex items-center justify-center min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                        <button type="button" onclick="openEditModal()" class="no-ripple btn-outline border-white text-white hover:bg-white hover:text-red-600 inline-flex items-center justify-center min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                             <i class="bi bi-pencil mr-2"></i>Edit Profile
                         </button>
                     </div>
@@ -284,7 +284,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             Account Security
                         </h2>
                         <div class="space-y-3">
-                            <button onclick="openPasswordModal()" class="no-ripple w-full text-left px-4 py-3 bg-gray-50 hover:bg-red-50 rounded-lg transition-colors duration-200 group flex items-center justify-center min-h-[48px] flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                            <button type="button" onclick="openPasswordModal()" class="no-ripple w-full text-left px-4 py-3 bg-gray-50 hover:bg-red-50 rounded-lg transition-colors duration-200 group flex items-center justify-center min-h-[48px] flex-shrink-0 transform-none hover:transform-none active:transform-none">
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <p class="text-sm font-medium text-gray-800 group-hover:text-red-700 transition-colors">Change Password</p>
@@ -339,7 +339,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-lg bg-white">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-gray-900">Edit Profile</h3>
-            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+            <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
         </div>
@@ -385,7 +385,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-gray-900">Change Password</h3>
-            <button onclick="closePasswordModal()" class="text-gray-400 hover:text-gray-600">
+            <button type="button" onclick="closePasswordModal()" class="text-gray-400 hover:text-gray-600">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
         </div>

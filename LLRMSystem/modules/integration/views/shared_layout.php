@@ -67,7 +67,7 @@ function getIntFileIconBg($mimeType, $fileName = '') {
                     <p class="text-red-100 mt-2 opacity-90">External data automatically synced from legislative partners.</p>
                 </div>
                 <div class="flex gap-3">
-                    <button id="simulateSyncBtn" onclick="openSimulatorModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-700 px-5 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-shadow shadow-sm min-w-[160px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                    <button type="button" id="simulateSyncBtn" onclick="openSimulatorModal()" class="no-ripple inline-flex items-center justify-center bg-white text-red-700 px-5 py-2.5 rounded-xl font-bold hover:bg-red-50 transition-shadow shadow-sm min-w-[160px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-cpu mr-2"></i> Simulate Sync
                     </button>
                 </div>
@@ -175,7 +175,7 @@ function getIntFileIconBg($mimeType, $fileName = '') {
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <?php if ($record['status'] !== 'synced'): ?>
-                                <button onclick="importToLRMS(<?php echo $record['id']; ?>, this)" class="text-red-600 hover:text-red-800 font-bold text-sm flex items-center justify-end w-full group">
+                                <button type="button" onclick="importToLRMS(<?php echo $record['id']; ?>, this)" class="text-red-600 hover:text-red-800 font-bold text-sm flex items-center justify-end w-full group">
                                     <i class="bi bi-download mr-1 transition-transform group-hover:translate-y-0.5"></i>
                                     Import to LRMS
                                 </button>
@@ -204,7 +204,7 @@ function getIntFileIconBg($mimeType, $fileName = '') {
             <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
                 <i class="bi bi-cpu mr-2 text-red-600"></i> Integration Simulator
             </h3>
-            <button id="simulatorCloseBtn" onclick="closeSimulatorModal()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+            <button type="button" id="simulatorCloseBtn" onclick="closeSimulatorModal()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>

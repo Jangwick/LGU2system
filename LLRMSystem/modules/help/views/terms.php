@@ -211,7 +211,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="space-y-3" id="terms-faqs">
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Who is authorized to use LRMS?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -221,7 +221,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Can I share my login credentials with a colleague?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -231,7 +231,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">What happens if I violate these terms?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -241,7 +241,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">Can I download or export documents from the system?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -251,7 +251,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">What types of documents can I upload?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>
@@ -261,7 +261,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <div class="border border-gray-100 rounded-xl overflow-hidden">
-                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
+                        <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition-colors">
                             <span class="font-bold text-gray-800 text-sm">How often are these terms updated?</span>
                             <i class="bi bi-chevron-down text-gray-400 transition-transform duration-300"></i>
                         </button>

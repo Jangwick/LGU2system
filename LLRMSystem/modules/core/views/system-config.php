@@ -55,7 +55,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                     <p class="text-red-100">View and manage system settings</p>
                 </div>
                 <div class="flex gap-3 animate-slide-in-right">
-                    <button onclick="resetConfig()" class="flex items-center px-6 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/20">
+                    <button type="button" onclick="resetConfig()" class="flex items-center px-6 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-sm border border-white/20">
                         <i class="bi bi-arrow-counterclockwise mr-2"></i> Reset to Defaults
                     </button>
                 </div>
@@ -203,7 +203,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Save Button -->
         <div class="flex justify-end gap-3 mb-6">
-            <button onclick="saveConfig()" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
+            <button type="button" onclick="saveConfig()" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transform hover:scale-105 hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
                 <i class="bi bi-check-lg mr-2"></i> Save Configuration
             </button>
         </div>

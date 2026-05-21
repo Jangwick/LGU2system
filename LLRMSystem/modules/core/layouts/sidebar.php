@@ -126,7 +126,7 @@
             </div>
             
             <div class="dropdown-section">
-                <button onclick="toggleDropdown('integrationDropdown')" class="nav-item w-full text-left">
+                <button type="button" onclick="toggleDropdown(event, 'integrationDropdown')" class="no-ripple nav-item w-full text-left">
                     <i class="bi bi-plug"></i>
                     <span class="flex-1 sidebar-text">Integration Modules</span>
                     <i class="bi bi-chevron-down dropdown-icon sidebar-text" id="integrationDropdown-icon"></i>
@@ -299,10 +299,14 @@
 </style>
 
 <script>
-function toggleDropdown(dropdownId) {
+function toggleDropdown(event, dropdownId) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
     const dropdown = document.getElementById(dropdownId);
     const icon = document.getElementById(dropdownId + '-icon');
-    
+
     if (dropdown.classList.contains('show')) {
         dropdown.classList.remove('show');
         dropdown.classList.add('hidden');

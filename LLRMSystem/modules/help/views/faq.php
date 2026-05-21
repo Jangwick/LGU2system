@@ -38,7 +38,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="space-y-4" id="faq-list">
                 <!-- FAQ 1 -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
-                    <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
                         <span class="text-lg font-black text-gray-900 uppercase tracking-tight group-hover:text-red-600 transition-colors">What is the Valenzuela LRMS?</span>
                         <div class="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-50 group-hover:text-red-600 transition-all">
                             <i class="bi bi-plus-lg text-lg transition-transform duration-300"></i>
@@ -51,7 +51,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- FAQ 2 -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
-                    <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
                         <span class="text-lg font-black text-gray-900 uppercase tracking-tight group-hover:text-red-600 transition-colors">Who can access the official records?</span>
                         <div class="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-50 group-hover:text-red-600 transition-all">
                             <i class="bi bi-plus-lg text-lg transition-transform duration-300"></i>
@@ -64,7 +64,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- FAQ 3 -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
-                    <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
                         <span class="text-lg font-black text-gray-900 uppercase tracking-tight group-hover:text-red-600 transition-colors">How do I search for a specific ordinance?</span>
                         <div class="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-50 group-hover:text-red-600 transition-all">
                             <i class="bi bi-plus-lg text-lg transition-transform duration-300"></i>
@@ -77,7 +77,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- FAQ 4 -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
-                    <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
                         <span class="text-lg font-black text-gray-900 uppercase tracking-tight group-hover:text-red-600 transition-colors">Is the portal available 24/7?</span>
                         <div class="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-50 group-hover:text-red-600 transition-all">
                             <i class="bi bi-plus-lg text-lg transition-transform duration-300"></i>
@@ -90,7 +90,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                 <!-- FAQ 5 -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
-                    <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
+                    <button type="button" onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-6 text-left group">
                         <span class="text-lg font-black text-gray-900 uppercase tracking-tight group-hover:text-red-600 transition-colors">Who manages this digital system?</span>
                         <div class="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-50 group-hover:text-red-600 transition-all">
                             <i class="bi bi-plus-lg text-lg transition-transform duration-300"></i>

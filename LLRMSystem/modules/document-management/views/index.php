@@ -101,38 +101,38 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button onclick="openUploadModal()" class="no-ripple inline-flex items-center justify-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[165px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                    <button type="button" onclick="openUploadModal()" class="no-ripple inline-flex items-center justify-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[165px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-plus-circle mr-2"></i>
                         Upload Document
                     </button>
                     <?php endif; ?>
                     <?php if ($userRole !== 'viewer'): ?>
                     <div class="relative" id="export-dropdown">
-                        <button onclick="toggleExportMenu()" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                        <button type="button" onclick="toggleExportMenu(event)" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                             <i class="bi bi-download mr-2"></i>
                             Export
                             <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>
                         </button>
                         <div id="export-menu" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700" style="position: fixed; width: 224px; z-index: 99999;">
                             <div class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">Export List</div>
-                            <button onclick="exportList('csv')" 
+                            <button type="button" onclick="exportList('csv')" 
                                class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
                                 <i class="bi bi-filetype-csv mr-3 text-green-600 dark:text-green-500 text-lg"></i>
                                 Export as CSV
                             </button>
-                            <button onclick="exportList('excel')" 
+                            <button type="button" onclick="exportList('excel')" 
                                class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
                                 <i class="bi bi-file-earmark-excel mr-3 text-green-600 dark:text-green-500 text-lg"></i>
                                 Export as Excel
                             </button>
                             <div class="border-t border-gray-200 dark:border-gray-700"></div>
                             <div class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">Export Files</div>
-                            <button onclick="exportSelectedFiles()" 
+                            <button type="button" onclick="exportSelectedFiles()" 
                                class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
                                 <i class="bi bi-file-earmark-zip mr-3 text-blue-600 dark:text-blue-500 text-lg"></i>
                                 Selected Files (ZIP)
                             </button>
-                            <button onclick="exportAllFiles()" 
+                            <button type="button" onclick="exportAllFiles()" 
                                class="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 flex items-center transition-colors duration-150">
                                 <i class="bi bi-archive mr-3 text-purple-600 dark:text-purple-500 text-lg"></i>
                                 All Files (ZIP)
@@ -395,7 +395,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
-                                            <button class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                            <button type="button" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                             <?php 
@@ -414,12 +414,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button class="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                            <button type="button" class="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <?php endif; ?>
                                             <?php if ($canDelete): ?>
-                                            <button class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                            <button type="button" class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                             <?php endif; ?>
@@ -467,7 +467,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <?php echo getStatusBadge($doc['status']); ?>
                                 </div>
                                 <div class="flex items-center gap-1.5">
-                                    <button class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                     <?php 
@@ -486,12 +486,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     $canDelete = $canEdit; // Same policy for mobile
                                     ?>
                                     <?php if ($canEdit): ?>
-                                    <button class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <?php endif; ?>
                                     <?php if (isset($canDelete) && $canDelete): ?>
-                                    <button class="w-9 h-9 flex items-center justify-center text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl transition-all active:scale-90" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl transition-all active:scale-90" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                     <?php endif; ?>
@@ -646,7 +646,7 @@ function viewDocument(id) {
                                 </a>
                                 ` : ''}
                                 ${currentUserRole !== 'viewer' ? `
-                                <button onclick="editDocument(${doc.id})" class="flex-1 sm:flex-none justify-center bg-gray-900 dark:bg-black hover:bg-black text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[11px] flex items-center shadow-lg transition-all active:scale-95">
+                                <button type="button" onclick="editDocument(${doc.id})" class="flex-1 sm:flex-none justify-center bg-gray-900 dark:bg-black hover:bg-black text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[11px] flex items-center shadow-lg transition-all active:scale-95">
                                     <i class="bi bi-pencil-square mr-2 text-base"></i> Edit
                                 </button>
                                 ` : ''}
@@ -729,7 +729,7 @@ function viewDocument(id) {
                                                             <p class="text-[10px] text-gray-500">${formatDateTime(v.created_at)} • ${v.created_by_name}</p>
                                                         </div>
                                                     </div>
-                                                    <button onclick="revertToVersion(${doc.id}, ${v.version_number})" class="text-xs font-black uppercase text-blue-600 hover:text-blue-700">Revert</button>
+                                                    <button type="button" onclick="revertToVersion(${doc.id}, ${v.version_number})" class="text-xs font-black uppercase text-blue-600 hover:text-blue-700">Revert</button>
                                                 </div>
                                             `).join('')}
                                         </div>
@@ -772,23 +772,23 @@ function viewDocument(id) {
                                     </h3>
                                     <div class="grid gap-3">
                                         ${currentUserRole === 'viewer' ? `
-                                        <button onclick="approveDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-green-700 dark:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-700 transition-colors">
+                                        <button type="button" onclick="approveDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-green-700 dark:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-700 transition-colors">
                                             <i class="bi bi-check-circle mr-3 text-green-500"></i> Approve Document
                                         </button>
                                         ` : `
-                                        <button onclick="shareDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
+                                        <button type="button" onclick="shareDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-share mr-3 text-blue-500"></i> Share Document
                                         </button>
-                                        <button onclick="window.print()" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
+                                        <button type="button" onclick="window.print()" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-printer mr-3 text-gray-500"></i> Print Details
                                         </button>
-                                        <button onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
+                                        <button type="button" onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
                                         `}
                                         <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
                                             ${doc.status !== 'approved' ? `
-                                            <button onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
+                                            <button type="button" onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
                                                 <i class="bi bi-trash mr-3"></i> Delete Document
                                             </button>
                                             ` : ''}
@@ -1195,20 +1195,24 @@ function exportList(format) {
     window.location.href = url;
 }
 
-function toggleExportMenu() {
+function toggleExportMenu(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
     const menu = document.getElementById('export-menu');
     const button = document.querySelector('#export-dropdown button');
     const rect = button.getBoundingClientRect();
-    
+
     // Move menu to body if not already there (to escape overflow:hidden containers)
     if (menu.parentElement.id === 'export-dropdown') {
         document.body.appendChild(menu);
     }
-    
+
     // Position the fixed dropdown below the button, aligned to the right
     menu.style.top = (rect.bottom + 8) + 'px';
     menu.style.left = (rect.right - 224) + 'px'; // 224 is the menu width
-    
+
     menu.classList.toggle('hidden');
 }
 
@@ -1300,7 +1304,7 @@ document.addEventListener('keydown', function(e) {
                 <i class="bi bi-pencil-square mr-3 text-red-600"></i>
                 Edit Document
             </h2>
-            <button onclick="closeEditModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all">
+            <button type="button" onclick="closeEditModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
@@ -1439,7 +1443,7 @@ document.addEventListener('keydown', function(e) {
                     <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest">Document Preview</h3>
                 </div>
             </div>
-            <button onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
+            <button type="button" onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -1456,7 +1460,7 @@ document.addEventListener('keydown', function(e) {
     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col border border-gray-200 dark:border-gray-800">
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <h3 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Activity History</h3>
-            <button onclick="closeActivityModal()" class="text-gray-400 hover:text-gray-600 transition-colors transform-none">
+            <button type="button" onclick="closeActivityModal()" class="text-gray-400 hover:text-gray-600 transition-colors transform-none">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -1481,7 +1485,7 @@ document.addEventListener('keydown', function(e) {
                 <i class="bi bi-cloud-arrow-up mr-3 text-red-600"></i>
                 Upload Repository
             </h2>
-            <button onclick="closeUploadModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all transform-none">
+            <button type="button" onclick="closeUploadModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all transform-none">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>

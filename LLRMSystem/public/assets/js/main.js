@@ -10,9 +10,16 @@ function createRipple(event) {
     const diameter = Math.max(button.clientWidth, button.clientHeight);
     const radius = diameter / 2;
 
+    if (window.getComputedStyle(button).position === 'static') {
+        button.style.position = 'relative';
+    }
+    button.style.overflow = 'hidden';
+
+    circle.style.position = 'absolute';
     circle.style.width = circle.style.height = `${diameter}px`;
     circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
     circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+    circle.style.pointerEvents = 'none';
     circle.classList.add("ripple");
 
     const ripple = button.getElementsByClassName("ripple")[0];
@@ -73,7 +80,7 @@ class ToastNotification {
             <div class="flex items-center p-4 border rounded-lg shadow-lg ${colors[type]} min-w-[300px] max-w-md">
                 <i class="bi bi-${icons[type]} mr-3 text-xl"></i>
                 <span class="flex-1">${message}</span>
-                <button onclick="this.parentElement.parentElement.remove()" class="ml-3 hover:opacity-70">
+                <button type="button" onclick="this.parentElement.parentElement.remove()" class="ml-3 hover:opacity-70">
                     <i class="bi bi-x text-xl"></i>
                 </button>
             </div>

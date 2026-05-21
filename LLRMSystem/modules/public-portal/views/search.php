@@ -143,7 +143,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
             </a>
             <div class="flex items-center gap-3">
                 <span class="hidden sm:inline text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Public Portal</span>
-                <button onclick="toggleDarkMode()" class="w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-500 dark:text-yellow-400 hover:border-red-300 transition-all" title="Toggle Dark Mode">
+                <button type="button" onclick="toggleDarkMode()" class="w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-500 dark:text-yellow-400 hover:border-red-300 transition-all" title="Toggle Dark Mode">
                     <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                 </button>
                 <a href="<?= LOGIN_URL ?>" class="bg-red-600 hover:bg-red-700 text-white font-black px-4 py-2 rounded-full text-xs shadow-lg shadow-red-200/50 dark:shadow-none transition-all">Sign In</a>
@@ -174,7 +174,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
 
     <!-- Mobile Filter Toggle -->
     <div class="lg:hidden">
-        <button onclick="toggleMobileFilters()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
+        <button type="button" onclick="toggleMobileFilters()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-all">
             <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600"><i class="bi bi-sliders2"></i></div><span class="font-bold text-gray-700 dark:text-gray-200">Refine Search</span></div>
             <i id="filter-chevron" class="bi bi-chevron-down text-gray-400 transition-transform"></i>
         </button>
@@ -266,8 +266,8 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                         <div class="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span><?= ucfirst($mode) ?> Engine</div>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-auto">
-                        <button onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded-lg shadow-sm"><i class="bi bi-grid-fill"></i></button>
-                        <button onclick="setView('list')" id="view-list" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm"><i class="bi bi-list-task"></i></button>
+                        <button type="button" onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded-lg shadow-sm"><i class="bi bi-grid-fill"></i></button>
+                        <button type="button" onclick="setView('list')" id="view-list" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm"><i class="bi bi-list-task"></i></button>
                     </div>
                 </div>
 
@@ -299,7 +299,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                                     <div class="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500"><i class="bi bi-person-circle text-gray-300 dark:text-gray-600 text-sm"></i><?= e($doc['uploaded_by_name'] ?? 'System Admin') ?></div>
                                     <div class="flex items-center gap-1.5"><?php $tags = explode(',', $doc['tags'] ?? ''); foreach(array_slice($tags,0,3) as $tag): if(empty(trim($tag))) continue; ?><span class="px-2.5 py-1 rounded-lg bg-gray-50 dark:bg-gray-950 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 border border-gray-100 dark:border-gray-700 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer">#<?= e(trim($tag)) ?></span><?php endforeach; ?></div>
                                     <div class="card-actions ml-auto flex items-center gap-3">
-                                        <button onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn"><i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i>Preview</button>
+                                        <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn"><i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i>Preview</button>
                                     </div>
                                 </div>
                             </div>
@@ -309,9 +309,9 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                     <!-- Pagination -->
                     <?php if ($totalPages > 1): ?>
                     <div id="pagination" class="flex items-center justify-center gap-2 pt-8">
-                        <?php if ($page > 1): ?><button onclick="changePage(<?= $page-1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 hover:text-red-600 transition-all shadow-sm"><i class="bi bi-chevron-left"></i></button><?php endif; ?>
-                        <?php for ($i = max(1,$page-2); $i <= min($totalPages,$page+2); $i++): ?><button onclick="changePage(<?= $i ?>)" class="w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm <?= $i===$page?'bg-red-600 text-white border-red-600':'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-600 hover:text-red-600' ?>"><?= $i ?></button><?php endfor; ?>
-                        <?php if ($page < $totalPages): ?><button onclick="changePage(<?= $page+1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 hover:text-red-600 transition-all shadow-sm"><i class="bi bi-chevron-right"></i></button><?php endif; ?>
+                        <?php if ($page > 1): ?><button type="button" onclick="changePage(<?= $page-1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 hover:text-red-600 transition-all shadow-sm"><i class="bi bi-chevron-left"></i></button><?php endif; ?>
+                        <?php for ($i = max(1,$page-2); $i <= min($totalPages,$page+2); $i++): ?><button type="button" onclick="changePage(<?= $i ?>)" class="w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm <?= $i===$page?'bg-red-600 text-white border-red-600':'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-600 hover:text-red-600' ?>"><?= $i ?></button><?php endfor; ?>
+                        <?php if ($page < $totalPages): ?><button type="button" onclick="changePage(<?= $page+1 ?>)" class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-red-600 hover:text-red-600 transition-all shadow-sm"><i class="bi bi-chevron-right"></i></button><?php endif; ?>
                     </div>
                     <?php endif; ?>
                     <?php endif; ?>
@@ -345,7 +345,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
             <div class="md:hidden w-full flex justify-center pt-3 pb-1 bg-gradient-to-r from-red-600 to-red-700"><div class="w-12 h-1.5 bg-white/30 rounded-full"></div></div>
             <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-start justify-between text-white border-b border-white/10">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0"><i id="modal-icon" class="bi bi-file-earmark-text"></i></div><div class="min-w-0"><h3 class="text-xl font-black leading-none mb-1">Document Preview</h3><p id="modal-subtitle" class="text-red-100 text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">REF: ---</p></div></div>
-                <button onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all shrink-0"><i class="bi bi-x-lg text-lg text-white"></i></button>
+                <button type="button" onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all shrink-0"><i class="bi bi-x-lg text-lg text-white"></i></button>
             </div>
             <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 max-h-[75vh] sm:max-h-none overflow-y-auto sm:overflow-visible">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
