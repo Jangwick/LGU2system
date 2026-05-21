@@ -287,7 +287,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <?= e(ucfirst($mode)) ?> Engine
                                 </div>
                                 <?php if ($userRole !== 'viewer'): ?>
-                                <button onclick="exportResults()" class="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest transition-all">
+                                <button type="button" onclick="exportResults(event)" class="no-ripple flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest transition-colors">
                                     <i class="bi bi-download text-red-600 dark:text-red-500"></i> Export CSV
                                 </button>
                                 <?php endif; ?>
@@ -703,7 +703,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Export Results
-            function exportResults() {
+            function exportResults(event) {
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
                 const formData = new FormData(filterForm);
                 const mainData = new FormData(mainForm);
                 const params = new URLSearchParams(formData);
