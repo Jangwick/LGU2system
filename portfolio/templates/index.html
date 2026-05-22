@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johnrick T. Nuñeza - Web Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="light-mode">
+    <div class="max-w-[1100px] mx-auto px-6 py-12">
+        <!-- Hero Section -->
+        <section class="hero-section mb-1 relative">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-3 shadow-lg border border-gray-200 dark:border-gray-800 relative w-full">
+                <button id="darkModeToggle" class="absolute top-4 right-4 p-2 rounded-full border transition-all duration-200 hover:scale-110 z-50 cursor-pointer">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <!-- Avatar -->
+                    <div class="flex-shrink-0 hero-avatar relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl blur-2xl"></div>
+                        <img src="{{ url_for('static', filename='avatar.png') }}" alt="Johnrick T. Nuñeza" class="relative w-32 h-32 md:w-40 md:h-40 rounded-xl object-cover border-4 shadow-2xl">
+                    </div>
+                    <!-- Name and Info -->
+                    <div class="flex-1 text-left hero-text z-10">
+                        <p class="text-lg mb-2 opacity-0 hero-name text-secondary">Hi, I'm</p>
+                        <h1 class="text-4xl md:text-5xl font-bold mb-3 opacity-0 hero-name">Johnrick T. Nuñeza</h1>
+                        <p class="text-xl mb-4 opacity-0 hero-tagline text-accent">Web Developer</p>
+                        <p class="text-secondary mb-6 leading-relaxed opacity-0 hero-about">
+                            A 24-year-old web developer with a strong work ethic and commitment to delivering results.
+                        </p>
+                        <div class="flex gap-4 opacity-0 hero-buttons">
+                            <a href="#contact" class="px-6 py-2 rounded-full font-medium transition-all duration-200 hover:scale-105 bg-accent text-white shadow-lg hover:shadow-xl">Contact</a>
+                            <a href="#projects" class="px-6 py-2 rounded-full font-medium border-2 transition-all duration-200 hover:scale-105 hover:bg-accent/10">Projects</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- About merged with header -->
+                <div class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-800">
+                    <h2 class="text-xl font-bold mb-2">About</h2>
+                    <p class="text-secondary leading-relaxed text-lg">
+                        Hi, I'm Johnrick T. Nuñeza, a 24-year-old web developer with a strong work ethic and commitment to delivering results. I build clean, functional, and user-friendly solutions using technologies such as HTML, CSS, JavaScript, Python, MySQL, PHP, and Flutter. I focus on creating responsive and efficient systems that solve real-world problems while continuously improving my skills as a developer.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section class="mb-1 fade-in-section" id="tech">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-3 shadow-lg border border-gray-200 dark:border-gray-800 w-full flex flex-col">
+                <h2 class="text-xl font-bold mb-3">Tech Stack</h2>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 rounded-full text-sm border">HTML</span>
+                    <span class="px-3 py-1 rounded-full text-sm border">CSS</span>
+                    <span class="px-3 py-1 rounded-full text-sm border">JavaScript</span>
+                    <span class="px-3 py-1 rounded-full text-sm border">Python</span>
+                    <span class="px-3 py-1 rounded-full text-sm border">PHP</span>
+                    <span class="px-3 py-1 rounded-full text-sm border">MySQL</span>
+                    <span class="px-3 py-1 rounded-full text-sm border">Flutter</span>
+                    <span class="px-3 py-1 rounded-full text-sm border">Supabase</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="mb-1 fade-in-section" id="projects">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-3 shadow-lg border border-gray-200 dark:border-gray-800 w-full flex flex-col">
+                <h2 class="text-xl font-bold mb-3">Projects</h2>
+                <div class="border border-gray-200 dark:border-gray-800 rounded-xl p-3 transition-all duration-200 hover:-translate-y-0.5 flex flex-col">
+                    <h3 class="text-xl font-bold mb-2">Legislative Records Management System</h3>
+                    <p class="text-secondary mb-4">A comprehensive system for managing legislative records for the LGU of Valenzuela City</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 rounded text-xs border">PHP</span>
+                        <span class="px-2 py-1 rounded text-xs border">MySQL</span>
+                        <span class="px-2 py-1 rounded text-xs border">Tailwind CSS</span>
+                        <span class="px-2 py-1 rounded text-xs border">JavaScript</span>
+                    </div>
+                    <a href="https://llrm.spvalenzuela.com/" target="_blank" class="text-accent hover:underline">View Live Demo →</a>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Footer Section -->
+        <footer class="fade-in-section" id="contact">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-800 w-full flex flex-col items-center">
+                <div class="flex justify-center gap-6 mb-6">
+                    <a href="https://www.linkedin.com/in/johnrick-nu%C3%B1eza-34b08026b/" target="_blank" class="text-2xl hover:scale-110 transition-transform">in</a>
+                    <a href="https://github.com/Jangwick" target="_blank" class="text-2xl hover:scale-110 transition-transform">⌘</a>
+                    <a href="https://www.facebook.com/rickzzz12345/" target="_blank" class="text-2xl hover:scale-110 transition-transform">f</a>
+                </div>
+                <p class="text-center text-secondary mb-2">Available for work</p>
+                <p class="text-center text-secondary text-sm">© 2024 Johnrick T. Nuñeza. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

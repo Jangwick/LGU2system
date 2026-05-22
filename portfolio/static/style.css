@@ -1,0 +1,257 @@
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    transition: background-color 200ms, color 200ms;
+    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+}
+
+body.dark-mode {
+    background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+}
+
+/* Light Mode */
+body.light-mode {
+    background-color: #FFFFFF;
+    color: #111111;
+}
+
+body.light-mode .text-secondary {
+    color: #666666;
+}
+
+body.light-mode .text-accent {
+    color: #2563eb;
+}
+
+body.light-mode .bg-accent {
+    background-color: #2563eb;
+}
+
+body.light-mode .border {
+    border-color: #e5e7eb;
+}
+
+body.light-mode nav {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-color: #e5e7eb;
+}
+
+body.light-mode .tech-card {
+    background-color: #ffffff;
+    border-color: #e5e7eb;
+}
+
+body.light-mode .border-gray-200 {
+    border-color: #e5e7eb;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+}
+
+body.dark-mode .text-secondary {
+    color: #a0a0a0;
+}
+
+body.dark-mode .text-accent {
+    color: #60a5fa;
+}
+
+body.dark-mode .bg-accent {
+    background-color: #60a5fa;
+}
+
+body.dark-mode .border {
+    border-color: #2a2a2a;
+}
+
+body.dark-mode nav {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: #2a2a2a;
+}
+
+body.dark-mode .tech-card {
+    background-color: #1a1a1a;
+    border-color: #2a2a2a;
+}
+
+body.dark-mode .border-gray-800 {
+    border-color: #2a2a2a;
+}
+
+body.dark-mode .dark\:bg-gray-900 {
+    background-color: #1a1a1a;
+}
+
+/* Dark Mode Toggle Button */
+body.light-mode #darkModeToggle {
+    background-color: #ffffff;
+    border-color: #e5e7eb;
+}
+
+body.dark-mode #darkModeToggle {
+    background-color: #1a1a1a;
+    border-color: #2a2a2a;
+}
+
+/* Hero Animations */
+.hero-name {
+    animation: slideInLeft 0.7s ease-out forwards;
+}
+
+.hero-tagline {
+    animation: slideInLeft 0.7s ease-out 0.1s forwards;
+}
+
+.hero-about {
+    animation: slideInLeft 0.7s ease-out 0.2s forwards;
+}
+
+.hero-buttons {
+    animation: slideInLeft 0.7s ease-out 0.3s forwards;
+}
+
+.hero-avatar {
+    animation: slideInRight 0.7s ease-out forwards;
+}
+
+/* Floating Avatar Animation */
+.floating-avatar {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Slide from LEFT - Text */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Slide from RIGHT - Avatar (NO vertical movement) */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Scroll Fade-in */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Button Styles */
+body.light-mode a.bg-accent {
+    background-color: #2563eb;
+}
+
+body.dark-mode a.bg-accent {
+    background-color: #60a5fa;
+}
+
+/* Avatar Border */
+body.light-mode .hero-avatar img {
+    border-color: #e5e7eb;
+}
+
+body.dark-mode .hero-avatar img {
+    border-color: #2a2a2a;
+}
+
+/* About Card */
+body.light-mode .bg-white {
+    background-color: #ffffff;
+}
+
+body.dark-mode .dark\:bg-gray-900 {
+    background-color: #1a1a1a;
+}
+
+/* Footer Border */
+body.light-mode .border-t {
+    border-color: #e5e7eb;
+}
+
+body.dark-mode .border-t {
+    border-color: #2a2a2a;
+}
+
+/* Project Card */
+body.light-mode .border.rounded-lg {
+    border-color: #e5e7eb;
+    background-color: #ffffff;
+}
+
+body.dark-mode .border.rounded-lg {
+    border-color: #2a2a2a;
+    background-color: #1a1a1a;
+}
+
+/* Project Tags */
+body.light-mode .px-2.py-1.rounded {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+}
+
+body.dark-mode .px-2.py-1.rounded {
+    background-color: #262626;
+    border-color: #2a2a2a;
+}
+
+/* Glassmorphism Effect */
+.backdrop-blur-md {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+    
+    .hero-text {
+        text-align: center;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    nav .flex.gap-6 {
+        display: none;
+    }
+}
