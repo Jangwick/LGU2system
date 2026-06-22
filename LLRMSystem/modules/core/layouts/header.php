@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../utils/helpers.php';
+require_once __DIR__ . '/../utils/Sanitizer.php';
+require_once __DIR__ . '/../utils/Request.php';
 require_once __DIR__ . '/../bootstrap/security.php';
 
 // Initialize security for authenticated requests
