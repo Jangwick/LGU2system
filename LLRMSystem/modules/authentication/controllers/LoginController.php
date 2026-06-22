@@ -32,8 +32,8 @@ if (ob_get_length()) ob_clean();
 
 // Handle login request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $email = Sanitizer::email($_POST['email'] ?? '');
+    $password = Sanitizer::string($_POST['password'] ?? '');
     
     // Validate input
     if (empty($email) || empty($password)) {
