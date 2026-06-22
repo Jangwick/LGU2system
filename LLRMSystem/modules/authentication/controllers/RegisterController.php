@@ -28,13 +28,13 @@ try {
 
     // Handle registration request
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Get form data
-        $name = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $department = trim($_POST['department'] ?? '');
-        $role = trim($_POST['role'] ?? '');
-        $password = $_POST['password'] ?? '';
-        $confirmPassword = $_POST['confirm_password'] ?? '';
+        // Get form data (sanitized)
+        $name = Sanitizer::plainText($_POST['name'] ?? '');
+        $email = Sanitizer::email($_POST['email'] ?? '');
+        $department = Sanitizer::plainText($_POST['department'] ?? '');
+        $role = Sanitizer::enum($_POST['role'] ?? '', ['viewer', 'staff', 'officer'], '');
+        $password = Sanitizer::string($_POST['password'] ?? '');
+        $confirmPassword = Sanitizer::string($_POST['confirm_password'] ?? '');
         $terms = isset($_POST['terms']);
 
         // Determine initial status based on role
