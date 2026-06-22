@@ -361,3 +361,7 @@ if (APP_ENV === 'development') {
 
 // Timezone
 date_default_timezone_set('Asia/Manila');
+
+// Load input sanitization utilities (available to all endpoints that include config)
+require_once __DIR__ . '/../utils/Sanitizer.php';
+require_once __DIR__ . '/../utils/Request.php';
