@@ -12,6 +12,10 @@ if (!defined('APP_CONFIG_LOADED')) {
     require_once __DIR__ . '/../config/config.php';
 }
 
+// Load input sanitization utilities (Sanitizer + Request)
+require_once __DIR__ . '/../utils/Sanitizer.php';
+require_once __DIR__ . '/../utils/Request.php';
+
 /**
  * Configure secure session settings
  */
