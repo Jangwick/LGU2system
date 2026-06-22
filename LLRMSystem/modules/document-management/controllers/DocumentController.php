@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/Document.php';
 require_once __DIR__ . '/../services/DocumentService.php';
@@ -24,21 +25,21 @@ class DocumentController {
      */
     public function index() {
         try {
-            $page = $_GET['page'] ?? 1;
-            $perPage = $_GET['per_page'] ?? 10;
+            $page = Sanitizer::int($_GET['page'] ?? 1, 1);
+            $perPage = Sanitizer::int($_GET['per_page'] ?? 10, 10);
             
             $filters = [
-                'search' => $_GET['search'] ?? '',
-                'type' => $_GET['type'] ?? '',
-                'status' => $_GET['status'] ?? '',
-                'date_from' => $_GET['date_from'] ?? '',
-                'date_to' => $_GET['date_to'] ?? '',
-                'file_size' => $_GET['file_size'] ?? '',
-                'tags' => $_GET['tags'] ?? '',
-                'category' => $_GET['category'] ?? '',
-                'reference' => $_GET['reference'] ?? '',
-                'sort_by' => $_GET['sort_by'] ?? 'created_at',
-                'sort_dir' => $_GET['sort_dir'] ?? 'DESC',
+                'search' => Sanitizer::plainText($_GET['search'] ?? ''),
+                'type' => Sanitizer::plainText($_GET['type'] ?? ''),
+                'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+                'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
+                'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
+                'file_size' => Sanitizer::plainText($_GET['file_size'] ?? ''),
+                'tags' => Sanitizer::plainText($_GET['tags'] ?? ''),
+                'category' => Sanitizer::plainText($_GET['category'] ?? ''),
+                'reference' => Sanitizer::plainText($_GET['reference'] ?? ''),
+                'sort_by' => Sanitizer::enum($_GET['sort_by'] ?? 'created_at', ['created_at', 'title', 'document_date', 'file_size', 'reference_number'], 'created_at'),
+                'sort_dir' => Sanitizer::enum($_GET['sort_dir'] ?? 'DESC', ['ASC', 'DESC'], 'DESC'),
                 'user_role' => strtolower(trim($_SESSION['user_role'] ?? 'viewer'))
             ];
             
@@ -109,20 +110,20 @@ class DocumentController {
                 throw new Exception("No file uploaded");
             }
             
-            $status = strtolower(trim($_POST['status'] ?? 'draft'));
+            $status = Sanitizer::enum($_POST['status'] ?? 'draft', ['draft', 'pending', 'approved', 'rejected', 'published'], 'draft');
             if ($status === 'published') {
                 $status = 'approved';
             }
 
-            // Prepare data
+            // Prepare data (sanitized)
             $data = [
-                'title' => $_POST['title'] ?? '',
-                'document_type' => $_POST['document_type'] ?? '',
-                'document_date' => $_POST['document_date'] ?? date('Y-m-d'),
+                'title' => Sanitizer::plainText($_POST['title'] ?? ''),
+                'document_type' => Sanitizer::plainText($_POST['document_type'] ?? ''),
+                'document_date' => Sanitizer::date($_POST['document_date'] ?? date('Y-m-d')),
                 'status' => $status,
-                'description' => $_POST['description'] ?? '',
-                'tags' => $_POST['tags'] ?? '',
-                'reference_number' => $_POST['reference_number'] ?? ''
+                'description' => Sanitizer::richText($_POST['description'] ?? ''),
+                'tags' => Sanitizer::plainText($_POST['tags'] ?? ''),
+                'reference_number' => Sanitizer::plainText($_POST['reference_number'] ?? '')
             ];
             
             // Validate required fields
@@ -152,13 +153,13 @@ class DocumentController {
             }
             
             $data = [
-                'title' => $_POST['title'] ?? '',
-                'document_type' => $_POST['document_type'] ?? '',
-                'document_date' => $_POST['document_date'] ?? '',
-                'status' => $_POST['status'] ?? '',
-                'description' => $_POST['description'] ?? '',
-                'tags' => $_POST['tags'] ?? '',
-                'confidentiality_level' => $_POST['confidentiality_level'] ?? 'public'
+                'title' => Sanitizer::plainText($_POST['title'] ?? ''),
+                'document_type' => Sanitizer::plainText($_POST['document_type'] ?? ''),
+                'document_date' => Sanitizer::date($_POST['document_date'] ?? ''),
+                'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+                'description' => Sanitizer::richText($_POST['description'] ?? ''),
+                'tags' => Sanitizer::plainText($_POST['tags'] ?? ''),
+                'confidentiality_level' => Sanitizer::enum($_POST['confidentiality_level'] ?? 'public', ['public', 'internal', 'confidential', 'restricted'], 'public')
             ];
             
             $result = $this->documentService->updateDocument($id, $data);
@@ -233,7 +234,9 @@ class DocumentController {
             
             foreach ($ids as $id) {
                 try {
-                    $this->documentService->deleteDocument($id);
+                    $cleanId = Sanitizer::int($id, 0);
+                    if ($cleanId <= 0) continue;
+                    $this->documentService->deleteDocument($cleanId);
                     $deleted++;
                 } catch (Exception $e) {
                     $errors[] = "Document ID {$id}: " . $e->getMessage();

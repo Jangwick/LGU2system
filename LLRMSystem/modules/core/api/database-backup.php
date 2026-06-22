@@ -23,6 +23,7 @@ try {
     // Log session status
     $response['debug'] = 'Session started, user_id: ' . ($_SESSION['user_id'] ?? 'not set');
     
+    require_once __DIR__ . '/../config/config.php';
     require_once __DIR__ . '/../config/database.php';
     require_once __DIR__ . '/../middleware/PermissionMiddleware.php';
 
@@ -39,7 +40,7 @@ try {
     $controller = new SuperAdminController();
 
     $input = json_decode(file_get_contents('php://input'), true);
-    $action = $input['action'] ?? $_GET['action'] ?? null;
+    $action = Sanitizer::enum($input['action'] ?? $_GET['action'] ?? '', ['create', 'delete', 'restore', 'cleanup', 'stats'], '');
     
     $response['debug'] .= ', action: ' . ($action ?? 'none');
 
@@ -50,17 +51,17 @@ try {
             break;
 
         case 'delete':
-            $filename = $input['filename'] ?? null;
+            $filename = Sanitizer::filename($input['filename'] ?? '');
             $response = $controller->deleteBackup($filename);
             break;
 
         case 'restore':
-            $filename = $input['filename'] ?? null;
+            $filename = Sanitizer::filename($input['filename'] ?? '');
             $response = $controller->restoreBackup($filename);
             break;
 
         case 'cleanup':
-            $retentionDays = $input['retention_days'] ?? 30;
+            $retentionDays = Sanitizer::int($input['retention_days'] ?? 30, 30);
             $response = $controller->cleanupOldBackups($retentionDays);
             break;
 

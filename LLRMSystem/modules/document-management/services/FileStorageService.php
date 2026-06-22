@@ -15,10 +15,72 @@ class FileStorageService {
         $this->ensureDirectories();
     }
     
+    private $allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'jpg', 'jpeg', 'png', 'gif'];
+    private $allowedMimes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'image/jpeg',
+        'image/png',
+        'image/gif'
+    ];
+    private $maxFileSize = 10485760; // 10MB
+    
     /**
      * Upload file to storage
      */
     public function uploadFile($file, $documentType) {
+        // Validate file upload
+        if (!isset($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("Invalid file upload");
+        }
+        
+        // Validate file size
+        if ($file['size'] > $this->maxFileSize) {
+            throw new Exception("File exceeds maximum size of 10MB");
+        }
+        
+        // Validate extension
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($extension, $this->allowedExtensions)) {
+            throw new Exception("File type not allowed. Allowed: " . implode(', ', $this->allowedExtensions));
+        }
+        
+        // Verify MIME type using finfo (more reliable than browser-supplied type)
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $detectedMime = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+        
+        // Map extensions to expected MIME types for cross-check
+        $extToMime = [
+            'pdf'  => ['application/pdf'],
+            'doc'  => ['application/msword', 'application/octet-stream'],
+            'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/octet-stream', 'application/zip'],
+            'xls'  => ['application/vnd.ms-excel', 'application/octet-stream'],
+            'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/octet-stream', 'application/zip'],
+            'ppt'  => ['application/vnd.ms-powerpoint', 'application/octet-stream'],
+            'pptx' => ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/octet-stream', 'application/zip'],
+            'jpg'  => ['image/jpeg'],
+            'jpeg' => ['image/jpeg'],
+            'png'  => ['image/png'],
+            'gif'  => ['image/gif']
+        ];
+        
+        $expectedMimes = $extToMime[$extension] ?? [];
+        if (!empty($expectedMimes) && !in_array($detectedMime, $expectedMimes) && !in_array($detectedMime, $this->allowedMimes)) {
+            throw new Exception("File MIME type mismatch. Detected: {$detectedMime}");
+        }
+        
+        // Sanitize document type for directory path (prevent path traversal)
+        $documentType = preg_replace('/[^a-zA-Z0-9_-]/', '', $documentType);
+        if (empty($documentType)) {
+            $documentType = 'general';
+        }
+        
         // Create type-specific directory
         $typeDir = $this->documentPath . '/' . $documentType;
         if (!file_exists($typeDir)) {
@@ -26,7 +88,6 @@ class FileStorageService {
         }
         
         // Generate unique filename
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = $this->generateUniqueFilename($extension);
         $filepath = $typeDir . '/' . $filename;
         
@@ -42,7 +103,7 @@ class FileStorageService {
             'path' => $filepath,
             'name' => $file['name'],
             'size' => $file['size'],
-            'type' => $file['type'],
+            'type' => $detectedMime,
             'stored_name' => $filename
         ];
     }
@@ -51,8 +112,14 @@ class FileStorageService {
      * Delete file from storage
      */
     public function deleteFile($filepath) {
-        if (file_exists($filepath)) {
-            return unlink($filepath);
+        // Prevent path traversal — resolve real path and ensure it's within storage
+        $realPath = realpath($filepath);
+        $storageReal = realpath($this->storageBasePath);
+        if ($realPath === false || $storageReal === false || strpos($realPath, $storageReal) !== 0) {
+            return false;
+        }
+        if (file_exists($realPath)) {
+            return unlink($realPath);
         }
         return false;
     }
@@ -61,7 +128,13 @@ class FileStorageService {
      * Get file for download
      */
     public function getFile($filepath) {
-        if (!file_exists($filepath)) {
+        // Prevent path traversal — resolve real path and ensure it's within storage
+        $realPath = realpath($filepath);
+        $storageReal = realpath($this->storageBasePath);
+        if ($realPath === false || $storageReal === false || strpos($realPath, $storageReal) !== 0) {
+            throw new Exception("File not found");
+        }
+        if (!file_exists($realPath)) {
             throw new Exception("File not found");
         }
         

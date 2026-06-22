@@ -9,16 +9,17 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/ReportController.php';
 
 try {
     $controller = new ReportController();
     
     // Get request parameters
-    $reportType = $_GET['type'] ?? '';
-    $startDate = $_GET['start_date'] ?? null;
-    $endDate = $_GET['end_date'] ?? null;
-    $format = $_GET['format'] ?? 'json';
+    $reportType = Sanitizer::enum($_GET['type'] ?? '', ['user_activity', 'document_access', 'top_uploaders', 'storage_usage', 'monthly_growth', 'department_summary', 'document_status', 'document_type'], '');
+    $startDate = Sanitizer::date($_GET['start_date'] ?? '') ?: null;
+    $endDate = Sanitizer::date($_GET['end_date'] ?? '') ?: null;
+    $format = Sanitizer::enum($_GET['format'] ?? 'json', ['json', 'csv', 'excel'], 'json');
     
     if (empty($reportType)) {
         throw new Exception('Report type is required');

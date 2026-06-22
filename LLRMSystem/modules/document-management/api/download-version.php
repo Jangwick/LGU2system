@@ -6,6 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     exit('Unauthorized');
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/DocumentVersion.php';
 require_once __DIR__ . '/../services/VersionService.php';
@@ -20,7 +21,7 @@ $fileStorageService = new FileStorageService();
 $logger = new Logger($db);
 $versionService = new VersionService($versionModel, $documentModel, $fileStorageService, $logger);
 
-$versionId = $_GET['id'] ?? null;
+$versionId = Sanitizer::int($_GET['id'] ?? 0, 0);
 
 if (!$versionId) {
     http_response_code(400);

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../middleware/PermissionMiddleware.php';
 require_once __DIR__ . '/../utils/Logger.php';
@@ -533,11 +534,11 @@ class SuperAdminController {
 
         $command = sprintf(
             'mysqldump -h%s -u%s -p%s %s > %s 2>&1',
-            $dbConfig['host'],
-            $dbConfig['username'],
-            $dbConfig['password'],
-            $dbConfig['database'],
-            $tempFile
+            escapeshellarg($dbConfig['host']),
+            escapeshellarg($dbConfig['username']),
+            escapeshellarg($dbConfig['password']),
+            escapeshellarg($dbConfig['database']),
+            escapeshellarg($tempFile)
         );
 
         $output = [];
@@ -743,6 +744,13 @@ class SuperAdminController {
      */
     public function restoreBackup($filename) {
         $backupDir = __DIR__ . '/../../../storage/backups';
+        
+        // Sanitize filename to prevent path traversal
+        $filename = Sanitizer::filename($filename);
+        if (empty($filename)) {
+            return ['success' => false, 'error' => 'Invalid backup filename'];
+        }
+        
         $filepath = $backupDir . '/' . $filename;
 
         if (!file_exists($filepath)) {
@@ -776,11 +784,11 @@ class SuperAdminController {
         // Use mysql command if available
         $command = sprintf(
             'mysql -h%s -u%s -p%s %s < %s',
-            $dbConfig['host'],
-            $dbConfig['username'],
-            $dbConfig['password'],
-            $dbConfig['database'],
-            $restoreFile
+            escapeshellarg($dbConfig['host']),
+            escapeshellarg($dbConfig['username']),
+            escapeshellarg($dbConfig['password']),
+            escapeshellarg($dbConfig['database']),
+            escapeshellarg($restoreFile)
         );
 
         $output = [];
@@ -1163,6 +1171,13 @@ class SuperAdminController {
      */
     public function deleteBackup($filename) {
         $backupDir = __DIR__ . '/../../../storage/backups';
+        
+        // Sanitize filename to prevent path traversal
+        $filename = Sanitizer::filename($filename);
+        if (empty($filename)) {
+            return ['success' => false, 'error' => 'Invalid backup filename'];
+        }
+        
         $filepath = $backupDir . '/' . $filename;
         
         if (file_exists($filepath)) {

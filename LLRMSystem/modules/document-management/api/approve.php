@@ -35,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Get document ID from POST data
+// Get document ID from POST data (sanitized)
 $data = json_decode(file_get_contents('php://input'), true);
-$documentId = $data['id'] ?? null;
+$documentId = Sanitizer::int($data['id'] ?? 0, 0);
 
 if (!$documentId) {
     http_response_code(400);

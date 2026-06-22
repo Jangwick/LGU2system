@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../middleware/PermissionMiddleware.php';
 
@@ -17,7 +18,7 @@ try {
     $controller = new SuperAdminController();
     
     $input = json_decode(file_get_contents('php://input'), true);
-    $action = $input['action'] ?? $_GET['action'] ?? null;
+    $action = Sanitizer::enum($input['action'] ?? $_GET['action'] ?? '', ['get_config', 'update', 'reset'], '');
     
     switch ($action) {
         case 'get_config':
@@ -26,7 +27,7 @@ try {
             break;
             
         case 'update':
-            $configData = $input['config'] ?? [];
+            $configData = is_array($input['config'] ?? null) ? Sanitizer::array($input['config'], 'string') : [];
             $result = $controller->updateSystemConfig($configData);
             echo json_encode($result);
             break;

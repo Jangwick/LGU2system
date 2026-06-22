@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/DocumentTag.php';
 
@@ -18,8 +19,8 @@ $tagModel = new DocumentTag($db);
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-$tagName = $data['name'] ?? null;
-$documentId = $data['document_id'] ?? null;
+$tagName = Sanitizer::plainText($data['name'] ?? '');
+$documentId = Sanitizer::int($data['document_id'] ?? 0, 0);
 
 if (!$tagName) {
     echo json_encode(['success' => false, 'error' => 'Tag name is required']);

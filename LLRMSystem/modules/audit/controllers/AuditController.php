@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/middleware/PermissionMiddleware.php';
 
@@ -21,15 +22,15 @@ class AuditController {
     public function index() {
         // Get filter parameters
         $filters = [
-            'user_id' => $_GET['user_id'] ?? null,
-            'action' => $_GET['action'] ?? null,
-            'table_name' => $_GET['table_name'] ?? null,
-            'date_from' => $_GET['date_from'] ?? null,
-            'date_to' => $_GET['date_to'] ?? null,
-            'search' => $_GET['search'] ?? null
+            'user_id' => Sanitizer::int($_GET['user_id'] ?? 0, 0) ?: null,
+            'action' => Sanitizer::plainText($_GET['action'] ?? null),
+            'table_name' => Sanitizer::plainText($_GET['table_name'] ?? null),
+            'date_from' => Sanitizer::date($_GET['date_from'] ?? '') ?: null,
+            'date_to' => Sanitizer::date($_GET['date_to'] ?? '') ?: null,
+            'search' => Sanitizer::plainText($_GET['search'] ?? null)
         ];
         
-        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+        $page = Sanitizer::int($_GET['page'] ?? 1, 1);
         $perPage = 20;
         $offset = ($page - 1) * $perPage;
         
@@ -153,12 +154,12 @@ class AuditController {
     public function exportCSV() {
         // Same filters as index
         $filters = [
-            'user_id' => $_GET['user_id'] ?? null,
-            'action' => $_GET['action'] ?? null,
-            'table_name' => $_GET['table_name'] ?? null,
-            'date_from' => $_GET['date_from'] ?? null,
-            'date_to' => $_GET['date_to'] ?? null,
-            'search' => $_GET['search'] ?? null
+            'user_id' => Sanitizer::int($_GET['user_id'] ?? 0, 0) ?: null,
+            'action' => Sanitizer::plainText($_GET['action'] ?? null),
+            'table_name' => Sanitizer::plainText($_GET['table_name'] ?? null),
+            'date_from' => Sanitizer::date($_GET['date_from'] ?? '') ?: null,
+            'date_to' => Sanitizer::date($_GET['date_to'] ?? '') ?: null,
+            'search' => Sanitizer::plainText($_GET['search'] ?? null)
         ];
         
         // Build query (same as index but without pagination)

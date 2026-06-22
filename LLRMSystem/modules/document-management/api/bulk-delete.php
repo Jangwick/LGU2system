@@ -12,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../../modules/core/config/database.php';
 require_once __DIR__ . '/../models/Document.php';
 require_once __DIR__ . '/../services/DocumentService.php';
@@ -31,6 +32,9 @@ try {
     if (empty($documentIds)) {
         throw new Exception('No documents selected');
     }
+    
+    // Sanitize all document IDs to integers
+    $documentIds = Sanitizer::array($documentIds, 'int');
     
     // Initialize services
     $db = getDatabase();

@@ -19,15 +19,15 @@ if (!isset($_SESSION['user_id'])) {
 
 $controller = new NotificationController();
 $method = $_SERVER['REQUEST_METHOD'];
-$action = $_GET['action'] ?? '';
+$action = Sanitizer::enum($_GET['action'] ?? '', ['list', 'count', 'read', 'read_all'], '');
 
 try {
     switch ($method) {
         case 'GET':
             switch ($action) {
                 case 'list':
-                    $limit = intval($_GET['limit'] ?? 20);
-                    $offset = intval($_GET['offset'] ?? 0);
+                    $limit = Sanitizer::int($_GET['limit'] ?? 20, 20);
+                    $offset = Sanitizer::int($_GET['offset'] ?? 0, 0);
                     $unreadOnly = isset($_GET['unread_only']) && $_GET['unread_only'] === 'true';
                     
                     $result = $controller->getNotifications($limit, $offset, $unreadOnly);
@@ -54,7 +54,7 @@ try {
                     if (!isset($data['notification_id'])) {
                         throw new Exception('Notification ID required');
                     }
-                    $result = $controller->markAsRead($data['notification_id']);
+                    $result = $controller->markAsRead(Sanitizer::int($data['notification_id'] ?? 0, 0));
                     echo json_encode($result);
                     break;
                     
@@ -70,7 +70,7 @@ try {
             break;
             
         case 'DELETE':
-            $notificationId = $_GET['id'] ?? null;
+            $notificationId = Sanitizer::int($_GET['id'] ?? 0, 0);
             if (!$notificationId) {
                 throw new Exception('Notification ID required');
             }

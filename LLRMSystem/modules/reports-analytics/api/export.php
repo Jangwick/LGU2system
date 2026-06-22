@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/ReportController.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
@@ -22,10 +23,10 @@ $db = getDatabase();
 $logger = new Logger($db);
 
 // Get parameters
-$reportType = $_GET['report_type'] ?? '';
-$format = $_GET['format'] ?? 'csv';
-$startDate = $_GET['start_date'] ?? null;
-$endDate = $_GET['end_date'] ?? null;
+$reportType = Sanitizer::enum($_GET['report_type'] ?? '', ['user_activity', 'document_access', 'top_uploaders'], '');
+$format = Sanitizer::enum($_GET['format'] ?? 'csv', ['csv', 'pdf'], 'csv');
+$startDate = Sanitizer::date($_GET['start_date'] ?? '') ?: null;
+$endDate = Sanitizer::date($_GET['end_date'] ?? '') ?: null;
 
 // Validate format - only CSV and PDF allowed
 if (!in_array(strtolower($format), ['csv', 'pdf'])) {

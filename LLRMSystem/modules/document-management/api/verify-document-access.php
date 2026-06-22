@@ -8,11 +8,11 @@ header('Content-Type: application/json');
 try {
     $db = getDatabase();
     
-    // Get request data
+    // Get request data (sanitized)
     $input = json_decode(file_get_contents('php://input'), true);
-    $documentId = $input['document_id'] ?? null;
-    $password = $input['password'] ?? null;
-    $action = $input['action'] ?? 'download';
+    $documentId = Sanitizer::int($input['document_id'] ?? 0, 0);
+    $password = Sanitizer::string($input['password'] ?? '');
+    $action = Sanitizer::enum($input['action'] ?? 'download', ['download', 'view'], 'download');
 
     if (!$documentId || !$password) {
         echo json_encode(['success' => false, 'error' => 'Missing required fields']);

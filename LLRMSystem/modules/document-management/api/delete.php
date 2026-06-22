@@ -12,18 +12,19 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/DocumentController.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/Document.php';
 
 $controller = new DocumentController();
 
-// Get input (support both JSON and Form Data)
-$id = $_POST['id'] ?? null;
+// Get input (support both JSON and Form Data) — sanitized
+$id = Sanitizer::int($_POST['id'] ?? 0, 0);
 
 if (!$id) {
     $input = json_decode(file_get_contents('php://input'), true);
-    $id = $input['id'] ?? null;
+    $id = Sanitizer::int($input['id'] ?? 0, 0);
 }
 
 if (!$id) {

@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../middleware/PermissionMiddleware.php';
 
@@ -21,32 +22,32 @@ try {
     $controller = new SuperAdminController();
 
     $input = json_decode(file_get_contents('php://input'), true);
-    $action = $input['action'] ?? $_GET['action'] ?? null;
+    $action = Sanitizer::enum($input['action'] ?? $_GET['action'] ?? '', ['list', 'export_csv'], '');
 
     switch ($action) {
         case 'list':
             $filters = [
-                'user_id' => $input['user_id'] ?? $_GET['user_id'] ?? null,
-                'action' => $input['action_filter'] ?? $_GET['action'] ?? null,
-                'table_name' => $input['table_name'] ?? $_GET['table_name'] ?? null,
-                'date_from' => $input['date_from'] ?? $_GET['date_from'] ?? null,
-                'date_to' => $input['date_to'] ?? $_GET['date_to'] ?? null,
-                'search' => $input['search'] ?? $_GET['search'] ?? null
+                'user_id' => Sanitizer::int($input['user_id'] ?? $_GET['user_id'] ?? 0, 0) ?: null,
+                'action' => Sanitizer::plainText($input['action_filter'] ?? $_GET['action'] ?? null),
+                'table_name' => Sanitizer::plainText($input['table_name'] ?? $_GET['table_name'] ?? null),
+                'date_from' => Sanitizer::date($input['date_from'] ?? $_GET['date_from'] ?? ''),
+                'date_to' => Sanitizer::date($input['date_to'] ?? $_GET['date_to'] ?? ''),
+                'search' => Sanitizer::plainText($input['search'] ?? $_GET['search'] ?? null)
             ];
-            $page = $input['page'] ?? $_GET['page'] ?? 1;
-            $perPage = $input['per_page'] ?? $_GET['per_page'] ?? 20;
+            $page = Sanitizer::int($input['page'] ?? $_GET['page'] ?? 1, 1);
+            $perPage = Sanitizer::int($input['per_page'] ?? $_GET['per_page'] ?? 20, 20);
             $result = $controller->getAuditLogs($filters, $page, $perPage);
             echo json_encode(['success' => true, 'data' => $result]);
             break;
 
         case 'export_csv':
             $filters = [
-                'user_id' => $_GET['user_id'] ?? null,
-                'action' => $_GET['action'] ?? null,
-                'table_name' => $_GET['table_name'] ?? null,
-                'date_from' => $_GET['date_from'] ?? null,
-                'date_to' => $_GET['date_to'] ?? null,
-                'search' => $_GET['search'] ?? null
+                'user_id' => Sanitizer::int($_GET['user_id'] ?? 0, 0) ?: null,
+                'action' => Sanitizer::plainText($_GET['action'] ?? null),
+                'table_name' => Sanitizer::plainText($_GET['table_name'] ?? null),
+                'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
+                'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
+                'search' => Sanitizer::plainText($_GET['search'] ?? null)
             ];
             $result = $controller->getAuditLogs($filters, 1, 10000);
             $logs = $result['logs'];

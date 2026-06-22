@@ -9,12 +9,13 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 
 try {
     // Get refresh parameters
-    $startDate = $_GET['start_date'] ?? null;
-    $endDate = $_GET['end_date'] ?? null;
+    $startDate = Sanitizer::date($_GET['start_date'] ?? '') ?: null;
+    $endDate = Sanitizer::date($_GET['end_date'] ?? '') ?: null;
     
     $db = getDatabase();
     

@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: application/json');
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/IntegrationController.php';
 
 // Simulate API authentication (in production use Bearer tokens)
@@ -22,14 +23,14 @@ if (strpos($contentType, 'application/json') !== false) {
 } else {
     // FormData submission (with file)
     $input = [
-        'module_type' => $_POST['module_type'] ?? null,
-        'source_system' => $_POST['source_system'] ?? null,
-        'external_id' => $_POST['external_id'] ?? null,
-        'title' => $_POST['title'] ?? null,
-        'summary' => $_POST['summary'] ?? null,
+        'module_type' => Sanitizer::plainText($_POST['module_type'] ?? null),
+        'source_system' => Sanitizer::plainText($_POST['source_system'] ?? null),
+        'external_id' => Sanitizer::plainText($_POST['external_id'] ?? null),
+        'title' => Sanitizer::plainText($_POST['title'] ?? null),
+        'summary' => Sanitizer::richText($_POST['summary'] ?? null),
         'payload' => [
-            'document_date' => $_POST['document_date'] ?? date('Y-m-d'),
-            'tags' => $_POST['tags'] ?? ''
+            'document_date' => Sanitizer::date($_POST['document_date'] ?? date('Y-m-d')),
+            'tags' => Sanitizer::plainText($_POST['tags'] ?? '')
         ]
     ];
 }

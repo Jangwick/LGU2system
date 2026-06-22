@@ -23,17 +23,17 @@ class SearchController {
      * Main search page
      */
     public function index() {
-        $query = $_GET['q'] ?? '';
-        $mode = $_GET['mode'] ?? 'hybrid'; // Default search mode
-        $page = (int)($_GET['page'] ?? 1);
+        $query = Sanitizer::plainText($_GET['q'] ?? '');
+        $mode = Sanitizer::enum($_GET['mode'] ?? 'hybrid', ['hybrid', 'semantic', 'keyword'], 'hybrid');
+        $page = Sanitizer::int($_GET['page'] ?? 1, 1);
         $perPage = 10;
         
         $filters = [
-            'type' => $_GET['type'] ?? '',
-            'status' => $_GET['status'] ?? '',
-            'date_from' => $_GET['date_from'] ?? '',
-            'date_to' => $_GET['date_to'] ?? '',
-            'tags' => $_GET['tags'] ?? '',
+            'type' => Sanitizer::plainText($_GET['type'] ?? ''),
+            'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+            'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
+            'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
+            'tags' => Sanitizer::plainText($_GET['tags'] ?? ''),
             'limit' => $perPage,
             'offset' => ($page - 1) * $perPage,
             'user_role' => strtolower(trim($_SESSION['user_role'] ?? 'viewer'))
@@ -93,12 +93,12 @@ class SearchController {
      * Export search results
      */
     public function export() {
-        $query = $_GET['q'] ?? '';
+        $query = Sanitizer::plainText($_GET['q'] ?? '');
         $filters = [
-            'type' => $_GET['type'] ?? '',
-            'status' => $_GET['status'] ?? '',
-            'date_from' => $_GET['date_from'] ?? '',
-            'date_to' => $_GET['date_to'] ?? ''
+            'type' => Sanitizer::plainText($_GET['type'] ?? ''),
+            'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+            'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
+            'date_to' => Sanitizer::date($_GET['date_to'] ?? '')
         ];
         
         $csv = $this->searchService->exportToCSV($query, $filters);
@@ -123,7 +123,7 @@ class SearchController {
      * Get search suggestions (AJAX)
      */
     public function suggestions() {
-        $query = $_GET['q'] ?? '';
+        $query = Sanitizer::plainText($_GET['q'] ?? '');
         $suggestions = $this->searchService->getSuggestions($query);
         
         header('Content-Type: application/json');

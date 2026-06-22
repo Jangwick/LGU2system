@@ -23,13 +23,14 @@ class UserController {
      */
     public function index() {
         $filters = [
-            'role' => $_GET['role'] ?? null,
-            'status' => $_GET['status'] ?? null,
-            'department' => $_GET['department'] ?? null,
-            'search' => $_GET['search'] ?? null
+            'role' => Sanitizer::enum($_GET['role'] ?? null, ['viewer', 'staff', 'officer', 'administrator'], null),
+            'status' => Sanitizer::enum($_GET['status'] ?? null, ['active', 'inactive', 'suspended', 'pending'], null),
+            'department' => Sanitizer::plainText($_GET['department'] ?? null),
+            'search' => Sanitizer::plainText($_GET['search'] ?? null)
         ];
         
-        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+        $page = Sanitizer::int($_GET['page'] ?? 1, 1);
+        $page = max(1, $page);
         $perPage = 20;
         $offset = ($page - 1) * $perPage;
         

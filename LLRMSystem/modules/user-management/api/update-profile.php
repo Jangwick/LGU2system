@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 
@@ -17,11 +18,11 @@ try {
     $db = getDatabase();
     $logger = new Logger($db);
     
-    $full_name = $_POST['full_name'] ?? '';
-    $username = $_POST['username'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone = $_POST['phone'] ?? '';
-    $department = $_POST['department'] ?? '';
+    $full_name = Sanitizer::plainText($_POST['full_name'] ?? '');
+    $username = Sanitizer::plainText($_POST['username'] ?? '');
+    $email = Sanitizer::email($_POST['email'] ?? '');
+    $phone = Sanitizer::plainText($_POST['phone'] ?? '');
+    $department = Sanitizer::plainText($_POST['department'] ?? '');
     
     // Get current profile for comparison
     $currentStmt = $db->prepare("SELECT full_name, username, email, phone, department FROM users WHERE id = ?");

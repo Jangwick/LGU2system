@@ -7,10 +7,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/IntegrationController.php';
 
 try {
-    $id = $_POST['id'] ?? null;
+    $id = Sanitizer::int($_POST['id'] ?? 0, 0);
     if (!$id) {
         throw new Exception("Missing record ID");
     }

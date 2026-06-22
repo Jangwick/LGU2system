@@ -9,15 +9,16 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 
 try {
     // Get request data
     $input = json_decode(file_get_contents('php://input'), true);
     
-    $reportType = $input['report_type'] ?? '';
-    $frequency = $input['frequency'] ?? 'monthly';
-    $recipients = $input['recipients'] ?? [$_SESSION['email']];
+    $reportType = Sanitizer::enum($input['report_type'] ?? '', ['user_activity', 'document_access', 'top_uploaders', 'storage_usage', 'monthly_growth', 'department_summary', 'document_status', 'document_type'], '');
+    $frequency = Sanitizer::enum($input['frequency'] ?? 'monthly', ['daily', 'weekly', 'monthly'], 'monthly');
+    $recipients = is_array($input['recipients'] ?? null) ? Sanitizer::array($input['recipients'], 'email') : [$_SESSION['email']];
     
     if (empty($reportType)) {
         throw new Exception('Report type is required');

@@ -6,6 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     redirectToLogin();
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/Document.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
@@ -14,9 +15,9 @@ $db = getDatabase();
 $documentModel = new Document($db);
 $logger = new Logger($db);
 
-// Get export type (using 'export_type' to avoid conflict with document type filter)
-$exportType = $_GET['export_type'] ?? 'list'; // 'list' or 'files'
-$format = $_GET['format'] ?? 'csv';
+// Get export type (using 'export_type' to avoid conflict with document type filter) — sanitized
+$exportType = Sanitizer::enum($_GET['export_type'] ?? 'list', ['list', 'files'], 'list');
+$format = Sanitizer::enum($_GET['format'] ?? 'csv', ['csv', 'pdf'], 'csv');
 
 // Validate format - only CSV and PDF allowed for list exports
 if ($exportType === 'list' && !in_array(strtolower($format), ['csv', 'pdf'])) {
@@ -25,16 +26,16 @@ if ($exportType === 'list' && !in_array(strtolower($format), ['csv', 'pdf'])) {
     exit;
 }
 
-// Get document IDs for bulk export (comma-separated)
-$documentIds = isset($_GET['ids']) ? explode(',', $_GET['ids']) : [];
+// Get document IDs for bulk export (comma-separated) — sanitized
+$documentIds = isset($_GET['ids']) ? explode(',', Sanitizer::string($_GET['ids'])) : [];
 
-// Get filters
+// Get filters — sanitized
 $filters = [
-    'search' => $_GET['search'] ?? '',
-    'type' => $_GET['doc_type'] ?? $_GET['type'] ?? '', // Support both doc_type and type
-    'status' => $_GET['status'] ?? '',
-    'date_from' => $_GET['date_from'] ?? '',
-    'date_to' => $_GET['date_to'] ?? '',
+    'search' => Sanitizer::plainText($_GET['search'] ?? ''),
+    'type' => Sanitizer::plainText($_GET['doc_type'] ?? $_GET['type'] ?? ''),
+    'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+    'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
+    'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
     'user_role' => strtolower(trim($_SESSION['user_role'] ?? 'viewer')),
     'limit' => 10000,
     'offset' => 0
@@ -45,7 +46,7 @@ if (!empty($documentIds)) {
     // Export specific selected documents
     $documents = [];
     foreach ($documentIds as $id) {
-        $doc = $documentModel->getById(trim($id));
+        $doc = $documentModel->getById(Sanitizer::int(trim($id), 0));
         if ($doc) {
             $documents[] = $doc;
         }

@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/DocumentLink.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
@@ -20,8 +21,8 @@ $logger = new Logger($db);
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-$linkId = $data['link_id'] ?? null;
-$documentId = $data['document_id'] ?? null;
+$linkId = Sanitizer::int($data['link_id'] ?? 0, 0);
+$documentId = Sanitizer::int($data['document_id'] ?? 0, 0);
 
 if (!$linkId) {
     echo json_encode(['success' => false, 'error' => 'Link ID is required']);

@@ -7,10 +7,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/DocumentController.php';
 
 $controller = new DocumentController();
-$id = $_GET['id'] ?? null;
+$id = Sanitizer::int($_GET['id'] ?? 0, 0);
 
 if (!$id) {
     http_response_code(400);

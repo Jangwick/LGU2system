@@ -39,17 +39,17 @@ try {
     $embeddingService = new EmbeddingService();
     $searchService = new SearchService($db, $embeddingService);
 
-    $query = $_GET['q'] ?? '';
-    $mode = $_GET['mode'] ?? 'hybrid';
-    $page = max(1, (int)($_GET['page'] ?? 1));
+    $query = Sanitizer::plainText($_GET['q'] ?? '');
+    $mode = Sanitizer::enum($_GET['mode'] ?? 'hybrid', ['hybrid', 'semantic', 'keyword'], 'hybrid');
+    $page = max(1, Sanitizer::int($_GET['page'] ?? 1, 1));
     $perPage = 10;
 
     $filters = [
-        'type' => $_GET['type'] ?? '',
+        'type' => Sanitizer::plainText($_GET['type'] ?? ''),
         'status' => '', // Will be forced below
-        'date_from' => $_GET['date_from'] ?? '',
-        'date_to' => $_GET['date_to'] ?? '',
-        'tags' => $_GET['tags'] ?? '',
+        'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
+        'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
+        'tags' => Sanitizer::plainText($_GET['tags'] ?? ''),
         'limit' => $perPage,
         'offset' => ($page - 1) * $perPage
     ];

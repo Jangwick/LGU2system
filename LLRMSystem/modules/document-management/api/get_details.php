@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$id = $_GET['id'] ?? null;
+$id = Sanitizer::int($_GET['id'] ?? 0, 0);
 
 if (!$id) {
     echo json_encode(['error' => 'Missing document ID']);

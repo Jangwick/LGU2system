@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 
@@ -17,9 +18,9 @@ try {
     $db = getDatabase();
     $logger = new Logger($db);
     
-    $current_password = $_POST['current_password'] ?? '';
-    $new_password = $_POST['new_password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
+    $current_password = Sanitizer::string($_POST['current_password'] ?? '');
+    $new_password = Sanitizer::string($_POST['new_password'] ?? '');
+    $confirm_password = Sanitizer::string($_POST['confirm_password'] ?? '');
     
     // Validate required fields
     if (empty($current_password) || empty($new_password) || empty($confirm_password)) {

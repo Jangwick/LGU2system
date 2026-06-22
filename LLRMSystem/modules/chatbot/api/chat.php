@@ -5,6 +5,7 @@
 
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/ChatbotController.php';
 
 // Only allow POST requests
@@ -21,8 +22,8 @@ if (empty($input['message'])) {
     exit;
 }
 
-$message = $input['message'];
-$history = $input['history'] ?? [];
+$message = Sanitizer::plainText($input['message'] ?? '');
+$history = is_array($input['history'] ?? null) ? Sanitizer::array($input['history'], 'plainText') : [];
 
 $controller = new ChatbotController();
 $result = $controller->ask($message, $history);

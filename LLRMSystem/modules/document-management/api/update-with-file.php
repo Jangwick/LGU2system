@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/Document.php';
 require_once __DIR__ . '/../models/DocumentVersion.php';
@@ -27,7 +28,7 @@ $fileStorageService = new FileStorageService();
 $logger = new Logger($db);
 $versionService = new VersionService($versionModel, $documentModel, $fileStorageService, $logger);
 
-$documentId = $_POST['document_id'] ?? null;
+$documentId = Sanitizer::int($_POST['document_id'] ?? 0, 0);
 
 if (!$documentId) {
     echo json_encode(['success' => false, 'error' => 'Document ID is required']);
@@ -37,18 +38,18 @@ if (!$documentId) {
 try {
     // Update metadata
     $data = [
-        'title' => $_POST['title'] ?? '',
-        'document_type' => $_POST['document_type'] ?? '',
-        'document_date' => $_POST['document_date'] ?? '',
-        'status' => $_POST['status'] ?? '',
-        'description' => $_POST['description'] ?? ''
+        'title' => Sanitizer::plainText($_POST['title'] ?? ''),
+        'document_type' => Sanitizer::plainText($_POST['document_type'] ?? ''),
+        'document_date' => Sanitizer::date($_POST['document_date'] ?? ''),
+        'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+        'description' => Sanitizer::richText($_POST['description'] ?? '')
     ];
     
     $documentModel->update($documentId, $data);
     
     // Handle file replacement
     if (isset($_FILES['replacement_file']) && $_FILES['replacement_file']['error'] === UPLOAD_ERR_OK) {
-        $changeDescription = $_POST['change_description'] ?? 'File replaced';
+        $changeDescription = Sanitizer::plainText($_POST['change_description'] ?? 'File replaced');
         
         $result = $versionService->createVersion(
             $documentId,

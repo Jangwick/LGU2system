@@ -9,13 +9,14 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/DashboardController.php';
 
 try {
     $controller = new DashboardController();
     
     // Get requested data
-    $action = $_GET['action'] ?? 'all';
+    $action = Sanitizer::enum($_GET['action'] ?? 'all', ['all', 'statistics', 'upload_trend', 'document_types', 'recent_documents', 'system_status'], 'all');
     
     switch ($action) {
         case 'statistics':
@@ -31,7 +32,7 @@ try {
             break;
             
         case 'recent_documents':
-            $limit = $_GET['limit'] ?? 5;
+            $limit = Sanitizer::int($_GET['limit'] ?? 5, 5);
             $data = $controller->getRecentDocuments($limit);
             break;
             

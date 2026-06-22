@@ -10,9 +10,9 @@ header('X-Content-Type-Options: nosniff');
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 
-$id = $_GET['id'] ?? null;
+$id = Sanitizer::int($_GET['id'] ?? 0, 0);
 
-if (!$id || !is_numeric($id)) {
+if (!$id) {
     http_response_code(400);
     echo json_encode(['error' => 'Missing or invalid document ID']);
     exit;
@@ -32,7 +32,7 @@ try {
           AND d.status IN ('approved')
     ");
 
-    $stmt->execute([':id' => (int)$id]);
+    $stmt->execute([':id' => $id]);
     $document = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$document) {

@@ -25,6 +25,7 @@ try {
         exit;
     }
 
+    require_once __DIR__ . '/../../core/config/config.php';
     require_once __DIR__ . '/../controllers/DocumentController.php';
 
     $controller = new DocumentController();

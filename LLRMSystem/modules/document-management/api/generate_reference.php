@@ -8,10 +8,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/DocumentController.php';
 
-$type = $_GET['type'] ?? '';
-$year = $_GET['year'] ?? null;
+$type = Sanitizer::plainText($_GET['type'] ?? '');
+$year = Sanitizer::int($_GET['year'] ?? 0, 0) ?: null;
 
 $controller = new DocumentController();
 $result = $controller->generateReference($type, $year);

@@ -10,15 +10,31 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 
 try {
     $db = getDatabase();
     
-    // Get all POST data
+    // Whitelist of allowed preference column names
+    $allowedColumns = [
+        'theme', 'email_notifications', 'sms_notifications',
+        'push_notifications', 'notification_frequency', 'language',
+        'timezone', 'compact_mode', 'auto_refresh'
+    ];
+    
+    // Get all POST data — sanitize keys against whitelist and values as strings
     $settings = [];
     foreach ($_POST as $key => $value) {
-        $settings[$key] = $value;
+        $cleanKey = Sanitizer::string($key);
+        if (in_array($cleanKey, $allowedColumns, true)) {
+            $settings[$cleanKey] = Sanitizer::string($value);
+        }
+    }
+    
+    if (empty($settings)) {
+        echo json_encode(['success' => false, 'message' => 'No valid settings provided']);
+        exit;
     }
     
     // Check if preferences exist

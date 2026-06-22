@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';
 CsrfMiddleware::requireValidToken();
 
+require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/Document.php';
 require_once __DIR__ . '/../models/DocumentVersion.php';
@@ -24,14 +25,14 @@ $fileStorageService = new FileStorageService();
 $logger = new Logger($db);
 $versionService = new VersionService($versionModel, $documentModel, $fileStorageService, $logger);
 
-// Try to get data from POST body first, then fallback to JSON input
-$documentId = $_POST['document_id'] ?? null;
-$versionNumber = $_POST['version_number'] ?? null;
+// Try to get data from POST body first, then fallback to JSON input — sanitized
+$documentId = Sanitizer::int($_POST['document_id'] ?? 0, 0);
+$versionNumber = Sanitizer::int($_POST['version_number'] ?? 0, 0);
 
 if (!$documentId || !$versionNumber) {
     $data = json_decode(file_get_contents('php://input'), true);
-    $documentId = $data['document_id'] ?? $documentId;
-    $versionNumber = $data['version_number'] ?? $versionNumber;
+    $documentId = Sanitizer::int($data['document_id'] ?? 0, 0) ?: $documentId;
+    $versionNumber = Sanitizer::int($data['version_number'] ?? 0, 0) ?: $versionNumber;
 }
 
 if (!$documentId || !$versionNumber) {
