@@ -44,8 +44,16 @@ try {
     $page = max(1, Sanitizer::int($_GET['page'] ?? 1, 1));
     $perPage = 10;
 
+    // Handle type filter: can be a single value or an array from type[] checkboxes
+    $typeFilter = $_GET['type'] ?? '';
+    if (is_array($typeFilter)) {
+        $typeFilter = Sanitizer::array($typeFilter, 'plainText');
+    } else {
+        $typeFilter = Sanitizer::plainText($typeFilter);
+    }
+
     $filters = [
-        'type' => Sanitizer::plainText($_GET['type'] ?? ''),
+        'type' => $typeFilter,
         'status' => '', // Will be forced below
         'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
         'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
