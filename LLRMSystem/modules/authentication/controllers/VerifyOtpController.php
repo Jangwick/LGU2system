@@ -27,7 +27,7 @@ header('Content-Type: application/json');
 if (ob_get_length()) ob_clean();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $otp = trim($_POST['otp'] ?? '');
+    $otp = Sanitizer::string($_POST['otp'] ?? '', ['maxLength' => 10]);
     $userId = $_SESSION['otp_pending_user_id'] ?? null;
 
     if (!$userId) {
