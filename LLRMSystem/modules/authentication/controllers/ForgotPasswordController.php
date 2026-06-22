@@ -8,8 +8,8 @@ header('Content-Type: application/json');
 try {
     $conn = getDatabase();
     
-    // Get email from POST
-    $email = trim($_POST['email'] ?? '');
+    // Get email from POST (sanitized)
+    $email = Sanitizer::email($_POST['email'] ?? '');
     
     if (empty($email)) {
         echo json_encode([
