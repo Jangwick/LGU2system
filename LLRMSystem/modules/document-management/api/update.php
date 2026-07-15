@@ -58,25 +58,15 @@ $data = [
     'title' => Sanitizer::plainText($_POST['title'] ?? ''),
     'document_type' => Sanitizer::plainText($_POST['document_type'] ?? ''),
     'document_date' => Sanitizer::date($_POST['document_date'] ?? ''),
-    'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
-    'description' => Sanitizer::richText($_POST['description'] ?? '')
+    'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected', 'archived'], ''),
+    'description' => Sanitizer::richText($_POST['description'] ?? ''),
+    'tags' => Sanitizer::plainText($_POST['tags'] ?? '')
 ];
 
 try {
-    $result = $documentModel->update($documentId, $data);
+    $result = $documentService->updateDocument($documentId, $data);
     
-    // Log activity
-    $logger->log(
-        $_SESSION['user_id'],
-        'document_updated',
-        $documentId,
-        'Updated document metadata'
-    );
-    
-    echo json_encode([
-        'success' => true,
-        'message' => 'Document updated successfully'
-    ]);
+    echo json_encode($result);
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,

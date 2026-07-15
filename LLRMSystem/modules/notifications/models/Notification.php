@@ -86,6 +86,29 @@ class Notification {
     }
     
     /**
+     * Create notification for all active users
+     */
+    public function notifyAllUsers($data) {
+        try {
+            $sql = "SELECT id FROM users WHERE status = 'active'";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            $users = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            $notificationIds = [];
+            foreach ($users as $userId) {
+                $data['user_id'] = $userId;
+                $notificationIds[] = $this->create($data);
+            }
+            
+            return $notificationIds;
+        } catch (PDOException $e) {
+            error_log("Notification notifyAllUsers error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
      * Get notifications for a user
      */
     public function getForUser($userId, $limit = 20, $offset = 0, $unreadOnly = false) {

@@ -31,7 +31,7 @@ class DocumentController {
             $filters = [
                 'search' => Sanitizer::plainText($_GET['search'] ?? ''),
                 'type' => Sanitizer::plainText($_GET['type'] ?? ''),
-                'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+                'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected', 'archived'], ''),
                 'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
                 'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
                 'file_size' => Sanitizer::plainText($_GET['file_size'] ?? ''),
@@ -110,7 +110,7 @@ class DocumentController {
                 throw new Exception("No file uploaded");
             }
             
-            $status = Sanitizer::enum($_POST['status'] ?? 'draft', ['draft', 'pending', 'approved', 'rejected', 'published'], 'draft');
+            $status = Sanitizer::enum($_POST['status'] ?? 'draft', ['draft', 'pending', 'approved', 'rejected', 'archived', 'published'], 'draft');
             if ($status === 'published') {
                 $status = 'approved';
             }
@@ -156,7 +156,7 @@ class DocumentController {
                 'title' => Sanitizer::plainText($_POST['title'] ?? ''),
                 'document_type' => Sanitizer::plainText($_POST['document_type'] ?? ''),
                 'document_date' => Sanitizer::date($_POST['document_date'] ?? ''),
-                'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+                'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected', 'archived'], ''),
                 'description' => Sanitizer::richText($_POST['description'] ?? ''),
                 'tags' => Sanitizer::plainText($_POST['tags'] ?? ''),
                 'confidentiality_level' => Sanitizer::enum($_POST['confidentiality_level'] ?? 'public', ['public', 'internal', 'confidential', 'restricted'], 'public')

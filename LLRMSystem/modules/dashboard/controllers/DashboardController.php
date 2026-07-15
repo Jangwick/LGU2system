@@ -23,6 +23,19 @@ class DashboardController {
         ");
         $stats['total_documents'] = $stmt->fetchColumn();
         
+        // New Documents (unread document-management notifications for current user)
+        $userId = $_SESSION['user_id'] ?? 0;
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) as count
+            FROM notifications
+            WHERE user_id = :user_id
+            AND is_read = 0
+            AND source_module = 'document-management'
+            AND type = 'file'
+        ");
+        $stmt->execute([':user_id' => $userId]);
+        $stats['new_documents'] = $stmt->fetchColumn();
+        
         // Pending Review
         $stmt = $this->db->query("
             SELECT COUNT(*) as count

@@ -1,5 +1,7 @@
 <?php
 
+require_once BASE_PATH . '/modules/user-management/controllers/UserController.php';
+
 use PHPUnit\Framework\TestCase;
 
 class UserFunctionalTest extends TestCase
@@ -24,14 +26,15 @@ class UserFunctionalTest extends TestCase
             'page' => '2'
         ];
 
-        $controller = new UserController();
+        $reflection = new ReflectionClass('UserController');
+        $controller = $reflection->newInstanceWithoutConstructor();
 
         $method = new ReflectionMethod($controller, 'index');
         $method->setAccessible(true);
 
         try {
             $method->invoke($controller);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             // Expected if DB is not available; filters are still built before query
         }
 

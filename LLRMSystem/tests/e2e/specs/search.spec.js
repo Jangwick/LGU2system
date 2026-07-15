@@ -13,6 +13,14 @@ test.describe('Public search', () => {
         await page.click('#filter-form button[type="submit"]');
         await expect(page.locator('body')).toBeVisible();
     });
+
+    test('public search preview button opens modal and displays document details', async ({ page }) => {
+        await page.goto('/modules/public-portal/views/search.php');
+        await page.click('button:has-text("Preview")');
+        await expect(page.locator('#preview-modal')).not.toHaveClass(/hidden/);
+        await expect(page.locator('#preview-title')).not.toHaveText('---');
+        await expect(page.locator('#preview-filename')).not.toHaveText('---');
+    });
 });
 
 test.describe('Admin search', () => {

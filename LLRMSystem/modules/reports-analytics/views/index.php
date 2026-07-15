@@ -10,6 +10,8 @@ $documentsByType = $controller->getDocumentsByType();
 $documentsByStatus = $controller->getDocumentsByStatus();
 $timeline = $controller->getDocumentsTimeline();
 $topUploaders = $controller->getTopUploaders(5);
+$topApprovers = $controller->getTopApprovers(5);
+$activityTrend = $controller->getActivityTrend();
 $activityByAction = $controller->getActivityByAction();
 $documentsByDepartment = $controller->getDocumentsByDepartment();
 $storageByType = $controller->getStorageByType();
@@ -105,6 +107,54 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
 
+        <!-- KPI Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-150 group cursor-pointer">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                        <i class="bi bi-hourglass-split text-yellow-600 dark:text-yellow-400 text-4xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-400">Pending Review</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['pending_documents']); ?></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-200 group cursor-pointer">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                        <i class="bi bi-x-circle-fill text-red-600 dark:text-red-400 text-4xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-red-600 dark:group-hover:text-red-400">Rejected</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['rejected_documents']); ?></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-250 group cursor-pointer">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                        <i class="bi bi-percent text-purple-600 dark:text-purple-400 text-4xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-purple-600 dark:group-hover:text-purple-400">Approval Rate</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo $stats['approval_rate']; ?>%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-300 group cursor-pointer">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                        <i class="bi bi-stopwatch text-teal-600 dark:text-teal-400 text-4xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-teal-600 dark:group-hover:text-teal-400">Avg Approval Time</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo $stats['average_approval_time']; ?>h</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Charts Row 1 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Documents by Type -->
@@ -151,8 +201,16 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
 
+        <!-- Activity Trend Chart -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-950 group">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Activity Trend (Last 30 Days)</h3>
+            <div class="relative" style="height: 300px;">
+                <canvas id="activityTrendChart"></canvas>
+            </div>
+        </div>
+
         <!-- Tables Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <!-- Top Uploaders -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
@@ -220,6 +278,43 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                                             echo number_format($size / 1024, 2) . ' KB';
                                         }
                                         ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Top Approvers -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Top Approvers</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-900/50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">User</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Approved</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <?php foreach ($topApprovers as $approver): ?>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="h-8 w-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                                                <i class="bi bi-person-fill text-green-600 dark:text-green-400"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <div class="text-sm font-bold text-gray-900 dark:text-gray-100"><?php echo htmlspecialchars($approver['full_name'] ?? $approver['name']); ?></div>
+                                                <div class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold"><?php echo htmlspecialchars($approver['department'] ?? 'N/A'); ?></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-black text-green-600 dark:text-green-400">
+                                        <?php echo number_format($approver['approved_count']); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -533,6 +628,56 @@ const timelineChart = new Chart(document.getElementById('timelineChart'), {
                 grid: {
                     color: getGridColor()
                 }
+            }
+        }
+    }
+});
+
+// Activity Trend Chart
+const activityTrendChart = new Chart(document.getElementById('activityTrendChart'), {
+    type: 'line',
+    data: {
+        labels: <?php echo json_encode(array_column($activityTrend, 'day')); ?>,
+        datasets: [{
+            label: 'Daily Activities',
+            data: <?php echo json_encode(array_column($activityTrend, 'count')); ?>,
+            borderColor: chartColors.purple,
+            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+            tension: 0.4,
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 3,
+            pointHoverRadius: 5
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    font: { size: 12 },
+                    color: getLabelColor()
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    font: { size: 11 },
+                    color: getLabelColor()
+                },
+                grid: { color: getGridColor() }
+            },
+            x: {
+                ticks: {
+                    font: { size: 11 },
+                    color: getLabelColor()
+                },
+                grid: { color: getGridColor() }
             }
         }
     }

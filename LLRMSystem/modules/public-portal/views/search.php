@@ -422,6 +422,7 @@ document.addEventListener('DOMContentLoaded',function(){setView(currentView);sea
 
 // Back to Top Button
 (function(){const btn=document.getElementById('back-to-top');if(!btn)return;function checkScroll(){let scrolled=false;if(window.pageYOffset>200||document.documentElement.scrollTop>200)scrolled=true;const main=document.querySelector('main');if(main&&main.scrollTop>200)scrolled=true;document.querySelectorAll('.overflow-y-auto').forEach(el=>{if(el.scrollTop>200)scrolled=true;});if(scrolled){btn.classList.remove('hidden');btn.classList.add('flex');}else{btn.classList.add('hidden');btn.classList.remove('flex');}}function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});const main=document.querySelector('main');if(main)main.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.scrollTo({top:0,behavior:'smooth'}));}btn.onclick=scrollToTop;window.addEventListener('scroll',checkScroll,{passive:true});const main=document.querySelector('main');if(main)main.addEventListener('scroll',checkScroll,{passive:true});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.addEventListener('scroll',checkScroll,{passive:true}));checkScroll();})();
+});
 </script>
 </body>
 </html>

@@ -18,7 +18,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'suggestions') {
 
 // Handle AJAX export
 if (isset($_GET['action']) && $_GET['action'] === 'export') {
-    $controller->export();
+    $export = $controller->export();
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="' . $export['filename'] . '"');
+    echo $export['csv'];
+    exit;
 }
 
 $data = $controller->index();

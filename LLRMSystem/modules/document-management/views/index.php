@@ -63,7 +63,8 @@ function getStatusBadge($status) {
         'draft' => '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
         'pending' => '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
         'approved' => '<span class="badge badge-success"><i class="bi bi-check-circle mr-1"></i>Approved</span>',
-        'rejected' => '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>'
+        'rejected' => '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>',
+        'archived' => '<span class="badge bg-gray-500 text-white"><i class="bi bi-archive mr-1"></i>Archived</span>'
     ];
     return $badges[$status] ?? '<span class="badge badge-info">' . ucfirst($status) . '</span>';
 }
@@ -209,7 +210,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 $statuses = [
                                     'draft' => 'Draft',
                                     'pending' => 'Pending Review',
-                                    'approved' => 'Approved'
+                                    'approved' => 'Approved',
+                                    'rejected' => 'Rejected',
+                                    'archived' => 'Archived'
                                 ];
                                 $selectedStatus = $_GET['status'] ?? '';
                                 foreach ($statuses as $value => $label): ?>
@@ -394,6 +397,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
                                         <?php echo getStatusBadge($doc['status']); ?>
+                                        <?php if (!empty($doc['status_changed_by_name'])): ?>
+                                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
+                                            by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
+                                        </p>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
@@ -471,8 +479,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                             <!-- Bottom: Status & Actions -->
                             <div class="px-4 py-3 bg-white dark:bg-gray-800 flex items-center justify-between border-t border-gray-50 dark:border-gray-700/50">
-                                <div class="flex items-center">
+                                <div class="flex flex-col">
                                     <?php echo getStatusBadge($doc['status']); ?>
+                                    <?php if (!empty($doc['status_changed_by_name'])): ?>
+                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
+                                        by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
+                                    </span>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="flex items-center gap-1.5">
                                     <button type="button" class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
@@ -716,6 +729,10 @@ function viewDocument(id) {
                                             <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Last Interaction</label>
                                             <p class="text-sm text-gray-800 dark:text-gray-200 font-bold">${formatDateTime(doc.updated_at)}</p>
                                         </div>
+                                        <div>
+                                            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Status Set By</label>
+                                            <p class="text-sm text-gray-800 dark:text-gray-200 font-bold">${doc.status_changed_by_name ? `${doc.status_changed_by_name}` : 'N/A'}</p>
+                                        </div>
                                     </div>
                                     
                                     <div class="mt-8 pt-6 border-t border-gray-50 dark:border-gray-800">
@@ -784,11 +801,6 @@ function viewDocument(id) {
                                         Quick Actions
                                     </h3>
                                     <div class="grid gap-3">
-                                        ${currentUserRole === 'viewer' ? `
-                                        <button type="button" onclick="approveDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-green-700 dark:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-700 transition-colors">
-                                            <i class="bi bi-check-circle mr-3 text-green-500"></i> Approve Document
-                                        </button>
-                                        ` : `
                                         <button type="button" onclick="shareDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-share mr-3 text-blue-500"></i> Share Document
                                         </button>
@@ -798,7 +810,6 @@ function viewDocument(id) {
                                         <button type="button" onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
-                                        `}
                                         <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
                                             ${doc.status !== 'approved' ? `
                                             <button type="button" onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
@@ -808,6 +819,47 @@ function viewDocument(id) {
                                         </div>
                                     </div>
                                 </section>
+
+                                ${currentUserRole !== 'viewer' ? `
+                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-5 flex items-center">
+                                        <i class="bi bi-arrow-left-right mr-2 text-indigo-500"></i>
+                                        Workflow Actions
+                                    </h3>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        ${doc.status !== 'pending' ? `
+                                        <button type="button" onclick="workflowAction(${doc.id}, 'review', 'Mark this document for review?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-indigo-700 dark:text-indigo-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-700 transition-colors">
+                                            <i class="bi bi-eye mr-2 text-indigo-500"></i> Review
+                                        </button>
+                                        ` : ''}
+                                        ${doc.status !== 'approved' ? `
+                                        <button type="button" onclick="workflowAction(${doc.id}, 'approve', 'Approve this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-green-700 dark:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-700 transition-colors">
+                                            <i class="bi bi-check-circle mr-2 text-green-500"></i> Approve
+                                        </button>
+                                        ` : ''}
+                                        ${doc.status !== 'rejected' ? `
+                                        <button type="button" onclick="workflowAction(${doc.id}, 'reject', 'Reject this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-red-700 dark:text-red-200 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-700 transition-colors">
+                                            <i class="bi bi-x-circle mr-2 text-red-500"></i> Reject
+                                        </button>
+                                        ` : ''}
+                                        ${doc.status !== 'draft' ? `
+                                        <button type="button" onclick="workflowAction(${doc.id}, 'request_revision', 'Request revision for this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-yellow-700 dark:text-yellow-200 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-xl border border-yellow-100 dark:border-yellow-700 transition-colors">
+                                            <i class="bi bi-pencil-square mr-2 text-yellow-500"></i> Request Revision
+                                        </button>
+                                        ` : ''}
+                                        ${doc.status !== 'pending' ? `
+                                        <button type="button" onclick="workflowAction(${doc.id}, 'forward', 'Forward this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-blue-700 dark:text-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-700 transition-colors">
+                                            <i class="bi bi-forward mr-2 text-blue-500"></i> Forward
+                                        </button>
+                                        ` : ''}
+                                        ${doc.status !== 'archived' ? `
+                                        <button type="button" onclick="workflowAction(${doc.id}, 'archive', 'Archive this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
+                                            <i class="bi bi-archive mr-2 text-gray-500"></i> Archive
+                                        </button>
+                                        ` : ''}
+                                    </div>
+                                </section>
+                                ` : ''}
                             </div>
                         </div>
                     </div>
@@ -843,35 +895,33 @@ function shareDocument(id) {
 }
 
 /**
- * Approve document
+ * Workflow action (status update)
  */
-function approveDocument(id) {
-    if (!confirm('Are you sure you want to approve this document?')) {
+function workflowAction(id, action, confirmMessage = '') {
+    if (confirmMessage && !confirm(confirmMessage)) {
         return;
     }
-    
-    fetch(App.apiUrl('documents', 'api/approve.php'), {
+
+    fetch(App.apiUrl('documents', 'api/workflow.php'), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id: id })
+        body: JSON.stringify({ document_id: id, action: action })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showToast('Document approved successfully', 'success');
-            // Refresh document list
+            showToast(data.message || 'Workflow action completed', 'success');
             loadDocuments();
-            // Close preview modal
             closePreviewModal();
         } else {
-            showToast(data.error || 'Failed to approve document', 'error');
+            showToast(data.error || 'Failed to perform workflow action', 'error');
         }
     })
     .catch(error => {
-        console.error('Error approving document:', error);
-        showToast('An error occurred while approving the document', 'error');
+        console.error('Error performing workflow action:', error);
+        showToast('An error occurred while performing the workflow action', 'error');
     });
 }
 
@@ -999,7 +1049,8 @@ function getStatusBadgeHTML(status) {
         'draft': '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
         'pending': '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
         'approved': '<span class="badge badge-success"><i class="bi bi-check-circle mr-1"></i>Approved</span>',
-        'rejected': '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>'
+        'rejected': '<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>',
+        'archived': '<span class="badge bg-gray-500 text-white"><i class="bi bi-archive mr-1"></i>Archived</span>'
     };
     return badges[s] || `<span class="badge badge-info">${status}</span>`;
 }
@@ -1405,6 +1456,8 @@ document.addEventListener('keydown', function(e) {
                                     <option value="draft">Draft (Working Paper)</option>
                                     <option value="pending">For Review</option>
                                     <option value="approved">Approved / Official</option>
+                                    <option value="rejected">Rejected</option>
+                                    <option value="archived">Archived</option>
                                 </select>
                                 <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                             </div>

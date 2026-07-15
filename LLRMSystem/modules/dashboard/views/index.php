@@ -65,7 +65,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mb-6">
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-6 mb-6">
             <!-- Total Documents -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-100 group cursor-pointer border border-transparent dark:border-gray-700">
                 <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
@@ -82,6 +82,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
             </div>
+            
+            <!-- New Documents -->
+            <a href="<?php echo DOCUMENTS_INDEX_URL; ?>" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-150 group cursor-pointer border border-transparent dark:border-gray-700">
+                <div class="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-2 text-center sm:text-left">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] md:text-sm font-medium mb-0.5 transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">New Documents</p>
+                        <h3 class="text-lg md:text-3xl font-bold text-gray-800 dark:text-white transform transition-all group-hover:scale-110"><?php echo number_format($stats['new_documents']); ?></h3>
+                        <p class="text-blue-600 dark:text-blue-500 text-[10px] md:text-sm mt-1 hidden sm:block">
+                            <i class="bi bi-bell"></i> unread
+                        </p>
+                    </div>
+                    <div class="bg-blue-100 dark:bg-blue-900/30 rounded-full p-2 md:p-4 transform transition-all group-hover:scale-110 group-hover:rotate-3">
+                        <i class="bi bi-bell text-blue-600 dark:text-blue-500 text-sm md:text-2xl"></i>
+                    </div>
+                </div>
+            </a>
             
             <!-- Pending Review -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 animate-fade-in-up animation-delay-200 group cursor-pointer border border-transparent dark:border-gray-700">

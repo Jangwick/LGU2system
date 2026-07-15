@@ -130,10 +130,11 @@ class SearchController {
                 ]);
         }
         
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="search_results_' . date('Y-m-d') . '.csv"');
-        echo $csv;
-        exit;
+        return [
+            'csv' => $csv,
+            'filters' => $filters,
+            'filename' => 'search_results_' . date('Y-m-d') . '.csv'
+        ];
     }
     
     /**

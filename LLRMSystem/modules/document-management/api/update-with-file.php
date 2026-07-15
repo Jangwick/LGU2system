@@ -41,38 +41,38 @@ try {
         'title' => Sanitizer::plainText($_POST['title'] ?? ''),
         'document_type' => Sanitizer::plainText($_POST['document_type'] ?? ''),
         'document_date' => Sanitizer::date($_POST['document_date'] ?? ''),
-        'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
-        'description' => Sanitizer::richText($_POST['description'] ?? '')
+        'status' => Sanitizer::enum($_POST['status'] ?? '', ['draft', 'pending', 'approved', 'rejected', 'archived'], ''),
+        'description' => Sanitizer::richText($_POST['description'] ?? ''),
+        'tags' => Sanitizer::plainText($_POST['tags'] ?? '')
     ];
-    
-    $documentModel->update($documentId, $data);
-    
+
+    $documentService = new DocumentService($documentModel, $fileStorageService, $logger);
+    $updateResult = $documentService->updateDocument($documentId, $data);
+
+    if (!$updateResult['success']) {
+        ob_clean();
+        echo json_encode($updateResult);
+        exit;
+    }
+
     // Handle file replacement
     if (isset($_FILES['replacement_file']) && $_FILES['replacement_file']['error'] === UPLOAD_ERR_OK) {
         $changeDescription = Sanitizer::plainText($_POST['change_description'] ?? 'File replaced');
-        
+
         $result = $versionService->createVersion(
             $documentId,
             $_FILES['replacement_file'],
             $changeDescription,
             $_SESSION['user_id']
         );
-        
+
         if (!$result['success']) {
             ob_clean();
             echo json_encode($result);
             exit;
         }
-    } else {
-        // Log metadata update only
-        $logger->log(
-            $_SESSION['user_id'],
-            'document_updated',
-            $documentId,
-            'Updated document metadata'
-        );
     }
-    
+
     ob_clean();
     echo json_encode([
         'success' => true,

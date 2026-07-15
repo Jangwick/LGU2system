@@ -90,7 +90,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500 relative z-[100]">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-500 relative z-10">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="relative">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>

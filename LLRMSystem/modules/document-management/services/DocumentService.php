@@ -115,13 +115,17 @@ class DocumentService {
             }
             $encryptedFileKey = $keyEncryptionResult['encrypted_key'];
 
+            $userId = $_SESSION['user_id'] ?? null;
+            $status = $data['status'] ?? 'draft';
+            $timestamp = date('Y-m-d H:i:s');
+
             // Prepare document data
             $documentData = [
                 'reference_number' => $data['reference_number'],
                 'title' => $data['title'],
                 'document_type' => $data['document_type'],
                 'document_date' => $data['document_date'],
-                'status' => $data['status'] ?? 'draft',
+                'status' => $status,
                 'description' => $data['description'] ?? '',
                 'tags' => $data['tags'] ?? '',
                 'file_path' => $fileData['path'],
@@ -130,21 +134,45 @@ class DocumentService {
                 'file_type' => $fileData['type'],
                 'source_module' => $data['source_module'] ?? 'manual',
                 'source_id' => $data['source_id'] ?? null,
-                'uploaded_by' => $_SESSION['user_id'],
+                'uploaded_by' => $userId,
                 'is_encrypted' => true,
-                'encryption_key' => $encryptedFileKey
+                'encryption_key' => $encryptedFileKey,
+                'status_changed_by' => $userId,
+                'status_changed_at' => $timestamp,
+                'approved_by' => $status === 'approved' ? $userId : null,
+                'approved_at' => $status === 'approved' ? $timestamp : null
             ];
-            
+
             // Create document record
             $documentId = $this->documentModel->create($documentData);
-            
+
+            // Record initial status history
+            $this->documentModel->addStatusHistory($documentId, null, $status, $userId, 'Document created');
+
+            // Notify all active users about the new document
+            try {
+                require_once __DIR__ . '/../../notifications/models/Notification.php';
+                $notification = new Notification();
+                $notification->notifyAllUsers([
+                    'type' => Notification::TYPE_FILE,
+                    'title' => 'New document uploaded',
+                    'message' => $data['title'] . ' (' . $data['document_type'] . ')',
+                    'source_module' => 'document-management',
+                    'source_id' => $documentId,
+                    'priority' => Notification::PRIORITY_NORMAL,
+                    'data' => ['link' => 'modules/document-management/views/index.php']
+                ]);
+            } catch (Exception $e) {
+                error_log("Failed to create document notification: " . $e->getMessage());
+            }
+
             // Log activity with detailed info
             $this->logger->logDocumentActivity($documentId, Logger::ACTION_DOCUMENT_UPLOAD, $data['title'], [
                 'reference_number' => $data['reference_number'],
                 'document_type' => $data['document_type'],
                 'file_size' => $fileData['size']
             ]);
-            
+
             return [
                 'success' => true,
                 'document_id' => $documentId,
@@ -171,23 +199,46 @@ class DocumentService {
         if (!$document) {
             throw new Exception("Document not found");
         }
-        
+
         // Store old values for audit trail
         $oldValues = [
             'title' => $document['title'],
             'description' => $document['description'] ?? '',
             'status' => $document['status'] ?? ''
         ];
-        
+
+        $oldStatus = $document['status'] ?? '';
+        $newStatus = $data['status'] ?? $oldStatus;
+
+        // Track status changes
+        if ($oldStatus !== $newStatus) {
+            $userId = $_SESSION['user_id'] ?? null;
+            $timestamp = date('Y-m-d H:i:s');
+            $data['status_changed_by'] = $userId;
+            $data['status_changed_at'] = $timestamp;
+
+            if ($newStatus === 'approved') {
+                $data['approved_by'] = $userId;
+                $data['approved_at'] = $timestamp;
+            } else {
+                $data['approved_by'] = null;
+                $data['approved_at'] = null;
+            }
+        }
+
         // Update document
         $success = $this->documentModel->update($id, $data);
-        
+
         if ($success) {
+            if ($oldStatus !== $newStatus) {
+                $this->documentModel->addStatusHistory($id, $oldStatus, $newStatus, $_SESSION['user_id'] ?? null, 'Status updated');
+            }
+
             $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_UPDATE, $document['title'], [
                 'changes' => array_intersect_key($data, $oldValues)
             ], $oldValues);
         }
-        
+
         return [
             'success' => $success,
             'message' => $success ? 'Document updated successfully' : 'Failed to update document'
@@ -198,25 +249,11 @@ class DocumentService {
      * Approve document
      */
     public function approveDocument($id) {
-        // Check if document exists
-        $document = $this->documentModel->getById($id);
-        if (!$document) {
-            throw new Exception("Document not found");
+        $result = $this->updateDocument($id, ['status' => 'approved']);
+        if ($result['success']) {
+            $result['message'] = 'Document approved successfully';
         }
-        
-        // Update document status to approved
-        $success = $this->documentModel->update($id, ['status' => 'approved']);
-        
-        if ($success) {
-            $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_UPDATE, $document['title'], [
-                'status_change' => ['from' => $document['status'] ?? '', 'to' => 'approved']
-            ], ['status' => $document['status'] ?? '']);
-        }
-        
-        return [
-            'success' => $success,
-            'message' => $success ? 'Document approved successfully' : 'Failed to approve document'
-        ];
+        return $result;
     }
     
     /**

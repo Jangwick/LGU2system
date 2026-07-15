@@ -11,7 +11,9 @@ if (!defined('APP_CONFIG_LOADED')) {
 
 // Load local configuration if it exists
 if (file_exists(__DIR__ . '/config.local.php')) {
+    ob_start();
     require_once __DIR__ . '/config.local.php';
+    ob_end_clean();
 }
 
 /**
@@ -54,7 +56,8 @@ function detectBaseUrl() {
         // actual scheme so local development still works without TLS.
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $isLocalhost = in_array($host, ['localhost', '127.0.0.1'], true)
-            || str_starts_with($host, 'localhost:');
+            || str_starts_with($host, 'localhost:')
+            || str_starts_with($host, '127.0.0.1:');
         $protocol = (!$isLocalhost || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'))
             ? 'https'
             : 'http';

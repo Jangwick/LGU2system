@@ -32,9 +32,13 @@ class Document {
      * Get all documents with filters
      */
     public function getAll($filters = []) {
-        $sql = "SELECT d.*, u.name as uploaded_by_name 
+        $sql = "SELECT d.*, u.name as uploaded_by_name,
+                        scu.name as status_changed_by_name,
+                        au.name as approved_by_name
                 FROM legislative_documents d
                 LEFT JOIN users u ON d.uploaded_by = u.id
+                LEFT JOIN users scu ON d.status_changed_by = scu.id
+                LEFT JOIN users au ON d.approved_by = au.id
                 WHERE d.deleted_at IS NULL";
         
         $params = [];
@@ -121,15 +125,40 @@ class Document {
      */
     public function getById($id) {
         $stmt = $this->db->prepare("
-            SELECT d.*, u.name as uploaded_by_name 
+            SELECT d.*, u.name as uploaded_by_name,
+                   scu.name as status_changed_by_name,
+                   au.name as approved_by_name
             FROM legislative_documents d
             LEFT JOIN users u ON d.uploaded_by = u.id
+            LEFT JOIN users scu ON d.status_changed_by = scu.id
+            LEFT JOIN users au ON d.approved_by = au.id
             WHERE d.id = :id
         ");
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
+    /**
+     * Add a status history entry
+     */
+    public function addStatusHistory($documentId, $oldStatus, $newStatus, $changedBy, $notes = '') {
+        $stmt = $this->db->prepare("
+            INSERT INTO document_status_history (
+                document_id, old_status, new_status, changed_by, changed_at, notes
+            ) VALUES (
+                :document_id, :old_status, :new_status, :changed_by, NOW(), :notes
+            )
+        ");
+
+        return $stmt->execute([
+            ':document_id' => $documentId,
+            ':old_status' => $oldStatus,
+            ':new_status' => $newStatus,
+            ':changed_by' => $changedBy,
+            ':notes' => $notes
+        ]);
+    }
+
     /**
      * Create new document
      */
@@ -139,15 +168,19 @@ class Document {
                 reference_number, title, document_type, document_date,
                 status, file_path, file_name, file_size, file_type,
                 description, tags, source_module, source_id,
-                uploaded_by, created_at
+                uploaded_by, created_at,
+                status_changed_by, status_changed_at,
+                approved_by, approved_at
             ) VALUES (
                 :reference_number, :title, :document_type, :document_date,
                 :status, :file_path, :file_name, :file_size, :file_type,
                 :description, :tags, :source_module, :source_id,
-                :uploaded_by, NOW()
+                :uploaded_by, NOW(),
+                :status_changed_by, :status_changed_at,
+                :approved_by, :approved_at
             )
         ");
-        
+
         $stmt->execute([
             ':reference_number' => $data['reference_number'],
             ':title' => $data['title'],
@@ -162,9 +195,13 @@ class Document {
             ':tags' => $data['tags'] ?? null,
             ':source_module' => $data['source_module'] ?? 'manual',
             ':source_id' => $data['source_id'] ?? null,
-            ':uploaded_by' => $data['uploaded_by']
+            ':uploaded_by' => $data['uploaded_by'],
+            ':status_changed_by' => $data['status_changed_by'] ?? null,
+            ':status_changed_at' => $data['status_changed_at'] ?? null,
+            ':approved_by' => $data['approved_by'] ?? null,
+            ':approved_at' => $data['approved_at'] ?? null
         ]);
-        
+
         return $this->db->lastInsertId();
     }
     
@@ -172,27 +209,31 @@ class Document {
      * Update document
      */
     public function update($id, $data) {
-        $stmt = $this->db->prepare("
-            UPDATE legislative_documents SET
-                title = :title,
-                document_type = :document_type,
-                document_date = :document_date,
-                status = :status,
-                description = :description,
-                tags = :tags,
-                updated_at = NOW()
-            WHERE id = :id
-        ");
-        
-        return $stmt->execute([
-            ':id' => $id,
-            ':title' => $data['title'],
-            ':document_type' => $data['document_type'],
-            ':document_date' => $data['document_date'],
-            ':status' => $data['status'],
-            ':description' => $data['description'] ?? null,
-            ':tags' => $data['tags'] ?? null
-        ]);
+        $allowedFields = [
+            'title', 'document_type', 'document_date', 'status',
+            'description', 'tags', 'confidentiality_level',
+            'approved_by', 'approved_at',
+            'status_changed_by', 'status_changed_at'
+        ];
+
+        $fields = [];
+        $params = [':id' => $id];
+
+        foreach ($allowedFields as $field) {
+            if (array_key_exists($field, $data)) {
+                $fields[] = "$field = :$field";
+                $params[":" . $field] = $data[$field] ?? null;
+            }
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        $sql = "UPDATE legislative_documents SET " . implode(', ', $fields) . ", updated_at = NOW() WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute($params);
     }
     
     /**

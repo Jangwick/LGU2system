@@ -46,12 +46,21 @@ if (!$documentId) {
 }
 
 try {
+    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+    if ($userRole === 'viewer') {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Access denied. Viewers cannot approve documents.']);
+        exit;
+    }
+
     $db = getDatabase();
-    $documentService = new DocumentService($db);
-    
-    // Allow viewers and public portal users to approve
+    $documentModel = new Document($db);
+    $fileStorageService = new FileStorageService();
+    $logger = new Logger($db);
+    $documentService = new DocumentService($documentModel, $fileStorageService, $logger);
+
     $result = $documentService->approveDocument($documentId);
-    
+
     echo json_encode($result);
 } catch (Exception $e) {
     http_response_code(500);

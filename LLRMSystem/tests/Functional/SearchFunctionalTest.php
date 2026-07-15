@@ -20,11 +20,16 @@ class SearchFunctionalTest extends TestCase
         $mockService->method('getCount')->willReturn(0);
         $mockService->method('getFacets')->willReturn([]);
 
+        $mockLogger = $this->getMockBuilder('Logger')
+            ->disableOriginalConstructor()
+            ->onlyMethods(['logActivity'])
+            ->getMock();
+
         $reflection = new ReflectionClass('SearchController');
         $this->controller = $reflection->newInstanceWithoutConstructor();
         $reflection->getProperty('searchService')->setValue($this->controller, $mockService);
         $reflection->getProperty('embeddingService')->setValue($this->controller, null);
-        $reflection->getProperty('logger')->setValue($this->controller, null);
+        $reflection->getProperty('logger')->setValue($this->controller, $mockLogger);
     }
 
     protected function tearDown(): void

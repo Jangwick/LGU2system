@@ -31,6 +31,20 @@ class ReportController {
         $stmt = $this->db->query("SELECT COUNT(*) FROM legislative_documents WHERE status = 'pending' AND deleted_at IS NULL");
         $stats['pending_documents'] = $stmt->fetchColumn();
         
+        $stmt = $this->db->query("SELECT COUNT(*) FROM legislative_documents WHERE status = 'rejected' AND deleted_at IS NULL");
+        $stats['rejected_documents'] = $stmt->fetchColumn();
+        
+        $decided = $stats['approved_documents'] + $stats['rejected_documents'];
+        $stats['approval_rate'] = $decided > 0 ? round(($stats['approved_documents'] / $decided) * 100, 1) : 0;
+        
+        $stmt = $this->db->query("
+            SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, approved_at)) as avg_hours
+            FROM legislative_documents
+            WHERE status = 'approved' AND approved_at IS NOT NULL AND deleted_at IS NULL
+        ");
+        $avgHours = $stmt->fetchColumn();
+        $stats['average_approval_time'] = $avgHours !== null ? round($avgHours, 1) : 0;
+        
         $stmt = $this->db->query("SELECT COUNT(*) FROM legislative_documents WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) AND deleted_at IS NULL");
         $stats['new_documents_30days'] = $stmt->fetchColumn();
         
@@ -95,6 +109,29 @@ class ReportController {
     }
     
     /**
+     * Get top approvers
+     */
+    public function getTopApprovers($limit = 10) {
+        $stmt = $this->db->prepare("
+            SELECT
+                u.id,
+                u.full_name,
+                u.email,
+                u.department,
+                COUNT(ld.id) as approved_count
+            FROM users u
+            INNER JOIN legislative_documents ld ON u.id = ld.approved_by
+            WHERE ld.status = 'approved' AND ld.deleted_at IS NULL
+            GROUP BY u.id
+            ORDER BY approved_count DESC
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Get top uploaders
      */
     public function getTopUploaders($limit = 10) {
@@ -117,6 +154,22 @@ class ReportController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    /**
+     * Get daily activity trend (last 30 days)
+     */
+    public function getActivityTrend() {
+        $stmt = $this->db->query("
+            SELECT
+                DATE(created_at) as day,
+                COUNT(*) as count
+            FROM activity_logs
+            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            GROUP BY day
+            ORDER BY day ASC
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /**
      * Get activity by action type
      */

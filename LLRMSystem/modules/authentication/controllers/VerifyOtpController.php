@@ -101,6 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$currentSessionId, $userId]);
             $_SESSION['current_session_id'] = $currentSessionId;
 
+            // Initialize notification last_seen_at to avoid overwhelming backlog
+            $stmt = $conn->prepare("UPDATE users SET last_seen_at = NOW() WHERE id = ? AND last_seen_at IS NULL");
+            $stmt->execute([$userId]);
+
             // Clear pending OTP data and brute-force counter
             unset($_SESSION['otp_pending_user_id']);
             unset($_SESSION['otp_attempts']);
