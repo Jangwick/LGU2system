@@ -1,0 +1,13 @@
+{
+  "name": "llrm-system-tests",
+  "version": "1.0.0",
+  "description": "End-to-end and acceptance tests for LLRM System",
+  "devDependencies": {
+    "@playwright/test": "^1.45.0"
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
+  }
+}

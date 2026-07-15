@@ -11,8 +11,8 @@ class SessionTimeoutMiddleware {
      * Check if session has timed out and logout if needed
      */
     public function checkSessionTimeout() {
-        // Start session if not already started
-        if (session_status() === PHP_SESSION_NONE) {
+        // Start session if not already started (skip in CLI/test environments)
+        if (session_status() === PHP_SESSION_NONE && PHP_SAPI !== 'cli') {
             session_start();
         }
         

@@ -91,9 +91,19 @@ class FileStorageService {
         $filename = $this->generateUniqueFilename($extension);
         $filepath = $typeDir . '/' . $filename;
         
-        // Move uploaded file
-        if (!move_uploaded_file($file['tmp_name'], $filepath)) {
-            throw new Exception("Failed to upload file");
+        // Move uploaded file (production) or copy (CLI/test environments)
+        if (is_uploaded_file($file['tmp_name'])) {
+            if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+                throw new Exception("Failed to upload file");
+            }
+        } elseif (PHP_SAPI === 'cli') {
+            // CLI fallback for testing
+            if (!copy($file['tmp_name'], $filepath)) {
+                throw new Exception("Failed to upload file");
+            }
+            @unlink($file['tmp_name']);
+        } else {
+            throw new Exception("Invalid file upload");
         }
         
         // Set proper permissions

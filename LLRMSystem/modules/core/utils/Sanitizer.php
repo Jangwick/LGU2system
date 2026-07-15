@@ -317,9 +317,12 @@ class Sanitizer
      */
     public static function applyRule($value, string $rule)
     {
+        $rule = strtolower($rule);
         switch ($rule) {
             case 'string':
                 return self::string($value);
+            case 'enum':
+                return self::enum($value, [], '');
             case 'plaintext':
             case 'plain':
                 return self::plainText($value);
