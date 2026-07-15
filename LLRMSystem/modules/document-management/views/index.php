@@ -154,7 +154,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </button>
         
         <!-- Filters Section -->
-        <div id="filters-section" class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
+        <div id="filters-section" class="relative z-50 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="sm:col-span-2 md:col-span-2">
@@ -222,6 +222,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <input type="hidden" id="status-filter-input" name="status" value="<?php echo $selectedStatus; ?>">
                     </div>
                 </div>
+            </div>
+            
+            <!-- Apply Filters Button -->
+            <div class="mt-4 flex justify-end">
+                <button type="button" onclick="applyFilters()" class="inline-flex items-center px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all shadow-sm font-bold">
+                    <i class="bi bi-funnel-fill mr-2"></i>
+                    Apply Filters
+                </button>
             </div>
             
             <!-- Advanced Filters Toggle -->
@@ -1652,7 +1660,7 @@ document.addEventListener('keydown', function(e) {
 
 <script>
 // Custom Dropdown Helper Function
-function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue, onChangeCallback = null) {
+function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass, defaultValue, onChangeCallback = null, autoSubmit = true) {
     const trigger = document.getElementById(triggerId);
     const dropdown = document.getElementById(dropdownId);
     const valueDisplay = document.getElementById(valueId);
@@ -1686,8 +1694,10 @@ function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass
             hiddenInput.value = value;
             dropdown.classList.add('hidden');
             
-            // Trigger filter change event
-            hiddenInput.dispatchEvent(new Event('change'));
+            // Trigger change event only for non-filter dropdowns (e.g. modal forms)
+            if (autoSubmit) {
+                hiddenInput.dispatchEvent(new Event('change'));
+            }
             
             // Call onChange callback if provided
             if (onChangeCallback && typeof onChangeCallback === 'function') {
@@ -1706,44 +1716,10 @@ function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass
 
 // Initialize custom dropdowns when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    initCustomDropdown('type-filter-trigger', 'type-filter-dropdown', 'type-filter-value', 'type-filter-input', '.type-filter-option', 'All Types');
-    initCustomDropdown('status-filter-trigger', 'status-filter-dropdown', 'status-filter-value', 'status-filter-input', '.status-filter-option', 'All Status');
+    initCustomDropdown('type-filter-trigger', 'type-filter-dropdown', 'type-filter-value', 'type-filter-input', '.type-filter-option', 'All Types', null, false);
+    initCustomDropdown('status-filter-trigger', 'status-filter-dropdown', 'status-filter-value', 'status-filter-input', '.status-filter-option', 'All Status', null, false);
     initCustomDropdown('upload-document-type-trigger', 'upload-document-type-dropdown', 'upload-document-type-value', 'upload-document-type-input', '.upload-document-type-option', 'Select Category', autoGenerateReference);
     initCustomDropdown('status-modal-trigger', 'status-modal-dropdown', 'status-modal-value', 'status-modal-input', '.status-modal-option', 'Draft');
-    
-    // Add event listeners for filter inputs to trigger form submission
-    const typeFilterInput = document.getElementById('type-filter-input');
-    const statusFilterInput = document.getElementById('status-filter-input');
-    
-    if (typeFilterInput) {
-        typeFilterInput.addEventListener('change', function() {
-            // Get current URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            // Update type parameter
-            if (this.value) {
-                urlParams.set('type', this.value);
-            } else {
-                urlParams.delete('type');
-            }
-            // Reload page with new parameters
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        });
-    }
-    
-    if (statusFilterInput) {
-        statusFilterInput.addEventListener('change', function() {
-            // Get current URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            // Update status parameter
-            if (this.value) {
-                urlParams.set('status', this.value);
-            } else {
-                urlParams.delete('status');
-            }
-            // Reload page with new parameters
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        });
-    }
 });
 
 // Modal File Upload Handling

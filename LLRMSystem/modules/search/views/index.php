@@ -1000,12 +1000,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 if (filterForm) {
-                    filterForm.querySelectorAll('input[type="checkbox"], input[type="radio"], input[type="date"], select').forEach(el => {
-                        el.addEventListener('change', (e) => {
-                            updateResults();
-                        });
-                    });
-
+                    // Only Apply Filters button triggers refresh; filter inputs no longer auto-submit
                     filterForm.addEventListener('submit', (e) => {
                         e.preventDefault();
                         updateResults();

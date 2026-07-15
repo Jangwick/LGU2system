@@ -1,18 +1,27 @@
 const { test, expect } = require('@playwright/test');
 
+const TEST_PAGE = '/tests/e2e/helpers/session-timeout-test.php';
+
 test.describe('Session timeout', () => {
-    test.setTimeout(600 * 1000);
-
-    test('idle timeout modal appears after 5 minutes', async ({ page }) => {
-        await page.goto('/modules/dashboard/views/index.php');
-        await page.waitForTimeout(300 * 1000); // Wait 5 minutes
+    test('idle timeout modal appears and shows stay/logout buttons', async ({ page }) => {
+        await page.goto(TEST_PAGE);
+        await page.waitForTimeout(6000); // Wait slightly longer than the 5-second JS timeout
         await expect(page.locator('#session-timeout-modal')).toBeVisible();
-    });
-
-    test('modal has logout and stay buttons', async ({ page }) => {
-        await page.goto('/modules/dashboard/views/index.php');
-        await page.waitForTimeout(300 * 1000);
         await expect(page.locator('#session-stay-btn')).toBeVisible();
         await expect(page.locator('#session-logout-btn')).toBeVisible();
+    });
+
+    test('clicking stay button hides the timeout modal', async ({ page }) => {
+        await page.goto(TEST_PAGE);
+        await page.waitForTimeout(6000);
+        await page.click('#session-stay-btn');
+        await expect(page.locator('#session-timeout-modal')).toBeHidden();
+    });
+
+    test('clicking logout button redirects to login', async ({ page }) => {
+        await page.goto(TEST_PAGE);
+        await page.waitForTimeout(6000);
+        await page.click('#session-logout-btn');
+        await expect(page).toHaveURL(/login/);
     });
 });

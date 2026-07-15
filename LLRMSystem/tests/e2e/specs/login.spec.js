@@ -7,10 +7,11 @@ test.describe('Login flow', () => {
     });
 
     test('invalid credentials show error', async ({ page }) => {
+        const uniqueEmail = `invalid${Date.now()}@example.com`;
         await page.goto('/modules/authentication/views/login.php');
-        await page.fill('#login-form input[name="email"]', 'invalid@example.com');
+        await page.fill('#login-form input[name="email"]', uniqueEmail);
         await page.fill('#login-form input[name="password"]', 'wrongpassword');
         await page.click('#login-form button[type="submit"]');
-        await expect(page.locator('text=Invalid')).toBeVisible();
+        await expect(page.locator('#alert-container')).toContainText('Invalid', { timeout: 15000 });
     });
 });

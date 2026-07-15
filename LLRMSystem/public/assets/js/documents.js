@@ -155,13 +155,7 @@ class DocumentManager {
             });
         }
 
-        if (typeFilter) {
-            typeFilter.addEventListener('change', () => this.applyFilters());
-        }
-
-        if (statusFilter) {
-            statusFilter.addEventListener('change', () => this.applyFilters());
-        }
+        // Dropdowns no longer auto-refresh; Apply Filters button triggers refresh
 
         // Check if we should auto-show advanced filters
         const params = new URLSearchParams(window.location.search);
