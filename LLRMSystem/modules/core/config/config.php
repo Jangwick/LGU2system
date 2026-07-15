@@ -105,7 +105,7 @@ define('OTP_EXPIRY_MINUTES', 1); // Reduced from 10 to 1 minute for security
 define('OTP_RESEND_COOLDOWN', 60); // Seconds
 
 // Session Timeout Settings
-define('SESSION_TIMEOUT_MINUTES', 15); // Auto-logout after 15 minutes of inactivity
+define('SESSION_TIMEOUT_MINUTES', 5); // Auto-logout after 5 minutes of inactivity
 // ------------------------------------------
 
 define('DASHBOARD_PATH', MODULES_PATH . DIRECTORY_SEPARATOR . 'dashboard');

@@ -172,46 +172,114 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </nav>
 
+<!-- Session Timeout Modal -->
+<?php if (isset($_SESSION['user_id'])): ?>
+<div id="session-timeout-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-200 dark:border-gray-800 transform transition-all duration-300">
+        <div class="p-6 text-center">
+            <div class="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="bi bi-exclamation-triangle-fill text-3xl text-amber-600 dark:text-amber-400"></i>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2">Session Idle Timeout</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Your session has been idle for 5 minutes. Would you like to stay logged in or logout now?</p>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="session-stay-btn" class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm uppercase tracking-wider transition-all active:scale-95">
+                    <i class="bi bi-shield-check mr-2"></i>Stay Logged In
+                </button>
+                <button id="session-logout-btn" class="flex-1 px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-bold text-sm uppercase tracking-wider transition-all active:scale-95">
+                    <i class="bi bi-box-arrow-right mr-2"></i>Logout Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Session Timeout Countdown
     const sessionTimer = document.getElementById('session-timer');
     const sessionCountdown = document.getElementById('session-countdown');
+    const timeoutModal = document.getElementById('session-timeout-modal');
+    const stayBtn = document.getElementById('session-stay-btn');
+    const logoutBtn = document.getElementById('session-logout-btn');
 
-    if (sessionTimer && sessionCountdown) {
-        // Get session timeout from PHP config or default to 2 minutes (120 seconds)
-        let remainingTime = parseInt(<?php echo isset($sessionTimeout) ? $sessionTimeout : 120; ?>) || 120;
+    if (!sessionTimer || !sessionCountdown) return;
 
-        function updateCountdown() {
-            const minutes = Math.floor(remainingTime / 60);
-            const seconds = remainingTime % 60;
-            sessionCountdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    const timeoutSeconds = parseInt(<?php echo isset($sessionTimeout) ? $sessionTimeout : (defined('SESSION_TIMEOUT_MINUTES') ? SESSION_TIMEOUT_MINUTES * 60 : 300); ?>) || 300;
+    let remainingTime = timeoutSeconds;
+    let countdownInterval = null;
+    let isModalShown = false;
 
-            // Change color when less than 30 seconds
-            if (remainingTime <= 30) {
-                sessionTimer.classList.remove('bg-amber-50', 'dark:bg-amber-900/30', 'border-amber-200', 'dark:border-amber-700');
-                sessionTimer.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-700');
-                sessionCountdown.classList.remove('text-amber-700', 'dark:text-amber-300');
-                sessionCountdown.classList.add('text-red-700', 'dark:text-red-300');
-            } else {
-                sessionTimer.classList.remove('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-700');
-                sessionTimer.classList.add('bg-amber-50', 'dark:bg-amber-900/30', 'border-amber-200', 'dark:border-amber-700');
-                sessionCountdown.classList.remove('text-red-700', 'dark:text-red-300');
-                sessionCountdown.classList.add('text-amber-700', 'dark:text-amber-300');
-            }
+    const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
 
-            if (remainingTime > 0) {
-                remainingTime--;
-            } else {
-                // Session expired, redirect to login
-                window.location.href = '<?php echo AUTH_URL; ?>/views/login.php?error=session_timeout';
-            }
+    function resetTimer() {
+        if (isModalShown) return;
+        remainingTime = timeoutSeconds;
+    }
+
+    activityEvents.forEach(function(evt) {
+        document.addEventListener(evt, resetTimer, { passive: true });
+    });
+
+    function updateCountdown() {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        sessionCountdown.textContent = minutes + ':' + seconds.toString().padStart(2, '0');
+
+        if (remainingTime <= 30) {
+            sessionTimer.classList.remove('bg-amber-50', 'dark:bg-amber-900/30', 'border-amber-200', 'dark:border-amber-700');
+            sessionTimer.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-700');
+            sessionCountdown.classList.remove('text-amber-700', 'dark:text-amber-300');
+            sessionCountdown.classList.add('text-red-700', 'dark:text-red-300');
+        } else {
+            sessionTimer.classList.remove('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-700');
+            sessionTimer.classList.add('bg-amber-50', 'dark:bg-amber-900/30', 'border-amber-200', 'dark:border-amber-700');
+            sessionCountdown.classList.remove('text-red-700', 'dark:text-red-300');
+            sessionCountdown.classList.add('text-amber-700', 'dark:text-amber-300');
         }
 
-        // Update countdown every second
-        const countdownInterval = setInterval(updateCountdown, 1000);
-        updateCountdown(); // Initial call
+        if (remainingTime > 0) {
+            remainingTime--;
+        } else {
+            showTimeoutModal();
+        }
     }
+
+    function showTimeoutModal() {
+        if (isModalShown) return;
+        isModalShown = true;
+        if (timeoutModal) {
+            timeoutModal.classList.remove('hidden');
+        }
+    }
+
+    function hideTimeoutModal() {
+        isModalShown = false;
+        if (timeoutModal) {
+            timeoutModal.classList.add('hidden');
+        }
+        remainingTime = timeoutSeconds;
+    }
+
+    if (stayBtn) {
+        stayBtn.addEventListener('click', function() {
+            hideTimeoutModal();
+            // Ping server to keep session alive
+            fetch('<?php echo AUTH_URL; ?>/controllers/ping.php', {
+                method: 'POST',
+                credentials: 'same-origin'
+            }).catch(function() {});
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            window.location.href = '<?php echo LOGOUT_URL; ?>';
+        });
+    }
+
+    countdownInterval = setInterval(updateCountdown, 1000);
+    updateCountdown();
 
     // Profile dropdown toggle only - notifications handled in footer.php
     const notificationsBtn = document.getElementById('notifications-btn');

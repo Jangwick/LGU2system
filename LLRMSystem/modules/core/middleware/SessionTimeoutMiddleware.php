@@ -22,7 +22,7 @@ class SessionTimeoutMiddleware {
         }
         
         // Get session timeout from config (default 2 minutes)
-        $timeoutMinutes = defined('SESSION_TIMEOUT_MINUTES') ? SESSION_TIMEOUT_MINUTES : 2;
+        $timeoutMinutes = defined('SESSION_TIMEOUT_MINUTES') ? SESSION_TIMEOUT_MINUTES : 5;
         $timeoutSeconds = $timeoutMinutes * 60;
         
         // Set or update last activity time
@@ -81,7 +81,7 @@ class SessionTimeoutMiddleware {
             return 0;
         }
         
-        $timeoutMinutes = defined('SESSION_TIMEOUT_MINUTES') ? SESSION_TIMEOUT_MINUTES : 2;
+        $timeoutMinutes = defined('SESSION_TIMEOUT_MINUTES') ? SESSION_TIMEOUT_MINUTES : 5;
         $timeoutSeconds = $timeoutMinutes * 60;
         $inactiveTime = time() - $_SESSION['last_activity'];
         $remainingTime = max(0, $timeoutSeconds - $inactiveTime);
