@@ -520,6 +520,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Pagination -->
             <?php if (isset($data['pagination']) && $data['pagination']['total_pages'] > 1): ?>
+                <?php
+                    $otherParams = array_diff_key($_GET, ['page' => '']);
+                    $queryString = http_build_query($otherParams);
+                    $querySeparator = $queryString ? '&' : '';
+                ?>
                 <div class="px-4 md:px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1">
                         Showing <span class="font-medium text-gray-900 dark:text-white"><?php echo (($data['pagination']['current_page'] - 1) * $data['pagination']['per_page']) + 1; ?></span> 
@@ -528,7 +533,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <div class="flex items-center gap-1.5 order-1 sm:order-2">
                         <?php if ($data['pagination']['current_page'] > 1): ?>
-                            <a href="?page=<?php echo $data['pagination']['current_page'] - 1; ?><?php echo http_build_query(array_diff_key($_GET, ['page' => ''])); ?>" 
+                            <a href="?page=<?php echo $data['pagination']['current_page'] - 1; ?><?php echo $querySeparator . $queryString; ?>" 
                                class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <i class="bi bi-chevron-left"></i>
                             </a>
@@ -542,13 +547,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php if ($i == $data['pagination']['current_page']): ?>
                                 <button class="inline-flex items-center justify-center w-9 h-9 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-sm"><?php echo $i; ?></button>
                             <?php else: ?>
-                                <a href="?page=<?php echo $i; ?><?php echo http_build_query(array_diff_key($_GET, ['page' => ''])); ?>" 
+                                <a href="?page=<?php echo $i; ?><?php echo $querySeparator . $queryString; ?>" 
                                    class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"><?php echo $i; ?></a>
                             <?php endif; ?>
                         <?php endfor; ?>
                         
                         <?php if ($data['pagination']['current_page'] < $data['pagination']['total_pages']): ?>
-                            <a href="?page=<?php echo $data['pagination']['current_page'] + 1; ?><?php echo http_build_query(array_diff_key($_GET, ['page' => ''])); ?>" 
+                            <a href="?page=<?php echo $data['pagination']['current_page'] + 1; ?><?php echo $querySeparator . $queryString; ?>" 
                                class="inline-flex items-center justify-center w-9 h-9 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <i class="bi bi-chevron-right"></i>
                             </a>

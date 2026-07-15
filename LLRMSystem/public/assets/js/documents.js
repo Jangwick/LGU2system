@@ -228,6 +228,9 @@ class DocumentManager {
             if (val) params.set(key, val);
         });
 
+        // Reset page when filters change
+        params.delete('page');
+
         // Reload page with filters
         window.location.href = window.location.pathname + '?' + params.toString();
     }
@@ -252,6 +255,9 @@ class DocumentManager {
         if (tags && tags.value) params.set('tags', tags.value);
         else params.delete('tags');
 
+        // Reset page when filters change
+        params.delete('page');
+
         window.location.href = window.location.pathname + '?' + params.toString();
     }
 
@@ -259,6 +265,9 @@ class DocumentManager {
         const params = new URLSearchParams(window.location.search);
         const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
         advancedKeys.forEach(key => params.delete(key));
+
+        // Reset page when filters are cleared
+        params.delete('page');
 
         window.location.href = window.location.pathname + '?' + params.toString();
     }
