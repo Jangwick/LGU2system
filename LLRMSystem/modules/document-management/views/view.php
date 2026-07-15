@@ -38,11 +38,11 @@ $isConfidential = in_array($confidentialityLevel, ['confidential', 'restricted']
 $isEncrypted = $document['is_encrypted'] ?? false;
 
 
-// Check if viewer can access this document (approved/rejected)
+// Check if viewer can access this document (approved only)
 $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-if ($userRole === 'viewer' && !in_array($document['status'], ['approved', 'rejected'])) {
+if ($userRole === 'viewer' && !in_array($document['status'], ['approved'])) {
     require_once __DIR__ . '/../../core/config/config.php';
-    $_SESSION['error_message'] = 'Access denied. Viewers can only view approved and rejected documents.';
+    $_SESSION['error_message'] = 'Access denied. Viewers can only view approved documents.';
     redirect(DOCUMENTS_INDEX_URL);
 }
 
