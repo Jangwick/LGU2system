@@ -43,13 +43,15 @@ class SearchService {
                 WHERE d.deleted_at IS NULL";
         
         $params = [];
-        $sql .= " AND d.status != 'pending'";
+        // Status filtering is applied below; default excludes pending/draft
         if (!empty($filters['type'])) {
             $this->applyTypeFilter($sql, $params, $filters['type']);
         }
         if (!empty($filters['status'])) {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
+        } else {
+            $sql .= " AND d.status NOT IN ('pending', 'draft')";
         }
         if (!empty($filters['date_from'])) {
             $sql .= " AND d.created_at >= :date_from";
@@ -230,7 +232,7 @@ class SearchService {
                 WHERE d.deleted_at IS NULL";
         
         $params = [];
-        $sql .= " AND d.status != 'pending'";
+        // Status filtering is applied below; default excludes pending/draft
         
         // Text search using LIKE (more compatible than FULLTEXT)
         if (!empty($query)) {
@@ -250,6 +252,8 @@ class SearchService {
         if (!empty($filters['status'])) {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
+        } else {
+            $sql .= " AND d.status NOT IN ('pending', 'draft')";
         }
         
         if (!empty($filters['date_from'])) {
@@ -427,7 +431,7 @@ class SearchService {
                 WHERE d.deleted_at IS NULL";
         
         $params = [];
-        $sql .= " AND d.status != 'pending'";
+        // Status filtering is applied below; default excludes pending/draft
         
         // Use the same LIKE logic as search() for consistency
         if (!empty($query)) {
@@ -446,6 +450,8 @@ class SearchService {
         if (!empty($filters['status'])) {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
+        } else {
+            $sql .= " AND d.status NOT IN ('pending', 'draft')";
         }
         
         if (!empty($filters['date_from'])) {
