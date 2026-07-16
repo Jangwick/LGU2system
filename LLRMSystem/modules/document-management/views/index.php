@@ -2314,9 +2314,11 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
                 <a id="original-file-preview-newtab" href="#" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <i class="bi bi-box-arrow-up-right"></i> New Tab
                 </a>
+                <?php if ($userRole !== 'viewer'): ?>
                 <a id="original-file-preview-download" href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
                     <i class="bi bi-download"></i> Download
                 </a>
+                <?php endif; ?>
                 <button type="button" onclick="closeOriginalFilePreviewModal()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
                     <i class="bi bi-x-lg text-sm"></i>
                 </button>
@@ -2343,8 +2345,8 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
     titleEl.textContent = fileName || 'Document Preview';
     typeEl.textContent = (fileType || '').replace('application/', '').replace('image/', 'img/');
 
-    newTabLink.href = previewUrl;
-    downloadLink.href = downloadUrl;
+    if (newTabLink) newTabLink.href = previewUrl;
+    if (downloadLink) downloadLink.href = downloadUrl;
 
     const ft = (fileType || '').toLowerCase();
     const ext = ((fileName || '').split('.').pop() || '').toLowerCase();
@@ -2365,9 +2367,9 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
                 </div>
                 <h4 class="text-base font-bold text-gray-700 dark:text-gray-300 mb-2">Cannot preview ${ext} files in browser</h4>
                 <p class="text-sm text-gray-400 dark:text-gray-500 max-w-md mb-6">This file type cannot be displayed directly in the web browser. You can download it to view the full document.</p>
-                <a href="${downloadUrl}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">
+                ${currentUserRole !== 'viewer' ? `<a href="${downloadUrl}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">
                     <i class="bi bi-download text-base"></i> Download File
-                </a>
+                </a>` : '<p class="text-sm text-gray-400 dark:text-gray-500 max-w-md">Contact an administrator if you need a copy of this document.</p>'}
             </div>`;
     }
 

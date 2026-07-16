@@ -543,7 +543,7 @@ class OcrService {
                 '/usr/local/bin/tesseract',
             ];
             foreach ($homePaths as $path) {
-                if (file_exists($path) && is_executable($path)) {
+                if (@file_exists($path) && @is_executable($path)) {
                     return $path;
                 }
             }
