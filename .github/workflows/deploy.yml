@@ -1,0 +1,66 @@
+name: Deploy to CyberPanel
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Deploy to CyberPanel
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST || 'llrm.spvalenzuela.com' }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER || 'llrms9456' }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/home/llrms9456/public_html' }}
+          DEPLOY_PASSWORD: ${{ secrets.DEPLOY_PASSWORD }}
+        run: |
+          if [ -z "$DEPLOY_PASSWORD" ]; then
+            echo "ERROR: DEPLOY_PASSWORD secret is required."
+            exit 1
+          fi
+
+          if [ -z "$DEPLOY_PATH" ]; then
+            echo "ERROR: DEPLOY_PATH secret is required."
+            exit 1
+          fi
+
+          SSH_OPTS="-p $DEPLOY_PORT -o StrictHostKeyChecking=accept-new"
+          RSYNC_RSH="sshpass -p \"$DEPLOY_PASSWORD\" ssh $SSH_OPTS"
+          SSH_CMD="sshpass -p \"$DEPLOY_PASSWORD\" ssh $SSH_OPTS"
+
+          # Upload application files
+          rsync -avz --delete \
+            -e "$RSYNC_RSH" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='vendor' \
+            --exclude='tests' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='phpunit*.log' \
+            --exclude='modules/core/config/config.local.php' \
+            --exclude='storage/backups' \
+            --exclude='storage/documents' \
+            --exclude='storage/keys' \
+            --exclude='storage/profiles' \
+            --exclude='storage/temp' \
+            --exclude='storage/versions' \
+            ./LLRMSystem/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
+
+          # Ensure storage folders exist and are writable
+          $SSH_CMD "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "mkdir -p ${DEPLOY_PATH}/storage/{backups,documents,keys,profiles,temp,versions} && chmod -R 775 ${DEPLOY_PATH}/storage"
