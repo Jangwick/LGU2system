@@ -6,6 +6,13 @@ if (!isset($_SESSION['user_id'])) {
     exit('Unauthorized');
 }
 
+// Viewers cannot download document versions
+$userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+if ($userRole === 'viewer') {
+    http_response_code(403);
+    exit('Viewers do not have permission to download documents');
+}
+
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../models/DocumentVersion.php';

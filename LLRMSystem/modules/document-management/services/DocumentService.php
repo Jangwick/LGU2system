@@ -326,6 +326,71 @@ class DocumentService {
     }
 
     /**
+     * Preview document with access control (allows viewers for approved docs)
+     */
+    public function previewDocument($id) {
+        $document = $this->documentModel->getById($id);
+
+        if (!$document) {
+            throw new Exception("Document not found");
+        }
+
+        $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+
+        // Viewers can only preview approved documents
+        if ($userRole === 'viewer') {
+            if (!in_array($document['status'] ?? '', ['approved'], true)) {
+                throw new Exception("You do not have permission to preview this document");
+            }
+        } else {
+            // Non-viewers use the standard decrypt permission check
+            if (!$this->canDecryptDocument($document, $_SESSION['user_id'], $userRole)) {
+                throw new Exception("You do not have permission to access this document");
+            }
+        }
+
+        // Decrypt file if encrypted
+        $filePath = $this->resolveFilePath($document['file_path']);
+
+        if (empty($document['is_encrypted']) && $this->encryptionService->isEncrypted($filePath)) {
+            throw new Exception("Document file is encrypted but the encryption flag is not set. Please re-upload the document.");
+        }
+
+        if ($document['is_encrypted'] ?? false) {
+            if (!empty($document['encryption_key'])) {
+                $keyDecryptionResult = $this->encryptionService->decryptFileKey($document['encryption_key']);
+                if (!$keyDecryptionResult['success']) {
+                    throw new Exception("File key decryption failed: " . $keyDecryptionResult['error']);
+                }
+                $fileKey = $keyDecryptionResult['file_key'];
+            } else {
+                $fileKey = null;
+            }
+
+            $decryptionResult = $this->encryptionService->decryptFile($filePath, $fileKey);
+            if (!$decryptionResult['success']) {
+                throw new Exception("File decryption failed: " . $decryptionResult['error']);
+            }
+            $tempPath = sys_get_temp_dir() . '/' . basename($filePath);
+            file_put_contents($tempPath, $decryptionResult['content']);
+            $filePath = $tempPath;
+        }
+
+        // Log preview with enhanced logging
+        $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_VIEW, $document['title'], [
+            'file_name' => $document['file_name'],
+            'file_type' => $document['file_type']
+        ]);
+        $this->logger->logAccess($id, $_SESSION['user_id'], 'preview');
+
+        return [
+            'path' => $filePath,
+            'name' => $document['file_name'],
+            'type' => $document['file_type']
+        ];
+    }
+
+    /**
      * Download document with access control
      */
     public function downloadDocument($id) {

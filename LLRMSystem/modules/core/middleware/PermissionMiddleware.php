@@ -19,7 +19,7 @@ class PermissionMiddleware {
         'document.edit' => ['staff', 'officer', 'administrator', 'super_admin'],
         'document.delete' => ['officer', 'administrator', 'super_admin'],
         'document.restore' => ['administrator', 'super_admin'],
-        'document.download' => ['viewer', 'staff', 'officer', 'administrator', 'super_admin'],
+        'document.download' => ['staff', 'officer', 'administrator', 'super_admin'],
         'tag.create' => ['staff', 'officer', 'administrator', 'super_admin'],
         'tag.edit' => ['officer', 'administrator', 'super_admin'],
         'tag.delete' => ['administrator', 'super_admin'],

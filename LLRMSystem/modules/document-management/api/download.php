@@ -7,6 +7,14 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Viewers cannot download documents
+$userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+if ($userRole === 'viewer') {
+    http_response_code(403);
+    echo json_encode(['error' => 'Viewers do not have permission to download documents']);
+    exit;
+}
+
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../controllers/DocumentController.php';
 

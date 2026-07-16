@@ -153,15 +153,19 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-shield-lock mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock to View</span><span class="xs:hidden">Unlock</span>
                     </button>
+                    <?php if ($userRole !== 'viewer'): ?>
                     <button type="button" onclick="promptPasswordForAccess('download')" 
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-download mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock & Download</span><span class="xs:hidden">DL</span>
                     </button>
+                    <?php endif; ?>
                     <?php else: ?>
+                    <?php if ($userRole !== 'viewer'): ?>
                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $document['id'] ?>" 
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-download mr-1 sm:mr-2"></i><span class="hidden xs:inline">Download</span><span class="xs:hidden">DL</span>
                     </a>
+                    <?php endif; ?>
                     <?php endif; ?>
                     <?php 
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
@@ -368,10 +372,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
                             </div>
                             <div class="flex gap-2">
+                                <?php if ($userRole !== 'viewer'): ?>
                                 <button type="button" onclick="downloadVersion(<?= $version['id'] ?>)" 
                                         class="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded">
                                     <i class="bi bi-download"></i>
                                 </button>
+                                <?php endif; ?>
                                 <?php if (in_array($userRole, ['administrator', 'admin', 'officer'])): ?>
                                 <button type="button" onclick="revertVersion(<?= $document['id'] ?>, <?= $version['version_number'] ?>)" 
                                         class="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">

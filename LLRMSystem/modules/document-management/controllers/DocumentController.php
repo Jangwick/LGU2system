@@ -195,6 +195,14 @@ class DocumentController {
      */
     public function download($id) {
         try {
+            // Viewers cannot download documents
+            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+            if ($userRole === 'viewer') {
+                http_response_code(403);
+                echo json_encode(['error' => 'Viewers do not have permission to download documents']);
+                exit;
+            }
+
             $fileData = $this->documentService->downloadDocument($id);
             
             // Set headers for file download
@@ -220,7 +228,7 @@ class DocumentController {
      */
     public function preview($id) {
         try {
-            $fileData = $this->documentService->downloadDocument($id);
+            $fileData = $this->documentService->previewDocument($id);
             $fileType = strtolower($fileData['type']);
             $fileName = $fileData['name'];
 
