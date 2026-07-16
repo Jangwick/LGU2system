@@ -1793,7 +1793,7 @@ document.addEventListener('keydown', function(e) {
 <div id="preview-modal" class="hidden fixed inset-0 z-[100002] overflow-y-auto">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
-        <div id="preview-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full sm:h-auto sm:max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800" style="max-height: 100dvh;">
+        <div id="preview-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full sm:h-[85vh] sm:max-h-[85vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800" style="max-height: 90dvh;">
         <!-- Mobile Drag Handle -->
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
             <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>

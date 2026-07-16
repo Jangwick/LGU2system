@@ -423,7 +423,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
 
                 <!-- Modal Content -->
-                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-auto sm:max-h-[92vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300" style="max-height: 100dvh;">
+                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-[85vh] sm:max-h-[85vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300" style="max-height: 90dvh;">
                     <!-- Mobile Drag Handle -->
                     <div class="md:hidden w-full flex justify-center pt-2.5 pb-1 bg-gradient-to-r from-red-600 to-red-700">
                         <div class="w-10 h-1.5 bg-white/30 rounded-full"></div>
