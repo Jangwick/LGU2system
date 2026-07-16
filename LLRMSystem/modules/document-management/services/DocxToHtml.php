@@ -213,7 +213,13 @@ class DocxToHtml
         $footnotes = $xpath->query('//w:footnote');
         foreach ($footnotes as $fn) {
             $id = $fn->getAttribute('w:id');
-            $this->footnotes[$id] = $this->renderParagraph($fn);
+            $html = '';
+            foreach ($fn->childNodes as $child) {
+                if ($child->nodeType === XML_ELEMENT_NODE && $child->localName === 'p') {
+                    $html .= $this->renderParagraph($child);
+                }
+            }
+            $this->footnotes[$id] = $html;
         }
     }
 
@@ -638,6 +644,9 @@ class DocxToHtml
      */
     private function getNode($parent, $query)
     {
+        if (!$parent || !isset($parent->ownerDocument)) {
+            return null;
+        }
         $xpath = new DOMXPath($parent->ownerDocument);
         $xpath->registerNamespace('w', $this->ns);
         $node = $xpath->query($query, $parent)->item(0);

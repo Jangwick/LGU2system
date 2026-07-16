@@ -317,6 +317,12 @@ class DocumentService {
         
         // Decrypt file if encrypted
         $filePath = $document['file_path'];
+
+        // Detect corrupted records where the file is encrypted but the flag is not set
+        if (empty($document['is_encrypted']) && $this->encryptionService->isEncrypted($filePath)) {
+            throw new Exception("Document file is encrypted but the encryption flag is not set. Please re-upload the document.");
+        }
+
         if ($document['is_encrypted'] ?? false) {
             // Decrypt the file key first
             if (!empty($document['encryption_key'])) {
@@ -413,12 +419,25 @@ class DocumentService {
             'application/vnd.openxmlformats-officedocument.presentationml.presentation'
         ];
 
+        $genericOpenXmlTypes = [
+            'application/zip',
+            'application/octet-stream'
+        ];
+
+        $allowedOpenXmlExtensions = ['docx', 'xlsx', 'pptx'];
+
         $detectedMime = mime_content_type($file['tmp_name']);
+        $uploadedName = $file['name'] ?? 'unknown';
+        $ext = strtolower(pathinfo($uploadedName, PATHINFO_EXTENSION));
+
         if (!in_array($detectedMime, $allowedTypes, true)) {
-            $uploadedName = $file['name'] ?? 'unknown';
-            $ext = strtolower(pathinfo($uploadedName, PATHINFO_EXTENSION));
-            $hint = $ext !== '' ? " (uploaded: .$ext, detected type: $detectedMime)" : " (detected type: $detectedMime)";
-            throw new Exception("Invalid file type{$hint}. Only PDF, Word, Excel, and PowerPoint files are allowed.");
+            // Some systems report OOXML files as application/zip or application/octet-stream
+            if (in_array($detectedMime, $genericOpenXmlTypes, true) && in_array($ext, $allowedOpenXmlExtensions, true)) {
+                // Accept the file; FileStorageService will normalize the stored MIME type
+            } else {
+                $hint = $ext !== '' ? " (uploaded: .$ext, detected type: $detectedMime)" : " (detected type: $detectedMime)";
+                throw new Exception("Invalid file type{$hint}. Only PDF, Word, Excel, and PowerPoint files are allowed.");
+            }
         }
         
         return true;

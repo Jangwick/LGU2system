@@ -263,9 +263,18 @@ class DocumentController {
             readfile($fileData['path']);
             exit;
 
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             http_response_code(404);
-            echo json_encode(['error' => $e->getMessage()]);
+            header('Content-Type: text/html; charset=utf-8');
+            $message = htmlspecialchars($e->getMessage());
+            echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>',
+                 'html,body{margin:0;padding:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#f3f4f6;color:#1f2937;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;}',
+                 '.container{padding:2rem;max-width:500px;}.icon{font-size:3rem;margin-bottom:1rem;}',
+                 'h1{font-size:1.25rem;margin-bottom:0.5rem;}p{font-size:0.875rem;color:#6b7280;line-height:1.5;}',
+                 'a{color:#dc2626;text-decoration:underline;font-weight:600;}</style></head><body>',
+                 '<div class="container"><div class="icon">⚠️</div><h1>Preview not available</h1>',
+                 '<p>' . $message . '</p>',
+                 '</div></body></html>';
             exit;
         }
     }

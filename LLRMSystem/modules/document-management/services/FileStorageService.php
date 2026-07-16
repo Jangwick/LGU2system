@@ -69,6 +69,21 @@ class FileStorageService {
             'png'  => ['image/png'],
             'gif'  => ['image/gif']
         ];
+
+        // Canonical MIME type to store in the database (keeps preview checks simple)
+        $canonicalMime = [
+            'pdf'  => 'application/pdf',
+            'doc'  => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls'  => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'ppt'  => 'application/vnd.ms-powerpoint',
+            'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'gif'  => 'image/gif'
+        ];
         
         $expectedMimes = $extToMime[$extension] ?? [];
         if (!empty($expectedMimes) && !in_array($detectedMime, $expectedMimes) && !in_array($detectedMime, $this->allowedMimes)) {
@@ -109,11 +124,14 @@ class FileStorageService {
         // Set proper permissions
         chmod($filepath, 0644);
         
+        // Store the canonical MIME type so preview always uses a recognized value
+        $storedType = $canonicalMime[$extension] ?? $detectedMime;
+
         return [
             'path' => $filepath,
             'name' => $file['name'],
             'size' => $file['size'],
-            'type' => $detectedMime,
+            'type' => $storedType,
             'stored_name' => $filename
         ];
     }

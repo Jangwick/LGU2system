@@ -2342,9 +2342,10 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
     downloadLink.href = downloadUrl;
 
     const ft = (fileType || '').toLowerCase();
-    const isPdf = ft === 'application/pdf' || ft === 'pdf';
-    const isDocx = ft === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || ft === 'word';
-    const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', ''));
+    const ext = ((fileName || '').split('.').pop() || '').toLowerCase();
+    const isPdf = ft === 'application/pdf' || ft === 'pdf' || ext === 'pdf';
+    const isDocx = ft === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || ft === 'word' || ext === 'docx' || ext === 'doc';
+    const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', '')) || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
 
     if (isPdf || isDocx) {
         body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0 block" style="height: 100%; min-height: 400px;"></iframe>`;

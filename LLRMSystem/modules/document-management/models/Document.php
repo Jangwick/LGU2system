@@ -173,7 +173,8 @@ class Document {
                 status_changed_by, status_changed_at,
                 approved_by, approved_at,
                 extracted_text, ocr_status, ocr_processed_at,
-                key_points, key_points_generated_at
+                key_points, key_points_generated_at,
+                is_encrypted, encryption_key
             ) VALUES (
                 :reference_number, :title, :document_type, :document_date,
                 :status, :file_path, :file_name, :file_size, :file_type,
@@ -182,7 +183,8 @@ class Document {
                 :status_changed_by, :status_changed_at,
                 :approved_by, :approved_at,
                 :extracted_text, :ocr_status, :ocr_processed_at,
-                :key_points, :key_points_generated_at
+                :key_points, :key_points_generated_at,
+                :is_encrypted, :encryption_key
             )
         ");
 
@@ -209,7 +211,9 @@ class Document {
             ':ocr_status' => $data['ocr_status'] ?? 'pending',
             ':ocr_processed_at' => $data['ocr_processed_at'] ?? null,
             ':key_points' => $data['key_points'] ?? null,
-            ':key_points_generated_at' => $data['key_points_generated_at'] ?? null
+            ':key_points_generated_at' => $data['key_points_generated_at'] ?? null,
+            ':is_encrypted' => $data['is_encrypted'] ?? 0,
+            ':encryption_key' => $data['encryption_key'] ?? null
         ]);
 
         return $this->db->lastInsertId();
@@ -225,7 +229,8 @@ class Document {
             'approved_by', 'approved_at',
             'status_changed_by', 'status_changed_at',
             'extracted_text', 'ocr_status', 'ocr_processed_at',
-            'key_points', 'key_points_generated_at'
+            'key_points', 'key_points_generated_at',
+            'is_encrypted', 'encryption_key'
         ];
 
         $fields = [];
