@@ -305,27 +305,27 @@ class DocxToHtml
         $rPr = $xpath->query('w:rPr', $rNode)->item(0);
         $style = $this->computeRunStyle($rPr, $paragraphStyleId);
 
-        $text = '';
+        $parts = [];
         foreach ($rNode->childNodes as $child) {
             if ($child->localName === 't') {
-                $text .= $child->nodeValue;
+                $parts[] = htmlspecialchars($child->nodeValue, ENT_QUOTES, 'UTF-8');
             } elseif ($child->localName === 'tab') {
-                $text .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+                $parts[] = '&nbsp;&nbsp;&nbsp;&nbsp;';
             } elseif ($child->localName === 'br') {
-                $text .= '<br>';
+                $parts[] = '<br>';
             } elseif ($child->localName === 'footnoteReference') {
                 $id = $child->getAttribute('w:id');
-                $text .= ' <sup>(' . $id . ')</sup> ';
+                $parts[] = ' <sup>(' . htmlspecialchars($id, ENT_QUOTES, 'UTF-8') . ')</sup> ';
             } elseif ($child->localName === 'drawing' || $child->localName === 'pict') {
-                $text .= $this->renderDrawing($child);
+                $parts[] = $this->renderDrawing($child);
             }
         }
+
+        $text = implode('', $parts);
 
         if ($text === '') {
             return '';
         }
-
-        $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 
         $tags = [];
         if ($style['bold']) $tags[] = 'strong';

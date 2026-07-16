@@ -282,7 +282,7 @@ class DocumentService {
         }
         
         // Delete file from storage
-        $this->fileStorageService->deleteFile($document['file_path']);
+        $this->fileStorageService->deleteFile($this->resolveFilePath($document['file_path']));
         
         // Delete document record
         $success = $this->documentModel->delete($id);
@@ -301,6 +301,31 @@ class DocumentService {
     }
     
     /**
+     * Resolve a file path from the database to an absolute filesystem path.
+     * Handles relative paths (storage/documents/...), absolute paths, and legacy Windows paths.
+     */
+    private function resolveFilePath($filePath) {
+        if (file_exists($filePath)) {
+            return $filePath;
+        }
+        // Try prepending BASE_PATH for relative paths
+        if (defined('BASE_PATH')) {
+            $fullPath = BASE_PATH . '/' . $filePath;
+            if (file_exists($fullPath)) {
+                return $fullPath;
+            }
+        }
+        // Try extracting storage/... portion from Windows-style paths
+        if (preg_match('#(storage/.+)$#', $filePath, $matches)) {
+            $relative = $matches[1];
+            if (defined('BASE_PATH') && file_exists(BASE_PATH . '/' . $relative)) {
+                return BASE_PATH . '/' . $relative;
+            }
+        }
+        return $filePath;
+    }
+
+    /**
      * Download document with access control
      */
     public function downloadDocument($id) {
@@ -316,7 +341,7 @@ class DocumentService {
         }
         
         // Decrypt file if encrypted
-        $filePath = $document['file_path'];
+        $filePath = $this->resolveFilePath($document['file_path']);
 
         // Detect corrupted records where the file is encrypted but the flag is not set
         if (empty($document['is_encrypted']) && $this->encryptionService->isEncrypted($filePath)) {
@@ -504,7 +529,7 @@ class DocumentService {
         $this->documentModel->updateOcrResult($documentId, 'processing');
 
         // Get file path — decrypt if necessary
-        $filePath = $document['file_path'];
+        $filePath = $this->resolveFilePath($document['file_path']);
         $tempFile = null;
 
         if ($document['is_encrypted'] ?? false) {
