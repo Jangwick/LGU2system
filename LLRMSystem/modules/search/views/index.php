@@ -423,7 +423,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
 
                 <!-- Modal Content -->
-                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-[85vh] sm:max-h-[85vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300" style="max-height: 90dvh;">
+                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-[85vh] sm:max-h-[85vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300" style="max-height: 100dvh;">
                     <!-- Mobile Drag Handle -->
                     <div class="md:hidden w-full flex justify-center pt-2.5 pb-1 bg-gradient-to-r from-red-600 to-red-700">
                         <div class="w-10 h-1.5 bg-white/30 rounded-full"></div>
@@ -567,6 +567,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             }
             .doc-preview-page .doc-content ol li::marker {
                 font-weight: 600;
+            }
+
+            @media (max-width: 640px) {
+                #original-file-preview-content {
+                    height: 100% !important;
+                    max-height: 100% !important;
+                    position: relative !important;
+                    top: auto !important;
+                    bottom: auto !important;
+                    margin: 0 !important;
+                    border-radius: 0 !important;
+                }
             }
         </style>
 
@@ -1248,8 +1260,8 @@ document.addEventListener('DOMContentLoaded', function() {
         </script>
 
 <!-- Original File Preview Modal -->
-<div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-end sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+<div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-stretch sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
         <div class="sm:hidden w-full flex justify-center pt-2.5 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-10 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
             <div class="flex items-center gap-3 min-w-0">
