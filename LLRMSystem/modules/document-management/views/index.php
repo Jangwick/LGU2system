@@ -1109,46 +1109,6 @@ function viewDocument(id) {
                                     </div>
                                 </section>
 
-                                ${currentUserRole !== 'viewer' ? `
-                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
-                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-5 flex items-center">
-                                        <i class="bi bi-arrow-left-right mr-2 text-indigo-500"></i>
-                                        Workflow Actions
-                                    </h3>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        ${doc.status !== 'pending' ? `
-                                        <button type="button" onclick="workflowAction(${doc.id}, 'review', 'Mark this document for review?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-indigo-700 dark:text-indigo-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-700 transition-colors">
-                                            <i class="bi bi-eye mr-2 text-indigo-500"></i> Review
-                                        </button>
-                                        ` : ''}
-                                        ${doc.status !== 'approved' ? `
-                                        <button type="button" onclick="workflowAction(${doc.id}, 'approve', 'Approve this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-green-700 dark:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-700 transition-colors">
-                                            <i class="bi bi-check-circle mr-2 text-green-500"></i> Approve
-                                        </button>
-                                        ` : ''}
-                                        ${doc.status !== 'rejected' ? `
-                                        <button type="button" onclick="workflowAction(${doc.id}, 'reject', 'Reject this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-red-700 dark:text-red-200 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-700 transition-colors">
-                                            <i class="bi bi-x-circle mr-2 text-red-500"></i> Reject
-                                        </button>
-                                        ` : ''}
-                                        ${doc.status !== 'draft' ? `
-                                        <button type="button" onclick="workflowAction(${doc.id}, 'request_revision', 'Request revision for this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-yellow-700 dark:text-yellow-200 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-xl border border-yellow-100 dark:border-yellow-700 transition-colors">
-                                            <i class="bi bi-pencil-square mr-2 text-yellow-500"></i> Request Revision
-                                        </button>
-                                        ` : ''}
-                                        ${doc.status !== 'pending' ? `
-                                        <button type="button" onclick="workflowAction(${doc.id}, 'forward', 'Forward this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-blue-700 dark:text-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-700 transition-colors">
-                                            <i class="bi bi-forward mr-2 text-blue-500"></i> Forward
-                                        </button>
-                                        ` : ''}
-                                        ${doc.status !== 'archived' ? `
-                                        <button type="button" onclick="workflowAction(${doc.id}, 'archive', 'Archive this document?')" class="flex items-center justify-center px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
-                                            <i class="bi bi-archive mr-2 text-gray-500"></i> Archive
-                                        </button>
-                                        ` : ''}
-                                    </div>
-                                </section>
-                                ` : ''}
                             </div>
                         </div>
                     </div>
@@ -1181,37 +1141,6 @@ function shareDocument(id) {
             console.error('Failed to copy link:', err);
         });
     }
-}
-
-/**
- * Workflow action (status update)
- */
-function workflowAction(id, action, confirmMessage = '') {
-    if (confirmMessage && !confirm(confirmMessage)) {
-        return;
-    }
-
-    fetch(App.apiUrl('documents', 'api/workflow.php'), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ document_id: id, action: action })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast(data.message || 'Workflow action completed', 'success');
-            closePreviewModal();
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showToast(data.error || 'Failed to perform workflow action', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error performing workflow action:', error);
-        showToast('An error occurred while performing the workflow action', 'error');
-    });
 }
 
 /**
