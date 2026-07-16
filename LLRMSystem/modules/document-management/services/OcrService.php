@@ -297,34 +297,55 @@ class OcrService {
     }
 
     /**
-     * Extract text from .docx using ZipArchive
+     * Extract text from .docx using ZipArchive or unzip fallback
      */
     private function extractFromDocx($filePath) {
-        $zip = new ZipArchive();
-        if ($zip->open($filePath) !== true) {
-            throw new Exception('Cannot open .docx file');
-        }
-
         $text = '';
-        // Main document content
-        $documentXml = $zip->getFromName('word/document.xml');
-        if ($documentXml !== false) {
-            $text .= $this->extractTextFromXml($documentXml);
+
+        if ($this->isZipAvailable()) {
+            $zip = new ZipArchive();
+            if ($zip->open($filePath) !== true) {
+                throw new Exception('Cannot open .docx file');
+            }
+
+            // Main document content
+            $documentXml = $zip->getFromName('word/document.xml');
+            if ($documentXml !== false) {
+                $text .= $this->extractTextFromXml($documentXml);
+            }
+
+            // Headers and footers
+            for ($i = 1; $i <= 3; $i++) {
+                $headerXml = $zip->getFromName("word/header{$i}.xml");
+                if ($headerXml !== false) {
+                    $text .= $this->extractTextFromXml($headerXml) . "\n";
+                }
+                $footerXml = $zip->getFromName("word/footer{$i}.xml");
+                if ($footerXml !== false) {
+                    $text .= $this->extractTextFromXml($footerXml) . "\n";
+                }
+            }
+
+            $zip->close();
+        } else {
+            // Fallback: use unzip command
+            $documentXml = $this->extractZipFile($filePath, 'word/document.xml');
+            if ($documentXml !== null) {
+                $text .= $this->extractTextFromXml($documentXml);
+            }
+
+            for ($i = 1; $i <= 3; $i++) {
+                $headerXml = $this->extractZipFile($filePath, "word/header{$i}.xml");
+                if ($headerXml !== null) {
+                    $text .= $this->extractTextFromXml($headerXml) . "\n";
+                }
+                $footerXml = $this->extractZipFile($filePath, "word/footer{$i}.xml");
+                if ($footerXml !== null) {
+                    $text .= $this->extractTextFromXml($footerXml) . "\n";
+                }
+            }
         }
 
-        // Headers and footers
-        for ($i = 1; $i <= 3; $i++) {
-            $headerXml = $zip->getFromName("word/header{$i}.xml");
-            if ($headerXml !== false) {
-                $text .= $this->extractTextFromXml($headerXml) . "\n";
-            }
-            $footerXml = $zip->getFromName("word/footer{$i}.xml");
-            if ($footerXml !== false) {
-                $text .= $this->extractTextFromXml($footerXml) . "\n";
-            }
-        }
-
-        $zip->close();
         return $text;
     }
 
@@ -342,35 +363,57 @@ class OcrService {
     }
 
     /**
-     * Extract text from .xlsx using ZipArchive
+     * Extract text from .xlsx using ZipArchive or unzip fallback
      */
     private function extractFromXlsx($filePath) {
-        $zip = new ZipArchive();
-        if ($zip->open($filePath) !== true) {
-            throw new Exception('Cannot open .xlsx file');
-        }
-
         $text = '';
-        // Shared strings (contains all text values)
-        $sharedStringsXml = $zip->getFromName('xl/sharedStrings.xml');
-        if ($sharedStringsXml !== false) {
-            $text .= $this->extractTextFromXml($sharedStringsXml);
-        }
 
-        // Also check sheet files for inline text
-        for ($i = 1; $i <= 20; $i++) {
-            $sheetXml = $zip->getFromName("xl/worksheets/sheet{$i}.xml");
-            if ($sheetXml !== false) {
-                $sheetText = $this->extractTextFromXml($sheetXml);
-                if (!empty($sheetText)) {
-                    $text .= "\n" . $sheetText;
+        if ($this->isZipAvailable()) {
+            $zip = new ZipArchive();
+            if ($zip->open($filePath) !== true) {
+                throw new Exception('Cannot open .xlsx file');
+            }
+
+            // Shared strings (contains all text values)
+            $sharedStringsXml = $zip->getFromName('xl/sharedStrings.xml');
+            if ($sharedStringsXml !== false) {
+                $text .= $this->extractTextFromXml($sharedStringsXml);
+            }
+
+            // Also check sheet files for inline text
+            for ($i = 1; $i <= 20; $i++) {
+                $sheetXml = $zip->getFromName("xl/worksheets/sheet{$i}.xml");
+                if ($sheetXml !== false) {
+                    $sheetText = $this->extractTextFromXml($sheetXml);
+                    if (!empty($sheetText)) {
+                        $text .= "\n" . $sheetText;
+                    }
+                } else {
+                    break;
                 }
-            } else {
-                break;
+            }
+
+            $zip->close();
+        } else {
+            // Fallback: use unzip command
+            $sharedStringsXml = $this->extractZipFile($filePath, 'xl/sharedStrings.xml');
+            if ($sharedStringsXml !== null) {
+                $text .= $this->extractTextFromXml($sharedStringsXml);
+            }
+
+            for ($i = 1; $i <= 20; $i++) {
+                $sheetXml = $this->extractZipFile($filePath, "xl/worksheets/sheet{$i}.xml");
+                if ($sheetXml !== null) {
+                    $sheetText = $this->extractTextFromXml($sheetXml);
+                    if (!empty($sheetText)) {
+                        $text .= "\n" . $sheetText;
+                    }
+                } else {
+                    break;
+                }
             }
         }
 
-        $zip->close();
         return $text;
     }
 
@@ -388,36 +431,59 @@ class OcrService {
     }
 
     /**
-     * Extract text from .pptx using ZipArchive
+     * Extract text from .pptx using ZipArchive or unzip fallback
      */
     private function extractFromPptx($filePath) {
-        $zip = new ZipArchive();
-        if ($zip->open($filePath) !== true) {
-            throw new Exception('Cannot open .pptx file');
-        }
-
         $text = '';
-        // Slide files: ppt/slides/slide1.xml, slide2.xml, etc.
-        for ($i = 1; $i <= 50; $i++) {
-            $slideXml = $zip->getFromName("ppt/slides/slide{$i}.xml");
-            if ($slideXml !== false) {
-                $text .= $this->extractTextFromXml($slideXml) . "\n--- Slide {$i} ---\n";
-            } else {
-                break;
+
+        if ($this->isZipAvailable()) {
+            $zip = new ZipArchive();
+            if ($zip->open($filePath) !== true) {
+                throw new Exception('Cannot open .pptx file');
+            }
+
+            // Slide files: ppt/slides/slide1.xml, slide2.xml, etc.
+            for ($i = 1; $i <= 50; $i++) {
+                $slideXml = $zip->getFromName("ppt/slides/slide{$i}.xml");
+                if ($slideXml !== false) {
+                    $text .= $this->extractTextFromXml($slideXml) . "\n--- Slide {$i} ---\n";
+                } else {
+                    break;
+                }
+            }
+
+            // Notes slides
+            for ($i = 1; $i <= 50; $i++) {
+                $notesXml = $zip->getFromName("ppt/notesSlides/notesSlide{$i}.xml");
+                if ($notesXml !== false) {
+                    $text .= $this->extractTextFromXml($notesXml) . "\n";
+                } else {
+                    break;
+                }
+            }
+
+            $zip->close();
+        } else {
+            // Fallback: use unzip command
+            for ($i = 1; $i <= 50; $i++) {
+                $slideXml = $this->extractZipFile($filePath, "ppt/slides/slide{$i}.xml");
+                if ($slideXml !== null) {
+                    $text .= $this->extractTextFromXml($slideXml) . "\n--- Slide {$i} ---\n";
+                } else {
+                    break;
+                }
+            }
+
+            for ($i = 1; $i <= 50; $i++) {
+                $notesXml = $this->extractZipFile($filePath, "ppt/notesSlides/notesSlide{$i}.xml");
+                if ($notesXml !== null) {
+                    $text .= $this->extractTextFromXml($notesXml) . "\n";
+                } else {
+                    break;
+                }
             }
         }
 
-        // Notes slides
-        for ($i = 1; $i <= 50; $i++) {
-            $notesXml = $zip->getFromName("ppt/notesSlides/notesSlide{$i}.xml");
-            if ($notesXml !== false) {
-                $text .= $this->extractTextFromXml($notesXml) . "\n";
-            } else {
-                break;
-            }
-        }
-
-        $zip->close();
         return $text;
     }
 
@@ -466,6 +532,18 @@ class OcrService {
             ];
             foreach ($paths as $path) {
                 if (file_exists($path)) {
+                    return $path;
+                }
+            }
+        } else {
+            // Check common user-space paths (for shared hosting without root)
+            $homePaths = [
+                getenv('HOME') . '/bin/tesseract_wrapper.sh',
+                getenv('HOME') . '/bin/tesseract',
+                '/usr/local/bin/tesseract',
+            ];
+            foreach ($homePaths as $path) {
+                if (file_exists($path) && is_executable($path)) {
                     return $path;
                 }
             }
@@ -536,6 +614,44 @@ class OcrService {
                 }
             }
         }
+        return null;
+    }
+
+    /**
+     * Check if ZipArchive extension is available
+     */
+    private function isZipAvailable() {
+        return class_exists('ZipArchive');
+    }
+
+    /**
+     * Extract a single file from a zip archive using unzip command
+     * Returns file contents or null if file not found
+     */
+    private function extractZipFile($zipPath, $internalPath) {
+        $unzip = $this->detectCommand('unzip');
+        if (!$unzip) {
+            throw new Exception('Neither ZipArchive extension nor unzip command is available');
+        }
+
+        $tempFile = $this->tempDir . '/' . uniqid('zip_') . '.xml';
+        $escapedZip = escapeshellarg($zipPath);
+        $escapedInternal = escapeshellarg($internalPath);
+        $escapedTemp = escapeshellarg($tempFile);
+
+        if (PHP_OS_FAMILY === 'Windows') {
+            shell_exec("$unzip -p $escapedZip $escapedInternal > $escapedTemp 2>nul");
+        } else {
+            shell_exec("$unzip -p $escapedZip $escapedInternal > $escapedTemp 2>/dev/null");
+        }
+
+        if (file_exists($tempFile) && filesize($tempFile) > 0) {
+            $content = file_get_contents($tempFile);
+            @unlink($tempFile);
+            return $content;
+        }
+
+        @unlink($tempFile);
         return null;
     }
 
