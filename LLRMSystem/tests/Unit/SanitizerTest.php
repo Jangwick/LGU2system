@@ -27,7 +27,7 @@ class SanitizerTest extends TestCase
 
     public function testPlainTextHandlesArrayInput()
     {
-        $this->assertSame('Array', Sanitizer::plainText(['a', 'b']));
+        $this->assertSame('', Sanitizer::plainText(['a', 'b']));
     }
 
     public function testRichTextRemovesDangerousContentButKeepsSafeHtml()

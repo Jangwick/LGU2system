@@ -213,6 +213,53 @@ class DocumentController {
             exit;
         }
     }
+
+    /**
+     * Preview document inline (serves decrypted file for browser rendering).
+     * DOCX files are converted to HTML for in-browser preview.
+     */
+    public function preview($id) {
+        try {
+            $fileData = $this->documentService->downloadDocument($id);
+            $fileType = strtolower($fileData['type']);
+            $fileName = $fileData['name'];
+
+            // Convert DOCX to HTML for browser preview
+            if ($fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+                str_ends_with(strtolower($fileName), '.docx')) {
+
+                require_once __DIR__ . '/../services/DocxToHtml.php';
+                $converter = new DocxToHtml();
+                $result = $converter->convert($fileData['path']);
+
+                if ($result['success']) {
+                    header('Content-Type: text/html; charset=utf-8');
+                    header('Content-Disposition: inline; filename="' . $fileName . '.html"');
+                    header('Cache-Control: no-cache, must-revalidate');
+                    header('X-Content-Type-Options: nosniff');
+
+                    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0; padding:0; background:#f3f4f6;}</style></head><body>';
+                    echo $result['html'];
+                    echo '</body></html>';
+                    exit;
+                }
+            }
+
+            header('Content-Type: ' . $fileData['type']);
+            header('Content-Disposition: inline; filename="' . $fileName . '"');
+            header('Content-Length: ' . filesize($fileData['path']));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('X-Content-Type-Options: nosniff');
+
+            readfile($fileData['path']);
+            exit;
+
+        } catch (Exception $e) {
+            http_response_code(404);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
     
     /**
      * Bulk delete documents

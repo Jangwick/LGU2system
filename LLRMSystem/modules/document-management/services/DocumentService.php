@@ -1,12 +1,16 @@
 <?php
 
 require_once __DIR__ . '/EncryptionService.php';
+require_once __DIR__ . '/OcrService.php';
+require_once __DIR__ . '/SummarizationService.php';
 
 class DocumentService {
     private $documentModel;
     private $fileStorageService;
     private $logger;
     private $encryptionService;
+    private $ocrService;
+    private $summarizationService;
     private $db;
     
     public function __construct($documentModel, $fileStorageService, $logger) {
@@ -14,6 +18,8 @@ class DocumentService {
         $this->fileStorageService = $fileStorageService;
         $this->logger = $logger;
         $this->encryptionService = new EncryptionService();
+        $this->ocrService = new OcrService();
+        $this->summarizationService = new SummarizationService();
         $this->db = getDatabase();
     }
     
@@ -99,6 +105,9 @@ class DocumentService {
             // Upload file
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
 
+            // Run OCR BEFORE encryption (file is still plaintext at this point)
+            $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
+
             // Generate a unique file key for this document
             $fileKey = $this->encryptionService->generateFileKey();
             
@@ -140,7 +149,12 @@ class DocumentService {
                 'status_changed_by' => $userId,
                 'status_changed_at' => $timestamp,
                 'approved_by' => $status === 'approved' ? $userId : null,
-                'approved_at' => $status === 'approved' ? $timestamp : null
+                'approved_at' => $status === 'approved' ? $timestamp : null,
+                'extracted_text' => $ocrResult['text'],
+                'ocr_status' => $ocrResult['status'],
+                'ocr_processed_at' => $ocrResult['status'] === 'completed' ? date('Y-m-d H:i:s') : null,
+                'key_points' => $ocrResult['key_points'],
+                'key_points_generated_at' => $ocrResult['key_points'] ? date('Y-m-d H:i:s') : null
             ];
 
             // Create document record
@@ -177,6 +191,7 @@ class DocumentService {
                 'success' => true,
                 'document_id' => $documentId,
                 'reference_number' => $data['reference_number'],
+                'ocr_status' => $ocrResult['status'],
                 'message' => 'Document uploaded successfully'
             ];
             
@@ -407,5 +422,119 @@ class DocumentService {
         }
         
         return true;
+    }
+    
+    /**
+     * Run OCR on a file (before encryption)
+     * Returns extracted text, OCR status, and key points
+     */
+    private function runOcrOnFile($filePath, $mimeType, $fileSize) {
+        $asyncThreshold = defined('OCR_ASYNC_THRESHOLD') ? OCR_ASYNC_THRESHOLD : 5242880; // 5MB
+        $result = [
+            'text' => null,
+            'status' => 'pending',
+            'key_points' => null
+        ];
+
+        // Check if OCR is enabled
+        if (!defined('OCR_ENABLED') || !OCR_ENABLED) {
+            $result['status'] = 'skipped';
+            return $result;
+        }
+
+        // Check if file type is OCR-capable
+        if (!$this->ocrService->isOcrCapable($mimeType, basename($filePath))) {
+            $result['status'] = 'skipped';
+            return $result;
+        }
+
+        // Large files: mark as pending for async processing
+        if ($fileSize >= $asyncThreshold) {
+            $result['status'] = 'pending';
+            return $result;
+        }
+
+        // Small files: run OCR synchronously
+        try {
+            $ocrResult = $this->ocrService->extractText($filePath, $mimeType);
+            $result['text'] = $ocrResult['text'];
+            $result['status'] = $ocrResult['status'];
+
+            // Generate key points if OCR succeeded
+            if ($ocrResult['status'] === 'completed' && !empty($ocrResult['text'])) {
+                $result['key_points'] = $this->summarizationService->generateKeyPointsString($ocrResult['text'], 7);
+            }
+        } catch (Exception $e) {
+            error_log("OCR failed for $filePath: " . $e->getMessage());
+            $result['status'] = 'failed';
+        }
+
+        return $result;
+    }
+    
+    /**
+     * Re-run OCR on an existing document (decrypts file first)
+     */
+    public function runOcrOnDocument($documentId) {
+        $document = $this->documentModel->getById($documentId);
+        if (!$document) {
+            return ['success' => false, 'error' => 'Document not found'];
+        }
+
+        // Mark as processing
+        $this->documentModel->updateOcrResult($documentId, 'processing');
+
+        // Get file path — decrypt if necessary
+        $filePath = $document['file_path'];
+        $tempFile = null;
+
+        if ($document['is_encrypted'] ?? false) {
+            // Decrypt file to temp location for OCR
+            if (!empty($document['encryption_key'])) {
+                $keyDecryptionResult = $this->encryptionService->decryptFileKey($document['encryption_key']);
+                if (!$keyDecryptionResult['success']) {
+                    $this->documentModel->updateOcrResult($documentId, 'failed');
+                    return ['success' => false, 'error' => 'File key decryption failed'];
+                }
+                $fileKey = $keyDecryptionResult['file_key'];
+            } else {
+                $fileKey = null;
+            }
+
+            $decryptionResult = $this->encryptionService->decryptFile($filePath, $fileKey);
+            if (!$decryptionResult['success']) {
+                $this->documentModel->updateOcrResult($documentId, 'failed');
+                return ['success' => false, 'error' => 'File decryption failed'];
+            }
+
+            // Write decrypted content to temp file
+            $tempFile = sys_get_temp_dir() . '/ocr_' . $documentId . '_' . uniqid();
+            file_put_contents($tempFile, $decryptionResult['content']);
+            $filePath = $tempFile;
+        }
+
+        // Run OCR
+        $ocrResult = $this->ocrService->extractText($filePath, $document['file_type']);
+
+        // Update document with OCR results
+        $this->documentModel->updateOcrResult($documentId, $ocrResult['status'], $ocrResult['text']);
+
+        // Generate key points if OCR succeeded
+        if ($ocrResult['status'] === 'completed' && !empty($ocrResult['text'])) {
+            $keyPoints = $this->summarizationService->generateKeyPointsString($ocrResult['text'], 7);
+            $this->documentModel->updateKeyPoints($documentId, $keyPoints);
+        }
+
+        // Clean up temp file
+        if ($tempFile && file_exists($tempFile)) {
+            @unlink($tempFile);
+        }
+
+        return [
+            'success' => true,
+            'ocr_status' => $ocrResult['status'],
+            'extracted_text_length' => strlen($ocrResult['text']),
+            'error' => $ocrResult['error'] ?? null
+        ];
     }
 }

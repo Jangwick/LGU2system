@@ -236,12 +236,13 @@ class SearchService {
         
         // Text search using LIKE (more compatible than FULLTEXT)
         if (!empty($query)) {
-            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3 OR d.tags LIKE :q4 OR d.document_type LIKE :q5)";
+            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3 OR d.tags LIKE :q4 OR d.document_type LIKE :q5 OR d.extracted_text LIKE :q6)";
             $params[':q1'] = '%' . $query . '%';
             $params[':q2'] = '%' . $query . '%';
             $params[':q3'] = '%' . $query . '%';
             $params[':q4'] = '%' . $query . '%';
             $params[':q5'] = '%' . $query . '%';
+            $params[':q6'] = '%' . $query . '%';
         }
         
         // Apply filters
@@ -435,12 +436,13 @@ class SearchService {
         
         // Use the same LIKE logic as search() for consistency
         if (!empty($query)) {
-            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3 OR d.tags LIKE :q4 OR d.document_type LIKE :q5)";
+            $sql .= " AND (d.title LIKE :q1 OR d.description LIKE :q2 OR d.reference_number LIKE :q3 OR d.tags LIKE :q4 OR d.document_type LIKE :q5 OR d.extracted_text LIKE :q6)";
             $params[':q1'] = '%' . $query . '%';
             $params[':q2'] = '%' . $query . '%';
             $params[':q3'] = '%' . $query . '%';
             $params[':q4'] = '%' . $query . '%';
             $params[':q5'] = '%' . $query . '%';
+            $params[':q6'] = '%' . $query . '%';
         }
         
         if (!empty($filters['type'])) {

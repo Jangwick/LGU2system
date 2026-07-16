@@ -34,6 +34,9 @@ class Sanitizer
         if ($value === null || is_bool($value)) {
             return '';
         }
+        if (is_array($value)) {
+            return '';
+        }
         $str = (string) $value;
 
         // Strip null bytes and non-printable control chars (keep \t \n \r)

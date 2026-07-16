@@ -4,6 +4,11 @@ use PHPUnit\Framework\TestCase;
 
 class SearchFilterTest extends TestCase
 {
+    private $mockSearchService;
+    private $mockEmbeddingService;
+    private $mockLogger;
+    private $controller;
+
     protected function setUp(): void
     {
         $_GET = [];

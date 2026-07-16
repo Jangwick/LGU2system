@@ -50,11 +50,12 @@ class Document {
         
         // Apply filters
         if (!empty($filters['search'])) {
-            $sql .= " AND (d.title LIKE :search1 OR d.reference_number LIKE :search2 OR d.description LIKE :search3)";
+            $sql .= " AND (d.title LIKE :search1 OR d.reference_number LIKE :search2 OR d.description LIKE :search3 OR d.extracted_text LIKE :search4)";
             $searchValue = '%' . $filters['search'] . '%';
             $params[':search1'] = $searchValue;
             $params[':search2'] = $searchValue;
             $params[':search3'] = $searchValue;
+            $params[':search4'] = $searchValue;
         }
         
         if (!empty($filters['type'])) {
@@ -170,14 +171,18 @@ class Document {
                 description, tags, source_module, source_id,
                 uploaded_by, created_at,
                 status_changed_by, status_changed_at,
-                approved_by, approved_at
+                approved_by, approved_at,
+                extracted_text, ocr_status, ocr_processed_at,
+                key_points, key_points_generated_at
             ) VALUES (
                 :reference_number, :title, :document_type, :document_date,
                 :status, :file_path, :file_name, :file_size, :file_type,
                 :description, :tags, :source_module, :source_id,
                 :uploaded_by, NOW(),
                 :status_changed_by, :status_changed_at,
-                :approved_by, :approved_at
+                :approved_by, :approved_at,
+                :extracted_text, :ocr_status, :ocr_processed_at,
+                :key_points, :key_points_generated_at
             )
         ");
 
@@ -199,7 +204,12 @@ class Document {
             ':status_changed_by' => $data['status_changed_by'] ?? null,
             ':status_changed_at' => $data['status_changed_at'] ?? null,
             ':approved_by' => $data['approved_by'] ?? null,
-            ':approved_at' => $data['approved_at'] ?? null
+            ':approved_at' => $data['approved_at'] ?? null,
+            ':extracted_text' => $data['extracted_text'] ?? null,
+            ':ocr_status' => $data['ocr_status'] ?? 'pending',
+            ':ocr_processed_at' => $data['ocr_processed_at'] ?? null,
+            ':key_points' => $data['key_points'] ?? null,
+            ':key_points_generated_at' => $data['key_points_generated_at'] ?? null
         ]);
 
         return $this->db->lastInsertId();
@@ -213,7 +223,9 @@ class Document {
             'title', 'document_type', 'document_date', 'status',
             'description', 'tags', 'confidentiality_level',
             'approved_by', 'approved_at',
-            'status_changed_by', 'status_changed_at'
+            'status_changed_by', 'status_changed_at',
+            'extracted_text', 'ocr_status', 'ocr_processed_at',
+            'key_points', 'key_points_generated_at'
         ];
 
         $fields = [];
@@ -334,11 +346,12 @@ class Document {
         }
         
         if (!empty($filters['search'])) {
-            $sql .= " AND (title LIKE :search1 OR reference_number LIKE :search2 OR description LIKE :search3)";
+            $sql .= " AND (title LIKE :search1 OR reference_number LIKE :search2 OR description LIKE :search3 OR extracted_text LIKE :search4)";
             $searchValue = '%' . $filters['search'] . '%';
             $params[':search1'] = $searchValue;
             $params[':search2'] = $searchValue;
             $params[':search3'] = $searchValue;
+            $params[':search4'] = $searchValue;
         }
         
         if (!empty($filters['type'])) {
@@ -385,6 +398,59 @@ class Document {
         $stmt->execute($params);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'];
+    }
+    
+    /**
+     * Update OCR result for a document
+     */
+    public function updateOcrResult($id, $status, $text = null) {
+        $stmt = $this->db->prepare("
+            UPDATE legislative_documents 
+            SET ocr_status = :status, 
+                extracted_text = :text, 
+                ocr_processed_at = NOW(),
+                updated_at = NOW()
+            WHERE id = :id
+        ");
+        return $stmt->execute([
+            ':id' => $id,
+            ':status' => $status,
+            ':text' => $text
+        ]);
+    }
+    
+    /**
+     * Update key points for a document
+     */
+    public function updateKeyPoints($id, $keyPoints) {
+        $stmt = $this->db->prepare("
+            UPDATE legislative_documents 
+            SET key_points = :key_points, 
+                key_points_generated_at = NOW(),
+                updated_at = NOW()
+            WHERE id = :id
+        ");
+        return $stmt->execute([
+            ':id' => $id,
+            ':key_points' => $keyPoints
+        ]);
+    }
+    
+    /**
+     * Get documents with pending OCR status
+     */
+    public function getPendingOcr($limit = 5) {
+        $stmt = $this->db->prepare("
+            SELECT id, file_path, file_name, file_type, file_size, is_encrypted
+            FROM legislative_documents 
+            WHERE ocr_status = 'pending' 
+            AND deleted_at IS NULL
+            ORDER BY created_at ASC
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     /**

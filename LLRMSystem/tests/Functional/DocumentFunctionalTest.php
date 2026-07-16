@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../../modules/document-management/services/DocumentService.php';
+require_once __DIR__ . '/../../modules/document-management/services/OcrService.php';
+require_once __DIR__ . '/../../modules/document-management/services/SummarizationService.php';
 require_once __DIR__ . '/../../modules/document-management/controllers/DocumentController.php';
 
 use PHPUnit\Framework\TestCase;
@@ -98,5 +100,42 @@ class DocumentFunctionalTest extends TestCase
         $this->assertEquals(10, $result['pagination']['per_page']);
         $this->assertEquals(25, $result['pagination']['total']);
         $this->assertEquals(3, $result['pagination']['total_pages']);
+    }
+
+    public function testOcrServiceDetectsCorrectFileTypes()
+    {
+        $ocr = new OcrService();
+
+        $this->assertTrue($ocr->isOcrCapable('application/pdf', 'doc.pdf'));
+        $this->assertTrue($ocr->isOcrCapable('image/jpeg', 'scan.jpg'));
+        $this->assertTrue($ocr->isOcrCapable('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'doc.docx'));
+        $this->assertFalse($ocr->isOcrCapable('text/plain', 'notes.txt'));
+    }
+
+    public function testSummarizationServiceGeneratesKeyPointsFromLegislativeText()
+    {
+        $summ = new SummarizationService();
+
+        $text = "AN ORDINANCE APPROPRIATING FUNDS FOR THE CITY GOVERNMENT FOR FISCAL YEAR 2025. " .
+                "Section 1. Two hundred million pesos shall be allocated for personal services. " .
+                "Section 2. One hundred fifty million pesos is appropriated for operating expenses. " .
+                "Section 3. This ordinance shall take effect immediately upon approval.";
+
+        $points = $summ->generateKeyPoints($text, 3);
+
+        $this->assertNotEmpty($points);
+        $this->assertLessThanOrEqual(3, count($points));
+        foreach ($points as $point) {
+            $this->assertStringStartsWith('•', $point);
+        }
+    }
+
+    public function testSummarizationServiceHandlesEmptyInput()
+    {
+        $summ = new SummarizationService();
+
+        $this->assertEmpty($summ->generateKeyPoints('', 5));
+        $this->assertEmpty($summ->generateKeyPoints(null, 5));
+        $this->assertSame('', $summ->generateKeyPointsString('', 5));
     }
 }

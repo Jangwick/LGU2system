@@ -368,3 +368,24 @@ date_default_timezone_set('Asia/Manila');
 // Load input sanitization utilities (available to all endpoints that include config)
 require_once __DIR__ . '/../utils/Sanitizer.php';
 require_once __DIR__ . '/../utils/Request.php';
+
+// OCR Configuration (can be overridden in config.local.php)
+if (!defined('OCR_ENABLED')) {
+    define('OCR_ENABLED', true);
+}
+if (!defined('OCR_TESSERACT_PATH')) {
+    // Auto-detect based on OS — OcrService handles detection
+    define('OCR_TESSERACT_PATH', '');
+}
+if (!defined('OCR_GHOSTSCRIPT_PATH')) {
+    define('OCR_GHOSTSCRIPT_PATH', '');
+}
+if (!defined('OCR_LANGUAGE')) {
+    define('OCR_LANGUAGE', 'eng');
+}
+if (!defined('OCR_TIMEOUT')) {
+    define('OCR_TIMEOUT', 30);
+}
+if (!defined('OCR_ASYNC_THRESHOLD')) {
+    define('OCR_ASYNC_THRESHOLD', 5242880); // 5MB — files larger than this run async
+}

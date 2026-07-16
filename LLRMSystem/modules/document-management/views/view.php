@@ -126,6 +126,20 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <i class="bi bi-shield-lock mr-1"></i><?= e(ucfirst($confidentialityLevel)) ?>
                         </span>
                         <?php endif; ?>
+                        <?php
+                        $ocrStatus = $document['ocr_status'] ?? 'pending';
+                        $ocrBadges = [
+                            'completed' => ['badge-success', 'check-circle'],
+                            'pending' => ['badge-warning', 'hourglass-split'],
+                            'processing' => ['badge-info', 'arrow-repeat'],
+                            'failed' => ['badge-danger', 'x-circle'],
+                            'skipped' => ['badge-secondary', 'dash-circle'],
+                        ];
+                        $ocrBadge = $ocrBadges[$ocrStatus] ?? $ocrBadges['pending'];
+                        ?>
+                        <span class="badge <?= $ocrBadge[0] ?>" title="OCR Status: <?= ucfirst($ocrStatus) ?>">
+                            <i class="bi bi-<?= $ocrBadge[1] ?> mr-1"></i>OCR: <?= ucfirst($ocrStatus) ?>
+                        </span>
                     </div>
                     <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1">Reference: <span class="font-mono font-semibold"><?= e($document['reference_number']) ?></span></p>
                     <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
@@ -217,6 +231,113 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php endforeach; ?>
                         </div>
                     </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- OCR Extracted Text & Key Points -->
+                <?php
+                $ocrStatus = $document['ocr_status'] ?? 'pending';
+                $extractedText = $document['extracted_text'] ?? null;
+                $keyPoints = $document['key_points'] ?? null;
+                $ocrProcessedAt = $document['ocr_processed_at'] ?? null;
+                $canRerunOcr = in_array($userRole, ['admin', 'administrator', 'officer', 'superadmin', 'super_admin']);
+                ?>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up">
+                    <div class="flex items-center justify-between mb-3 sm:mb-4">
+                        <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white flex items-center">
+                            <i class="bi bi-file-earmark-text mr-2 text-blue-600"></i> OCR Extracted Content
+                        </h2>
+                        <?php if ($canRerunOcr): ?>
+                        <button type="button" onclick="rerunOcr(<?= $document['id'] ?>)" 
+                                id="rerun-ocr-btn"
+                                class="px-3 py-1.5 text-xs sm:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
+                            <i class="bi bi-arrow-repeat mr-1"></i> Re-run OCR
+                        </button>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if ($ocrStatus === 'completed'): ?>
+                        <?php if ($keyPoints): ?>
+                        <div class="mb-4">
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 block">
+                                <i class="bi bi-list-stars mr-1"></i>Key Points
+                                <?php if ($document['key_points_generated_at']): ?>
+                                <span class="text-xs text-gray-400 ml-2">(Generated: <?= date('M d, Y g:i A', strtotime($document['key_points_generated_at'])) ?>)</span>
+                                <?php endif; ?>
+                            </label>
+                            <div class="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                <?php foreach (explode("\n", $keyPoints) as $point): ?>
+                                    <?php if (trim($point)): ?>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-1.5 leading-relaxed"><?= htmlspecialchars(trim($point)) ?></p>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($extractedText): ?>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 block">
+                                <i class="bi bi-file-text mr-1"></i>Extracted Text
+                                <span class="text-xs text-gray-400 ml-2">(<?= number_format(strlen($extractedText)) ?> chars)</span>
+                            </label>
+                            <div class="relative">
+                                <div id="extracted-text-preview" class="p-3 sm:p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 max-h-64 overflow-y-auto text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                                    <?= nl2br(htmlspecialchars(substr($extractedText, 0, 2000))) ?>
+                                    <?php if (strlen($extractedText) > 2000): ?>
+                                    <span class="text-gray-400 italic">... (truncated, <?= number_format(strlen($extractedText) - 2000) ?> more chars)</span>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if (strlen($extractedText) > 2000): ?>
+                                <button type="button" onclick="toggleFullText()" 
+                                        id="toggle-text-btn"
+                                        class="mt-2 text-xs text-blue-600 hover:text-blue-700 font-medium">
+                                    Show Full Text
+                                </button>
+                                <div id="extracted-text-full" class="hidden p-3 sm:p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                                    <?= nl2br(htmlspecialchars($extractedText)) ?>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($ocrProcessedAt): ?>
+                        <p class="text-xs text-gray-400 mt-3">
+                            <i class="bi bi-clock mr-1"></i>OCR processed: <?= date('F d, Y g:i A', strtotime($ocrProcessedAt)) ?>
+                        </p>
+                        <?php endif; ?>
+
+                    <?php elseif ($ocrStatus === 'pending'): ?>
+                        <div class="text-center py-6">
+                            <i class="bi bi-hourglass-split text-3xl text-yellow-500 mb-2"></i>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">OCR processing is pending. The document will be processed automatically.</p>
+                            <?php if ($canRerunOcr): ?>
+                            <p class="text-xs text-gray-400 mt-1">Click "Re-run OCR" to process now.</p>
+                            <?php endif; ?>
+                        </div>
+                    <?php elseif ($ocrStatus === 'processing'): ?>
+                        <div class="text-center py-6">
+                            <i class="bi bi-arrow-repeat text-3xl text-blue-500 animate-spin mb-2"></i>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">OCR processing in progress...</p>
+                        </div>
+                    <?php elseif ($ocrStatus === 'failed'): ?>
+                        <div class="text-center py-6">
+                            <i class="bi bi-x-circle text-3xl text-red-500 mb-2"></i>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">OCR processing failed. This may be due to missing OCR binaries or an unsupported file format.</p>
+                            <?php if ($canRerunOcr): ?>
+                            <p class="text-xs text-gray-400 mt-1">Click "Re-run OCR" to try again.</p>
+                            <?php endif; ?>
+                        </div>
+                    <?php elseif ($ocrStatus === 'skipped'): ?>
+                        <div class="text-center py-6">
+                            <i class="bi bi-dash-circle text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">OCR was skipped for this file type.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-6">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">OCR status: <?= htmlspecialchars($ocrStatus) ?></p>
+                        </div>
                     <?php endif; ?>
                 </div>
 
@@ -550,6 +671,54 @@ function deleteDocument(id) {
                 alert('Error: ' + data.error);
             }
         });
+    }
+}
+
+async function rerunOcr(id) {
+    const btn = document.getElementById('rerun-ocr-btn');
+    if (!btn) return;
+    
+    if (!confirm('Re-run OCR on this document? This will decrypt the file and extract text again.')) {
+        return;
+    }
+    
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-1"></i> Processing...';
+    
+    try {
+        const response = await fetch(`../../document-management/api/ocr.php?id=${id}`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(`OCR ${data.ocr_status}. ${data.extracted_text_length} characters extracted.`);
+            window.location.reload();
+        } else {
+            alert('OCR failed: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        alert('Failed to connect to OCR service.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+function toggleFullText() {
+    const preview = document.getElementById('extracted-text-preview');
+    const full = document.getElementById('extracted-text-full');
+    const btn = document.getElementById('toggle-text-btn');
+    
+    if (full.classList.contains('hidden')) {
+        full.classList.remove('hidden');
+        preview.classList.add('hidden');
+        btn.textContent = 'Show Less';
+    } else {
+        full.classList.add('hidden');
+        preview.classList.remove('hidden');
+        btn.textContent = 'Show Full Text';
     }
 }
 </script>

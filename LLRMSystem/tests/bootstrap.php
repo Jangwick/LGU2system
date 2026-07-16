@@ -34,6 +34,8 @@ require_once BASE_PATH . '/modules/core/middleware/SessionTimeoutMiddleware.php'
 
 // Load services for integration tests
 require_once BASE_PATH . '/modules/document-management/services/FileStorageService.php';
+require_once BASE_PATH . '/modules/document-management/services/OcrService.php';
+require_once BASE_PATH . '/modules/document-management/services/SummarizationService.php';
 require_once BASE_PATH . '/modules/search/services/SearchService.php';
 require_once BASE_PATH . '/modules/search/services/EmbeddingService.php';
 require_once BASE_PATH . '/modules/search/controllers/SearchController.php';

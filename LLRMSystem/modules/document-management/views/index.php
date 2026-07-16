@@ -69,6 +69,17 @@ function getStatusBadge($status) {
     return $badges[$status] ?? '<span class="badge badge-info">' . ucfirst($status) . '</span>';
 }
 
+function getOcrBadge($ocrStatus) {
+    $badges = [
+        'completed' => '<span class="badge badge-success text-[10px]" title="OCR Completed"><i class="bi bi-check-circle mr-0.5"></i>OCR</span>',
+        'pending' => '<span class="badge badge-warning text-[10px]" title="OCR Pending"><i class="bi bi-hourglass-split mr-0.5"></i>OCR</span>',
+        'processing' => '<span class="badge badge-info text-[10px]" title="OCR Processing"><i class="bi bi-arrow-repeat mr-0.5"></i>OCR</span>',
+        'failed' => '<span class="badge badge-danger text-[10px]" title="OCR Failed"><i class="bi bi-x-circle mr-0.5"></i>OCR</span>',
+        'skipped' => '',
+    ];
+    return $badges[$ocrStatus] ?? '';
+}
+
 function formatFileSize($bytes) {
     if ($bytes >= 1073741824) {
         return number_format($bytes / 1073741824, 2) . ' GB';
@@ -396,7 +407,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo htmlspecialchars($doc['reference_number']); ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                                        <?php echo getStatusBadge($doc['status']); ?>
+                                        <div class="flex flex-wrap items-center gap-1">
+                                            <?php echo getStatusBadge($doc['status']); ?>
+                                            <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
+                                        </div>
                                         <?php if (!empty($doc['status_changed_by_name'])): ?>
                                         <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
                                             by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
@@ -480,7 +494,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <!-- Bottom: Status & Actions -->
                             <div class="px-4 py-3 bg-white dark:bg-gray-800 flex items-center justify-between border-t border-gray-50 dark:border-gray-700/50">
                                 <div class="flex flex-col">
-                                    <?php echo getStatusBadge($doc['status']); ?>
+                                    <div class="flex flex-wrap items-center gap-1">
+                                        <?php echo getStatusBadge($doc['status']); ?>
+                                        <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
+                                    </div>
                                     <?php if (!empty($doc['status_changed_by_name'])): ?>
                                     <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
                                         by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
@@ -583,6 +600,42 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>
 
+<style>
+.doc-preview-page {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    line-height: 1.8;
+    color: #1a1a1a;
+    max-width: 100%;
+    margin: 0 auto;
+}
+.doc-preview-page .doc-content h2 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+.doc-preview-page .doc-content h3 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 13px;
+    font-weight: 700;
+}
+.doc-preview-page .doc-content p {
+    text-align: justify;
+    hyphens: auto;
+}
+.doc-preview-page .doc-content ol,
+.doc-preview-page .doc-content ul {
+    margin-left: 0;
+    padding-left: 1.5rem;
+}
+.doc-preview-page .doc-content li {
+    margin-bottom: 0.4rem;
+}
+.doc-preview-page .doc-content ol li::marker {
+    font-weight: 600;
+}
+</style>
+
 <script src="<?php echo asset('js/documents.js'); ?>?v=<?php echo time(); ?>"></script>
 <script>
 // User role for access control
@@ -611,6 +664,137 @@ function applyAdvancedFilters() {
 
 function clearAdvancedFilters() {
     if (window.docManager) window.docManager.clearFilters();
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function toggleDocPreview(btn) {
+    const container = document.getElementById('doc-preview-container');
+    const icon = btn.querySelector('i');
+    const label = btn.querySelector('span');
+    if (container.classList.contains('max-h-72')) {
+        container.classList.remove('max-h-72');
+        container.classList.add('max-h-[2000px]');
+        icon.classList.remove('bi-chevron-down');
+        icon.classList.add('bi-chevron-up');
+        label.textContent = 'Collapse';
+    } else {
+        container.classList.remove('max-h-[2000px]');
+        container.classList.add('max-h-72');
+        icon.classList.remove('bi-chevron-up');
+        icon.classList.add('bi-chevron-down');
+        label.textContent = 'Expand';
+    }
+}
+
+function formatDocumentText(rawText) {
+    if (!rawText) return '<p class="text-gray-400 italic">No content available.</p>';
+
+    // Normalize line endings
+    let text = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+    // Remove OCR markers
+    text = text.replace(/^\[OCR\]\s*\n?/i, '');
+    text = text.replace(/\[Page OCR failed:.*?\]/g, '');
+    text = text.replace(/--- Page Break ---/g, '\n\n');
+
+    // Split into blocks separated by blank lines
+    const blocks = text.split(/\n{2,}/);
+    let html = '';
+    let inList = false;
+    let listType = '';
+    let listItems = [];
+
+    const closeList = () => {
+        if (inList) {
+            const tag = listType === 'ol' ? 'ol' : 'ul';
+            const cls = listType === 'ol'
+                ? 'list-decimal list-inside space-y-1.5 my-3 pl-2'
+                : 'list-disc list-inside space-y-1.5 my-3 pl-2';
+            html += `<${tag} class="${cls}">${listItems.join('')}</${tag}>`;
+            inList = false;
+            listType = '';
+            listItems = [];
+        }
+    };
+
+    for (let block of blocks) {
+        block = block.trim();
+        if (!block) continue;
+
+        // Check for numbered list items (1., 2., etc.)
+        const numberedMatch = block.match(/^(\d+)\.\s*(.+)/);
+
+        // Check for bullet list items (-, *, •)
+        const bulletMatch = block.match(/^[•·\-\*]\s*(.+)/);
+
+        // Check for section headers: ROMAN NUMERAL + . or all caps short line
+        const romanNumeralMatch = block.match(/^([IVXLCDM]+)\.\s*(.+)/i);
+        const isShortAllCaps = block.length < 80 && block === block.toUpperCase() && /[A-Z]/.test(block) && !block.endsWith('.') && !numberedMatch;
+
+        // Check for lettered items (A., B., etc.)
+        const letteredMatch = block.match(/^([A-Z])\.\s*(.+)/);
+
+        // Detect headings — lines that look like titles
+        const isHeading = isShortAllCaps ||
+            (block.length < 100 && block === block.toUpperCase() && /[A-Z]/.test(block)) ||
+            /^(DETAILED\s|AN\s|ORDINANCE|RESOLUTION|REPUBLIC\s|CITY\s|MUNICIPAL|PROVINCIAL|BARANGAY|OFFICE\s|DEPARTMENT|COLLEGE|UNIVERSITY|SCHOOL|SECTION|ARTICLE|CHAPTER)/i.test(block) && block.length < 120;
+
+        if (numberedMatch) {
+            if (inList && listType !== 'ol') { closeList(); }
+            if (!inList) { inList = true; listType = 'ol'; }
+            listItems.push(`<li class="text-gray-800 dark:text-gray-200 leading-relaxed">${escapeHtml(numberedMatch[2])}</li>`);
+        } else if (bulletMatch) {
+            if (inList && listType !== 'ul') { closeList(); }
+            if (!inList) { inList = true; listType = 'ul'; }
+            listItems.push(`<li class="text-gray-800 dark:text-gray-200 leading-relaxed">${escapeHtml(bulletMatch[1])}</li>`);
+        } else if (letteredMatch && block.length < 200) {
+            if (inList && listType !== 'ol') { closeList(); }
+            if (!inList) { inList = true; listType = 'ol'; }
+            listItems.push(`<li class="text-gray-800 dark:text-gray-200 leading-relaxed"><strong>${letteredMatch[1]}.</strong> ${escapeHtml(letteredMatch[2])}</li>`);
+        } else {
+            closeList();
+
+            if (isHeading) {
+                // Major heading — centered, bold, larger
+                html += `<h2 class="text-center font-bold text-base text-gray-900 dark:text-gray-100 my-3 uppercase tracking-wide">${escapeHtml(block)}</h2>`;
+            } else if (romanNumeralMatch && block.length < 200) {
+                // Roman numeral section heading
+                html += `<h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 mt-4 mb-2">${escapeHtml(block)}</h3>`;
+            } else if (block.length < 100 && /^(Section|Article|Chapter|Title)\s/i.test(block)) {
+                // Section heading
+                html += `<h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 mt-4 mb-2">${escapeHtml(block)}</h3>`;
+            } else {
+                // Regular paragraph — handle single line breaks within block
+                const lines = block.split('\n');
+                if (lines.length === 1) {
+                    html += `<p class="text-gray-800 dark:text-gray-200 leading-relaxed mb-3 text-justify">${escapeHtml(block)}</p>`;
+                } else {
+                    // Multi-line block: check if it's a sub-list or indented content
+                    const isIndented = lines.every(l => /^\s+/.test(l) || !l.trim());
+                    if (isIndented && lines.length > 2) {
+                        html += `<div class="pl-4 border-l-2 border-gray-200 dark:border-gray-700 my-3 space-y-1">`;
+                        for (const line of lines) {
+                            if (line.trim()) {
+                                html += `<p class="text-gray-700 dark:text-gray-300 leading-relaxed text-[12px]">${escapeHtml(line.trim())}</p>`;
+                            }
+                        }
+                        html += `</div>`;
+                    } else {
+                        // Join lines with <br> for line-by-line content (e.g., addresses)
+                        html += `<p class="text-gray-800 dark:text-gray-200 leading-relaxed mb-3 text-justify">${lines.map(l => escapeHtml(l.trim())).join('<br>')}</p>`;
+                    }
+                }
+            }
+        }
+    }
+    closeList();
+
+    return html;
 }
 
 function viewDocument(id) {
@@ -740,6 +924,99 @@ function viewDocument(id) {
                                         <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">${doc.description || 'No additional notes provided for this record.'}</p>
                                     </div>
                                 </section>
+
+                                <!-- Document Analysis (OCR) -->
+                                ${(() => {
+                                    const ocrStatus = doc.ocr_status || 'pending';
+                                    const ocrInfo = {
+                                        'completed': { badge: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50', icon: 'patch-check-fill', label: 'Digitally Extracted' },
+                                        'pending': { badge: 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 border-amber-200 dark:border-amber-800/50', icon: 'hourglass-split', label: 'Extraction Scheduled' },
+                                        'processing': { badge: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-200 dark:border-blue-800/50', icon: 'arrow-repeat', label: 'Extracting...' },
+                                        'failed': { badge: 'bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 border-rose-200 dark:border-rose-800/50', icon: 'exclamation-triangle-fill', label: 'Extraction Unavailable' },
+                                        'skipped': { badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700', icon: 'dash-circle-fill', label: 'Extraction Skipped' }
+                                    };
+                                    const info = ocrInfo[ocrStatus] || ocrInfo['pending'];
+                                    const keyPoints = doc.key_points ? doc.key_points.split('\n').filter(p => p.trim()) : [];
+                                    const extractedText = doc.extracted_text || '';
+                                    const processedDate = doc.ocr_processed_at ? new Date(doc.ocr_processed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : null;
+                                    const wordCount = extractedText ? extractedText.trim().split(/\s+/).length : 0;
+
+                                    return `
+                                    <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                                        <!-- Header Bar -->
+                                        <div class="px-5 md:px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
+                                            <div class="flex items-center">
+                                                <span class="w-1 h-5 bg-indigo-600 rounded-full mr-3"></span>
+                                                <h3 class="text-sm font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest">
+                                                    Document Analysis
+                                                </h3>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${info.badge}">
+                                                    <i class="bi bi-${info.icon}"></i>${info.label}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="p-5 md:p-6 space-y-6">
+                                            ${processedDate ? `
+                                                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-gray-400 dark:text-gray-500">
+                                                    <span class="flex items-center"><i class="bi bi-calendar-check mr-1.5"></i>Extracted on ${processedDate}</span>
+                                                    ${extractedText ? `<span class="flex items-center"><i class="bi bi-file-earmark-text mr-1.5"></i>${extractedText.length.toLocaleString()} characters &middot; ${wordCount.toLocaleString()} words</span>` : ''}
+                                                </div>
+                                            ` : ''}
+
+                                            ${keyPoints.length > 0 ? `
+                                                <!-- Summary of Key Points -->
+                                                <div>
+                                                    <div class="flex items-center mb-3">
+                                                        <i class="bi bi-card-text text-indigo-600 dark:text-indigo-400 mr-2"></i>
+                                                        <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Summary of Key Points</h4>
+                                                    </div>
+                                                    <ol class="space-y-2.5 border-l-2 border-indigo-100 dark:border-indigo-900/50 pl-5">
+                                                        ${keyPoints.map((p, i) => `
+                                                            <li class="relative">
+                                                                <span class="absolute -left-[27px] top-0 w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">${i + 1}</span>
+                                                                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed pt-0.5">${escapeHtml(p.replace(/^[•·\-\*]\s*/, ''))}</p>
+                                                            </li>
+                                                        `).join('')}
+                                                    </ol>
+                                                </div>
+                                            ` : ''}
+
+                                            ${extractedText ? `
+                                                <!-- Document Preview -->
+                                                <div>
+                                                    <div class="flex items-center justify-between mb-3">
+                                                        <div class="flex items-center">
+                                                            <i class="bi bi-file-earmark-richtext text-slate-600 dark:text-slate-400 mr-2"></i>
+                                                            <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Document Preview</h4>
+                                                        </div>
+                                                        <div class="flex items-center gap-3">
+                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
+                                                                <i class="bi bi-eye"></i><span>Preview</span>
+                                                            </button>
+                                                            <button type="button" onclick="toggleDocPreview(this)" class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1">
+                                                                <i class="bi bi-chevron-down"></i><span>Expand</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div id="doc-preview-container" class="max-h-72 overflow-y-auto rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-300">
+                                                        <div class="bg-white dark:bg-gray-900 p-6 md:p-10 doc-preview-page">
+                                                            <div class="doc-content text-[13px] text-gray-800 dark:text-gray-200 leading-7">${formatDocumentText(extractedText)}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ` : !keyPoints.length ? `
+                                                <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                                                    <i class="bi bi-file-earmark-x text-3xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
+                                                    <p class="text-sm text-gray-400 dark:text-gray-500 font-medium">${ocrStatus === 'pending' ? 'Document content extraction is scheduled and will be available once processing is complete.' : ocrStatus === 'failed' ? 'Content extraction was unsuccessful. The file may be corrupted or in an unsupported format.' : 'No readable text content was found in this document.'}</p>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </section>
+                                    `;
+                                })()}
 
                                 <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 md:p-6">
                                     <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center">
@@ -2042,6 +2319,114 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
         alert('Network error: ' + error.message);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
+    }
+});
+</script>
+
+<!-- Original File Preview Modal -->
+<div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-center justify-center p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
+                    <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400"></i>
+                </div>
+                <div class="min-w-0">
+                    <h3 id="original-file-preview-title" class="text-sm font-bold text-gray-800 dark:text-white truncate">Document Preview</h3>
+                    <p id="original-file-preview-type" class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wider"></p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <a id="original-file-preview-newtab" href="#" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <i class="bi bi-box-arrow-up-right"></i> New Tab
+                </a>
+                <a id="original-file-preview-download" href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
+                    <i class="bi bi-download"></i> Download
+                </a>
+                <button type="button" onclick="closeOriginalFilePreviewModal()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <i class="bi bi-x-lg text-sm"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Body -->
+        <div id="original-file-preview-body" class="flex-1 overflow-hidden bg-gray-100 dark:bg-gray-950">
+        </div>
+    </div>
+</div>
+
+<script>
+function openOriginalFilePreviewModal(docId, fileName, fileType) {
+    const modal = document.getElementById('original-file-preview-modal');
+    const body = document.getElementById('original-file-preview-body');
+    const titleEl = document.getElementById('original-file-preview-title');
+    const typeEl = document.getElementById('original-file-preview-type');
+    const newTabLink = document.getElementById('original-file-preview-newtab');
+    const downloadLink = document.getElementById('original-file-preview-download');
+
+    const previewUrl = App.apiUrl('documents', `preview.php?id=${docId}`);
+    const downloadUrl = App.apiUrl('documents', `download.php?id=${docId}`);
+
+    titleEl.textContent = fileName || 'Document Preview';
+    typeEl.textContent = (fileType || '').replace('application/', '').replace('image/', 'img/');
+
+    newTabLink.href = previewUrl;
+    downloadLink.href = downloadUrl;
+
+    const ft = (fileType || '').toLowerCase();
+    const isPdf = ft === 'application/pdf' || ft === 'pdf';
+    const isDocx = ft === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || ft === 'word';
+    const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', ''));
+
+    if (isPdf || isDocx) {
+        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0" style="min-height: 70vh;"></iframe>`;
+    } else if (isImage) {
+        body.innerHTML = `<div class="flex items-center justify-center h-full p-8 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg"></div>`;
+    } else {
+        const ext = (fileName || '').split('.').pop().toUpperCase();
+        body.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-full p-12 text-center">
+                <div class="w-20 h-20 rounded-2xl bg-gray-200 dark:bg-gray-800 flex items-center justify-center mb-5">
+                    <i class="bi bi-file-earmark-x text-4xl text-gray-400 dark:text-gray-600"></i>
+                </div>
+                <h4 class="text-base font-bold text-gray-700 dark:text-gray-300 mb-2">Cannot preview ${ext} files in browser</h4>
+                <p class="text-sm text-gray-400 dark:text-gray-500 max-w-md mb-6">This file type cannot be displayed directly in the web browser. You can download it to view the full document.</p>
+                <a href="${downloadUrl}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">
+                    <i class="bi bi-download text-base"></i> Download File
+                </a>
+            </div>`;
+    }
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeOriginalFilePreviewModal() {
+    const modal = document.getElementById('original-file-preview-modal');
+    const body = document.getElementById('original-file-preview-body');
+    modal.classList.add('hidden');
+    body.innerHTML = '';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('original-file-preview-modal');
+        if (!modal.classList.contains('hidden')) {
+            closeOriginalFilePreviewModal();
+        }
+    }
+});
+
+// Delegate click for original file preview buttons (works for dynamically generated content)
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-original-preview');
+    if (!btn) return;
+    const docId = btn.getAttribute('data-preview-id');
+    const fileName = btn.getAttribute('data-preview-name');
+    const fileType = btn.getAttribute('data-preview-type');
+    if (docId) {
+        openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType);
     }
 });
 </script>
