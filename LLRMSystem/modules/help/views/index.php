@@ -329,8 +329,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Contact Support Modal -->
-<div id="contactModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-lg bg-white">
+<div id="contactModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div id="contactModalContent" class="relative mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-t-3xl sm:rounded-lg bg-white max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-gray-200 rounded-full"></div></div>
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-gray-900">Contact Support</h3>
             <button type="button" onclick="closeContactModal()" class="text-gray-400 hover:text-gray-600">
@@ -338,7 +339,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </button>
         </div>
         
-        <form id="contactForm" class="space-y-4">
+        <form id="contactForm" class="space-y-4 overflow-y-auto flex-1 min-h-0">
             <div class="grid md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
@@ -394,8 +395,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Feedback Modal -->
-<div id="feedbackModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-lg bg-white">
+<div id="feedbackModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div id="feedbackModalContent" class="relative mx-auto p-5 border w-full max-w-lg shadow-lg rounded-t-3xl sm:rounded-lg bg-white max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-gray-200 rounded-full"></div></div>
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-gray-900">Submit Feedback</h3>
             <button type="button" onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-600">
@@ -403,7 +405,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </button>
         </div>
         
-        <form id="feedbackForm" class="space-y-4">
+        <form id="feedbackForm" class="space-y-4 overflow-y-auto flex-1 min-h-0">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">How satisfied are you with LRMS?</label>
                 <div class="flex justify-center gap-4 p-4">
@@ -502,18 +504,28 @@ function showVideoTutorials() {
 
 function openContactModal() {
     document.getElementById('contactModal').classList.remove('hidden');
+    document.body.style.overflow='hidden';
+    const c=document.getElementById('contactModalContent');
+    setTimeout(()=>{if(c){c.classList.remove('translate-y-full','sm:scale-95','opacity-0');c.classList.add('translate-y-0','sm:scale-100','opacity-100');}},10);
 }
 
 function closeContactModal() {
-    document.getElementById('contactModal').classList.add('hidden');
+    const c=document.getElementById('contactModalContent');
+    if(c){c.classList.add('translate-y-full','sm:scale-95','opacity-0');c.classList.remove('translate-y-0','sm:scale-100','opacity-100');}
+    setTimeout(()=>{document.getElementById('contactModal').classList.add('hidden');document.body.style.overflow='';},300);
 }
 
 function openFeedbackModal() {
     document.getElementById('feedbackModal').classList.remove('hidden');
+    document.body.style.overflow='hidden';
+    const c=document.getElementById('feedbackModalContent');
+    setTimeout(()=>{if(c){c.classList.remove('translate-y-full','sm:scale-95','opacity-0');c.classList.add('translate-y-0','sm:scale-100','opacity-100');}},10);
 }
 
 function closeFeedbackModal() {
-    document.getElementById('feedbackModal').classList.add('hidden');
+    const c=document.getElementById('feedbackModalContent');
+    if(c){c.classList.add('translate-y-full','sm:scale-95','opacity-0');c.classList.remove('translate-y-0','sm:scale-100','opacity-100');}
+    setTimeout(()=>{document.getElementById('feedbackModal').classList.add('hidden');document.body.style.overflow='';},300);
 }
 
 function setRating(rating) {

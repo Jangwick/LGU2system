@@ -346,15 +346,15 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
 
 <!-- Preview Modal (identical to admin but without Download/Detailed View buttons) -->
 <div id="preview-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" role="dialog" aria-modal="true">
-    <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
-        <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl opacity-0 scale-95 duration-300">
-            <div class="md:hidden w-full flex justify-center pt-3 pb-1 bg-gradient-to-r from-red-600 to-red-700"><div class="w-12 h-1.5 bg-white/30 rounded-full"></div></div>
+        <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-auto sm:max-h-[92vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300">
+            <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-gradient-to-r from-red-600 to-red-700"><div class="w-12 h-1.5 bg-white/30 rounded-full"></div></div>
             <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-start justify-between text-white border-b border-white/10">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0"><i id="modal-icon" class="bi bi-file-earmark-text"></i></div><div class="min-w-0"><h3 class="text-xl font-black leading-none mb-1">Document Preview</h3><p id="modal-subtitle" class="text-red-100 text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">REF: ---</p></div></div>
                 <button type="button" onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all shrink-0"><i class="bi bi-x-lg text-lg text-white"></i></button>
             </div>
-            <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 max-h-[75vh] sm:max-h-none overflow-y-auto sm:overflow-visible">
+            <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 overflow-y-auto flex-1 min-h-0">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="md:col-span-2 space-y-6">
                         <div><h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Document Title</h4><h2 id="preview-title" class="text-xl md:text-2xl font-black text-gray-800 dark:text-white leading-tight">---</h2></div>
@@ -497,19 +497,21 @@ function formatDocumentText(rawText){
 
 function showSignInPrompt(){
     const modal=document.getElementById('signin-prompt-modal');
+    const content=document.getElementById('signin-prompt-content');
     if(modal){
         modal.classList.remove('hidden');
         document.body.style.overflow='hidden';
         const btt=document.getElementById('back-to-top');if(btt)btt.classList.add('hidden');
+        setTimeout(()=>{if(content){content.classList.remove('translate-y-full','sm:scale-95','opacity-0');content.classList.add('translate-y-0','sm:scale-100','opacity-100');}},10);
     }
 }
 
 function closeSignInPrompt(){
     const modal=document.getElementById('signin-prompt-modal');
+    const content=document.getElementById('signin-prompt-content');
+    if(content){content.classList.add('translate-y-full','sm:scale-95','opacity-0');content.classList.remove('translate-y-0','sm:scale-100','opacity-100');}
     if(modal){
-        modal.classList.add('hidden');
-        document.body.style.overflow='';
-        const btt=document.getElementById('back-to-top');if(btt)btt.classList.remove('hidden');
+        setTimeout(()=>{modal.classList.add('hidden');document.body.style.overflow='';const btt=document.getElementById('back-to-top');if(btt)btt.classList.remove('hidden');},300);
     }
 }
 
@@ -517,7 +519,7 @@ async function previewDocument(id){
     const modal=document.getElementById('preview-modal'),overlay=document.getElementById('preview-overlay'),content=document.getElementById('preview-content');
     modal.classList.remove('hidden');document.body.style.overflow='hidden';
     const btt0=document.getElementById('back-to-top');if(btt0)btt0.classList.add('hidden');
-    setTimeout(()=>{overlay.classList.remove('opacity-0','pointer-events-none');overlay.classList.add('opacity-100','pointer-events-auto');content.classList.remove('scale-95','opacity-0');content.classList.add('scale-100','opacity-100');},10);
+    setTimeout(()=>{overlay.classList.remove('opacity-0','pointer-events-none');overlay.classList.add('opacity-100','pointer-events-auto');content.classList.remove('translate-y-full','sm:scale-95','opacity-0');content.classList.add('translate-y-0','sm:scale-100','opacity-100');},10);
     try{
         const r=await fetch(`${BASE}/modules/public-portal/api/public_document.php?id=${id}`);
         const d=await r.json();
@@ -615,7 +617,7 @@ async function previewDocument(id){
     }catch(e){console.error(e);closePreview();}
 }
 
-function closePreview(){const o=document.getElementById('preview-overlay'),c=document.getElementById('preview-content');o.classList.add('opacity-0','pointer-events-none');o.classList.remove('opacity-100','pointer-events-auto');c.classList.add('scale-95','opacity-0');c.classList.remove('scale-100','opacity-100');setTimeout(()=>{document.getElementById('preview-modal').classList.add('hidden');document.body.style.overflow='';const ac=document.getElementById('preview-analysis');if(ac)ac.innerHTML='';const btt=document.getElementById('back-to-top');if(btt)btt.classList.remove('hidden');},300);}
+function closePreview(){const o=document.getElementById('preview-overlay'),c=document.getElementById('preview-content');o.classList.add('opacity-0','pointer-events-none');o.classList.remove('opacity-100','pointer-events-auto');c.classList.add('translate-y-full','sm:scale-95','opacity-0');c.classList.remove('translate-y-0','sm:scale-100','opacity-100');setTimeout(()=>{document.getElementById('preview-modal').classList.add('hidden');document.body.style.overflow='';const ac=document.getElementById('preview-analysis');if(ac)ac.innerHTML='';const btt=document.getElementById('back-to-top');if(btt)btt.classList.remove('hidden');},300);}
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();const sp=document.getElementById('signin-prompt-modal');if(sp&&!sp.classList.contains('hidden'))closeSignInPrompt();}});
 document.getElementById('preview-overlay')?.addEventListener('click',closePreview);
@@ -628,8 +630,9 @@ document.addEventListener('DOMContentLoaded',function(){setView(currentView);sea
 </script>
 
 <!-- Sign-In Prompt Modal -->
-<div id="signin-prompt-modal" class="hidden fixed inset-0 z-[100003] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target===this) closeSignInPrompt()">
-    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+<div id="signin-prompt-modal" class="hidden fixed inset-0 z-[100003] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeSignInPrompt()">
+    <div id="signin-prompt-content" class="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-md w-full max-h-[92vh] overflow-hidden transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 flex flex-col">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-800"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-5 text-white">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">

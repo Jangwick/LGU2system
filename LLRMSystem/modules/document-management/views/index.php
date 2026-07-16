@@ -800,7 +800,7 @@ function formatDocumentText(rawText) {
 function viewDocument(id) {
     const modal = document.getElementById('preview-modal');
     const content = document.getElementById('preview-content');
-    const modalContainer = modal.querySelector('div');
+    const modalContainer = document.getElementById('preview-modal-panel');
     
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -1208,8 +1208,16 @@ function workflowAction(id, action, confirmMessage = '') {
 async function viewActivityHistory(id) {
     const modal = document.getElementById('activity-modal');
     const content = document.getElementById('activity-content');
+    const modalContent = document.getElementById('activity-modal-content');
     
     modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+        if (modalContent) {
+            modalContent.classList.remove('translate-y-full', 'sm:scale-95', 'opacity-0');
+            modalContent.classList.add('translate-y-0', 'sm:scale-100', 'opacity-100');
+        }
+    }, 10);
     content.innerHTML = '<div class="p-8 text-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div></div>';
     
     try {
@@ -1272,7 +1280,16 @@ async function viewActivityHistory(id) {
 }
 
 function closeActivityModal() {
-    document.getElementById('activity-modal').classList.add('hidden');
+    const modal = document.getElementById('activity-modal');
+    const modalContent = document.getElementById('activity-modal-content');
+    if (modalContent) {
+        modalContent.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
+        modalContent.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
+    }
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }, 300);
 }
 
 /**
@@ -1307,7 +1324,7 @@ async function revertToVersion(docId, version) {
 
 function closePreviewModal() {
     const modal = document.getElementById('preview-modal');
-    const modalContainer = modal.querySelector('div');
+    const modalContainer = document.getElementById('preview-modal-panel');
     
     modalContainer.classList.add('translate-y-full', 'opacity-0');
     modalContainer.classList.remove('translate-y-0', 'opacity-100');
@@ -1362,7 +1379,7 @@ function editDocument(id) {
     
     const modal = document.getElementById('edit-modal');
     const form = document.getElementById('edit-form-modal');
-    const modalContainer = modal.querySelector('div');
+    const modalContainer = document.getElementById('edit-modal-panel');
     
     // Show modal and start transition
     modal.classList.remove('hidden');
@@ -1401,7 +1418,7 @@ function editDocument(id) {
 
 function closeEditModal() {
     const modal = document.getElementById('edit-modal');
-    const modalContainer = modal.querySelector('div');
+    const modalContainer = document.getElementById('edit-modal-panel');
     
     modalContainer.classList.add('translate-y-full', 'opacity-0');
     modalContainer.classList.remove('translate-y-0', 'opacity-100');
@@ -1593,7 +1610,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Upload Modal Functions
 function openUploadModal() {
     const modal = document.getElementById('upload-modal');
-    const modalContainer = modal.querySelector('div');
+    const modalContainer = document.getElementById('upload-modal-panel');
     
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -1606,7 +1623,7 @@ function openUploadModal() {
 
 function closeUploadModal() {
     const modal = document.getElementById('upload-modal');
-    const modalContainer = modal.querySelector('div');
+    const modalContainer = document.getElementById('upload-modal-panel');
     
     modalContainer.classList.add('translate-y-full', 'opacity-0');
     modalContainer.classList.remove('translate-y-0', 'opacity-100');
@@ -1632,8 +1649,10 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 <!-- Edit Document Modal -->
-<div id="edit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100004] flex items-end sm:items-center justify-center sm:p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+<div id="edit-modal" class="hidden fixed inset-0 z-[100004] overflow-y-auto">
+    <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
+        <div id="edit-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full sm:h-auto sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
             <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
@@ -1651,7 +1670,7 @@ document.addEventListener('keydown', function(e) {
         </div>
 
         <!-- Modal Body -->
-        <div class="overflow-y-auto flex-1 custom-scrollbar">
+        <div class="overflow-y-auto flex-1 min-h-0 custom-scrollbar">
             <form id="edit-form-modal" class="p-4 md:p-8 bg-white dark:bg-gray-900">
                 <input type="hidden" name="document_id">
                 
@@ -1765,12 +1784,15 @@ document.addEventListener('keydown', function(e) {
                 </div>
             </form>
         </div>
+        </div>
     </div>
 </div>
 
 <!-- Document Preview Modal -->
-<div id="preview-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100002] flex items-end sm:items-center justify-center sm:p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+<div id="preview-modal" class="hidden fixed inset-0 z-[100002] overflow-y-auto">
+    <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
+        <div id="preview-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full sm:h-auto sm:max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
             <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
@@ -1792,22 +1814,24 @@ document.addEventListener('keydown', function(e) {
         </div>
 
         <!-- Scrollable Modal Content -->
-        <div id="preview-content" class="overflow-y-auto overflow-x-hidden flex-1 bg-white dark:bg-gray-900">
+        <div id="preview-content" class="overflow-y-auto overflow-x-hidden flex-1 min-h-0 bg-white dark:bg-gray-900">
             <!-- Content injected by JS -->
+        </div>
         </div>
     </div>
 </div>
 
 <!-- Activity History Modal -->
-<div id="activity-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100003] flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col border border-gray-200 dark:border-gray-800">
+<div id="activity-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100003] flex items-end sm:items-center justify-center sm:p-4">
+    <div id="activity-modal-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <h3 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Activity History</h3>
             <button type="button" onclick="closeActivityModal()" class="text-gray-400 hover:text-gray-600 transition-colors transform-none">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
-        <div id="activity-content" class="overflow-y-auto flex-1">
+        <div id="activity-content" class="overflow-y-auto flex-1 min-h-0">
             <!-- Content injected by JS -->
         </div>
     </div>
@@ -1815,8 +1839,10 @@ document.addEventListener('keydown', function(e) {
 
 
 <!-- Upload Document Modal -->
-<div id="upload-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100004] flex items-end sm:items-center justify-center sm:p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+<div id="upload-modal" class="hidden fixed inset-0 z-[100004] overflow-y-auto">
+    <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
+        <div id="upload-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full sm:h-auto sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
             <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
@@ -1834,7 +1860,7 @@ document.addEventListener('keydown', function(e) {
         </div>
 
         <!-- Modal Body -->
-        <div class="overflow-y-auto flex-1 custom-scrollbar">
+        <div class="overflow-y-auto flex-1 min-h-0 custom-scrollbar">
             <form id="upload-form-modal" class="p-4 md:p-8 bg-white dark:bg-gray-900">
                 <!-- File Upload Section -->
                 <div class="mb-10">
@@ -1987,9 +2013,7 @@ document.addEventListener('keydown', function(e) {
                 </div>
             </form>
         </div>
-    </div>
-</div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -2200,14 +2224,15 @@ function openEditModal() {
     const modal = document.getElementById('edit-modal');
     modal.classList.remove('hidden');
     setTimeout(() => {
-        modal.querySelector('div').classList.remove('translate-y-full', 'opacity-0');
-        modal.querySelector('div').classList.add('translate-y-0', 'opacity-100');
+        const panel = document.getElementById('edit-modal-panel');
+        panel.classList.remove('translate-y-full', 'opacity-0');
+        panel.classList.add('translate-y-0', 'opacity-100');
     }, 10);
 }
 
 function closeEditModal() {
     const modal = document.getElementById('edit-modal');
-    const modalContainer = modal.querySelector('div');
+    const modalContainer = document.getElementById('edit-modal-panel');
     modalContainer.classList.add('translate-y-full', 'opacity-0');
     modalContainer.classList.remove('translate-y-0', 'opacity-100');
     setTimeout(() => {
@@ -2324,8 +2349,9 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
 </script>
 
 <!-- Original File Preview Modal -->
-<div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-center justify-center p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+<div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-end sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <!-- Header -->
         <div class="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
             <div class="flex items-center gap-3 min-w-0">
@@ -2399,14 +2425,28 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
 
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    const content = document.getElementById('original-file-preview-content');
+    setTimeout(() => {
+        if (content) {
+            content.classList.remove('translate-y-full', 'sm:scale-95', 'opacity-0');
+            content.classList.add('translate-y-0', 'sm:scale-100', 'opacity-100');
+        }
+    }, 10);
 }
 
 function closeOriginalFilePreviewModal() {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
-    modal.classList.add('hidden');
-    body.innerHTML = '';
-    document.body.style.overflow = '';
+    const content = document.getElementById('original-file-preview-content');
+    if (content) {
+        content.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
+        content.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
+    }
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        body.innerHTML = '';
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 document.addEventListener('keydown', function(e) {

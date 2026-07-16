@@ -198,8 +198,9 @@ function getIntFileIconBg($mimeType, $fileName = '') {
 </div>
 
 <!-- Simulator Modal -->
-<div id="simulatorModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-50 items-center justify-center p-4">
-    <div class="bg-white/90 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-white/20 dark:border-gray-700/50">
+<div id="simulatorModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-50 items-end sm:items-center justify-center sm:p-4">
+    <div id="simulatorModalContent" class="bg-white/90 dark:bg-gray-800/95 backdrop-blur-md rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-white/20 dark:border-gray-700/50">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
                 <i class="bi bi-cpu mr-2 text-red-600"></i> Integration Simulator
@@ -211,7 +212,7 @@ function getIntFileIconBg($mimeType, $fileName = '') {
         
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">This tool simulates an external system sending data to the LRMS via the Integration API.</p>
         
-        <form id="simulatorForm" enctype="multipart/form-data" class="space-y-4">
+        <form id="simulatorForm" enctype="multipart/form-data" class="space-y-4 overflow-y-auto flex-1 min-h-0">
             <input type="hidden" name="module_type" value="<?php echo $currentModule; ?>">
             
             <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-600 mb-4">
@@ -329,13 +330,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function openSimulatorModal() {
-    document.getElementById('simulatorModal').classList.remove('hidden');
-    document.getElementById('simulatorModal').classList.add('flex');
+    const modal=document.getElementById('simulatorModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow='hidden';
+    const c=document.getElementById('simulatorModalContent');
+    setTimeout(()=>{if(c){c.classList.remove('translate-y-full','sm:scale-95','opacity-0');c.classList.add('translate-y-0','sm:scale-100','opacity-100');}},10);
 }
 
 function closeSimulatorModal() {
-    document.getElementById('simulatorModal').classList.add('hidden');
-    document.getElementById('simulatorModal').classList.remove('flex');
+    const c=document.getElementById('simulatorModalContent');
+    if(c){c.classList.add('translate-y-full','sm:scale-95','opacity-0');c.classList.remove('translate-y-0','sm:scale-100','opacity-100');}
+    setTimeout(()=>{const modal=document.getElementById('simulatorModal');modal.classList.add('hidden');modal.classList.remove('flex');document.body.style.overflow='';},300);
 }
 
 function importToLRMS(id, btn) {

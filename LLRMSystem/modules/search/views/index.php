@@ -418,12 +418,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Document Preview Modal -->
         <div id="preview-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen sm:items-center sm:p-4">
+            <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
                 <!-- Overlay -->
                 <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
 
                 <!-- Modal Content -->
-                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 duration-300">
+                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-auto sm:max-h-[92vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300">
                     <!-- Mobile Drag Handle -->
                     <div class="md:hidden w-full flex justify-center pt-3 pb-1 bg-gradient-to-r from-red-600 to-red-700">
                         <div class="w-12 h-1.5 bg-white/30 rounded-full"></div>
@@ -446,7 +446,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 max-h-[75vh] sm:max-h-none overflow-y-auto sm:overflow-visible">
+                    <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 overflow-y-auto flex-1 min-h-0">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <!-- Left: Details -->
                             <div class="md:col-span-2 space-y-6">
@@ -1239,8 +1239,9 @@ document.addEventListener('DOMContentLoaded', function() {
         </script>
 
 <!-- Original File Preview Modal -->
-<div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-center justify-center p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+<div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-end sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
             <div class="flex items-center gap-3 min-w-0">
                 <div class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
@@ -1313,14 +1314,28 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
 
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    const content = document.getElementById('original-file-preview-content');
+    setTimeout(() => {
+        if (content) {
+            content.classList.remove('translate-y-full', 'sm:scale-95', 'opacity-0');
+            content.classList.add('translate-y-0', 'sm:scale-100', 'opacity-100');
+        }
+    }, 10);
 }
 
 function closeOriginalFilePreviewModal() {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
-    modal.classList.add('hidden');
-    body.innerHTML = '';
-    document.body.style.overflow = '';
+    const content = document.getElementById('original-file-preview-content');
+    if (content) {
+        content.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
+        content.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
+    }
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        body.innerHTML = '';
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 document.addEventListener('keydown', function(e) {

@@ -329,8 +329,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Export Modal -->
-<div id="exportModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full border border-gray-200 dark:border-gray-800 transform transition-all duration-300">
+<div id="exportModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div id="exportModalContent" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-md w-full border border-gray-200 dark:border-gray-800 max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <!-- Modal Header -->
         <div class="px-6 py-5 border-b border-red-200 dark:border-gray-800 flex justify-between items-center rounded-t-2xl bg-red-50 dark:bg-gray-800/50">
             <div class="flex items-center gap-3">
@@ -344,7 +345,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </button>
         </div>
         
-        <form method="GET" action="<?php echo REPORTS_URL; ?>/api/export.php" class="p-6">
+        <form method="GET" action="<?php echo REPORTS_URL; ?>/api/export.php" class="p-6 overflow-y-auto flex-1 min-h-0">
             <div class="space-y-5">
                 <div class="relative z-30">
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Report Type</label>
@@ -817,13 +818,15 @@ function showExportModal() {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    const c=document.getElementById('exportModalContent');
+    setTimeout(()=>{if(c){c.classList.remove('translate-y-full','sm:scale-95','opacity-0');c.classList.add('translate-y-0','sm:scale-100','opacity-100');}},10);
 }
 
 function closeExportModal() {
     const modal = document.getElementById('exportModal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-    document.body.style.overflow = 'auto';
+    const c=document.getElementById('exportModalContent');
+    if(c){c.classList.add('translate-y-full','sm:scale-95','opacity-0');c.classList.remove('translate-y-0','sm:scale-100','opacity-100');}
+    setTimeout(()=>{modal.classList.add('hidden');modal.classList.remove('flex');document.body.style.overflow='auto';},300);
 }
 
 // Close modal when clicking outside

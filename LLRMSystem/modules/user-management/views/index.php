@@ -340,8 +340,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- Create/Edit User Modal -->
-<div id="userModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-    <div class="relative mx-auto p-6 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md my-8">
+<div id="userModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div id="userModalContent" class="relative mx-auto p-6 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-t-3xl sm:rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
@@ -354,7 +355,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </button>
         </div>
         
-        <form id="userForm" onsubmit="saveUser(event)">
+        <form id="userForm" onsubmit="saveUser(event)" class="overflow-y-auto flex-1 min-h-0">
             <input type="hidden" id="userId" name="id">
             
             <div class="space-y-5">
@@ -454,8 +455,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 </div>
 
 <!-- View User Modal -->
-<div id="viewUserModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-    <div class="relative mx-auto p-6 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md my-8">
+<div id="viewUserModal" class="hidden fixed inset-0 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div id="viewUserModalContent" class="relative mx-auto p-6 border border-gray-200 dark:border-gray-700/50 w-full max-w-2xl shadow-2xl rounded-t-3xl sm:rounded-2xl bg-white dark:bg-gray-800/95 backdrop-blur-md max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
@@ -468,7 +470,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </button>
         </div>
         
-        <div id="viewUserContent" class="space-y-5">
+        <div id="viewUserContent" class="space-y-5 overflow-y-auto flex-1 min-h-0">
             <!-- User details will be loaded here -->
         </div>
         
@@ -562,10 +564,15 @@ function openCreateModal() {
     document.getElementById('userPassword').required = true;
     document.getElementById('passwordRequired').style.display = 'inline';
     document.getElementById('userModal').classList.remove('hidden');
+    document.body.style.overflow='hidden';
+    const uc=document.getElementById('userModalContent');
+    setTimeout(()=>{if(uc){uc.classList.remove('translate-y-full','sm:scale-95','opacity-0');uc.classList.add('translate-y-0','sm:scale-100','opacity-100');}},10);
 }
 
 function closeModal() {
-    document.getElementById('userModal').classList.add('hidden');
+    const uc=document.getElementById('userModalContent');
+    if(uc){uc.classList.add('translate-y-full','sm:scale-95','opacity-0');uc.classList.remove('translate-y-0','sm:scale-100','opacity-100');}
+    setTimeout(()=>{document.getElementById('userModal').classList.add('hidden');document.body.style.overflow='';},300);
 }
 
 function editUser(id) {
@@ -677,6 +684,9 @@ function viewUser(id) {
                     </div>
                 `;
                 document.getElementById('viewUserModal').classList.remove('hidden');
+                document.body.style.overflow='hidden';
+                const vc=document.getElementById('viewUserModalContent');
+                setTimeout(()=>{if(vc){vc.classList.remove('translate-y-full','sm:scale-95','opacity-0');vc.classList.add('translate-y-0','sm:scale-100','opacity-100');}},10);
             } else {
                 alert('Error: ' + (data.error || 'Failed to load user'));
             }
@@ -687,7 +697,9 @@ function viewUser(id) {
 }
 
 function closeViewModal() {
-    document.getElementById('viewUserModal').classList.add('hidden');
+    const vc=document.getElementById('viewUserModalContent');
+    if(vc){vc.classList.add('translate-y-full','sm:scale-95','opacity-0');vc.classList.remove('translate-y-0','sm:scale-100','opacity-100');}
+    setTimeout(()=>{document.getElementById('viewUserModal').classList.add('hidden');document.body.style.overflow='';},300);
 }
 
 function saveUser(event) {
