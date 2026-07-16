@@ -32,7 +32,7 @@
     </footer>
     
     <!-- Back to Top Button -->
-    <button id="back-to-top" class="no-ripple fixed bottom-24 right-6 md:bottom-24 md:right-6 z-[999999] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
+    <button id="back-to-top" class="no-ripple fixed bottom-24 right-6 md:bottom-24 md:right-6 z-[40] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
             title="Back to top"
             aria-label="Scroll to top">
         <i class="bi bi-arrow-up text-xl md:text-base leading-none pointer-events-none"></i>
@@ -45,6 +45,12 @@
         if (!btn) return;
         
         function checkScroll() {
+            // Don't show back-to-top when any modal is open (body overflow hidden)
+            if (document.body.style.overflow === 'hidden') {
+                btn.classList.add('hidden');
+                btn.classList.remove('flex');
+                return;
+            }
             var scrolled = false;
             
             // Check window scroll
@@ -119,6 +125,48 @@
             var main = document.querySelector('main');
             if (main) main.addEventListener('scroll', checkScroll, { passive: true });
             checkScroll();
+        });
+
+        // MutationObserver: hide back-to-top immediately when any modal opens
+        // Modals set body.style.overflow='hidden' on open, so watch for that
+        var bodyObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mut) {
+                if (mut.attributeName === 'style') {
+                    if (document.body.style.overflow === 'hidden') {
+                        btn.classList.add('hidden');
+                        btn.classList.remove('flex');
+                    } else {
+                        checkScroll();
+                    }
+                }
+            });
+        });
+        bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+
+        // Also observe modal elements being shown (class changes on elements with 'modal' in id)
+        var modalObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mut) {
+                if (mut.attributeName === 'class') {
+                    var el = mut.target;
+                    var isHidden = el.classList.contains('hidden');
+                    if (!isHidden) {
+                        btn.classList.add('hidden');
+                        btn.classList.remove('flex');
+                    } else {
+                        checkScroll();
+                    }
+                }
+            });
+        });
+        // Observe all elements with 'modal' in their id
+        document.querySelectorAll('[id*="modal"]').forEach(function(el) {
+            modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+        });
+        // Also catch modals added after initial render
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[id*="modal"]').forEach(function(el) {
+                modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+            });
         });
     })();
     </script>

@@ -24,6 +24,7 @@ try {
     $stmt = $db->prepare("
         SELECT d.id, d.reference_number, d.title, d.document_type, d.document_date,
                d.status, d.file_name, d.file_size, d.file_type, d.description, d.tags,
+               d.ocr_status, d.extracted_text, d.key_points, d.ocr_processed_at,
                d.created_at, d.updated_at, u.full_name
         FROM legislative_documents d
         LEFT JOIN users u ON d.uploaded_by = u.id

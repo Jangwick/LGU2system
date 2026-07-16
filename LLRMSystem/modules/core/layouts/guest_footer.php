@@ -52,7 +52,7 @@
 </footer>
 
 <!-- Back to Top Button -->
-<button id="back-to-top" class="no-ripple fixed z-[999999] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95"
+<button id="back-to-top" class="no-ripple fixed z-[40] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95"
         style="display: none; position: fixed; bottom: 2rem; right: 1.5rem; left: auto; width: 3.5rem; height: 3.5rem;"
         title="Back to top"
         aria-label="Scroll to top">
@@ -66,6 +66,11 @@
     if (!btn) return;
 
     function checkScroll() {
+        // Don't show back-to-top when any modal is open (body overflow hidden)
+        if (document.body.style.overflow === 'hidden') {
+            btn.style.display = 'none';
+            return;
+        }
         var scrolled = false;
 
         // Check window scroll
@@ -123,5 +128,41 @@
 
     // Initial check
     checkScroll();
+
+    // MutationObserver: hide back-to-top immediately when any modal opens
+    var bodyObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mut) {
+            if (mut.attributeName === 'style') {
+                if (document.body.style.overflow === 'hidden') {
+                    btn.style.display = 'none';
+                } else {
+                    checkScroll();
+                }
+            }
+        });
+    });
+    bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+
+    var modalObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mut) {
+            if (mut.attributeName === 'class') {
+                var el = mut.target;
+                var isHidden = el.classList.contains('hidden');
+                if (!isHidden) {
+                    btn.style.display = 'none';
+                } else {
+                    checkScroll();
+                }
+            }
+        });
+    });
+    document.querySelectorAll('[id*="modal"]').forEach(function(el) {
+        modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[id*="modal"]').forEach(function(el) {
+            modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+        });
+    });
 })();
 </script>

@@ -129,6 +129,13 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
         @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         .animate-fade-in-up{animation:fadeInUp .5s ease-out forwards}
         .animation-delay-100{animation-delay:.1s;opacity:0}.animation-delay-200{animation-delay:.2s;opacity:0}.animation-delay-300{animation-delay:.3s;opacity:0}.animation-delay-400{animation-delay:.4s;opacity:0}.animation-delay-500{animation-delay:.5s;opacity:0}.animation-delay-600{animation-delay:.6s;opacity:0}.animation-delay-700{animation-delay:.7s;opacity:0}.animation-delay-800{animation-delay:.8s;opacity:0}
+        .doc-preview-page{font-family:'Georgia','Times New Roman',serif;line-height:1.8;color:#1a1a1a;max-width:100%;margin:0 auto}
+        .doc-preview-page .doc-content h2{font-family:'Georgia','Times New Roman',serif;font-size:15px;font-weight:700;letter-spacing:.05em}
+        .doc-preview-page .doc-content h3{font-family:'Georgia','Times New Roman',serif;font-size:13px;font-weight:700}
+        .doc-preview-page .doc-content p{text-align:justify;hyphens:auto}
+        .doc-preview-page .doc-content ol,.doc-preview-page .doc-content ul{margin-left:0;padding-left:1.5rem}
+        .doc-preview-page .doc-content li{margin-bottom:.4rem}
+        .doc-preview-page .doc-content ol li::marker{font-weight:600}
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen custom-scrollbar">
@@ -330,7 +337,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
     </footer>
 
     <!-- Back to Top Button -->
-    <button id="back-to-top" class="no-ripple fixed bottom-24 right-6 md:bottom-24 md:right-6 z-[9999] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
+    <button id="back-to-top" class="no-ripple fixed bottom-24 right-6 md:bottom-24 md:right-6 z-[40] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
             title="Back to top"
             aria-label="Scroll to top">
         <i class="bi bi-arrow-up text-xl md:text-base leading-none pointer-events-none"></i>
@@ -372,6 +379,8 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                     </div>
                 </div>
             </div>
+            <!-- Document Analysis Section -->
+            <div id="preview-analysis" class="bg-white dark:bg-gray-800 px-6 pb-8 md:px-8"></div>
         </div>
     </div>
 </div>
@@ -411,18 +420,244 @@ const hideSuggestions=()=>{suggestionsBox.classList.add('opacity-0','translate-y
 
 window.selectSuggestion=(title)=>{searchInput.value=title;hideSuggestions();updateResults();};
 
-async function previewDocument(id){const modal=document.getElementById('preview-modal'),overlay=document.getElementById('preview-overlay'),content=document.getElementById('preview-content');modal.classList.remove('hidden');document.body.style.overflow='hidden';setTimeout(()=>{overlay.classList.remove('opacity-0','pointer-events-none');overlay.classList.add('opacity-100','pointer-events-auto');content.classList.remove('scale-95','opacity-0');content.classList.add('scale-100','opacity-100');},10);try{const r=await fetch(`${BASE}/modules/public-portal/api/public_document.php?id=${id}`);const d=await r.json();if(d.success){const doc=d.document;document.getElementById('modal-subtitle').textContent=`REF: ${doc.reference_number||'N/A'}`;document.getElementById('preview-title').textContent=doc.title;document.getElementById('preview-desc').textContent=doc.description||'No description available.';document.getElementById('preview-date').textContent=new Date(doc.created_at).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});document.getElementById('preview-filename').textContent=doc.file_name;document.getElementById('preview-filesize').textContent=formatFileSize(doc.file_size||0);document.getElementById('preview-uploader').textContent=doc.full_name||'System Admin';const sc={'approved':'bg-emerald-100 text-emerald-700 border-emerald-200','archived':'bg-gray-100 text-gray-700 border-gray-200'};document.getElementById('preview-status').innerHTML=`<span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest ${sc[doc.status.toLowerCase()]||'bg-gray-100 text-gray-700 border-gray-200'}">${_esc(doc.status)}</span>`;const ic={'ordinance':'bi-journal-text','resolution':'bi-file-earmark-check','session':'bi-people','agenda':'bi-list-ul','committee':'bi-shield-check','research':'bi-search'};document.getElementById('modal-icon').className='bi '+(ic[(doc.document_type||'').toLowerCase()]||'bi-file-earmark-text');const tc=document.getElementById('preview-tags');tc.innerHTML='';if(doc.tags){doc.tags.split(',').forEach(t=>{t=t.trim();if(t){const s=document.createElement('span');s.className='px-2 py-1 rounded-lg bg-white dark:bg-gray-800 text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 dark:border-gray-700';s.textContent='#'+t;tc.appendChild(s);}});}}else{closePreview();}}catch(e){console.error(e);closePreview();}}
+function escapeHtml(str){const div=document.createElement('div');div.textContent=str;return div.innerHTML;}
 
-function closePreview(){const o=document.getElementById('preview-overlay'),c=document.getElementById('preview-content');o.classList.add('opacity-0','pointer-events-none');o.classList.remove('opacity-100','pointer-events-auto');c.classList.add('scale-95','opacity-0');c.classList.remove('scale-100','opacity-100');setTimeout(()=>{document.getElementById('preview-modal').classList.add('hidden');document.body.style.overflow='';},300);}
+function toggleDocPreview(btn){
+    const container=document.getElementById('doc-preview-container');
+    if(!container)return;
+    const icon=btn.querySelector('i'),label=btn.querySelector('span');
+    if(container.classList.contains('max-h-72')){
+        container.classList.remove('max-h-72');container.classList.add('max-h-[2000px]');
+        if(icon){icon.classList.remove('bi-chevron-down');icon.classList.add('bi-chevron-up');}
+        if(label)label.textContent='Collapse';
+    }else{
+        container.classList.remove('max-h-[2000px]');container.classList.add('max-h-72');
+        if(icon){icon.classList.remove('bi-chevron-up');icon.classList.add('bi-chevron-down');}
+        if(label)label.textContent='Expand';
+    }
+}
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closePreview();});
+function formatDocumentText(rawText){
+    if(!rawText)return '<p class="text-gray-400 italic">No content available.</p>';
+    let text=rawText.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+    text=text.replace(/^\[OCR\]\s*\n?/i,'');
+    text=text.replace(/\[Page OCR failed:.*?\]/g,'');
+    text=text.replace(/--- Page Break ---/g,'\n\n');
+    const blocks=text.split(/\n{2,}/);
+    let html='',inList=false,listType='',listItems=[];
+    const closeList=()=>{if(inList){const tag=listType==='ol'?'ol':'ul';const cls=listType==='ol'?'list-decimal list-inside space-y-1.5 my-3 pl-2':'list-disc list-inside space-y-1.5 my-3 pl-2';html+=`<${tag} class="${cls}">${listItems.join('')}</${tag}>`;inList=false;listType='';listItems=[];}};
+    for(let block of blocks){
+        block=block.trim();if(!block)continue;
+        const numberedMatch=block.match(/^(\d+)\.\s*(.+)/);
+        const bulletMatch=block.match(/^[•·\-\*]\s*(.+)/);
+        const romanNumeralMatch=block.match(/^([IVXLCDM]+)\.\s*(.+)/i);
+        const isShortAllCaps=block.length<80&&block===block.toUpperCase()&&/[A-Z]/.test(block)&&!block.endsWith('.')&&!numberedMatch;
+        const letteredMatch=block.match(/^([A-Z])\.\s*(.+)/);
+        const isHeading=isShortAllCaps||(block.length<100&&block===block.toUpperCase()&&/[A-Z]/.test(block))||/^(DETAILED\s|AN\s|ORDINANCE|RESOLUTION|REPUBLIC\s|CITY\s|MUNICIPAL|PROVINCIAL|BARANGAY|OFFICE\s|DEPARTMENT|COLLEGE|UNIVERSITY|SCHOOL|SECTION|ARTICLE|CHAPTER)/i.test(block)&&block.length<120;
+        if(numberedMatch){
+            if(inList&&listType!=='ol')closeList();
+            if(!inList){inList=true;listType='ol';}
+            listItems.push(`<li class="text-gray-800 dark:text-gray-200 leading-relaxed">${escapeHtml(numberedMatch[2])}</li>`);
+        }else if(bulletMatch){
+            if(inList&&listType!=='ul')closeList();
+            if(!inList){inList=true;listType='ul';}
+            listItems.push(`<li class="text-gray-800 dark:text-gray-200 leading-relaxed">${escapeHtml(bulletMatch[1])}</li>`);
+        }else if(letteredMatch&&block.length<200){
+            if(inList&&listType!=='ol')closeList();
+            if(!inList){inList=true;listType='ol';}
+            listItems.push(`<li class="text-gray-800 dark:text-gray-200 leading-relaxed"><strong>${letteredMatch[1]}.</strong> ${escapeHtml(letteredMatch[2])}</li>`);
+        }else{
+            closeList();
+            if(isHeading){
+                html+=`<h2 class="text-center font-bold text-base text-gray-900 dark:text-gray-100 my-3 uppercase tracking-wide">${escapeHtml(block)}</h2>`;
+            }else if(romanNumeralMatch&&block.length<200){
+                html+=`<h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 mt-4 mb-2">${escapeHtml(block)}</h3>`;
+            }else if(block.length<100&&/^(Section|Article|Chapter|Title)\s/i.test(block)){
+                html+=`<h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 mt-4 mb-2">${escapeHtml(block)}</h3>`;
+            }else{
+                const lines=block.split('\n');
+                if(lines.length===1){
+                    html+=`<p class="text-gray-800 dark:text-gray-200 leading-relaxed mb-3 text-justify">${escapeHtml(block)}</p>`;
+                }else{
+                    const isIndented=lines.every(l=>/^\s+/.test(l)||!l.trim());
+                    if(isIndented&&lines.length>2){
+                        html+=`<div class="pl-4 border-l-2 border-gray-200 dark:border-gray-700 my-3 space-y-1">`;
+                        for(const line of lines){if(line.trim())html+=`<p class="text-gray-700 dark:text-gray-300 leading-relaxed text-[12px]">${escapeHtml(line.trim())}</p>`;}
+                        html+=`</div>`;
+                    }else{
+                        html+=`<p class="text-gray-800 dark:text-gray-200 leading-relaxed mb-3 text-justify">${lines.map(l=>escapeHtml(l.trim())).join('<br>')}</p>`;
+                    }
+                }
+            }
+        }
+    }
+    closeList();
+    return html;
+}
+
+function showSignInPrompt(){
+    const modal=document.getElementById('signin-prompt-modal');
+    if(modal){
+        modal.classList.remove('hidden');
+        document.body.style.overflow='hidden';
+        const btt=document.getElementById('back-to-top');if(btt)btt.classList.add('hidden');
+    }
+}
+
+function closeSignInPrompt(){
+    const modal=document.getElementById('signin-prompt-modal');
+    if(modal){
+        modal.classList.add('hidden');
+        document.body.style.overflow='';
+        const btt=document.getElementById('back-to-top');if(btt)btt.classList.remove('hidden');
+    }
+}
+
+async function previewDocument(id){
+    const modal=document.getElementById('preview-modal'),overlay=document.getElementById('preview-overlay'),content=document.getElementById('preview-content');
+    modal.classList.remove('hidden');document.body.style.overflow='hidden';
+    const btt0=document.getElementById('back-to-top');if(btt0)btt0.classList.add('hidden');
+    setTimeout(()=>{overlay.classList.remove('opacity-0','pointer-events-none');overlay.classList.add('opacity-100','pointer-events-auto');content.classList.remove('scale-95','opacity-0');content.classList.add('scale-100','opacity-100');},10);
+    try{
+        const r=await fetch(`${BASE}/modules/public-portal/api/public_document.php?id=${id}`);
+        const d=await r.json();
+        if(d.success){
+            const doc=d.document;
+            document.getElementById('modal-subtitle').textContent=`REF: ${doc.reference_number||'N/A'}`;
+            document.getElementById('preview-title').textContent=doc.title;
+            document.getElementById('preview-desc').textContent=doc.description||'No description available.';
+            document.getElementById('preview-date').textContent=new Date(doc.created_at).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+            document.getElementById('preview-filename').textContent=doc.file_name;
+            document.getElementById('preview-filesize').textContent=formatFileSize(doc.file_size||0);
+            document.getElementById('preview-uploader').textContent=doc.full_name||'System Admin';
+            const sc={'approved':'bg-emerald-100 text-emerald-700 border-emerald-200','archived':'bg-gray-100 text-gray-700 border-gray-200'};
+            document.getElementById('preview-status').innerHTML=`<span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest ${sc[doc.status.toLowerCase()]||'bg-gray-100 text-gray-700 border-gray-200'}">${_esc(doc.status)}</span>`;
+            const ic={'ordinance':'bi-journal-text','resolution':'bi-file-earmark-check','session':'bi-people','agenda':'bi-list-ul','committee':'bi-shield-check','research':'bi-search'};
+            document.getElementById('modal-icon').className='bi '+(ic[(doc.document_type||'').toLowerCase()]||'bi-file-earmark-text');
+            const tc=document.getElementById('preview-tags');
+            tc.innerHTML='';
+            if(doc.tags){doc.tags.split(',').forEach(t=>{t=t.trim();if(t){const s=document.createElement('span');s.className='px-2 py-1 rounded-lg bg-white dark:bg-gray-800 text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 dark:border-gray-700';s.textContent='#'+t;tc.appendChild(s);}});}
+
+            // Document Analysis Section
+            const analysisContainer=document.getElementById('preview-analysis');
+            if(analysisContainer){
+                const ocrStatus=doc.ocr_status||'pending';
+                const ocrInfo={
+                    'completed':{badge:'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50',icon:'patch-check-fill',label:'Digitally Extracted'},
+                    'pending':{badge:'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 border-amber-200 dark:border-amber-800/50',icon:'hourglass-split',label:'Extraction Scheduled'},
+                    'processing':{badge:'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-200 dark:border-blue-800/50',icon:'arrow-repeat',label:'Extracting...'},
+                    'failed':{badge:'bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 border-rose-200 dark:border-rose-800/50',icon:'exclamation-triangle-fill',label:'Extraction Unavailable'},
+                    'skipped':{badge:'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700',icon:'dash-circle-fill',label:'Extraction Skipped'}
+                };
+                const info=ocrInfo[ocrStatus]||ocrInfo['pending'];
+                const keyPoints=doc.key_points?doc.key_points.split('\n').filter(p=>p.trim()):[];
+                const extractedText=doc.extracted_text||'';
+                const processedDate=doc.ocr_processed_at?new Date(doc.ocr_processed_at).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):null;
+                const wordCount=extractedText?extractedText.trim().split(/\s+/).length:0;
+
+                analysisContainer.innerHTML=`
+                    <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                        <div class="px-5 md:px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
+                            <div class="flex items-center">
+                                <span class="w-1 h-5 bg-indigo-600 rounded-full mr-3"></span>
+                                <h3 class="text-sm font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest">Document Analysis</h3>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${info.badge}">
+                                    <i class="bi bi-${info.icon}"></i>${info.label}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-5 md:p-6 space-y-6">
+                            ${processedDate?`
+                                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-gray-400 dark:text-gray-500">
+                                    <span class="flex items-center"><i class="bi bi-calendar-check mr-1.5"></i>Extracted on ${processedDate}</span>
+                                    ${extractedText?`<span class="flex items-center"><i class="bi bi-file-earmark-text mr-1.5"></i>${extractedText.length.toLocaleString()} characters &middot; ${wordCount.toLocaleString()} words</span>`:''}
+                                </div>
+                            `:''}
+                            ${keyPoints.length>0?`
+                                <div>
+                                    <div class="flex items-center mb-3">
+                                        <i class="bi bi-card-text text-indigo-600 dark:text-indigo-400 mr-2"></i>
+                                        <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Summary of Key Points</h4>
+                                    </div>
+                                    <ol class="space-y-2.5 border-l-2 border-indigo-100 dark:border-indigo-900/50 pl-5">
+                                        ${keyPoints.map((p,i)=>`
+                                            <li class="relative">
+                                                <span class="absolute -left-[27px] top-0 w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">${i+1}</span>
+                                                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed pt-0.5">${escapeHtml(p.replace(/^[•·\-\*]\s*/,''))}</p>
+                                            </li>
+                                        `).join('')}
+                                    </ol>
+                                </div>
+                            `:''}
+                            ${extractedText?`
+                                <div class="flex items-center justify-between pt-2">
+                                    <div class="flex items-center">
+                                        <i class="bi bi-file-earmark-richtext text-slate-600 dark:text-slate-400 mr-2"></i>
+                                        <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Original File</h4>
+                                    </div>
+                                    <button type="button" onclick="showSignInPrompt()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95">
+                                        <i class="bi bi-eye"></i><span>Preview File</span>
+                                    </button>
+                                </div>
+                            `:!keyPoints.length?`
+                                <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                                    <i class="bi bi-file-earmark-x text-3xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
+                                    <p class="text-sm text-gray-400 dark:text-gray-500 font-medium">${ocrStatus==='pending'?'Document content extraction is scheduled and will be available once processing is complete.':ocrStatus==='failed'?'Content extraction was unsuccessful. The file may be corrupted or in an unsupported format.':'No readable text content was found in this document.'}</p>
+                                </div>
+                            `:''}
+                        </div>
+                    </section>
+                `;
+            }
+        }else{closePreview();}
+    }catch(e){console.error(e);closePreview();}
+}
+
+function closePreview(){const o=document.getElementById('preview-overlay'),c=document.getElementById('preview-content');o.classList.add('opacity-0','pointer-events-none');o.classList.remove('opacity-100','pointer-events-auto');c.classList.add('scale-95','opacity-0');c.classList.remove('scale-100','opacity-100');setTimeout(()=>{document.getElementById('preview-modal').classList.add('hidden');document.body.style.overflow='';const ac=document.getElementById('preview-analysis');if(ac)ac.innerHTML='';const btt=document.getElementById('back-to-top');if(btt)btt.classList.remove('hidden');},300);}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();const sp=document.getElementById('signin-prompt-modal');if(sp&&!sp.classList.contains('hidden'))closeSignInPrompt();}});
 document.getElementById('preview-overlay')?.addEventListener('click',closePreview);
 
 document.addEventListener('DOMContentLoaded',function(){setView(currentView);searchInput?.addEventListener('input',e=>{clearTimeout(queryTimer);queryTimer=setTimeout(()=>showSuggestions(e.target.value),300);});document.addEventListener('click',e=>{if(!suggestionsBox?.contains(e.target)&&e.target!==searchInput)hideSuggestions();});if(filterForm){filterForm.querySelectorAll('input[type="radio"],input[type="date"],select').forEach(el=>{el.addEventListener('change',()=>updateResults());});filterForm.addEventListener('submit',e=>{e.preventDefault();updateResults();});}if(mainForm){mainForm.addEventListener('submit',e=>{e.preventDefault();updateResults();});}
 
 // Back to Top Button
-(function(){const btn=document.getElementById('back-to-top');if(!btn)return;function checkScroll(){let scrolled=false;if(window.pageYOffset>200||document.documentElement.scrollTop>200)scrolled=true;const main=document.querySelector('main');if(main&&main.scrollTop>200)scrolled=true;document.querySelectorAll('.overflow-y-auto').forEach(el=>{if(el.scrollTop>200)scrolled=true;});if(scrolled){btn.classList.remove('hidden');btn.classList.add('flex');}else{btn.classList.add('hidden');btn.classList.remove('flex');}}function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});const main=document.querySelector('main');if(main)main.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.scrollTo({top:0,behavior:'smooth'}));}btn.onclick=scrollToTop;window.addEventListener('scroll',checkScroll,{passive:true});const main=document.querySelector('main');if(main)main.addEventListener('scroll',checkScroll,{passive:true});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.addEventListener('scroll',checkScroll,{passive:true}));checkScroll();})();
+(function(){const btn=document.getElementById('back-to-top');if(!btn)return;function checkScroll(){if(document.body.style.overflow==='hidden'){btn.classList.add('hidden');btn.classList.remove('flex');return;}let scrolled=false;if(window.pageYOffset>200||document.documentElement.scrollTop>200)scrolled=true;const main=document.querySelector('main');if(main&&main.scrollTop>200)scrolled=true;document.querySelectorAll('.overflow-y-auto').forEach(el=>{if(el.scrollTop>200)scrolled=true;});if(scrolled){btn.classList.remove('hidden');btn.classList.add('flex');}else{btn.classList.add('hidden');btn.classList.remove('flex');}}function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});const main=document.querySelector('main');if(main)main.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.scrollTo({top:0,behavior:'smooth'}));}btn.onclick=scrollToTop;window.addEventListener('scroll',checkScroll,{passive:true});const main=document.querySelector('main');if(main)main.addEventListener('scroll',checkScroll,{passive:true});document.querySelectorAll('.overflow-y-auto').forEach(el=>el.addEventListener('scroll',checkScroll,{passive:true}));checkScroll();var bodyObs=new MutationObserver(function(muts){muts.forEach(function(m){if(m.attributeName==='style'){if(document.body.style.overflow==='hidden'){btn.classList.add('hidden');btn.classList.remove('flex');}else{checkScroll();}}});});bodyObs.observe(document.body,{attributes:true,attributeFilter:['style']});var modalObs=new MutationObserver(function(muts){muts.forEach(function(m){if(m.attributeName==='class'){var el=m.target;if(!el.classList.contains('hidden')){btn.classList.add('hidden');btn.classList.remove('flex');}else{checkScroll();}}});});document.querySelectorAll('[id*="modal"]').forEach(function(el){modalObs.observe(el,{attributes:true,attributeFilter:['class']});});document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[id*="modal"]').forEach(function(el){modalObs.observe(el,{attributes:true,attributeFilter:['class']});});});})();
 });
 </script>
+
+<!-- Sign-In Prompt Modal -->
+<div id="signin-prompt-modal" class="hidden fixed inset-0 z-[100003] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target===this) closeSignInPrompt()">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+        <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-5 text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                    <i class="bi bi-lock-fill text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-black">Account Required</h3>
+                    <p class="text-red-100 text-[10px] font-bold uppercase tracking-widest">Sign in to preview files</p>
+                </div>
+            </div>
+        </div>
+        <div class="p-6 md:p-8 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center mx-auto mb-5">
+                <i class="bi bi-file-earmark-play text-3xl text-emerald-600 dark:text-emerald-400"></i>
+            </div>
+            <h4 class="text-base font-black text-gray-800 dark:text-white mb-2">Preview requires an account</h4>
+            <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">To preview the original document file, you need to sign in with a registered account. A <strong class="text-gray-700 dark:text-gray-300">viewer</strong> account is sufficient for full read access.</p>
+            <div class="flex flex-col gap-3">
+                <a href="<?= LOGIN_URL ?>" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-lg shadow-red-600/20 transition-all flex items-center justify-center gap-2 active:scale-95">
+                    <i class="bi bi-box-arrow-in-right text-base"></i> Sign In
+                </a>
+                <button type="button" onclick="closeSignInPrompt()" class="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 font-bold uppercase tracking-widest text-[10px] rounded-2xl transition-all">
+                    Maybe Later
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
