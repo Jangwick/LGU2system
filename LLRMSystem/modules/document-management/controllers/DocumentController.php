@@ -238,12 +238,12 @@ class DocumentController {
                     header('Cache-Control: no-cache, must-revalidate');
                     header('X-Content-Type-Options: nosniff');
 
-                    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><style>
+                    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>
                         html, body { margin: 0; padding: 0; background: #f3f4f6; overflow-wrap: break-word; word-wrap: break-word; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
-                        .docx-preview { max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; overflow-x: hidden !important; padding: 1em !important; margin: 0 !important; font-size: 11pt !important; }
-                        .docx-preview * { box-sizing: border-box !important; max-width: 100% !important; }
+                        .docx-preview { max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; overflow-x: hidden !important; padding: 1em !important; margin: 0 !important; font-size: 12pt !important; }
+                        .docx-preview * { box-sizing: border-box !important; max-width: 100% !important; word-wrap: break-word !important; overflow-wrap: break-word !important; }
                         .docx-preview img { max-width: 100% !important; height: auto !important; display: block; }
-                        .docx-preview [style*="margin-left"], .docx-preview [style*="margin-left"] { margin-left: 0 !important; }
+                        .docx-preview [style*="margin-left"] { margin-left: 0 !important; }
                         .docx-preview [style*="font-size"] { font-size: inherit !important; }
                         .docx-preview h1, .docx-preview h2, .docx-preview h3 { font-size: 1.3em !important; }
                         .docx-preview p, .docx-preview div, .docx-preview span { line-height: 1.6 !important; }

@@ -420,28 +420,28 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <div id="preview-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
                 <!-- Overlay -->
-                <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
+                <div id="preview-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
 
                 <!-- Modal Content -->
-                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-[85vh] sm:max-h-[85vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300" style="max-height: 100dvh;">
+                <div id="preview-content" class="relative bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-[85vh] sm:max-h-[85vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300 border border-gray-200 dark:border-gray-800" style="max-height: 100dvh;">
                     <!-- Mobile Drag Handle -->
-                    <div class="md:hidden w-full flex justify-center pt-2.5 pb-1 bg-gradient-to-r from-red-600 to-red-700">
-                        <div class="w-10 h-1.5 bg-white/30 rounded-full"></div>
+                    <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+                        <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
                     </div>
 
                     <!-- Modal Header -->
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-4 py-4 md:px-8 md:py-6 flex items-center justify-between text-white border-b border-white/10">
-                        <div class="flex items-center gap-3 md:gap-4 min-w-0">
-                            <div id="modal-icon-bg" class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl md:text-2xl flex-shrink-0">
-                                <i id="modal-icon" class="bi bi-file-earmark-text"></i>
+                    <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-xl">
+                                <i id="modal-icon" class="bi bi-file-earmark-text text-red-600 text-xl"></i>
                             </div>
                             <div class="min-w-0">
-                                <h3 class="text-lg md:text-xl font-black leading-none mb-1" id="modal-title">Document Preview</h3>
-                                <p id="modal-subtitle" class="text-red-100 text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">Reference ID: ---</p>
+                                <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest" id="modal-title">Document Preview</h3>
+                                <p id="modal-subtitle" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider truncate">Reference ID: ---</p>
                             </div>
                         </div>
-                        <button type="button" onclick="closePreview()" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all flex-shrink-0">
-                            <i class="bi bi-x-lg text-base md:text-lg text-white"></i>
+                        <button type="button" onclick="closePreview()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
+                            <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
 
@@ -1261,16 +1261,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-stretch sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
-        <div class="sm:hidden w-full flex justify-center pt-2.5 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-10 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
-        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
             <div class="flex items-center gap-3 min-w-0">
-                <div class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
-                    <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400"></i>
+                <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex-shrink-0">
+                    <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
                 <div class="min-w-0">
-                    <h3 id="original-file-preview-title" class="text-sm font-bold text-gray-800 dark:text-white truncate">Document Preview</h3>
-                    <p id="original-file-preview-type" class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wider"></p>
+                    <h3 id="original-file-preview-title" class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
+                    <p id="original-file-preview-type" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
@@ -1316,7 +1316,7 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
     const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', '')) || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
 
     if (isPdf || isDocx) {
-        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0 block" style="height: 100%; min-height: 400px;"></iframe>`;
+        body.innerHTML = `<iframe src="${previewUrl}" title="Document Preview" frameborder="0" scrolling="auto" allowfullscreen class="w-full h-full border-0 block" style="width: 100%; height: 100%; min-height: 400px;"></iframe>`;
     } else if (isImage) {
         body.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
     } else {
