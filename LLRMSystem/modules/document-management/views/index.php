@@ -2351,7 +2351,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-end sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-auto sm:max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
         <div class="sm:hidden w-full flex justify-center pt-2.5 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-10 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <!-- Header -->
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
@@ -2406,7 +2406,7 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
     const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', ''));
 
     if (isPdf || isDocx) {
-        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0 block" style="height: 100%;"></iframe>`;
+        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0 block" style="height: 100%; min-height: 400px;"></iframe>`;
     } else if (isImage) {
         body.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
     } else {

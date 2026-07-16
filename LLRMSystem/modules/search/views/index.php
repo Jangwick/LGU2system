@@ -510,9 +510,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <i class="bi bi-download text-base"></i> Download Document
                                     </a>
                                     <?php endif; ?>
-                                    <button type="button" onclick="closePreview()" class="no-ripple w-full h-14 min-h-14 px-4 bg-gray-900 dark:bg-black hover:bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-gray-200 dark:shadow-none transition-colors flex items-center justify-center gap-2 transform-none hover:transform-none active:transform-none flex-shrink-0">
-                                        <i class="bi bi-x-lg text-base"></i> Close Preview
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -520,16 +517,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <!-- Document Analysis Section -->
                         <div id="preview-analysis" class="mt-6"></div>
                     </div>
-                    <!-- Mobile Sticky Footer: Download & Close -->
+                    <!-- Mobile Sticky Footer: Download -->
                     <div class="md:hidden flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
                         <?php if ($userRole !== 'viewer'): ?>
                         <a id="preview-download-btn-mobile" href="#" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
                             <i class="bi bi-download text-base"></i> Download
                         </a>
                         <?php endif; ?>
-                        <button type="button" onclick="closePreview()" class="flex-1 py-3 bg-gray-900 dark:bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
-                            <i class="bi bi-x-lg text-base"></i> Close
-                        </button>
                     </div>
                 </div>
             </div>
@@ -1255,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-end sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-auto sm:max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
         <div class="sm:hidden w-full flex justify-center pt-2.5 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-10 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
             <div class="flex items-center gap-3 min-w-0">
@@ -1309,7 +1303,7 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
     const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', ''));
 
     if (isPdf || isDocx) {
-        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0 block" style="height: 100%;"></iframe>`;
+        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0 block" style="height: 100%; min-height: 400px;"></iframe>`;
     } else if (isImage) {
         body.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
     } else {
