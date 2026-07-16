@@ -1,0 +1,1780 @@
+/* Custom CSS Styles */
+/* Additional styles that complement Tailwind CSS */
+
+/* ========================================
+   Custom Scrollbars - Draggable & Styled
+   ======================================== */
+
+/* Base scrollbar styles for all scrollable areas */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    cursor: grab;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+    cursor: grabbing;
+}
+
+::-webkit-scrollbar-corner {
+    background: #f1f5f9;
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+/* Thin scrollbar for sidebar filters */
+.filter-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+    border-radius: 3px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #b91c1c 0%, #991b1b 100%);
+}
+
+/* Main content area scrollbar */
+main::-webkit-scrollbar {
+    width: 10px;
+}
+
+main::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-left: 1px solid #e2e8f0;
+}
+
+main::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+    border-radius: 5px;
+    border: 2px solid #f8fafc;
+    cursor: grab;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+}
+
+main::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+    cursor: grabbing;
+}
+
+/* Table container scrollbar */
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
+    border-radius: 4px;
+    cursor: grab;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #94a3b8 0%, #64748b 100%);
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:active,
+.overflow-y-auto::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(90deg, #64748b 0%, #475569 100%);
+    cursor: grabbing;
+}
+
+/* Modal/Dialog scrollbar */
+.modal-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+/* ========================================
+   Drag-to-Scroll Containers
+   ======================================== */
+
+.drag-scroll {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.drag-scroll:active,
+.drag-scroll.dragging {
+    cursor: grabbing;
+}
+
+.drag-scroll.dragging * {
+    pointer-events: none;
+}
+
+/* Enhanced scrollbar for drag-scroll containers */
+.drag-scroll::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+}
+
+.drag-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 6px;
+    margin: 4px;
+}
+
+.drag-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+    border-radius: 6px;
+    border: 2px solid #f1f5f9;
+    cursor: grab;
+}
+
+.drag-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+}
+
+.drag-scroll::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #475569 0%, #334155 100%);
+    cursor: grabbing;
+}
+
+/* ========================================
+   Filter Checkbox Labels
+   ======================================== */
+
+/* Filter Checkbox Labels - Proper alignment */
+.filter-checkbox-label {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.375rem 0.5rem;
+    margin: 0 -0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s;
+}
+
+.filter-checkbox-label:hover {
+    background-color: #f9fafb;
+}
+
+.filter-checkbox-label input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.filter-checkbox-label .filter-label {
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.filter-checkbox-label .filter-count {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* File type filter with icon */
+.filter-checkbox-label-icon {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.375rem 0.5rem;
+    margin: 0 -0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s;
+}
+
+.filter-checkbox-label-icon:hover {
+    background-color: #f9fafb;
+}
+
+/* Dark Mode - Filter Checkbox Labels */
+.dark .filter-checkbox-label .filter-label {
+    color: #e5e5e5 !important;
+}
+
+.dark .filter-checkbox-label .filter-count {
+    color: #a3a3a3 !important;
+}
+
+.dark .filter-checkbox-label:hover {
+    background-color: #3d3d3d !important;
+}
+
+.dark .filter-checkbox-label-icon .filter-label {
+    color: #e5e5e5 !important;
+}
+
+.dark .filter-checkbox-label-icon:hover {
+    background-color: #3d3d3d !important;
+}
+
+/* Dark Mode - Filter Section Headers */
+.dark .text-gray-700 {
+    color: #d4d4d4 !important;
+}
+
+.dark .text-gray-600 {
+    color: #a3a3a3 !important;
+}
+
+/* Dark Mode - Date Input Fields */
+.dark input[type="date"] {
+    background-color: #3d3d3d !important;
+    border-color: #525252 !important;
+    color: #e5e5e5 !important;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* Animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Set initial hidden state BEFORE animation starts */
+.animate-fade-in,
+.animate-slide-in,
+.animate-fade-in-up {
+    opacity: 0;
+}
+
+.animate-fade-in {
+    transform: translateY(-10px);
+    animation: fade-in 0.3s ease-in-out both;
+}
+
+.animate-fade-in-up {
+    transform: translateY(20px);
+    animation: fade-in-up 0.4s ease-out both;
+}
+
+.animate-fade-out {
+    animation: fade-out 0.3s ease-in-out forwards;
+}
+
+.animate-slide-in {
+    transform: translateX(100%);
+    animation: slide-in 0.3s ease-in-out both;
+}
+
+.animate-slide-in-left {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slide-in-left 0.4s ease-out both;
+}
+
+.animate-slide-in-right {
+    opacity: 0;
+    transform: translateX(20px);
+    animation: slide-in-right 0.4s ease-out both;
+}
+
+.animate-bounce-in {
+    opacity: 0;
+    transform: scale(0.8);
+    animation: bounce-in 0.5s ease-out both;
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bounce-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animation Delay Utilities */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-600 { animation-delay: 600ms; }
+.animation-delay-700 { animation-delay: 700ms; }
+.animation-delay-800 { animation-delay: 800ms; }
+.animation-delay-900 { animation-delay: 900ms; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Loading Spinner */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Skeleton Loading */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Focus Ring */
+.focus-ring:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Hover Effects */
+.hover-lift {
+    transition: transform 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+/* Status Indicators */
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.status-indicator.online {
+    background-color: #10b981;
+}
+
+.status-indicator.offline {
+    background-color: #ef4444;
+}
+
+.status-indicator.busy {
+    background-color: #f59e0b;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+    }
+    
+    .print-full-width {
+        width: 100% !important;
+        max-width: none !important;
+    }
+}
+
+/* Custom Utilities */
+.text-balance {
+    text-wrap: balance;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Gradient Backgrounds */
+.gradient-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+/* Glass Morphism */
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    .responsive-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+/* Dark Mode Styles */
+.dark {
+    color-scheme: dark;
+}
+
+/* Dark Mode - Body & Background */
+.dark body {
+    background-color: #0f0f0f !important;
+    color: #e5e5e5;
+}
+
+.dark main,
+.dark .main-content {
+    background-color: #0f0f0f !important;
+}
+
+/* Dark Mode - Navbar */
+.dark nav {
+    background-color: #2d2d2d !important;
+    border-color: #404040 !important;
+}
+
+.dark nav h2,
+.dark nav p,
+.dark nav span,
+.dark nav a {
+    color: #e5e5e5 !important;
+}
+
+.dark nav button {
+    color: #e5e5e5 !important;
+}
+
+.dark nav button:hover {
+    background-color: #404040 !important;
+    color: #ffffff !important;
+}
+
+.dark nav input {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+    color: #e5e5e5 !important;
+}
+
+.dark nav input::placeholder {
+    color: #999999 !important;
+}
+
+/* Dark Mode - Sidebar */
+.dark aside,
+.dark .sidebar,
+.dark aside#sidebar {
+    background: linear-gradient(180deg, #7f1d1d 0%, #450a0a 100%) !important;
+    border-color: #450a0a !important;
+}
+
+.dark aside nav,
+.dark .sidebar nav {
+    background-color: transparent !important;
+}
+
+.dark aside a,
+.dark .sidebar a,
+.dark aside button,
+.dark .sidebar button {
+    color: #e5e5e5 !important;
+}
+
+.dark aside a:hover,
+.dark .sidebar a:hover,
+.dark aside button:hover,
+.dark .sidebar button:hover {
+    background-color: rgba(220, 38, 38, 0.3) !important;
+}
+
+.dark aside a.active,
+.dark .sidebar a.active {
+    background-color: rgba(220, 38, 38, 0.5) !important;
+    color: #ffffff !important;
+}
+
+.dark aside .bg-red-600,
+.dark .sidebar .bg-red-600 {
+    background-color: #dc2626 !important;
+}
+
+/* Dark Mode - Sidebar Section Headers */
+.dark aside .text-red-300,
+.dark .sidebar .text-red-300 {
+    color: #fca5a5 !important;
+}
+
+/* Dark Mode - Sidebar Dropdown */
+.dark aside .dropdown-content,
+.dark .sidebar .dropdown-content {
+    background-color: rgba(127, 29, 29, 0.5) !important;
+}
+
+.dark aside#sidebar .dropdown-section button.nav-item,
+.dark .sidebar .dropdown-section button.nav-item,
+.dark aside button.nav-item,
+.dark .sidebar button.nav-item {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.dark aside#sidebar .dropdown-section button.nav-item:hover,
+.dark .sidebar .dropdown-section button.nav-item:hover,
+.dark aside button.nav-item:hover,
+.dark .sidebar button.nav-item:hover {
+    background-color: rgba(220, 38, 38, 0.3) !important;
+}
+
+.dark aside .nav-item-sub:hover,
+.dark .sidebar .nav-item-sub:hover {
+    background-color: rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Dark Mode - Cards & Containers */
+.dark .bg-white {
+    background-color: #2d2d2d !important;
+}
+
+/* Dark Mode - Danger Zone Exception */
+.dark .danger-zone.bg-white {
+    background-color: #2d2d2d !important;
+    border-color: #7f1d1d !important;
+}
+
+.dark .danger-zone-item {
+    background-color: rgba(127, 29, 29, 0.2) !important;
+}
+
+.dark .danger-zone-item p {
+    color: #e5e5e5 !important;
+}
+
+.dark .danger-zone-item p.text-sm {
+    color: #b3b3b3 !important;
+}
+
+/* Dark Mode - Add User Button */
+.dark .add-user-btn {
+    background-color: #b91c1c !important;
+    color: #ffffff !important;
+}
+
+.dark .add-user-btn:hover {
+    background-color: #991b1b !important;
+}
+
+/* Dark Mode - Status Badges */
+.dark .bg-green-100 {
+    background-color: #166534 !important;
+}
+
+.dark .text-green-800,
+.dark .text-green-600 {
+    color: #4ade80 !important;
+}
+
+/* Dark Mode - Remove shadows/glow from action buttons */
+.dark td button,
+.dark td a {
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+    background-color: #1a1a1a !important;
+}
+
+/* Light Mode - Borders */
+.border-gray-100 {
+    border-color: #f3f4f6 !important;
+}
+
+.border-gray-200 {
+    border-color: #e5e7eb !important;
+}
+
+.dark .border-gray-200,
+.dark .border-gray-100 {
+    border-color: #404040 !important;
+}
+
+.dark .shadow,
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Light Mode - Text Colors */
+.text-gray-900 {
+    color: #111827 !important;
+}
+
+.text-gray-800 {
+    color: #1f2937 !important;
+}
+
+/* Dark Mode - Text Colors */
+.dark .text-gray-800,
+.dark .text-gray-900 {
+    color: #e5e5e5 !important;
+}
+
+.dark .text-gray-700 {
+    color: #cccccc !important;
+}
+
+.dark .text-gray-600 {
+    color: #b3b3b3 !important;
+}
+
+.dark .text-gray-500 {
+    color: #999999 !important;
+}
+
+.dark .text-gray-400 {
+    color: #808080 !important;
+}
+
+/* Dark Mode - Hover States */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover {
+    background-color: #404040 !important;
+}
+
+.dark .hover\:bg-gray-200:hover {
+    background-color: #4d4d4d !important;
+}
+
+/* Dark Mode - Dropdowns */
+.dark #notifications-dropdown,
+.dark #profile-dropdown {
+    background-color: #2d2d2d !important;
+    border-color: #404040 !important;
+}
+
+/* Light Mode - Pagination Container */
+.bg-white {
+    background-color: #ffffff !important;
+}
+
+:root {
+    --pagination-bg: #ffffff;
+}
+
+.dark {
+    --pagination-bg: #1f2937;
+}
+
+/* Light Mode - Tables */
+table {
+    background-color: #ffffff !important;
+}
+
+table thead {
+    background-color: #f9fafb !important;
+}
+
+table tbody tr {
+    background-color: #ffffff !important;
+}
+
+table tbody tr:hover {
+    background-color: #fef2f2 !important;
+}
+
+/* Dark Mode - Tables */
+.dark table {
+    background-color: #2d2d2d !important;
+}
+
+.dark table thead {
+    background-color: #404040 !important;
+}
+
+.dark table tbody tr {
+    background-color: #2d2d2d !important;
+}
+
+.dark table tbody tr:hover {
+    background-color: #3a3a3a !important;
+}
+
+.dark table th,
+.dark table td {
+    border-color: #404040 !important;
+    color: #e5e5e5 !important;
+}
+
+/* Dark Mode - Forms */
+.dark input,
+.dark textarea,
+.dark select {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+    color: #e5e5e5 !important;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+    border-color: #3b82f6 !important;
+    background-color: #4d4d4d !important;
+}
+
+/* Dark Mode - Buttons */
+.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600) {
+    background-color: #404040 !important;
+    color: #e5e5e5 !important;
+}
+
+/* Dark Mode - Charts */
+.dark canvas {
+    filter: brightness(0.9);
+}
+
+/* Dark Mode - Scrollbar */
+.dark ::-webkit-scrollbar-track {
+    background: #2d2d2d;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #555555;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+}
+
+/* Dark Mode - Status Badges */
+.dark .bg-green-100 {
+    background-color: #1a4d2e !important;
+}
+
+.dark .bg-red-100 {
+    background-color: #4d1a1a !important;
+}
+
+.dark .bg-yellow-100 {
+    background-color: #4d3d1a !important;
+}
+
+.dark .bg-red-100 {
+    background-color: #4d1a1a !important;
+}
+
+.dark .bg-gray-200 {
+    background-color: #404040 !important;
+}
+
+/* Light Mode - Pagination Buttons */
+nav ul li a {
+    background-color: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+}
+
+nav ul li a:hover {
+    background-color: #fee2e2 !important;
+    border-color: #fca5a5 !important;
+    color: #dc2626 !important;
+}
+
+nav ul li a.bg-red-600 {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+/* Dark Mode - Pagination */
+.dark nav ul li a {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+    color: #e5e5e5 !important;
+}
+
+.dark nav ul li a:hover {
+    background-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+.dark nav ul li a.bg-red-600 {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+/* Dark Mode - Pagination Container */
+.dark .bg-gray-50 {
+    background-color: #2d2d2d !important;
+}
+
+.dark .border-gray-200 {
+    border-color: #404040 !important;
+}
+
+.dark .text-gray-300 {
+    color: #d1d5db !important;
+}
+
+/* Back to Top Button */
+#back-to-top {
+    z-index: 9999;
+}
+
+#back-to-top.translate-y-0 {
+    transform: translateY(0) !important;
+}
+
+#back-to-top.translate-y-20 {
+    transform: translateY(5rem) !important;
+}
+
+/* Mobile adjustments for back to top button */
+@media (max-width: 768px) {
+    #back-to-top {
+        bottom: 1rem;
+        right: 1rem;
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+    
+    #back-to-top i {
+        font-size: 1rem;
+    }
+}
+
+/* Dark Mode - Gradient Backgrounds */
+.dark .gradient-blue,
+.dark .bg-gradient-to-r {
+    background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
+}
+
+.dark .bg-red-600 {
+    background-color: #dc2626 !important;
+}
+
+.dark .bg-red-500 {
+    background-color: #ef4444 !important;
+}
+
+/* Dark Mode - Icons */
+.dark .text-red-600 {
+    color: #f87171 !important;
+}
+
+.dark .text-green-600 {
+    color: #34d399 !important;
+}
+
+.dark .text-yellow-600 {
+    color: #fbbf24 !important;
+}
+
+/* Dark Mode Transition */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ========================================
+   Sidebar Toggle Styles
+   ======================================== */
+
+/* Sidebar Expanded State (default) */
+#sidebar.sidebar-expanded {
+    width: 16rem; /* w-64 */
+}
+
+#sidebar.sidebar-expanded .sidebar-text {
+    opacity: 1;
+    width: auto;
+    visibility: visible;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+#sidebar.sidebar-expanded .sidebar-logo {
+    padding: 1.5rem;
+}
+
+#sidebar.sidebar-expanded .nav-item {
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+}
+
+#sidebar.sidebar-expanded .nav-item i {
+    margin-right: 0.75rem;
+}
+
+/* Sidebar Base Transition */
+#sidebar {
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease,
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.4s ease;
+}
+
+/* Sidebar Expanded State */
+#sidebar.sidebar-expanded {
+    width: 16rem;
+    min-width: 16rem;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* Sidebar Collapsed State - Completely Hidden with Animation */
+#sidebar.sidebar-collapsed {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateX(-100%) !important;
+}
+
+#sidebar.sidebar-collapsed .sidebar-text {
+    opacity: 0 !important;
+    width: 0 !important;
+    visibility: hidden !important;
+    overflow: hidden !important;
+    position: absolute !important;
+}
+
+#sidebar.sidebar-collapsed .sidebar-logo {
+    padding: 0;
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .sidebar-logo > a {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .sidebar-logo > a > div:last-child {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item i {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item span {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .dropdown-section {
+    display: none;
+}
+
+#sidebar.sidebar-collapsed .nav-item-sub {
+    display: none;
+}
+
+/* User profile section in collapsed state */
+#sidebar.sidebar-collapsed > .p-4:last-child {
+    display: none;
+}
+
+/* Toggle button styling and animation */
+#sidebar-toggle {
+    position: relative;
+    overflow: hidden;
+}
+
+#sidebar-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+#sidebar-toggle:hover::before {
+    width: 100%;
+    height: 100%;
+}
+
+#sidebar-toggle i {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+#sidebar-toggle:hover i {
+    transform: scale(1.1);
+}
+
+#sidebar-toggle.sidebar-hidden i {
+    transform: rotate(180deg);
+}
+
+/* Main content expands to full width when sidebar is collapsed */
+#sidebar.sidebar-collapsed + .flex-1,
+#sidebar.sidebar-collapsed ~ .flex-1 {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Smooth expand animation for main content */
+.flex-1 {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN STYLES
+   ======================================== */
+
+/* ---------- XS Breakpoint Utility Classes (480px+) ---------- */
+@media (min-width: 480px) {
+    .xs\:inline { display: inline !important; }
+    .xs\:block { display: block !important; }
+    .xs\:flex { display: flex !important; }
+    .xs\:hidden { display: none !important; }
+    .xs\:text-sm { font-size: 0.875rem !important; }
+    .xs\:text-base { font-size: 1rem !important; }
+    .xs\:gap-2 { gap: 0.5rem !important; }
+    .xs\:gap-3 { gap: 0.75rem !important; }
+    .xs\:gap-4 { gap: 1rem !important; }
+    .xs\:px-3 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+    .xs\:px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
+}
+
+/* ---------- Mobile First Base Styles ---------- */
+
+/* Extra Small Devices (phones, less than 576px) */
+@media (max-width: 575.98px) {
+    /* Typography */
+    h1, .text-3xl { font-size: 1.5rem !important; }
+    h2, .text-2xl { font-size: 1.25rem !important; }
+    h3, .text-xl { font-size: 1.1rem !important; }
+    
+    /* Padding adjustments */
+    main { padding: 0.75rem !important; }
+    .p-6 { padding: 1rem !important; }
+    .p-8 { padding: 1.25rem !important; }
+    .px-6 { padding-left: 1rem !important; padding-right: 1rem !important; }
+    .py-6 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+    
+    /* Cards */
+    .rounded-xl { border-radius: 0.75rem !important; }
+    .rounded-2xl { border-radius: 1rem !important; }
+    
+    /* Buttons */
+    .btn-primary, .btn-outline, button {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+    }
+    
+    /* Forms */
+    input, select, textarea {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    /* Tables - Card View on Mobile */
+    .mobile-card-view thead {
+        display: none;
+    }
+    
+    .mobile-card-view tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-card-view tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0 !important;
+        border: none !important;
+    }
+    
+    .mobile-card-view tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #6b7280;
+        margin-right: 1rem;
+    }
+    
+    /* Hide non-essential columns on mobile */
+    .hide-mobile {
+        display: none !important;
+    }
+    
+    /* Navbar adjustments */
+    nav .flex-1 .ml-4 h2 {
+        font-size: 1rem !important;
+    }
+    
+    nav .flex-1 .ml-4 nav {
+        display: none !important; /* Hide breadcrumbs on mobile */
+    }
+    
+    /* Stats cards - full width */
+    .grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Modal adjustments */
+    .modal-content, [class*="max-w-"] {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 1rem auto !important;
+    }
+    
+    /* Toast notifications */
+    #toast-container {
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+        bottom: 0.5rem !important;
+    }
+    
+    /* Charts */
+    canvas {
+        max-height: 200px !important;
+    }
+    
+    /* Footer */
+    footer .flex {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 0.5rem !important;
+    }
+}
+
+/* Small Devices (landscape phones, 576px to 767px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    main { padding: 1rem !important; }
+    
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Two column layout for stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Medium Devices (tablets, 768px to 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    main { padding: 1.25rem !important; }
+    
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Adjust sidebar width */
+    #sidebar.sidebar-expanded {
+        width: 14rem !important;
+    }
+    
+    /* Table adjustments */
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 800px;
+    }
+}
+
+/* Large Devices (desktops, 992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .grid-cols-4 {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+/* ---------- Responsive Tables ---------- */
+@media (max-width: 768px) {
+    /* Make tables horizontally scrollable */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        font-size: 0.875rem;
+    }
+    
+    table th, table td {
+        padding: 0.75rem 0.5rem !important;
+        white-space: nowrap;
+    }
+    
+    /* Action buttons compact */
+    table td:last-child {
+        white-space: nowrap;
+    }
+    
+    table td:last-child button,
+    table td:last-child a {
+        padding: 0.25rem !important;
+        margin: 0 0.125rem !important;
+    }
+}
+
+/* ---------- Responsive Cards & Grids ---------- */
+@media (max-width: 640px) {
+    /* Stack cards vertically */
+    .grid {
+        gap: 1rem !important;
+    }
+    
+    /* Full width cards */
+    .card, .bg-white.rounded-xl {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+        border-radius: 0 !important;
+    }
+    
+    /* Adjust card content */
+    .card .flex {
+        flex-wrap: wrap;
+    }
+}
+
+/* ---------- Responsive Navigation ---------- */
+@media (max-width: 767.98px) {
+    /* Navbar compact */
+    nav {
+        padding: 0.5rem !important;
+    }
+    
+    nav .h-16 {
+        height: 3.5rem !important;
+    }
+    
+    /* Hide quick search on mobile */
+    #quick-search {
+        display: none !important;
+    }
+    
+    /* Mobile menu button larger touch target */
+    #mobile-menu-btn {
+        width: 44px;
+        height: 44px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Profile dropdown adjustments */
+    .profile-dropdown {
+        right: 0;
+        width: 100vw;
+        max-width: 300px;
+    }
+}
+
+/* ---------- Responsive Forms ---------- */
+@media (max-width: 640px) {
+    /* Stack form fields */
+    .form-row, .flex.gap-4 {
+        flex-direction: column !important;
+    }
+    
+    .form-row > *, .flex.gap-4 > * {
+        width: 100% !important;
+    }
+    
+    /* Full width inputs */
+    input, select, textarea {
+        width: 100% !important;
+    }
+    
+    /* Filter section */
+    .filter-section {
+        flex-direction: column;
+    }
+    
+    .filter-section > * {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ---------- Responsive Modals ---------- */
+@media (max-width: 640px) {
+    /* Full screen modals on mobile */
+    .modal, [class*="fixed inset-0"] > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: 90vh !important;
+        margin: auto !important;
+        border-radius: 1rem 1rem 0 0 !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+    }
+    
+    /* Modal content scrollable */
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+}
+
+/* ---------- Responsive Charts ---------- */
+@media (max-width: 768px) {
+    /* Charts responsive */
+    .chart-container {
+        height: 250px !important;
+    }
+    
+    canvas {
+        max-width: 100% !important;
+    }
+    
+    /* Legend below chart */
+    .chart-legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ---------- Responsive Dashboard ---------- */
+@media (max-width: 640px) {
+    /* Welcome banner compact */
+    .welcome-banner, .bg-gradient-to-r.from-red-600 {
+        padding: 1.25rem !important;
+    }
+    
+    .welcome-banner h1 {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Stats numbers smaller */
+    .text-3xl.font-bold {
+        font-size: 1.75rem !important;
+    }
+    
+    /* Quick actions horizontal scroll */
+    .quick-actions {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .quick-actions > * {
+        flex-shrink: 0;
+        width: 80%;
+    }
+}
+
+/* ---------- Responsive Document Management ---------- */
+@media (max-width: 768px) {
+    /* Document header stack */
+    .document-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+    
+    /* Action buttons wrap */
+    .document-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    .document-actions button,
+    .document-actions .btn-primary,
+    .document-actions .btn-outline {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    /* Filters collapse */
+    .filters-section {
+        display: none;
+    }
+    
+    .filters-section.show {
+        display: block;
+    }
+    
+    /* Filter toggle button */
+    .filter-toggle {
+        display: flex !important;
+    }
+}
+
+/* ---------- Responsive Search Page ---------- */
+@media (max-width: 991.98px) {
+    /* Sidebar filters below content on tablet/mobile */
+    .search-layout {
+        flex-direction: column-reverse;
+    }
+    
+    .search-filters {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+}
+
+/* ---------- Responsive User Management ---------- */
+@media (max-width: 640px) {
+    /* User cards instead of table */
+    .user-table {
+        display: none;
+    }
+    
+    .user-cards {
+        display: block !important;
+    }
+    
+    .user-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+}
+
+/* ---------- Touch Device Optimizations ---------- */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets */
+    button, a, .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Remove hover effects that don't work on touch */
+    .hover\:scale-105:hover {
+        transform: none;
+    }
+    
+    /* Add active states instead */
+    button:active, a:active, .clickable:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+    
+    /* Disable hover dropdowns, use click instead */
+    .dropdown:hover .dropdown-menu {
+        display: none;
+    }
+}
+
+/* ---------- Print Styles ---------- */
+@media print {
+    /* Hide non-essential elements */
+    #sidebar, nav, #mobile-sidebar, #sidebar-overlay,
+    .no-print, button, .btn-primary, .btn-outline,
+    #toast-container, .modal {
+        display: none !important;
+    }
+    
+    /* Full width content */
+    main, .flex-1 {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Preserve backgrounds for badges */
+    .badge, .bg-green-100, .bg-red-100, .bg-yellow-100 {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Page breaks */
+    .page-break {
+        page-break-before: always;
+    }
+    
+    /* Table styling for print */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+}
+
+/* ---------- Orientation Changes ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+    /* Compact header in landscape */
+    nav .h-16 {
+        height: 3rem !important;
+    }
+    
+    /* Reduce padding */
+    main {
+        padding: 0.75rem !important;
+    }
+    
+    /* Smaller modals */
+    .modal {
+        max-height: 80vh !important;
+    }
+}
+
+/* ---------- High Resolution Displays ---------- */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Sharper borders */
+    .border {
+        border-width: 0.5px;
+    }
+}
+
+/* ---------- Reduced Motion Preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ---------- Safe Area Insets (for notched devices) ---------- */
+@supports (padding: max(0px)) {
+    main {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    nav {
+        padding-top: env(safe-area-inset-top);
+    }
+}
+
+/* ---------- Utility Classes for Responsive ---------- */
+.show-mobile { display: none !important; }
+.hide-desktop { display: none !important; }
+
+@media (max-width: 767.98px) {
+    .show-mobile { display: block !important; }
+    .hide-mobile { display: none !important; }
+    .show-mobile.flex { display: flex !important; }
+    .show-mobile.inline { display: inline !important; }
+}
+
+@media (min-width: 768px) {
+    .hide-desktop { display: none !important; }
+    .show-desktop { display: block !important; }
+    .show-desktop.flex { display: flex !important; }
+}
+
+/* Responsive text */
+.text-responsive {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.heading-responsive {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+}
+
+/* Responsive spacing */
+.p-responsive {
+    padding: clamp(0.75rem, 3vw, 1.5rem);
+}
+
+.gap-responsive {
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+}
