@@ -238,7 +238,16 @@ class DocumentController {
                     header('Cache-Control: no-cache, must-revalidate');
                     header('X-Content-Type-Options: nosniff');
 
-                    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0; padding:0; background:#f3f4f6;}</style></head><body>';
+                    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><style>
+                        html, body { margin: 0; padding: 0; background: #f3f4f6; overflow-wrap: break-word; word-wrap: break-word; -webkit-text-size-adjust: 100%; }
+                        .docx-preview { max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; overflow-x: hidden !important; }
+                        .docx-preview img { max-width: 100% !important; height: auto !important; }
+                        @media (max-width: 640px) {
+                            .docx-preview { padding: 1em !important; font-size: 11pt !important; }
+                            .docx-preview [style*="font-size"] { font-size: inherit !important; }
+                            .docx-preview h1, .docx-preview h2, .docx-preview h3 { font-size: 1.3em !important; }
+                        }
+                    </style></head><body>';
                     echo $result['html'];
                     echo '</body></html>';
                     exit;

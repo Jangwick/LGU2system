@@ -423,31 +423,31 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
 
                 <!-- Modal Content -->
-                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-auto sm:max-h-[92vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300">
+                <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-auto sm:max-h-[92vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300" style="max-height: 100dvh;">
                     <!-- Mobile Drag Handle -->
-                    <div class="md:hidden w-full flex justify-center pt-3 pb-1 bg-gradient-to-r from-red-600 to-red-700">
-                        <div class="w-12 h-1.5 bg-white/30 rounded-full"></div>
+                    <div class="md:hidden w-full flex justify-center pt-2.5 pb-1 bg-gradient-to-r from-red-600 to-red-700">
+                        <div class="w-10 h-1.5 bg-white/30 rounded-full"></div>
                     </div>
 
                     <!-- Modal Header -->
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-start justify-between text-white border-b border-white/10">
-                        <div class="flex items-center gap-4">
-                            <div id="modal-icon-bg" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl flex-shrink-0">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 px-4 py-4 md:px-8 md:py-6 flex items-center justify-between text-white border-b border-white/10">
+                        <div class="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div id="modal-icon-bg" class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl md:text-2xl flex-shrink-0">
                                 <i id="modal-icon" class="bi bi-file-earmark-text"></i>
                             </div>
                             <div class="min-w-0">
-                                <h3 class="text-xl font-black leading-none mb-1" id="modal-title">Document Preview</h3>
-                                <p id="modal-subtitle" class="text-red-100 text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">Reference ID: ---</p>
+                                <h3 class="text-lg md:text-xl font-black leading-none mb-1" id="modal-title">Document Preview</h3>
+                                <p id="modal-subtitle" class="text-red-100 text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">Reference ID: ---</p>
                             </div>
                         </div>
-                        <button type="button" onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all flex-shrink-0 -mt-1 md:mt-0">
-                            <i class="bi bi-x-lg text-lg text-white"></i>
+                        <button type="button" onclick="closePreview()" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all flex-shrink-0">
+                            <i class="bi bi-x-lg text-base md:text-lg text-white"></i>
                         </button>
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 overflow-y-auto flex-1 min-h-0">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-gray-800 px-4 py-5 md:px-8 md:py-8 overflow-y-auto overflow-x-hidden flex-1 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
                             <!-- Left: Details -->
                             <div class="md:col-span-2 space-y-6">
                                 <div>
@@ -460,15 +460,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <p id="preview-desc" class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed font-medium">---</p>
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
-                                        <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Status</h4>
+                                <div class="grid grid-cols-2 gap-3 md:gap-4">
+                                    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl md:rounded-2xl p-3 md:p-4 border border-gray-100 dark:border-gray-700">
+                                        <h4 class="text-[9px] md:text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Status</h4>
                                         <div id="preview-status" class="inline-flex mt-1">
-                                            <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">---</span>
+                                            <span class="px-2.5 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">---</span>
                                         </div>
                                     </div>
-                                    <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
-                                        <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Date Created</h4>
+                                    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl md:rounded-2xl p-3 md:p-4 border border-gray-100 dark:border-gray-700">
+                                        <h4 class="text-[9px] md:text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Date Created</h4>
                                         <p id="preview-date" class="text-xs md:text-sm font-bold text-gray-800 dark:text-gray-200 mt-1">---</p>
                                     </div>
                                 </div>
@@ -476,12 +476,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                             <!-- Right: Metadata & Actions -->
                             <div class="space-y-6">
-                                <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-6 border border-gray-100 dark:border-gray-700">
-                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">File Information</h4>
-                                    <div class="space-y-4">
+                                <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl md:rounded-3xl p-4 md:p-6 border border-gray-100 dark:border-gray-700">
+                                    <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 md:mb-4">File Information</h4>
+                                    <div class="space-y-3 md:space-y-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-red-600 dark:text-red-500 shadow-sm border border-gray-100 dark:border-gray-700 flex-shrink-0">
-                                                <i class="bi bi-file-earmark-pdf text-xl"></i>
+                                            <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-red-600 dark:text-red-500 shadow-sm border border-gray-100 dark:border-gray-700 flex-shrink-0">
+                                                <i class="bi bi-file-earmark-pdf text-lg md:text-xl"></i>
                                             </div>
                                             <div class="min-w-0">
                                                 <p id="preview-filename" class="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate">filename.pdf</p>
@@ -489,8 +489,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 shadow-sm border border-gray-100 dark:border-gray-700 flex-shrink-0">
-                                                <i class="bi bi-person-circle text-lg"></i>
+                                            <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 shadow-sm border border-gray-100 dark:border-gray-700 flex-shrink-0">
+                                                <i class="bi bi-person-circle text-base md:text-lg"></i>
                                             </div>
                                             <div class="min-w-0">
                                                 <p id="preview-uploader" class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">Uploader</p>
@@ -499,12 +499,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </div>
                                     </div>
                                     
-                                    <div id="preview-tags" class="mt-6 flex flex-wrap gap-2">
+                                    <div id="preview-tags" class="mt-4 md:mt-6 flex flex-wrap gap-2">
                                         <!-- Tags will be injected here -->
                                     </div>
                                 </div>
 
-                                <div class="space-y-3 pb-6 md:pb-0">
+                                <div class="hidden md:flex flex-col space-y-3 pb-6 md:pb-0">
                                     <?php if ($userRole !== 'viewer'): ?>
                                     <a id="preview-download-btn" href="#" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-2 transform active:scale-95">
                                         <i class="bi bi-download text-base"></i> Download Document
@@ -516,10 +516,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Document Analysis Section -->
-                    <div id="preview-analysis" class="bg-white dark:bg-gray-800 px-6 pb-8 md:px-8"></div>
+                        <!-- Document Analysis Section -->
+                        <div id="preview-analysis" class="mt-6"></div>
+                    </div>
+                    <!-- Mobile Sticky Footer: Download & Close -->
+                    <div class="md:hidden flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+                        <?php if ($userRole !== 'viewer'): ?>
+                        <a id="preview-download-btn-mobile" href="#" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
+                            <i class="bi bi-download text-base"></i> Download
+                        </a>
+                        <?php endif; ?>
+                        <button type="button" onclick="closePreview()" class="flex-1 py-3 bg-gray-900 dark:bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
+                            <i class="bi bi-x-lg text-base"></i> Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -955,18 +966,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             analysisContainer.innerHTML = `
                                 <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
-                                    <div class="px-5 md:px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
-                                        <div class="flex items-center">
-                                            <span class="w-1 h-5 bg-indigo-600 rounded-full mr-3"></span>
-                                            <h3 class="text-sm font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest">Document Analysis</h3>
+                                    <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
+                                        <div class="flex items-center min-w-0">
+                                            <span class="w-1 h-5 bg-indigo-600 rounded-full mr-3 shrink-0"></span>
+                                            <h3 class="text-xs md:text-sm font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest truncate">Document Analysis</h3>
                                         </div>
-                                        <div class="flex items-center gap-2">
+                                        <div class="flex items-center gap-2 shrink-0">
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${info.badge}">
-                                                <i class="bi bi-${info.icon}"></i>${info.label}
+                                                <i class="bi bi-${info.icon}"></i><span class="hidden sm:inline">${info.label}</span>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="p-5 md:p-6 space-y-6">
+                                    <div class="p-4 md:p-6 space-y-5 md:space-y-6">
                                         ${processedDate ? `
                                             <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-gray-400 dark:text-gray-500">
                                                 <span class="flex items-center"><i class="bi bi-calendar-check mr-1.5"></i>Extracted on ${processedDate}</span>
@@ -1006,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     </div>
                                                 </div>
                                                 <div id="doc-preview-container" class="max-h-72 overflow-y-auto rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-300">
-                                                    <div class="bg-white dark:bg-gray-900 p-6 md:p-10 doc-preview-page">
+                                                    <div class="bg-white dark:bg-gray-900 p-4 md:p-10 doc-preview-page">
                                                         <div class="doc-content text-[13px] text-gray-800 dark:text-gray-200 leading-7">${formatDocumentText(extractedText)}</div>
                                                     </div>
                                                 </div>
@@ -1026,6 +1037,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         const downloadBtn = document.getElementById('preview-download-btn');
                         if (downloadBtn) {
                             downloadBtn.href = `<?= BASE_URL ?>/modules/document-management/api/download.php?id=${doc.id}`;
+                        }
+                        const downloadBtnMobile = document.getElementById('preview-download-btn-mobile');
+                        if (downloadBtnMobile) {
+                            downloadBtnMobile.href = `<?= BASE_URL ?>/modules/document-management/api/download.php?id=${doc.id}`;
                         }
                         // Detailed view button removed - now closes preview instead
                     } else {
@@ -1240,9 +1255,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-end sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
-        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
-        <div class="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-auto sm:max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100">
+        <div class="sm:hidden w-full flex justify-center pt-2.5 pb-1 bg-gray-50 dark:bg-gray-800/50"><div class="w-10 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
+        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
             <div class="flex items-center gap-3 min-w-0">
                 <div class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
                     <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400"></i>
@@ -1264,7 +1279,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
             </div>
         </div>
-        <div id="original-file-preview-body" class="flex-1 overflow-hidden bg-gray-100 dark:bg-gray-950">
+        <div id="original-file-preview-body" class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
         </div>
     </div>
 </div>
@@ -1294,9 +1309,9 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
     const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', ''));
 
     if (isPdf || isDocx) {
-        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0" style="min-height: 70vh;"></iframe>`;
+        body.innerHTML = `<iframe src="${previewUrl}" class="w-full h-full border-0 block" style="height: 100%;"></iframe>`;
     } else if (isImage) {
-        body.innerHTML = `<div class="flex items-center justify-center h-full p-8 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg"></div>`;
+        body.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
     } else {
         const ext = (fileName || '').split('.').pop().toUpperCase();
         body.innerHTML = `

@@ -348,39 +348,45 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
 <div id="preview-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" role="dialog" aria-modal="true">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div id="preview-overlay" class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity opacity-0 pointer-events-none"></div>
-        <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-auto sm:max-h-[92vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300">
-            <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-gradient-to-r from-red-600 to-red-700"><div class="w-12 h-1.5 bg-white/30 rounded-full"></div></div>
-            <div class="bg-gradient-to-r from-red-600 to-red-800 px-6 py-6 md:px-8 flex items-start justify-between text-white border-b border-white/10">
-                <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0"><i id="modal-icon" class="bi bi-file-earmark-text"></i></div><div class="min-w-0"><h3 class="text-xl font-black leading-none mb-1">Document Preview</h3><p id="modal-subtitle" class="text-red-100 text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">REF: ---</p></div></div>
-                <button type="button" onclick="closePreview()" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all shrink-0"><i class="bi bi-x-lg text-lg text-white"></i></button>
+        <div id="preview-content" class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all w-full sm:max-w-4xl sm:h-auto sm:max-h-[92vh] opacity-0 translate-y-full sm:translate-y-0 sm:scale-95 flex flex-col duration-300" style="max-height: 100dvh;">
+            <div class="sm:hidden w-full flex justify-center pt-2.5 pb-1 bg-gradient-to-r from-red-600 to-red-700"><div class="w-10 h-1.5 bg-white/30 rounded-full"></div></div>
+            <div class="bg-gradient-to-r from-red-600 to-red-800 px-4 py-4 md:px-8 md:py-6 flex items-center justify-between text-white border-b border-white/10">
+                <div class="flex items-center gap-3 md:gap-4 min-w-0"><div class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl md:text-2xl shrink-0"><i id="modal-icon" class="bi bi-file-earmark-text"></i></div><div class="min-w-0"><h3 class="text-lg md:text-xl font-black leading-none mb-1">Document Preview</h3><p id="modal-subtitle" class="text-red-100 text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-80 truncate">REF: ---</p></div></div>
+                <button type="button" onclick="closePreview()" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center transition-all shrink-0"><i class="bi bi-x-lg text-base md:text-lg text-white"></i></button>
             </div>
-            <div class="bg-white dark:bg-gray-800 px-6 py-8 md:px-8 overflow-y-auto flex-1 min-h-0">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white dark:bg-gray-800 px-4 py-5 md:px-8 md:py-8 overflow-y-auto overflow-x-hidden flex-1 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
                     <div class="md:col-span-2 space-y-6">
                         <div><h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Document Title</h4><h2 id="preview-title" class="text-xl md:text-2xl font-black text-gray-800 dark:text-white leading-tight">---</h2></div>
                         <div><h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Description</h4><p id="preview-desc" class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed font-medium">---</p></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-700"><h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</h4><div id="preview-status" class="inline-flex mt-1"><span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-gray-100 text-gray-600 border-gray-200">---</span></div></div>
-                            <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-700"><h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Date Created</h4><p id="preview-date" class="text-xs md:text-sm font-bold text-gray-800 dark:text-gray-200 mt-1">---</p></div>
+                        <div class="grid grid-cols-2 gap-3 md:gap-4">
+                            <div class="bg-gray-50 dark:bg-gray-900 rounded-xl md:rounded-2xl p-3 md:p-4 border border-gray-100 dark:border-gray-700"><h4 class="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</h4><div id="preview-status" class="inline-flex mt-1"><span class="px-2.5 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-gray-100 text-gray-600 border-gray-200">---</span></div></div>
+                            <div class="bg-gray-50 dark:bg-gray-900 rounded-xl md:rounded-2xl p-3 md:p-4 border border-gray-100 dark:border-gray-700"><h4 class="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Date Created</h4><p id="preview-date" class="text-xs md:text-sm font-bold text-gray-800 dark:text-gray-200 mt-1">---</p></div>
                         </div>
                     </div>
                     <div class="space-y-6">
-                        <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-6 border border-gray-100 dark:border-gray-700">
-                            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">File Information</h4>
-                            <div class="space-y-4">
-                                <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-red-600 shadow-sm border border-gray-100 dark:border-gray-700 shrink-0"><i class="bi bi-file-earmark-pdf text-xl"></i></div><div class="min-w-0"><p id="preview-filename" class="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate">---</p><p id="preview-filesize" class="text-[9px] text-gray-400 font-bold">---</p></div></div>
-                                <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 dark:border-gray-700 shrink-0"><i class="bi bi-person-circle text-lg"></i></div><div class="min-w-0"><p id="preview-uploader" class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">---</p><p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Uploaded By</p></div></div>
+                        <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl md:rounded-3xl p-4 md:p-6 border border-gray-100 dark:border-gray-700">
+                            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 md:mb-4">File Information</h4>
+                            <div class="space-y-3 md:space-y-4">
+                                <div class="flex items-center gap-3"><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-red-600 shadow-sm border border-gray-100 dark:border-gray-700 shrink-0"><i class="bi bi-file-earmark-pdf text-lg md:text-xl"></i></div><div class="min-w-0"><p id="preview-filename" class="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate">---</p><p id="preview-filesize" class="text-[9px] text-gray-400 font-bold">---</p></div></div>
+                                <div class="flex items-center gap-3"><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 dark:border-gray-700 shrink-0"><i class="bi bi-person-circle text-base md:text-lg"></i></div><div class="min-w-0"><p id="preview-uploader" class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">---</p><p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Uploaded By</p></div></div>
                             </div>
-                            <div id="preview-tags" class="mt-6 flex flex-wrap gap-2"></div>
+                            <div id="preview-tags" class="mt-4 md:mt-6 flex flex-wrap gap-2"></div>
                         </div>
-                        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-5 pb-6 md:pb-5">
+                        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-4 md:p-5 pb-6 md:pb-5">
                             <p class="text-xs text-amber-700 dark:text-amber-400 font-medium leading-relaxed"><i class="bi bi-info-circle mr-1.5"></i>Document downloads require a registered account. Please <a href="<?= LOGIN_URL ?>" class="font-bold underline">sign in</a> or contact the administrator for full access.</p>
                         </div>
                     </div>
                 </div>
+                <!-- Document Analysis Section -->
+                <div id="preview-analysis" class="mt-6"></div>
             </div>
-            <!-- Document Analysis Section -->
-            <div id="preview-analysis" class="bg-white dark:bg-gray-800 px-6 pb-8 md:px-8"></div>
+            <!-- Mobile Sticky Footer: Close -->
+            <div class="sm:hidden flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+                <button type="button" onclick="closePreview()" class="flex-1 py-3 bg-gray-900 dark:bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
+                    <i class="bi bi-x-lg text-base"></i> Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -559,18 +565,18 @@ async function previewDocument(id){
 
                 analysisContainer.innerHTML=`
                     <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
-                        <div class="px-5 md:px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
-                            <div class="flex items-center">
-                                <span class="w-1 h-5 bg-indigo-600 rounded-full mr-3"></span>
-                                <h3 class="text-sm font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest">Document Analysis</h3>
+                        <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
+                            <div class="flex items-center min-w-0">
+                                <span class="w-1 h-5 bg-indigo-600 rounded-full mr-3 shrink-0"></span>
+                                <h3 class="text-xs md:text-sm font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest truncate">Document Analysis</h3>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 shrink-0">
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${info.badge}">
-                                    <i class="bi bi-${info.icon}"></i>${info.label}
+                                    <i class="bi bi-${info.icon}"></i><span class="hidden sm:inline">${info.label}</span>
                                 </span>
                             </div>
                         </div>
-                        <div class="p-5 md:p-6 space-y-6">
+                        <div class="p-4 md:p-6 space-y-5 md:space-y-6">
                             ${processedDate?`
                                 <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-gray-400 dark:text-gray-500">
                                     <span class="flex items-center"><i class="bi bi-calendar-check mr-1.5"></i>Extracted on ${processedDate}</span>
