@@ -1261,31 +1261,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-stretch sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
-        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
+    <div id="original-file-preview-content" class="modal-panel-mobile bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeOriginalFilePreviewModal"><div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
+        <div class="mobile-preview-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
             <div class="flex items-center gap-3 min-w-0">
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex-shrink-0">
                     <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
                 <div class="min-w-0">
-                    <h3 id="original-file-preview-title" class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
-                    <p id="original-file-preview-type" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
+                    <h3 id="original-file-preview-title" class="header-title text-xs sm:text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
+                    <p id="original-file-preview-type" class="hidden sm:block text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
                 <a id="original-file-preview-newtab" href="#" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <i class="bi bi-box-arrow-up-right"></i> New Tab
                 </a>
-                <a id="original-file-preview-download" href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
-                    <i class="bi bi-download"></i> Download
+                <a id="original-file-preview-download" href="#" class="inline-flex items-center justify-center gap-1.5 h-11 w-11 sm:w-auto sm:px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
+                    <i class="bi bi-download text-base"></i>
+                    <span class="hidden sm:inline">Download</span>
                 </a>
-                <button type="button" onclick="closeOriginalFilePreviewModal()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-                    <i class="bi bi-x-lg text-sm"></i>
+                <button type="button" onclick="closeOriginalFilePreviewModal()" class="h-11 w-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <i class="bi bi-x-lg text-base"></i>
                 </button>
             </div>
         </div>
-        <div id="original-file-preview-body" class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+        <div id="original-file-preview-body" class="mobile-preview-body flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
         </div>
     </div>
 </div>
@@ -1316,7 +1317,23 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
     const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', '')) || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
 
     if (isPdf || isDocx) {
-        body.innerHTML = `<iframe src="${previewUrl}" title="Document Preview" frameborder="0" scrolling="auto" allowfullscreen class="w-full h-full border-0 block" style="width: 100%; height: 100%; min-height: 400px;"></iframe>`;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'preview-iframe-wrapper relative w-full h-full';
+        const loader = document.createElement('div');
+        loader.className = 'iframe-loader';
+        loader.innerHTML = '<div class="inline-block w-8 h-8 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin"></div>';
+        const iframe = document.createElement('iframe');
+        iframe.src = previewUrl;
+        iframe.title = 'Document Preview';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('scrolling', 'auto');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.className = 'preview-iframe w-full h-full border-0 block';
+        iframe.onload = function() { loader.remove(); };
+        wrapper.appendChild(loader);
+        wrapper.appendChild(iframe);
+        body.innerHTML = '';
+        body.appendChild(wrapper);
     } else if (isImage) {
         body.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
     } else {
@@ -1379,6 +1396,31 @@ document.addEventListener('click', function(e) {
         openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType);
     }
 });
+
+// Swipe-to-close gesture for mobile modal drag handles
+function setupSwipeToClose() {
+    const handles = document.querySelectorAll('[data-close-fn]');
+    handles.forEach(function(handle) {
+        let startY = 0;
+        let startTime = 0;
+        handle.addEventListener('touchstart', function(e) {
+            startY = e.touches[0].clientY;
+            startTime = Date.now();
+        }, { passive: true });
+        handle.addEventListener('touchend', function(e) {
+            const endY = e.changedTouches[0].clientY;
+            const diffY = endY - startY;
+            const elapsed = Date.now() - startTime;
+            if (diffY > 60 && elapsed < 600) {
+                const fnName = handle.getAttribute('data-close-fn');
+                if (typeof window[fnName] === 'function') {
+                    window[fnName]();
+                }
+            }
+        }, { passive: true });
+    });
+}
+setupSwipeToClose();
 </script>
 
         <?php include_once __DIR__ . '/../../core/layouts/footer.php'; ?>

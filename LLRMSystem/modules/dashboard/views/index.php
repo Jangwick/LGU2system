@@ -328,11 +328,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div id="preview-modal" class="hidden fixed inset-0 z-[100002] overflow-y-auto">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
-        <div id="preview-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full sm:h-[85vh] sm:max-h-[85vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800" style="max-height: 100dvh;">
-        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
-            <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        <div id="preview-modal-panel" class="modal-panel-mobile relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full sm:h-[85vh] sm:max-h-[85vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closePreviewModal">
+            <div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
         </div>
-        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+        <div class="modal-sticky-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-10">
             <div class="flex items-center">
                 <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-xl mr-3">
                     <i class="bi bi-file-earmark-pdf text-red-600 text-xl"></i>
@@ -341,11 +341,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest">Document Preview</h3>
                 </div>
             </div>
-            <button type="button" onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
+            <button type="button" onclick="closePreviewModal()" class="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
-        <div id="preview-content" class="overflow-y-auto overflow-x-hidden flex-1 min-h-0 bg-white dark:bg-gray-900" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;"></div>
+        <div id="preview-content" class="modal-body-scroll overflow-y-auto overflow-x-hidden flex-1 min-h-0 bg-white dark:bg-gray-900" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;"></div>
         </div>
     </div>
 </div>
@@ -354,48 +354,49 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <div id="activity-modal" class="hidden fixed inset-0 z-[100003] overflow-y-auto">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
-        <div id="activity-modal-content" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
-            <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
-                <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        <div id="activity-modal-content" class="modal-panel-mobile relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+            <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeActivityModal">
+                <div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
             </div>
-            <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+            <div class="modal-sticky-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-10">
                 <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest">Activity History</h3>
-                <button type="button" onclick="closeActivityModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
+                <button type="button" onclick="closeActivityModal()" class="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
-            <div id="activity-content" class="overflow-y-auto flex-1 min-h-0 custom-scrollbar"></div>
+            <div id="activity-content" class="modal-body-scroll overflow-y-auto flex-1 min-h-0 custom-scrollbar"></div>
         </div>
     </div>
 </div>
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100004] flex items-stretch sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
-        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
+    <div id="original-file-preview-content" class="modal-panel-mobile bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeOriginalFilePreviewModal"><div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
+        <div class="mobile-preview-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
             <div class="flex items-center gap-3 min-w-0">
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex-shrink-0">
                     <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
                 <div class="min-w-0">
-                    <h3 id="original-file-preview-title" class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
-                    <p id="original-file-preview-type" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
+                    <h3 id="original-file-preview-title" class="header-title text-xs sm:text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
+                    <p id="original-file-preview-type" class="hidden sm:block text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
                 <a id="original-file-preview-newtab" href="#" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <i class="bi bi-box-arrow-up-right"></i> New Tab
                 </a>
-                <a id="original-file-preview-download" href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
-                    <i class="bi bi-download"></i> Download
+                <a id="original-file-preview-download" href="#" class="inline-flex items-center justify-center gap-1.5 h-11 w-11 sm:w-auto sm:px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
+                    <i class="bi bi-download text-base"></i>
+                    <span class="hidden sm:inline">Download</span>
                 </a>
-                <button type="button" onclick="closeOriginalFilePreviewModal()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-                    <i class="bi bi-x-lg text-sm"></i>
+                <button type="button" onclick="closeOriginalFilePreviewModal()" class="h-11 w-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <i class="bi bi-x-lg text-base"></i>
                 </button>
             </div>
         </div>
-        <div id="original-file-preview-body" class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;"></div>
+        <div id="original-file-preview-body" class="mobile-preview-body flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;"></div>
     </div>
 </div>
 
@@ -598,4 +599,99 @@ document.addEventListener('DOMContentLoaded', function() {
         attributeFilter: ['class']
     });
 });
+
+// Mobile-friendly original-file preview (overrides document-view-modal.js default)
+function openOriginalFilePreviewModal(docId, fileName, fileType) {
+    const modal = document.getElementById('original-file-preview-modal');
+    const body = document.getElementById('original-file-preview-body');
+    const titleEl = document.getElementById('original-file-preview-title');
+    const typeEl = document.getElementById('original-file-preview-type');
+    const newTabLink = document.getElementById('original-file-preview-newtab');
+    const downloadLink = document.getElementById('original-file-preview-download');
+
+    const previewUrl = App.apiUrl('documents', 'preview.php?id=' + docId);
+    const downloadUrl = App.apiUrl('documents', 'download.php?id=' + docId);
+
+    titleEl.textContent = fileName || 'Document Preview';
+    typeEl.textContent = (fileType || '').replace('application/', '').replace('image/', 'img/');
+
+    newTabLink.href = previewUrl;
+    downloadLink.href = downloadUrl;
+
+    const ft = (fileType || '').toLowerCase();
+    const ext = ((fileName || '').split('.').pop() || '').toLowerCase();
+    const isPdf = ft === 'application/pdf' || ft === 'pdf' || ext === 'pdf';
+    const isDocx = ft === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || ft === 'word' || ext === 'docx' || ext === 'doc';
+    const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', '')) || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
+
+    if (isPdf || isDocx) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'preview-iframe-wrapper relative w-full h-full';
+        const loader = document.createElement('div');
+        loader.className = 'iframe-loader';
+        loader.innerHTML = '<div class="inline-block w-8 h-8 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin"></div>';
+        const iframe = document.createElement('iframe');
+        iframe.src = previewUrl;
+        iframe.title = 'Document Preview';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('scrolling', 'auto');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.className = 'preview-iframe w-full h-full border-0 block';
+        iframe.onload = function() { loader.remove(); };
+        wrapper.appendChild(loader);
+        wrapper.appendChild(iframe);
+        body.innerHTML = '';
+        body.appendChild(wrapper);
+    } else if (isImage) {
+        body.innerHTML = '<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="' + previewUrl + '" alt="' + escapeHtml(fileName) + '" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>';
+    } else {
+        const ext = (fileName || '').split('.').pop().toUpperCase();
+        body.innerHTML =
+            '<div class="flex flex-col items-center justify-center h-full p-12 text-center">' +
+                '<div class="w-20 h-20 rounded-2xl bg-gray-200 dark:bg-gray-800 flex items-center justify-center mb-5">' +
+                    '<i class="bi bi-file-earmark-x text-4xl text-gray-400 dark:text-gray-600"></i>' +
+                '</div>' +
+                '<h4 class="text-base font-bold text-gray-700 dark:text-gray-300 mb-2">Cannot preview ' + ext + ' files in browser</h4>' +
+                '<p class="text-sm text-gray-400 dark:text-gray-500 max-w-md mb-6">This file type cannot be displayed directly in the web browser. You can download it to view the full document.</p>' +
+                '<a href="' + downloadUrl + '" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">' +
+                    '<i class="bi bi-download text-base"></i> Download File' +
+                '</a>' +
+            '</div>';
+    }
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    const content = document.getElementById('original-file-preview-content');
+    setTimeout(function() {
+        if (content) {
+            content.classList.remove('translate-y-full', 'sm:scale-95', 'opacity-0');
+            content.classList.add('translate-y-0', 'sm:scale-100', 'opacity-100');
+        }
+    }, 10);
+}
+
+// Swipe-to-close gesture for mobile modal drag handles
+function setupSwipeToClose() {
+    const handles = document.querySelectorAll('[data-close-fn]');
+    handles.forEach(function(handle) {
+        let startY = 0;
+        let startTime = 0;
+        handle.addEventListener('touchstart', function(e) {
+            startY = e.touches[0].clientY;
+            startTime = Date.now();
+        }, { passive: true });
+        handle.addEventListener('touchend', function(e) {
+            const endY = e.changedTouches[0].clientY;
+            const diffY = endY - startY;
+            const elapsed = Date.now() - startTime;
+            if (diffY > 60 && elapsed < 600) {
+                const fnName = handle.getAttribute('data-close-fn');
+                if (typeof window[fnName] === 'function') {
+                    window[fnName]();
+                }
+            }
+        }, { passive: true });
+    });
+}
+setupSwipeToClose();
 </script>

@@ -1819,7 +1819,8 @@ nav ul li a.bg-red-600 {
     
     /* Add active states instead */
     button:active, a:active, .clickable:active {
-    transform: scale(0.98);
+        transform: scale(0.98);
+    }
 }
 
 /* Button Ripple Effect */
@@ -2008,4 +2009,125 @@ button .ripple {
 .gap-responsive {
     gap: clamp(0.5rem, 2vw, 1.5rem);
 }
+
+/* ---------- Mobile Modal / Iframe Enhancements ---------- */
+@media (max-width: 640px) {
+    /* Make the original-file preview iframe truly fullscreen on mobile */
+    .mobile-preview-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0%;
+        min-height: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .preview-iframe-wrapper {
+        position: relative;
+        flex: 1 1 0%;
+        min-height: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .preview-iframe-wrapper iframe,
+    .preview-iframe {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        border: none;
+        display: block;
+    }
+
+    /* Compact, touch-friendly mobile preview header */
+    .mobile-preview-header {
+        flex-shrink: 0;
+        min-height: 56px;
+    }
+
+    .mobile-preview-header .header-title {
+        max-width: calc(100vw - 180px);
+    }
+
+    .mobile-preview-header button,
+    .mobile-preview-header a {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Larger drag handle for swipe-to-close */
+    .modal-drag-handle {
+        touch-action: pan-y;
+        cursor: grab;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .modal-drag-handle:active {
+        cursor: grabbing;
+    }
+
+    .modal-drag-handle .drag-bar {
+        width: 48px;
+        height: 6px;
+    }
+
+    /* Simple loader overlay inside iframe wrapper */
+    .iframe-loader {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.9);
+        z-index: 10;
+        transition: opacity 0.2s ease;
+    }
+
+    .dark .iframe-loader {
+        background: rgba(17, 24, 39, 0.9);
+    }
+
+    .iframe-loader.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Ensure all modal panels use the full available height on mobile */
+    .modal-panel-mobile {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        border-radius: 1rem 1rem 0 0 !important;
+        margin: 0 !important;
+    }
+
+    .modal-panel-mobile .modal-body-scroll {
+        flex: 1 1 0%;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+
+    .modal-panel-mobile .modal-sticky-header {
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+    }
+
+    /* Enforce minimum 44px tap targets on small modal controls */
+    .modal-sticky-header button,
+    .modal-sticky-header a {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
