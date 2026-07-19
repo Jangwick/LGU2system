@@ -438,7 +438,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                     <i class="bi bi-person-circle text-gray-300 text-sm"></i>
                                                     <span class="hover:text-red-500 transition-colors cursor-default"><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
                                                 </div>
-                                </div>
+                                                                                <div class="card-actions ml-auto flex items-center gap-3">
+                                                    <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
+                                                        <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
+                                                    </button>
+                                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
+                                                        <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
+                                                    </a>
+                                                </div>
+</div>
                                                                 </div>
                                 </div>
                                 </div>
