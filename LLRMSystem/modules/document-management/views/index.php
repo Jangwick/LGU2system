@@ -487,16 +487,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </td>
                                     <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
-                                            <button type="button" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye"></i></button>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                             if ($userRole !== 'viewer'): 
                                             ?>
-                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors" title="Download">
-                                                <i class="bi bi-download"></i>
-                                            </a>
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download"><i class="bi bi-download"></i></a>
                                             <?php endif; ?>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));

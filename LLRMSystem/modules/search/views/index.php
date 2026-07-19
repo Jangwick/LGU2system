@@ -333,7 +333,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php foreach ($results as $index => $doc): 
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
-                                                                <div class="result-card-mobile md:hidden">\n<div class="result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
+                                                                <div class="md:hidden">
+<div class="result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
                                     <!-- Top: Type, Date & Status -->
                                     <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
                                         <div class="flex items-center gap-2">
@@ -394,7 +395,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </div>
                                 </div>
                                 </div>
-                                <div class="result-card-desktop hidden md:block">\n<div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
+                                <div class="hidden md:block">
+<div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
                                     <div class="flex flex-col md:flex-row gap-6">
                                         <!-- Doc Icon -->
                                         <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 group-hover:border-red-100 transition-all duration-300">
@@ -436,13 +438,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                     <i class="bi bi-person-circle text-gray-300 text-sm"></i>
                                                     <span class="hover:text-red-500 transition-colors cursor-default"><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
                                                 </div>
-                                                                                <div class="card-actions ml-auto flex items-center gap-3">
-                                                    <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
-                                                        <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
+                                                                                                                                <div class="card-actions ml-auto flex items-center gap-1.5">
+                                                    <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="Preview">
+                                                        <i class="bi bi-eye"></i>
                                                     </button>
-                                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
-                                                        <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
+                                                    <?php if ($userRole !== 'viewer'): ?>
+                                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download">
+                                                        <i class="bi bi-download"></i>
                                                     </a>
+                                                    <?php endif; ?>
                                                 </div>
 </div>
                                                                 </div>
