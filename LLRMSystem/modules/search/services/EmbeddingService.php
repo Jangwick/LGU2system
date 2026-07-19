@@ -7,6 +7,16 @@
 class EmbeddingService {
     private $apiKey;
     private $model;
+    public $lastError = null;
+    public $lastHttpCode = null;
+
+    public function getLastError() {
+        return $this->lastError;
+    }
+
+    public function getLastHttpCode() {
+        return $this->lastHttpCode;
+    }
 
     public function __construct() {
         $this->apiKey = defined('GEMINI_API_KEY') ? GEMINI_API_KEY : '';
@@ -21,7 +31,11 @@ class EmbeddingService {
      * @return array|null Vector values
      */
     public function generateEmbedding($text) {
+        $this->lastError = null;
+        $this->lastHttpCode = null;
+
         if (empty($this->apiKey)) {
+            $this->lastError = 'GEMINI_API_KEY is missing';
             error_log("EmbeddingService: GEMINI_API_KEY is missing");
             return null;
         }
@@ -54,11 +68,16 @@ class EmbeddingService {
         curl_close($ch);
 
         if ($err) {
+            $this->lastError = 'Curl: ' . $err;
+            $this->lastHttpCode = $httpCode;
             error_log("EmbeddingService Curl Error: " . $err);
             return null;
         }
 
+        $this->lastHttpCode = $httpCode;
+
         if ($httpCode < 200 || $httpCode >= 300) {
+            $this->lastError = 'HTTP ' . $httpCode . ': ' . $response;
             error_log("EmbeddingService HTTP Error: " . $httpCode . " Response: " . $response);
             return null;
         }
@@ -69,6 +88,7 @@ class EmbeddingService {
             return $result['embedding']['values'];
         }
 
+        $this->lastError = 'Gemini response: ' . json_encode($result);
         error_log("EmbeddingService Gemini Error: " . json_encode($result));
         return null;
     }
