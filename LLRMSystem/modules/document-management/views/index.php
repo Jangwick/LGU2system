@@ -1212,6 +1212,13 @@ function renderPreviewModalCompliance(docId, data, role) {
             const code = escapeHtml(r.code || r.title || 'Rule');
             const title = r.code ? escapeHtml(r.title || '') : '';
             const score = parseInt(r.score || 0, 10);
+            let aiHtml = '';
+            if (r.ai_analysis) {
+                try {
+                    const ai = JSON.parse(r.ai_analysis);
+                    aiHtml = '<p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1"><i class="bi bi-robot mr-1"></i><strong>AI Analysis' + (ai.confidence ? ' (' + ai.confidence + '%)' : '') + ':</strong> ' + escapeHtml(ai.analysis || ai.reason || '') + '</p>';
+                } catch (e) {}
+            }
             html += '<div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">' +
                 '<div class="flex items-center gap-2 mb-1">' +
                     '<i class="bi ' + icon + '"></i>' +
@@ -1222,6 +1229,7 @@ function renderPreviewModalCompliance(docId, data, role) {
                     '<div class="' + barColor + ' h-1.5 rounded-full" style="width: ' + Math.min(100, Math.max(0, score)) + '%;"></div>' +
                 '</div>' +
                 '<p class="text-xs text-gray-500 dark:text-gray-400">' + escapeHtml(r.explanation || '') + '</p>' +
+                aiHtml +
             '</div>';
         });
         html += '</div>';
