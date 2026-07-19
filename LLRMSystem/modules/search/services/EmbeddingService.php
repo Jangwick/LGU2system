@@ -46,13 +46,15 @@ class EmbeddingService {
         $ch = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
+        $dimensionality = defined('GEMINI_EMBEDDING_DIMENSIONALITY') ? GEMINI_EMBEDDING_DIMENSIONALITY : 768;
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'model' => 'models/' . $this->model,
             'content' => [
                 'parts' => [
                     ['text' => $text]
                 ]
-            ]
+            ],
+            'output_dimensionality' => $dimensionality
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',

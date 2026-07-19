@@ -326,6 +326,9 @@ if (!defined('GEMINI_API_KEY')) {
 if (!defined('GEMINI_EMBEDDING_MODEL')) {
     define('GEMINI_EMBEDDING_MODEL', 'gemini-embedding-2'); // Gemini Embedding 2
 }
+if (!defined('GEMINI_EMBEDDING_DIMENSIONALITY')) {
+    define('GEMINI_EMBEDDING_DIMENSIONALITY', 768); // Lower-cost 768-dim vectors
+}
 if (!defined('GROQ_API_KEY')) {
     define('GROQ_API_KEY', ''); // Set in config.local.php
 }
