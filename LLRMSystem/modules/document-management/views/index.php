@@ -58,7 +58,18 @@ function getFileIconClass($mimeType, $fileName = '') {
     return 'bg-gray-100 dark:bg-gray-800';
 }
 
-function getStatusBadge($status) {
+function getStatusBadge($status, $compact = false) {
+    if ($compact) {
+        $badges = [
+            'draft' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"><i class="bi bi-pencil"></i>Draft</span>',
+            'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"><i class="bi bi-clock"></i>Pending</span>',
+            'approved' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"><i class="bi bi-check-circle"></i>Approved</span>',
+            'rejected' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"><i class="bi bi-x-circle"></i>Rejected</span>',
+            'archived' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-500 text-white dark:bg-gray-600"><i class="bi bi-archive"></i>Archived</span>'
+        ];
+        return $badges[$status] ?? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">' . ucfirst($status) . '</span>';
+    }
+
     $badges = [
         'draft' => '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
         'pending' => '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
@@ -69,7 +80,18 @@ function getStatusBadge($status) {
     return $badges[$status] ?? '<span class="badge badge-info">' . ucfirst($status) . '</span>';
 }
 
-function getOcrBadge($ocrStatus) {
+function getOcrBadge($ocrStatus, $compact = false) {
+    if ($compact) {
+        $badges = [
+            'completed' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="OCR Completed"><i class="bi bi-check-circle"></i>OCR</span>',
+            'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="OCR Pending"><i class="bi bi-hourglass-split"></i>OCR</span>',
+            'processing' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" title="OCR Processing"><i class="bi bi-arrow-repeat"></i>OCR</span>',
+            'failed' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="OCR Failed"><i class="bi bi-x-circle"></i>OCR</span>',
+            'skipped' => '',
+        ];
+        return $badges[$ocrStatus] ?? '';
+    }
+
     $badges = [
         'completed' => '<span class="badge badge-success text-[10px]" title="OCR Completed"><i class="bi bi-check-circle mr-0.5"></i>OCR</span>',
         'pending' => '<span class="badge badge-warning text-[10px]" title="OCR Pending"><i class="bi bi-hourglass-split mr-0.5"></i>OCR</span>',
@@ -80,8 +102,17 @@ function getOcrBadge($ocrStatus) {
     return $badges[$ocrStatus] ?? '';
 }
 
-function getComplianceBadge($complianceStatus) {
+function getComplianceBadge($complianceStatus, $compact = false) {
     $status = $complianceStatus ?? 'pending';
+    if ($compact) {
+        $badges = [
+            'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="Compliance check pending"><i class="bi bi-hourglass-split"></i>Pending</span>',
+            'compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="Compliant"><i class="bi bi-shield-check"></i>Compliant</span>',
+            'non_compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non-Compliant</span>',
+        ];
+        return $badges[$status] ?? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">Unknown</span>';
+    }
+
     $badges = [
         'pending' => '<span class="badge badge-warning" title="Compliance check pending"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>',
         'compliant' => '<span class="badge badge-success" title="Compliant"><i class="bi bi-shield-check mr-1"></i>Compliant</span>',
@@ -510,12 +541,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
                                         <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </span>
-                                    <div class="flex flex-wrap justify-end gap-1">
-                                        <?php echo getStatusBadge($doc['status']); ?>
-                                        <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
-                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
+                                    <div class="flex flex-nowrap items-center gap-1 overflow-x-auto">
+                                        <?php echo getStatusBadge($doc['status'], true); ?>
+                                        <?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?>
+                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
                                         <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
-                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center p-1 text-[10px] text-blue-600 hover:text-blue-800" title="Run compliance check">
+                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] active:scale-95" title="Run compliance check">
                                             <i class="bi bi-shield-check"></i>
                                         </button>
                                         <?php endif; ?>
@@ -535,43 +566,41 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
 
                             <!-- Bottom: Actions & Metadata -->
-                            <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex flex-col gap-2">
+                            <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex items-center justify-between gap-3">
+                                <?php if (!empty($doc['status_changed_by_name'])): ?>
+                                <span class="text-[10px] text-gray-500 dark:text-gray-400 truncate" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
+                                    by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
+                                </span>
+                                <?php else: ?>
+                                <span></span>
+                                <?php endif; ?>
                                 <?php 
                                 $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                 $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
                                 $isApproved = ($doc['status'] ?? '') === 'approved';
                                 $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                                $canDelete = $canEdit; // Same policy for mobile
+                                $canDelete = $canEdit;
                                 ?>
-                                <div class="flex flex-wrap justify-end gap-2">
-                                    <button type="button" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all focus:ring-2 focus:ring-blue-500/20" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-eye"></i>
-                                        <span>View</span>
                                     </button>
                                     <?php if ($userRole !== 'viewer'): ?>
-                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all focus:ring-2 focus:ring-green-500/20" title="Download">
+                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download">
                                         <i class="bi bi-download"></i>
-                                        <span>Download</span>
                                     </a>
                                     <?php endif; ?>
                                     <?php if ($canEdit): ?>
-                                    <button type="button" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 active:scale-95 transition-all focus:ring-2 focus:ring-gray-500/20" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                    <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 active:scale-95 transition-all" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-pencil"></i>
-                                        <span>Edit</span>
                                     </button>
                                     <?php endif; ?>
                                     <?php if ($canDelete): ?>
-                                    <button type="button" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 active:scale-95 transition-all focus:ring-2 focus:ring-red-500/20" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                    <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 active:scale-95 transition-all" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-trash"></i>
-                                        <span>Delete</span>
                                     </button>
                                     <?php endif; ?>
                                 </div>
-                                <?php if (!empty($doc['status_changed_by_name'])): ?>
-                                <div class="text-right text-[10px] text-gray-500 dark:text-gray-400" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
-                                    by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
-                                </div>
-                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
