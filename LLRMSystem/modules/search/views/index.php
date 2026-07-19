@@ -439,7 +439,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                     <span class="hover:text-red-500 transition-colors cursor-default"><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
                                                 </div>
                                 </div>
-                                <?php endforeach; ?>
+                                                                </div>
+                                </div>
+                                </div>
+                                </div>
+<?php endforeach; ?>
 
                                 <!-- Pagination -->
                                 <?php if ($totalPages > 1): ?>
