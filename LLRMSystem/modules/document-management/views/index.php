@@ -2489,7 +2489,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-stretch sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="modal-panel-mobile bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+    <div id="original-file-preview-content" class="modal-panel-mobile relative bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeOriginalFilePreviewModal"><div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <!-- Header -->
         <div class="mobile-preview-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
@@ -2524,8 +2524,12 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
         <div class="flex flex-col sm:flex-row flex-1 overflow-hidden">
             <div id="original-file-preview-body" class="mobile-preview-body flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
             </div>
-            <div id="original-file-preview-analysis" class="w-full sm:w-80 border-t sm:border-t-0 sm:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 overflow-y-auto p-4 text-sm">
-                <div id="original-file-analysis-content" class="space-y-4"></div>
+            <div id="original-file-preview-analysis" class="compliance-sheet w-full sm:w-80 border-t sm:border-t-0 sm:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden sm:overflow-y-auto">
+                <button type="button" onclick="toggleComplianceSheet()" class="compliance-sheet-handle sm:hidden w-full px-4 py-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Compliance</span>
+                    <i class="bi bi-chevron-up compliance-sheet-chevron transition-transform duration-300"></i>
+                </button>
+                <div id="original-file-analysis-content" class="compliance-sheet-body p-4 text-sm overflow-y-auto"></div>
             </div>
         </div>
     </div>
@@ -2721,6 +2725,8 @@ function closeOriginalFilePreviewModal() {
         content.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
         content.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
     }
+    const analysisPanel = document.getElementById('original-file-preview-analysis');
+    if (analysisPanel) analysisPanel.classList.remove('expanded');
     setTimeout(() => {
         modal.classList.add('hidden');
         body.innerHTML = '';
@@ -2738,6 +2744,12 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+function toggleComplianceSheet() {
+    const sheet = document.getElementById('original-file-preview-analysis');
+    if (!sheet) return;
+    sheet.classList.toggle('expanded');
+}
 
 // Delegate click for original file preview buttons (works for dynamically generated content)
 document.addEventListener('click', function(e) {

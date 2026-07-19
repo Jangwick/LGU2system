@@ -2020,6 +2020,7 @@ button .ripple {
         min-height: 0;
         position: relative;
         overflow: hidden;
+        padding-bottom: 52px;
     }
 
     .preview-iframe-wrapper {
@@ -2129,5 +2130,70 @@ button .ripple {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+    }
+
+    /* Collapsible mobile compliance bottom sheet */
+    .compliance-sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 30;
+        height: 52px;
+        transition: height 0.3s ease;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+    }
+
+    .compliance-sheet.expanded {
+        height: 70dvh;
+    }
+
+    .compliance-sheet.expanded .compliance-sheet-chevron {
+        transform: rotate(180deg);
+    }
+
+    .compliance-sheet-handle {
+        height: 52px;
+        flex-shrink: 0;
+    }
+
+    .compliance-sheet-handle,
+    .compliance-sheet-handle * {
+        touch-action: pan-y;
+    }
+
+    .compliance-sheet-body {
+        height: calc(100% - 52px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+}
+
+@media (min-width: 641px) {
+    .compliance-sheet {
+        position: static;
+        height: auto;
+        width: 20rem;
+        overflow-y: auto;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        box-shadow: none;
+    }
+
+    .compliance-sheet-handle {
+        display: none;
+    }
+
+    .compliance-sheet-body {
+        height: auto;
+        overflow: visible;
+    }
+
+    .mobile-preview-body {
+        padding-bottom: 0;
     }
 }
