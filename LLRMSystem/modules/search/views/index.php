@@ -333,7 +333,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php foreach ($results as $index => $doc): 
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
-                                <div class="result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
+                                                                <div class="md:hidden">
+<div class="result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
                                     <!-- Top: Type, Date & Status -->
                                     <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
                                         <div class="flex items-center gap-2">
@@ -392,6 +393,51 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             <?php endif; ?>
                                         </div>
                                     </div>
+                                </div>
+                                </div>
+                                <div class="hidden md:block">
+<div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
+                                    <div class="flex flex-col md:flex-row gap-6">
+                                        <!-- Doc Icon -->
+                                        <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 group-hover:border-red-100 transition-all duration-300">
+                                            <i class="bi <?= getTypeIcon($doc['document_type']) ?>"></i>
+                                        </div>
+
+                                        <!-- Doc Info -->
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex flex-wrap items-center gap-2 mb-3">
+                                                <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-widest <?= getStatusBadgeClass($doc['status']) ?>">
+                                                    <?= $doc['status'] ?>
+                                                </span>
+                                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">REF: <?= $doc['reference_number'] ?? 'N/A' ?></span>
+                                                
+                                                <?php if(isset($doc['relevance_score'])): ?>
+                                                <div class="relevance-bar ml-auto flex items-center gap-2 bg-red-50/50 px-3 py-1.5 rounded-xl border border-red-100">
+                                                    <div class="text-[9px] font-black uppercase text-red-600 tracking-tighter">AI Relevance</div>
+                                                    <div class="h-1.5 w-14 bg-gray-200 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-red-500 shadow-sm shadow-red-500/50" style="width: <?= $doc['relevance_score'] * 100 ?>%"></div>
+                                                    </div>
+                                                </div>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <h3 class="text-xl font-black text-gray-800 group-hover:text-red-600 transition-colors line-clamp-1 mb-2">
+                                                <?= htmlspecialchars($doc['title']) ?>
+                                            </h3>
+
+                                            <p class="text-gray-500 text-sm line-clamp-2 mb-6 leading-relaxed font-medium">
+                                                <?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?>
+                                            </p>
+
+                                            <div class="flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 pt-5">
+                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400">
+                                                    <i class="bi bi-calendar-event text-red-500 text-sm"></i>
+                                                    <?= date('M d, Y', strtotime($doc['created_at'])) ?>
+                                                </div>
+                                                <div class="flex items-center gap-2 text-xs font-bold text-gray-400">
+                                                    <i class="bi bi-person-circle text-gray-300 text-sm"></i>
+                                                    <span class="hover:text-red-500 transition-colors cursor-default"><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
+                                                </div>
                                 </div>
                                 <?php endforeach; ?>
 
