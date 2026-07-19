@@ -382,8 +382,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             by <?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?>
                                         </span>
                                         <div class="flex items-center gap-1.5">
-                                            <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="Preview">
-                                                <i class="bi bi-eye"></i>
+                                            <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-4 py-2 md:px-6 md:py-2.5 rounded-xl bg-gray-800 dark:bg-black hover:bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn">
+                                                <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
                                             </button>
                                             <?php if ($userRole !== 'viewer'): ?>
                                             <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download">
