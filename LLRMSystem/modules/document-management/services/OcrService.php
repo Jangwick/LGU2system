@@ -218,17 +218,37 @@ class OcrService {
     }
 
     /**
+     * Decide whether extracted text contains enough real content to be useful.
+     */
+    private function isTextUsable($text) {
+        $text = trim((string) $text);
+        if (empty($text)) {
+            return false;
+        }
+
+        // Strip common OCR/PDF utility markers and page-break noise
+        $text = preg_replace('/\[[^\]]+\]|---[^-]+---|Page Break|Tesseract|Ghostscript|pdftotext|smalot|Created with|Title|Author|Subject|Keywords|Producer|Creator/i', '', $text);
+
+        // Collapse whitespace and count alphanumeric words/characters
+        $text = preg_replace('/\s+/', '', $text);
+        $clean = preg_replace('/[^A-Za-z0-9]/', '', $text);
+        $wordCount = preg_match_all('/[A-Za-z0-9]+/', $text);
+
+        return strlen($clean) >= 40 && $wordCount >= 5;
+    }
+
+    /**
      * Process PDF files — try digital extraction first, fall back to OCR
      */
     private function processPdf($filePath) {
         // First, try to extract embedded text using smalot/pdfparser
         $digitalText = $this->extractDigitalPdfText($filePath);
 
-        if (!empty(trim($digitalText))) {
+        if ($this->isTextUsable($digitalText)) {
             return $digitalText;
         }
 
-        // No embedded text — likely a scanned PDF, use OCR
+        // Digital text is empty or only markers/noise — treat as a scanned PDF
         return $this->processScannedPdf($filePath);
     }
 
