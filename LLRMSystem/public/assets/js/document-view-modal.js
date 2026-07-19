@@ -4,6 +4,7 @@ function formatDate(s){if(!s)return'N/A';return new Date(s).toLocaleDateString('
 function formatDateTime(s){if(!s)return'N/A';return new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});}
 function formatSize(b){if(b===0)return'0 Bytes';const k=1024,s=['Bytes','KB','MB','GB'];const i=Math.floor(Math.log(b)/Math.log(k));return parseFloat((b/Math.pow(k,i)).toFixed(2))+' '+s[i];}
 function getStatusBadgeHTML(st){if(!st)return'';const s=st.toLowerCase();const b={'draft':'<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>','pending':'<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>','approved':'<span class="badge badge-success"><i class="bi bi-check-circle mr-1"></i>Approved</span>','rejected':'<span class="badge badge-danger"><i class="bi bi-x-circle mr-1"></i>Rejected</span>','archived':'<span class="badge bg-gray-500 text-white"><i class="bi bi-archive mr-1"></i>Archived</span>'};return b[s]||'<span class="badge badge-info">'+st+'</span>';}
+function getComplianceBadgeHTML(st){if(!st)return'';const s=st.toLowerCase();const b={'pending':'<span class="badge badge-warning"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>','compliant':'<span class="badge badge-success"><i class="bi bi-shield-check mr-1"></i>Compliant</span>','non_compliant':'<span class="badge badge-danger"><i class="bi bi-shield-exclamation mr-1"></i>Non-Compliant</span>'};return b[s]||'<span class="badge badge-warning">'+st+'</span>';}
 function toggleDocPreview(btn){const c=document.getElementById('doc-preview-container');const i=btn.querySelector('i');const l=btn.querySelector('span');if(c.classList.contains('max-h-72')){c.classList.remove('max-h-72');c.classList.add('max-h-[2000px]');i.classList.replace('bi-chevron-down','bi-chevron-up');l.textContent='Collapse';}else{c.classList.replace('max-h-[2000px]','max-h-72');i.classList.replace('bi-chevron-up','bi-chevron-down');l.textContent='Expand';}}
 function formatDocumentText(t){if(!t)return'<p class="text-gray-400 italic">No content available.</p>';t=t.replace(/\r\n/g,'\n').replace(/\r/g,'\n').replace(/^\[OCR\]\s*\n?/i,'').replace(/\[Page OCR failed:.*?\]/g,'').replace(/--- Page Break ---/g,'\n\n');const bs=t.split(/\n{2,}/);let h='',inL=false,lt='',li=[];const cl=()=>{if(inL){h+='<'+(lt==='ol'?'ol':'ul')+' class="'+(lt==='ol'?'list-decimal':'list-disc')+' list-inside space-y-1.5 my-3 pl-2">'+li.join('')+'</'+(lt==='ol'?'ol':'ul')+'>';inL=false;lt='';li=[];}};for(let b of bs){b=b.trim();if(!b)continue;const nm=b.match(/^(\d+)\.\s*(.+)/),bm=b.match(/^[•·\-\*]\s*(.+)/),rm=b.match(/^([IVXLCDM]+)\.\s*(.+)/i),sa=b.length<80&&b===b.toUpperCase()&&/[A-Z]/.test(b)&&!b.endsWith('.')&&!nm,lm=b.match(/^([A-Z])\.\s*(.+)/),hd=sa||(b.length<100&&b===b.toUpperCase()&&/[A-Z]/.test(b))||/^(DETAILED|AN|ORDINANCE|RESOLUTION|REPUBLIC|CITY|MUNICIPAL|PROVINCIAL|BARANGAY|OFFICE|DEPARTMENT|COLLEGE|UNIVERSITY|SCHOOL|SECTION|ARTICLE|CHAPTER)/i.test(b)&&b.length<120;if(nm){if(inL&&lt!=='ol')cl();if(!inL){inL=true;lt='ol';}li.push('<li class="text-gray-800 dark:text-gray-200 leading-relaxed">'+escapeHtml(nm[2])+'</li>');}else if(bm){if(inL&&lt!=='ul')cl();if(!inL){inL=true;lt='ul';}li.push('<li class="text-gray-800 dark:text-gray-200 leading-relaxed">'+escapeHtml(bm[1])+'</li>');}else if(lm&&b.length<200){if(inL&&lt!=='ol')cl();if(!inL){inL=true;lt='ol';}li.push('<li class="text-gray-800 dark:text-gray-200 leading-relaxed"><strong>'+lm[1]+'.</strong> '+escapeHtml(lm[2])+'</li>');}else{cl();if(hd){h+='<h2 class="text-center font-bold text-base text-gray-900 dark:text-gray-100 my-3 uppercase tracking-wide">'+escapeHtml(b)+'</h2>';}else if(rm&&b.length<200){h+='<h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 mt-4 mb-2">'+escapeHtml(b)+'</h3>';}else if(b.length<100&&/^(Section|Article|Chapter|Title)\s/i.test(b)){h+='<h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 mt-4 mb-2">'+escapeHtml(b)+'</h3>';}else{const ls=b.split('\n');if(ls.length===1){h+='<p class="text-gray-800 dark:text-gray-200 leading-relaxed mb-3 text-justify">'+escapeHtml(b)+'</p>';}else{const ii=ls.every(l=>/^\s+/.test(l)||!l.trim());if(ii&&ls.length>2){h+='<div class="pl-4 border-l-2 border-gray-200 dark:border-gray-700 my-3 space-y-1">';for(const l of ls)if(l.trim())h+='<p class="text-gray-700 dark:text-gray-300 leading-relaxed text-[12px]">'+escapeHtml(l.trim())+'</p>';h+='</div>';}else{h+='<p class="text-gray-800 dark:text-gray-200 leading-relaxed mb-3 text-justify">'+ls.map(l=>escapeHtml(l.trim())).join('<br>')+'</p>';}}}}}cl();return h;}
 
@@ -80,8 +81,100 @@ ${res.related&&res.related.length?`<div class="space-y-3">${res.related.map(r=>`
 <button type="button" onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors"><i class="bi bi-clock-history mr-3 text-purple-500"></i>Activity History</button>
 <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">${doc.status!=='approved'?`<button type="button" onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"><i class="bi bi-trash mr-3"></i>Delete Document</button>`:''}</div>
 </div></section>
+<section id="view-modal-compliance" class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
+<h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center"><i class="bi bi-shield-check mr-2 text-emerald-500"></i>Compliance</h3>
+<div id="view-modal-compliance-badge" class="mb-3"></div>
+<div id="view-modal-compliance-content"></div>
+</section>
 </div></div></div>`;
+loadComplianceForViewModal(doc.id, role);
 }).catch(()=>{content.innerHTML='<div class="p-12 text-center text-red-600">Failed to load document details</div>';});
+}
+
+function loadComplianceForViewModal(docId, role) {
+    const badgeEl = document.getElementById('view-modal-compliance-badge');
+    const contentEl = document.getElementById('view-modal-compliance-content');
+    if (!badgeEl || !contentEl) return;
+    contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading compliance analysis...</div>';
+    fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ document_id: docId })
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            renderViewModalCompliance(docId, data, role);
+        } else {
+            contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
+        }
+    }).catch(() => {
+        contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis.</p>';
+    });
+}
+
+function renderViewModalCompliance(docId, data, role) {
+    const contentEl = document.getElementById('view-modal-compliance-content');
+    if (!contentEl) return;
+    let html = '<div class="space-y-3">';
+    if (data.rejection_notes) {
+        html += '<div class="p-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40 text-red-800 dark:text-red-300 text-sm">' +
+            '<p class="font-semibold mb-1"><i class="bi bi-exclamation-circle mr-1"></i>Rejection Notes</p>' +
+            '<p>' + escapeHtml(data.rejection_notes) + '</p>' +
+        '</div>';
+    }
+    if (data.results && data.results.length > 0) {
+        html += '<div class="space-y-2">';
+        data.results.forEach(function(r) {
+            const passed = r.status === 'compliant';
+            const icon = passed ? 'bi-check-circle text-green-600 dark:text-green-400' : 'bi-x-circle text-red-600 dark:text-red-400';
+            const barColor = passed ? 'bg-green-500' : 'bg-red-500';
+            const code = escapeHtml(r.code || r.title || 'Rule');
+            const title = r.code ? escapeHtml(r.title || '') : '';
+            const score = parseInt(r.score || 0, 10);
+            html += '<div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">' +
+                '<div class="flex items-center gap-2 mb-1">' +
+                    '<i class="bi ' + icon + '"></i>' +
+                    '<span class="font-medium text-sm text-gray-800 dark:text-gray-200">' + code + '</span>' +
+                '</div>' +
+                (title ? '<p class="text-xs text-gray-500 dark:text-gray-400 mb-1">' + title + '</p>' : '') +
+                '<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">' +
+                    '<div class="' + barColor + ' h-1.5 rounded-full" style="width: ' + Math.min(100, Math.max(0, score)) + '%;"></div>' +
+                '</div>' +
+                '<p class="text-xs text-gray-500 dark:text-gray-400">' + escapeHtml(r.explanation || '') + '</p>' +
+            '</div>';
+        });
+        html += '</div>';
+    } else {
+        html += '<p class="text-sm text-gray-500 dark:text-gray-400">No compliance analysis available yet.</p>';
+    }
+    html += '</div>';
+    if (role !== 'viewer') {
+        html += '<button type="button" onclick="runComplianceCheckInViewModal(' + docId + ')" class="mt-4 w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition"><i class="bi bi-arrow-repeat mr-1"></i> Run Compliance Check</button>';
+    }
+    contentEl.innerHTML = html;
+}
+
+async function runComplianceCheckInViewModal(docId) {
+    const contentEl = document.getElementById('view-modal-compliance-content');
+    const badgeEl = document.getElementById('view-modal-compliance-badge');
+    if (contentEl) contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Running compliance check...</div>';
+    try {
+        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: docId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            showToast('Compliance status: ' + data.compliance_status, data.compliance_status === 'compliant' ? 'success' : 'warning');
+            if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            loadComplianceForViewModal(docId, window.currentUserRole || 'viewer');
+        } else {
+            if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Compliance check failed: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
+        }
+    } catch (e) {
+        if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Failed to run compliance check.</p>';
+    }
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){const pm=document.getElementById('preview-modal');if(pm&&!pm.classList.contains('hidden'))closePreviewModal();const am=document.getElementById('activity-modal');if(am&&!am.classList.contains('hidden'))closeActivityModal();const om=document.getElementById('original-file-preview-modal');if(om&&!om.classList.contains('hidden'))closeOriginalFilePreviewModal();}});
