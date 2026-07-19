@@ -554,14 +554,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
                             </div>
 
-                            <!-- Middle: Icon & Title -->
-                            <div class="p-4 flex gap-4">
-                                <div class="w-16 h-16 rounded-2xl <?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> flex items-center justify-center flex-shrink-0 shadow-sm">
-                                    <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-3xl"></i>
-                                </div>
-                                <div class="flex-1 min-w-0 flex flex-col justify-center">
+                            <!-- Middle: Title, Filename & Icon -->
+                            <div class="p-4 flex flex-col items-center text-center gap-3">
+                                <div class="min-w-0 w-full">
                                     <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2"><?php echo htmlspecialchars($doc['title']); ?></h4>
                                     <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                </div>
+                                <div class="w-16 h-16 rounded-2xl <?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> flex items-center justify-center flex-shrink-0 shadow-sm">
+                                    <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-3xl"></i>
                                 </div>
                             </div>
 
