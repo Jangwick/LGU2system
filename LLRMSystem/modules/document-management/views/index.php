@@ -560,7 +560,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2"><?php echo htmlspecialchars($doc['title']); ?></h4>
                                     <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                 </div>
-                                <div class="w-16 h-16 rounded-2xl <?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> flex items-center justify-center flex-shrink-0 shadow-sm">
+                                <div class="w-full h-16 rounded-2xl <?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> flex items-center justify-center flex-shrink-0 shadow-sm">
                                     <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-3xl"></i>
                                 </div>
                             </div>
