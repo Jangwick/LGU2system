@@ -164,15 +164,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
             
             <!-- Document Types Chart -->
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
+            <div class="bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up animation-delay-600">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-bold text-gray-800">Document Types Distribution</h2>
+                    <h2 class="text-base sm:text-lg font-bold text-gray-800">Document Types Distribution</h2>
                     <button class="text-gray-500 hover:text-gray-700">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                 </div>
-                <div style="height: 300px; position: relative;">
-                    <canvas id="documentTypesChart"></canvas>
+                <div class="relative h-56 sm:h-80 w-full">
+                    <canvas id="documentTypesChart" class="w-full h-full"></canvas>
                 </div>
             </div>
         </div>
@@ -498,6 +498,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return $dashboardController->formatDocumentType($type['document_type']); 
         }, $documentTypes)); ?>;
         const typeCounts = <?php echo json_encode(array_column($documentTypes, 'count')); ?>;
+        const isMobile = window.innerWidth < 640;
         
         typesChart = new Chart(typesCtx, {
             type: 'doughnut',
@@ -523,15 +524,17 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 1.5,
+                maintainAspectRatio: false,
+                cutout: '60%',
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: {
-                            padding: 15,
+                            padding: isMobile ? 8 : 15,
+                            boxWidth: 12,
+                            usePointStyle: true,
                             font: {
-                                size: 12
+                                size: isMobile ? 10 : 12
                             },
                             color: getLabelColor(),
                             generateLabels: function(chart) {
