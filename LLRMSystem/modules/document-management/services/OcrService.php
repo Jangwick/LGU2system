@@ -192,7 +192,7 @@ class OcrService {
             }
         }
 
-        // Fallback: try pdftotext command if available
+        // Fallback 1: try pdftotext command if available
         $pdftotext = $this->detectCommand('pdftotext');
         if ($pdftotext) {
             $escapedPath = escapeshellarg($filePath);
@@ -208,6 +208,39 @@ class OcrService {
             if (file_exists($tempOutput)) {
                 $text = file_get_contents($tempOutput);
                 unlink($tempOutput);
+                if (!empty(trim($text))) {
+                    return $text;
+                }
+            }
+        }
+
+        // Fallback 2: use Ghostscript txtwrite to extract digital text (no OCR needed)
+        return $this->extractPdfTextWithGhostscript($filePath);
+    }
+
+    /**
+     * Extract text from digital PDFs using Ghostscript txtwrite device
+     */
+    private function extractPdfTextWithGhostscript($filePath) {
+        $gs = $this->getGhostscriptPath();
+        if (!$gs) {
+            return '';
+        }
+
+        $escapedGs = escapeshellarg($gs);
+        $escapedPath = escapeshellarg($filePath);
+
+        if (PHP_OS_FAMILY === 'Windows') {
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=txtwrite -sOutputFile=- -q $escapedPath 2>nul";
+        } else {
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=txtwrite -sOutputFile=- -q $escapedPath 2>/dev/null";
+        }
+
+        $output = shell_exec($command);
+
+        if ($output !== null) {
+            $text = trim($output);
+            if (!empty($text)) {
                 return $text;
             }
         }
