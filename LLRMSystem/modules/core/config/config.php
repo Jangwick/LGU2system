@@ -326,6 +326,12 @@ if (!defined('GEMINI_API_KEY')) {
 if (!defined('GEMINI_EMBEDDING_MODEL')) {
     define('GEMINI_EMBEDDING_MODEL', 'gemini-embedding-2'); // Gemini Embedding 2
 }
+if (!defined('GROQ_API_KEY')) {
+    define('GROQ_API_KEY', ''); // Set in config.local.php
+}
+if (!defined('GROQ_MODEL')) {
+    define('GROQ_MODEL', 'llama-3.1-70b-versatile');
+}
 
 // Encryption Configuration
 // Master encryption key for file encryption

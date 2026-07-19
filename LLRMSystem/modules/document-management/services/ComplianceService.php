@@ -5,6 +5,7 @@ require_once __DIR__ . '/../models/ComplianceRule.php';
 require_once __DIR__ . '/../models/DocumentComplianceResult.php';
 require_once __DIR__ . '/../../search/services/EmbeddingService.php';
 require_once __DIR__ . '/../../search/services/SearchService.php';
+require_once __DIR__ . '/../../ai/services/GroqService.php';
 
 class ComplianceService {
     private $db;
@@ -12,6 +13,7 @@ class ComplianceService {
     private $ruleModel;
     private $resultModel;
     private $embeddingService;
+    private $groqService;
 
     public function __construct($db = null) {
         $this->db = $db ?? getDatabase();
@@ -19,6 +21,7 @@ class ComplianceService {
         $this->ruleModel = new ComplianceRule($this->db);
         $this->resultModel = new DocumentComplianceResult($this->db);
         $this->embeddingService = new EmbeddingService();
+        $this->groqService = new GroqService();
     }
 
     /**
@@ -39,13 +42,32 @@ class ComplianceService {
         $docVector = $this->getDocumentVector($documentId, $complianceText, $document['title'] ?? null);
 
         $hasApplicable = count($applicableRules) > 0;
-        $hasForbidden = false;
-        $allCompliant = true;
         $checkedAt = date('Y-m-d H:i:s');
 
+        // 1. Vector scoring for all applicable rules
+        $ruleScores = [];
         foreach ($applicableRules as $rule) {
-            $scoreResult = $this->scoreRule($docVector, $complianceText, $rule, $document);
-            $ruleStatus = ($scoreResult['score'] >= 70 && !$this->checkForbidden($complianceText, $rule)) ? 'compliant' : 'non_compliant';
+            $ruleScores[$rule['id']] = $this->scoreRule($docVector, $complianceText, $rule, $document);
+        }
+
+        // 2. Groq AI analysis / rule search over the scored rules
+        $groqResults = [];
+        if (defined('GROQ_API_KEY') && GROQ_API_KEY) {
+            $groqInput = $this->buildGroqRules($applicableRules, $ruleScores);
+            $groqResults = $this->groqService->analyzeCompliance($complianceText, $groqInput);
+            if (!is_array($groqResults)) {
+                $groqResults = [];
+            }
+        }
+
+        // 3. Finalize statuses and store results
+        $hasForbidden = false;
+        $allCompliant = true;
+
+        foreach ($applicableRules as $rule) {
+            $scoreResult = $ruleScores[$rule['id']];
+            $groqResult = $groqResults[$rule['code']] ?? null;
+            $ruleStatus = $this->determineRuleStatus($complianceText, $scoreResult, $groqResult, $rule);
 
             if ($this->checkForbidden($complianceText, $rule)) {
                 $hasForbidden = true;
@@ -62,6 +84,7 @@ class ComplianceService {
                 'score' => $scoreResult['score'],
                 'matched_keywords' => $scoreResult['matched'],
                 'explanation' => $scoreResult['explanation'],
+                'ai_analysis' => $groqResult ? json_encode($groqResult) : null,
                 'checked_by' => $userId,
                 'checked_at' => $checkedAt
             ]);
@@ -122,6 +145,48 @@ class ComplianceService {
     }
 
     /**
+     * Build the rule payload passed to Groq for analysis and search.
+     */
+    private function buildGroqRules(array $rules, array $ruleScores) {
+        $out = [];
+        foreach ($rules as $rule) {
+            $scoreResult = $ruleScores[$rule['id']] ?? ['score' => 0];
+            $out[] = [
+                'code' => $rule['code'],
+                'title' => $rule['title'],
+                'summary' => $rule['summary'] ?? '',
+                'example_excerpt' => $rule['example_excerpt'] ?? '',
+                'reference_url' => $rule['reference_url'] ?? '',
+                'reference_text' => $rule['reference_text'] ?? '',
+                'vector_score' => $scoreResult['score']
+            ];
+        }
+        return $out;
+    }
+
+    /**
+     * Determine the final rule status using Groq analysis when available,
+     * falling back to the vector similarity threshold.
+     */
+    private function determineRuleStatus($complianceText, $scoreResult, $groqResult, $rule) {
+        $forbidden = $this->checkForbidden($complianceText, $rule);
+
+        if ($groqResult && isset($groqResult['status'])) {
+            $status = strtolower($groqResult['status']);
+            $confidence = (int) ($groqResult['confidence'] ?? 0);
+            if ($confidence >= 50) {
+                if ($status === 'compliant') {
+                    return $forbidden ? 'non_compliant' : 'compliant';
+                }
+                return 'non_compliant';
+            }
+        }
+
+        $score = $scoreResult['score'] ?? 0;
+        return ($score >= 70 && !$forbidden) ? 'compliant' : 'non_compliant';
+    }
+
+    /**
      * Build a lowercased searchable corpus from the document fields.
      */
     private function buildCorpus($document) {
@@ -174,7 +239,7 @@ class ComplianceService {
             $document['reference_number'] ?? '',
             $document['description'] ?? '',
             $document['tags'] ?? '',
-            substr($document['extracted_text'] ?? '', 0, 2000)
+            substr($document['extracted_text'] ?? '', 0, 4000)
         ];
         return implode(' ', array_filter($parts));
     }

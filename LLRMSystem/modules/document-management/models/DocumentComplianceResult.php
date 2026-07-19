@@ -35,9 +35,9 @@ class DocumentComplianceResult {
     public function create($data) {
         $stmt = $this->db->prepare("
             INSERT INTO document_compliance_results
-            (document_id, rule_id, status, score, matched_keywords, explanation, reviewer_comment, checked_by, checked_at)
+            (document_id, rule_id, status, score, matched_keywords, explanation, ai_analysis, reviewer_comment, checked_by, checked_at)
             VALUES
-            (:document_id, :rule_id, :status, :score, :matched_keywords, :explanation, :reviewer_comment, :checked_by, :checked_at)
+            (:document_id, :rule_id, :status, :score, :matched_keywords, :explanation, :ai_analysis, :reviewer_comment, :checked_by, :checked_at)
         ");
         $stmt->execute([
             ':document_id' => $data['document_id'],
@@ -46,6 +46,7 @@ class DocumentComplianceResult {
             ':score' => $data['score'] ?? 0,
             ':matched_keywords' => $data['matched_keywords'] ?? null,
             ':explanation' => $data['explanation'] ?? null,
+            ':ai_analysis' => $data['ai_analysis'] ?? null,
             ':reviewer_comment' => $data['reviewer_comment'] ?? null,
             ':checked_by' => $data['checked_by'] ?? null,
             ':checked_at' => $data['checked_at'] ?? null,
