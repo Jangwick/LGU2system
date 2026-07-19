@@ -555,7 +555,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
 
                             <!-- Middle: Title, Filename & Icon -->
-                            <div class="p-4 flex flex-col items-center text-center gap-3">
+                            <div class="p-4 flex flex-col items-start gap-3">
                                 <div class="min-w-0 w-full">
                                     <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2"><?php echo htmlspecialchars($doc['title']); ?></h4>
                                     <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80"><?php echo htmlspecialchars($doc['file_name']); ?></p>
