@@ -11,12 +11,15 @@ require_once __DIR__ . '/../models/Document.php';
 require_once __DIR__ . '/../models/DocumentVersion.php';
 require_once __DIR__ . '/../models/DocumentLink.php';
 require_once __DIR__ . '/../models/DocumentTag.php';
+require_once __DIR__ . '/../models/ComplianceRule.php';
+require_once __DIR__ . '/../models/DocumentComplianceResult.php';
 
 $db = getDatabase();
 $documentModel = new Document($db);
 $versionModel = new DocumentVersion($db);
 $linkModel = new DocumentLink($db);
 $tagModel = new DocumentTag($db);
+$complianceResultModel = new DocumentComplianceResult($db);
 
 $documentId = $_GET['id'] ?? null;
 
@@ -50,6 +53,10 @@ $versions = $versionModel->getByDocumentId($documentId);
 $links = $linkModel->getByDocumentId($documentId);
 $incomingLinks = $linkModel->getIncomingLinks($documentId);
 $tags = $tagModel->getByDocumentId($documentId);
+$complianceResults = $complianceResultModel->getByDocumentId($documentId);
+
+$complianceStatus = $document['compliance_status'] ?? 'pending';
+$complianceCheckedAt = $document['compliance_checked_at'] ?? null;
 
 $pageTitle = $document['title'];
 $currentPage = 'documents';
@@ -93,6 +100,17 @@ function getLinkTypeLabel($type) {
         'reference' => 'References'
     ];
     return $labels[$type] ?? ucfirst($type);
+}
+
+function getComplianceBadge($status) {
+    $status = $status ?? 'pending';
+    $labels = [
+        'pending' => ['class' => 'badge-warning', 'icon' => 'bi-hourglass-split', 'label' => 'Pending'],
+        'compliant' => ['class' => 'badge-success', 'icon' => 'bi-shield-check', 'label' => 'Compliant'],
+        'non_compliant' => ['class' => 'badge-danger', 'icon' => 'bi-shield-exclamation', 'label' => 'Non-Compliant']
+    ];
+    $cfg = $labels[$status] ?? $labels['pending'];
+    return '<span class="badge ' . $cfg['class'] . '"><i class="bi ' . $cfg['icon'] . ' mr-1"></i>' . $cfg['label'] . '</span>';
 }
 
 include_once __DIR__ . '/../../core/layouts/header.php';
@@ -464,6 +482,61 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
 
+                <!-- Ordinance & Regulation Alignment -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-5 md:p-6 border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center">
+                        <i class="bi bi-shield-check mr-2 text-red-600"></i> Ordinance &amp; Regulation Alignment
+                    </h2>
+
+                    <div class="mb-4">
+                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                            <?php echo getComplianceBadge($complianceStatus); ?>
+                            <?php if ($complianceCheckedAt): ?>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Checked <?php echo date('M d, Y H:i', strtotime($complianceCheckedAt)); ?></span>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if ($complianceStatus === 'non_compliant' && $userRole !== 'viewer'): ?>
+                        <div id="reject-compliance-form" class="mt-3">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Non-compliance comment</label>
+                            <textarea id="reject-comment" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-red-500 focus:border-red-500" placeholder="Explain why this document is non-compliant..."></textarea>
+                            <button type="button" onclick="rejectDocument(<?= (int)$documentId ?>)" class="mt-2 w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition">
+                                <i class="bi bi-x-circle mr-1"></i> Reject with Comment
+                            </button>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($userRole !== 'viewer'): ?>
+                        <button type="button" onclick="checkCompliance(<?= (int)$documentId ?>)" id="rerun-compliance-btn" class="mt-2 w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-sm font-bold rounded-lg transition">
+                            <i class="bi bi-arrow-repeat mr-1"></i> Re-run Compliance Check
+                        </button>
+                        <?php endif; ?>
+
+                        <?php if (empty($complianceResults) && $complianceStatus === 'pending'): ?>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Compliance has not been checked yet.</p>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (!empty($complianceResults)): ?>
+                    <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                        <?php foreach ($complianceResults as $result): ?>
+                        <div class="p-3 rounded-lg border <?= $result['status'] === 'compliant' ? 'border-green-200 bg-green-50 dark:bg-green-900/20' : 'border-red-200 bg-red-50 dark:bg-red-900/20' ?>">
+                            <div class="flex items-start justify-between gap-2">
+                                <p class="text-sm font-bold text-gray-800 dark:text-gray-200"><?= htmlspecialchars($result['title'] ?? 'Unknown standard') ?></p>
+                                <span class="text-xs px-2 py-0.5 rounded-full <?= $result['status'] === 'compliant' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>"><?= $result['status'] === 'compliant' ? 'Aligned' : 'Not Aligned' ?></span>
+                            </div>
+                            <?php if (!empty($result['explanation'])): ?>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1"><?= htmlspecialchars($result['explanation']) ?></p>
+                            <?php endif; ?>
+                            <?php if ($result['score'] > 0): ?>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Score: <?= (int)$result['score'] ?></p>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
                 <!-- AI Research Tools -->
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-5 md:p-6 border border-gray-200 dark:border-gray-700">
                     <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center">
@@ -725,6 +798,59 @@ function toggleFullText() {
         full.classList.add('hidden');
         preview.classList.remove('hidden');
         btn.textContent = 'Show Full Text';
+    }
+}
+async function checkCompliance(documentId) {
+    const btn = document.getElementById('rerun-compliance-btn');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-1"></i> Checking...';
+    }
+    try {
+        const response = await fetch('../../document-management/api/check-compliance.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: documentId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            alert('Compliance check completed: ' + data.compliance_status);
+            window.location.reload();
+        } else {
+            alert('Compliance check failed: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        alert('Failed to run compliance check.');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+}
+
+async function rejectDocument(documentId) {
+    const comment = document.getElementById('reject-comment')?.value?.trim();
+    if (!comment) {
+        alert('Please enter a non-compliance comment.');
+        return;
+    }
+    try {
+        const response = await fetch('../../document-management/api/reject-document.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: documentId, comment: comment })
+        });
+        const data = await response.json();
+        if (data.success) {
+            alert('Document rejected.');
+            window.location.reload();
+        } else {
+            alert('Rejection failed: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        alert('Failed to reject document.');
     }
 }
 </script>

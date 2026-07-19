@@ -222,7 +222,7 @@ class DocumentManager {
         }
 
         // Preserve advanced filters if they exist
-        const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
+        const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference', 'compliance_status'];
         advancedKeys.forEach(key => {
             const val = params.get(key);
             if (val) params.set(key, val);
@@ -242,6 +242,7 @@ class DocumentManager {
         const dateTo = document.getElementById('filter-date-to');
         const reference = document.getElementById('filter-reference');
         const tags = document.getElementById('filter-tags');
+        const compliance = document.getElementById('filter-compliance');
 
         if (dateFrom && dateFrom.value) params.set('date_from', dateFrom.value);
         else params.delete('date_from');
@@ -255,6 +256,9 @@ class DocumentManager {
         if (tags && tags.value) params.set('tags', tags.value);
         else params.delete('tags');
 
+        if (compliance && compliance.value) params.set('compliance_status', compliance.value);
+        else params.delete('compliance_status');
+
         // Reset page when filters change
         params.delete('page');
 
@@ -263,7 +267,7 @@ class DocumentManager {
 
     clearFilters() {
         const params = new URLSearchParams(window.location.search);
-        const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference'];
+        const advancedKeys = ['date_from', 'date_to', 'file_size', 'tags', 'category', 'reference', 'compliance_status'];
         advancedKeys.forEach(key => params.delete(key));
 
         // Reset page when filters are cleared
@@ -281,7 +285,8 @@ class DocumentManager {
             'filter-file-size': 'file_size',
             'filter-tags': 'tags',
             'filter-category': 'category',
-            'filter-reference': 'reference'
+            'filter-reference': 'reference',
+            'filter-compliance': 'compliance_status'
         };
 
         for (const [id, param] of Object.entries(map)) {

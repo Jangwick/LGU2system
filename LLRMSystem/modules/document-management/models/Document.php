@@ -68,6 +68,11 @@ class Document {
             $params[':status'] = $filters['status'];
         }
         
+        if (!empty($filters['compliance_status'])) {
+            $sql .= " AND d.compliance_status = :compliance_status";
+            $params[':compliance_status'] = $filters['compliance_status'];
+        }
+        
         if (!empty($filters['date_from'])) {
             $sql .= " AND d.document_date >= :date_from";
             $params[':date_from'] = $filters['date_from'];
@@ -230,7 +235,8 @@ class Document {
             'status_changed_by', 'status_changed_at',
             'extracted_text', 'ocr_status', 'ocr_processed_at',
             'key_points', 'key_points_generated_at',
-            'is_encrypted', 'encryption_key'
+            'is_encrypted', 'encryption_key',
+            'compliance_status', 'compliance_checked_at'
         ];
 
         $fields = [];
@@ -367,6 +373,11 @@ class Document {
         if (!empty($filters['status'])) {
             $sql .= " AND status = :status";
             $params[':status'] = $filters['status'];
+        }
+
+        if (!empty($filters['compliance_status'])) {
+            $sql .= " AND compliance_status = :compliance_status";
+            $params[':compliance_status'] = $filters['compliance_status'];
         }
 
         if (!empty($filters['date_from'])) {

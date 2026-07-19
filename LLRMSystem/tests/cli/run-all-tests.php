@@ -13,7 +13,8 @@ $testFiles = [
     'test-ping.php',
     'test-smoke.php',
     'test-edge-cases.php',
-    'test-accessibility.php'
+    'test-accessibility.php',
+    'test-compliance.php'
 ];
 
 $totalPassed = 0;

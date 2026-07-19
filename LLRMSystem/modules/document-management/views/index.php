@@ -80,6 +80,16 @@ function getOcrBadge($ocrStatus) {
     return $badges[$ocrStatus] ?? '';
 }
 
+function getComplianceBadge($complianceStatus) {
+    $status = $complianceStatus ?? 'pending';
+    $badges = [
+        'pending' => '<span class="badge badge-warning" title="Compliance check pending"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>',
+        'compliant' => '<span class="badge badge-success" title="Compliant"><i class="bi bi-shield-check mr-1"></i>Compliant</span>',
+        'non_compliant' => '<span class="badge badge-danger" title="Non-Compliant"><i class="bi bi-shield-exclamation mr-1"></i>Non-Compliant</span>',
+    ];
+    return $badges[$status] ?? '<span class="badge badge-secondary">Unknown</span>';
+}
+
 function formatFileSize($bytes) {
     if ($bytes >= 1073741824) {
         return number_format($bytes / 1073741824, 2) . ' GB';
@@ -278,6 +288,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
                         <input type="text" id="filter-tags" placeholder="e.g. budget, land" value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
+                    <!-- Compliance Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Compliance</label>
+                        <select id="filter-compliance" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
+                            <option value="">All</option>
+                            <option value="pending" <?php echo (($_GET['compliance_status'] ?? '') === 'pending') ? 'selected' : ''; ?>>Pending</option>
+                            <option value="compliant" <?php echo (($_GET['compliance_status'] ?? '') === 'compliant') ? 'selected' : ''; ?>>Compliant</option>
+                            <option value="non_compliant" <?php echo (($_GET['compliance_status'] ?? '') === 'non_compliant') ? 'selected' : ''; ?>>Non-Compliant</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="mt-4 flex flex-col sm:flex-row justify-end gap-3">
@@ -353,6 +373,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 Status
                             </th>
                             <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Compliance
+                            </th>
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Date
                             </th>
                             <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -366,7 +389,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <?php if (isset($data['error'])): ?>
                             <tr>
-                                <td colspan="8" class="px-6 py-12 text-center">
+                                <td colspan="9" class="px-6 py-12 text-center">
                                     <div class="text-red-600">
                                         <i class="bi bi-exclamation-circle text-4xl mb-2"></i>
                                         <p><?php echo htmlspecialchars($data['message']); ?></p>
@@ -375,7 +398,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php elseif (empty($data['documents'])): ?>
                             <tr>
-                                <td colspan="8" class="px-6 py-12 text-center">
+                                <td colspan="9" class="px-6 py-12 text-center">
                                     <div class="text-gray-500">
                                         <i class="bi bi-inbox text-4xl mb-2"></i>
                                         <p>No documents found</p>
@@ -415,6 +438,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
                                             by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
                                         </p>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
+                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
+                                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
+                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="ml-1 inline-flex items-center p-1 text-xs text-blue-600 hover:text-blue-800" title="Run compliance check">
+                                            <i class="bi bi-shield-check"></i>
+                                        </button>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
@@ -493,10 +524,18 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                             <!-- Bottom: Status & Actions -->
                             <div class="px-4 py-3 bg-white dark:bg-gray-800 flex items-center justify-between border-t border-gray-50 dark:border-gray-700/50">
-                                <div class="flex flex-col">
+                                <div class="flex flex-col gap-1">
                                     <div class="flex flex-wrap items-center gap-1">
                                         <?php echo getStatusBadge($doc['status']); ?>
                                         <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-1">
+                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
+                                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
+                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center p-1 text-[10px] text-blue-600 hover:text-blue-800" title="Run compliance check">
+                                            <i class="bi bi-shield-check"></i>
+                                        </button>
+                                        <?php endif; ?>
                                     </div>
                                     <?php if (!empty($doc['status_changed_by_name'])): ?>
                                     <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
@@ -2459,5 +2498,33 @@ function setupSwipeToClose() {
     });
 }
 setupSwipeToClose();
+
+async function checkCompliance(docId, btn) {
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i>';
+    }
+    try {
+        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: docId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            alert('Compliance status: ' + data.compliance_status);
+            window.location.reload();
+        } else {
+            alert('Compliance check failed: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        alert('Failed to run compliance check.');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-shield-check"></i>';
+        }
+    }
+}
 </script>
 

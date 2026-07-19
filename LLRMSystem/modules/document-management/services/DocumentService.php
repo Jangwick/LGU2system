@@ -246,7 +246,7 @@ class DocumentService {
 
         if ($success) {
             if ($oldStatus !== $newStatus) {
-                $this->documentModel->addStatusHistory($id, $oldStatus, $newStatus, $_SESSION['user_id'] ?? null, 'Status updated');
+                $this->documentModel->addStatusHistory($id, $oldStatus, $newStatus, $_SESSION['user_id'] ?? null, $data['status_notes'] ?? 'Status updated');
             }
 
             $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_UPDATE, $document['title'], [
@@ -264,6 +264,20 @@ class DocumentService {
      * Approve document
      */
     public function approveDocument($id) {
+        $document = $this->documentModel->getById($id);
+        if (!$document) {
+            throw new Exception("Document not found");
+        }
+
+        $complianceStatus = $document['compliance_status'] ?? 'pending';
+        if ($complianceStatus !== 'compliant') {
+            return [
+                'success' => false,
+                'error' => 'Document cannot be approved until it passes compliance checks.',
+                'compliance_status' => $complianceStatus
+            ];
+        }
+
         $result = $this->updateDocument($id, ['status' => 'approved']);
         if ($result['success']) {
             $result['message'] = 'Document approved successfully';

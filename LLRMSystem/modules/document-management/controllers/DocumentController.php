@@ -32,6 +32,7 @@ class DocumentController {
                 'search' => Sanitizer::plainText($_GET['search'] ?? ''),
                 'type' => Sanitizer::plainText($_GET['type'] ?? ''),
                 'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected', 'archived'], ''),
+                'compliance_status' => Sanitizer::enum($_GET['compliance_status'] ?? '', ['pending', 'compliant', 'non_compliant'], ''),
                 'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
                 'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
                 'file_size' => Sanitizer::plainText($_GET['file_size'] ?? ''),
