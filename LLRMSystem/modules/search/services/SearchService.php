@@ -51,7 +51,7 @@ class SearchService {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
         } else {
-            $sql .= " AND d.status NOT IN ('pending', 'draft')";
+            $sql .= " AND d.status NOT IN ('pending', 'draft', 'rejected')";
         }
         if (!empty($filters['date_from'])) {
             $sql .= " AND d.created_at >= :date_from";
@@ -128,6 +128,7 @@ class SearchService {
             $sql = "SELECT d.id, d.title, d.document_type, d.reference_number
                     FROM legislative_documents d
                     WHERE d.deleted_at IS NULL
+                    AND d.status != 'rejected'
                     AND (d.title LIKE :keyword OR d.description LIKE :keyword)";
 
             $params = [':keyword' => '%' . $keyword . '%'];
@@ -254,7 +255,7 @@ class SearchService {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
         } else {
-            $sql .= " AND d.status NOT IN ('pending', 'draft')";
+            $sql .= " AND d.status NOT IN ('pending', 'draft', 'rejected')";
         }
         
         if (!empty($filters['date_from'])) {
@@ -313,7 +314,7 @@ class SearchService {
             'by_month' => []
         ];
         
-        $whereClause = "WHERE deleted_at IS NULL";
+        $whereClause = "WHERE deleted_at IS NULL AND status != 'rejected'";
         $params = [];
         
         if (!empty($query)) {
@@ -412,6 +413,7 @@ class SearchService {
             SELECT DISTINCT title, reference_number, document_type
             FROM legislative_documents
             WHERE deleted_at IS NULL
+            AND status != 'rejected'
             AND (title LIKE :query OR reference_number LIKE :query OR tags LIKE :query OR document_type LIKE :query)
             LIMIT :limit
         ");
@@ -453,7 +455,7 @@ class SearchService {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
         } else {
-            $sql .= " AND d.status NOT IN ('pending', 'draft')";
+            $sql .= " AND d.status NOT IN ('pending', 'draft', 'rejected')";
         }
         
         if (!empty($filters['date_from'])) {

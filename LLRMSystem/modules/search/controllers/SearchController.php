@@ -38,7 +38,7 @@ class SearchController {
 
         $filters = [
             'type' => $typeFilter,
-            'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+            'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved'], ''),
             'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
             'date_to' => Sanitizer::date($_GET['date_to'] ?? ''),
             'tags' => Sanitizer::plainText($_GET['tags'] ?? ''),
@@ -113,7 +113,7 @@ class SearchController {
 
         $filters = [
             'type' => $typeFilter,
-            'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved', 'rejected'], ''),
+            'status' => Sanitizer::enum($_GET['status'] ?? '', ['draft', 'pending', 'approved'], ''),
             'date_from' => Sanitizer::date($_GET['date_from'] ?? ''),
             'date_to' => Sanitizer::date($_GET['date_to'] ?? '')
         ];
