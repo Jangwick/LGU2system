@@ -2527,13 +2527,14 @@ async function checkCompliance(docId, btn) {
         });
         const data = await response.json();
         if (data.success) {
-            alert('Compliance status: ' + data.compliance_status);
-            window.location.reload();
+            const isCompliant = data.compliance_status === 'compliant';
+            showToast('Compliance status: ' + data.compliance_status, isCompliant ? 'success' : 'warning');
+            setTimeout(() => window.location.reload(), 1200);
         } else {
-            alert('Compliance check failed: ' + (data.error || 'Unknown error'));
+            showToast('Compliance check failed: ' + (data.error || 'Unknown error'), 'error');
         }
     } catch (error) {
-        alert('Failed to run compliance check.');
+        showToast('Failed to run compliance check.', 'error');
     } finally {
         if (btn) {
             btn.disabled = false;

@@ -44,6 +44,49 @@ function setButtonLoading(button, isLoading, originalText = '') {
     }
 }
 
+/**
+ * Show a non-blocking toast notification.
+ * @param {string} message
+ * @param {string} type - success | error | warning | info
+ * @param {number} duration - milliseconds
+ */
+function showToast(message, type = 'info', duration = 3500) {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'fixed top-4 right-4 z-[100010] flex flex-col gap-2 pointer-events-none';
+        document.body.appendChild(container);
+    }
+
+    const icons = {
+        success: 'bi-check-circle',
+        error: 'bi-x-circle',
+        warning: 'bi-exclamation-triangle',
+        info: 'bi-info-circle'
+    };
+    const colors = {
+        success: 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-900/40 dark:text-green-300',
+        error: 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-900/40 dark:text-red-300',
+        warning: 'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-900/40 dark:text-yellow-300',
+        info: 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-900/40 dark:text-blue-300'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = 'pointer-events-auto flex items-start gap-2 min-w-[260px] max-w-sm p-3 rounded-lg border shadow-lg transform transition-all duration-300 translate-x-full opacity-0 ' + (colors[type] || colors.info);
+    toast.innerHTML = '<i class="bi ' + (icons[type] || icons.info) + ' text-lg flex-shrink-0"></i><span class="text-sm font-medium">' + message + '</span>';
+    container.appendChild(toast);
+
+    requestAnimationFrame(function() {
+        toast.classList.remove('translate-x-full', 'opacity-0');
+    });
+
+    setTimeout(function() {
+        toast.classList.add('translate-x-full', 'opacity-0');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
 // Apply ripple effect to all buttons
 document.addEventListener('DOMContentLoaded', function() {
     const buttons = document.querySelectorAll('button:not(.no-ripple)');
