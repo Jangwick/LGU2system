@@ -407,7 +407,7 @@ if (!defined('OCR_GROQ_ENHANCE')) {
     define('OCR_GROQ_ENHANCE', true);
 }
 if (!defined('OCR_GROQ_MODEL')) {
-    define('OCR_GROQ_MODEL', 'llama-3.2-11b-vision-preview');
+    define('OCR_GROQ_MODEL', 'meta-llama/llama-4-scout-17b-16e-instruct');
 }
 if (!defined('OCR_GROQ_MAX_PAGES')) {
     define('OCR_GROQ_MAX_PAGES', 5);

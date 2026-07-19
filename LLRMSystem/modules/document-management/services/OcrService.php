@@ -35,7 +35,7 @@ class OcrService {
         $this->groqFallback = defined('OCR_GROQ_FALLBACK') ? OCR_GROQ_FALLBACK : false;
         $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : true;
         $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 0;
-        $this->groqModel = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'llama-3.2-11b-vision-preview';
+        $this->groqModel = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'meta-llama/llama-4-scout-17b-16e-instruct';
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
         $this->ensureTempDir();
     }
@@ -206,6 +206,8 @@ class OcrService {
                     if (!empty($visual)) {
                         $text .= "\n\n[Visual elements]\n" . trim($visual);
                     }
+                } elseif ($groq->getLastError()) {
+                    throw new Exception('Groq vision OCR failed: ' . $groq->getLastError());
                 }
             }
         }
@@ -626,7 +628,7 @@ class OcrService {
      * Get Tesseract binary path
      */
     private function getTesseractPath() {
-        if (!empty($this->tesseractPath) && file_exists($this->tesseractPath)) {
+        if (!empty($this->tesseractPath) && @file_exists($this->tesseractPath)) {
             return $this->tesseractPath;
         }
         return $this->detectTesseract();
@@ -636,7 +638,7 @@ class OcrService {
      * Get Ghostscript binary path
      */
     private function getGhostscriptPath() {
-        if (!empty($this->ghostscriptPath) && file_exists($this->ghostscriptPath)) {
+        if (!empty($this->ghostscriptPath) && @file_exists($this->ghostscriptPath)) {
             return $this->ghostscriptPath;
         }
         return $this->detectGhostscript();
@@ -653,7 +655,7 @@ class OcrService {
                 'C:\Tesseract-OCR\tesseract.exe',
             ];
             foreach ($paths as $path) {
-                if (file_exists($path)) {
+                if (@file_exists($path)) {
                     return $path;
                 }
             }
@@ -716,7 +718,7 @@ class OcrService {
                 'C:\Program Files (x86)\gs\gs9.55.0\bin\gswin32c.exe',
             ];
             foreach ($paths as $path) {
-                if (file_exists($path)) {
+                if (@file_exists($path)) {
                     return $path;
                 }
             }
@@ -741,7 +743,7 @@ class OcrService {
             $result = shell_exec("where $name 2>nul");
             if ($result) {
                 $lines = explode("\n", trim($result));
-                if (!empty($lines[0]) && file_exists(trim($lines[0]))) {
+                if (!empty($lines[0]) && @file_exists(trim($lines[0]))) {
                     return trim($lines[0]);
                 }
             }
@@ -800,7 +802,7 @@ class OcrService {
      */
     private function cleanTempImages($imagePaths) {
         foreach ($imagePaths as $path) {
-            if (file_exists($path)) {
+            if (@file_exists($path)) {
                 @unlink($path);
             }
         }

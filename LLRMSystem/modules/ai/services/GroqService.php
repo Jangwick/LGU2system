@@ -175,7 +175,7 @@ class GroqService {
             "\n\nReturn only this JSON object and no commentary: {$jsonShape}";
 
         if (empty($model)) {
-            $model = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'llama-3.2-11b-vision-preview';
+            $model = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'meta-llama/llama-4-scout-17b-16e-instruct';
         }
 
         $apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
