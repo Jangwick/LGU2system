@@ -574,9 +574,10 @@ class OcrService {
             }
         } else {
             // Check common user-space paths (for shared hosting without root)
+            $home = $this->getHomeDir();
             $homePaths = [
-                getenv('HOME') . '/bin/tesseract_wrapper.sh',
-                getenv('HOME') . '/bin/tesseract',
+                $home . '/bin/tesseract_wrapper.sh',
+                $home . '/bin/tesseract',
                 '/usr/local/bin/tesseract',
             ];
             foreach ($homePaths as $path) {
@@ -586,6 +587,23 @@ class OcrService {
             }
         }
         return $this->detectCommand('tesseract');
+    }
+
+    /**
+     * Determine the user's home directory
+     */
+    private function getHomeDir() {
+        $home = getenv('HOME');
+        if (!empty($home)) {
+            return $home;
+        }
+        if (function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
+            $info = posix_getpwuid(posix_getuid());
+            if (!empty($info['dir'])) {
+                return $info['dir'];
+            }
+        }
+        return '/tmp';
     }
 
     /**
