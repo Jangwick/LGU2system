@@ -191,9 +191,9 @@ class OcrService {
             $groq = $this->getGroqService();
             if ($groq) {
                 @set_time_limit(180);
+                $this->groqPagesUsed++;
                 $result = $groq->extractTextFromImage($filePath, $text, $this->groqModel, 2048);
                 if (is_array($result)) {
-                    $this->groqPagesUsed++;
                     if (empty($text)) {
                         $text = $result['text'] ?? '';
                     } else {

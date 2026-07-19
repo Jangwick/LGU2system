@@ -410,7 +410,7 @@ if (!defined('OCR_GROQ_MODEL')) {
     define('OCR_GROQ_MODEL', 'qwen/qwen3.6-27b');
 }
 if (!defined('OCR_GROQ_MAX_PAGES')) {
-    define('OCR_GROQ_MAX_PAGES', 5);
+    define('OCR_GROQ_MAX_PAGES', 1);
 }
 if (!defined('OCR_GROQ_PROMPT')) {
     define('OCR_GROQ_PROMPT', 'Extract all readable text from this image. Also briefly describe any images, seals, signatures, stamps, diagrams, or other visible content. Return only plain text.');
