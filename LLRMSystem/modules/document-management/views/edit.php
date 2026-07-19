@@ -241,10 +241,13 @@ let selectedTags = <?= json_encode(array_column($documentTags, 'id')) ?>;
 const complianceStatus = <?= json_encode($document['compliance_status'] ?? 'pending') ?>;
 
 const statusSelect = document.getElementById('statusSelect');
-const approvedOption = statusSelect ? statusSelect.querySelector('option[value="approved"]') : null;
-if (approvedOption && complianceStatus !== 'compliant') {
-    approvedOption.disabled = true;
-    approvedOption.textContent += ' (not compliant)';
+if (statusSelect) {
+    const approvedOption = statusSelect.querySelector('option[value="approved"]');
+    if (complianceStatus !== 'compliant' && approvedOption) {
+        approvedOption.remove();
+    } else if (complianceStatus === 'compliant' && !approvedOption) {
+        statusSelect.add(new Option('Approved / Official', 'approved'));
+    }
 }
 
 document.getElementById('replacementFile').addEventListener('change', function() {

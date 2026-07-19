@@ -2324,13 +2324,32 @@ async function editDocument(id) {
             form.querySelector('[name="status"]').value = doc.status;
             form.querySelector('[name="description"]').value = doc.description || '';
             form.querySelector('[name="tags"]').value = doc.tags || '';
-            
+
+            // Track compliance status to gate the approve/publish option
+            form.dataset.complianceStatus = doc.compliance_status || 'pending';
+            updateApprovedOptionState();
+
             openEditModal();
         } else {
             alert(res.error || 'Failed to load document details');
         }
     } catch (e) {
         alert('Failed to connect to server');
+    }
+}
+
+function updateApprovedOptionState() {
+    const form = document.getElementById('edit-form-modal');
+    const statusSelect = form?.querySelector('[name="status"]');
+    if (!statusSelect) return;
+
+    const complianceStatus = form.dataset.complianceStatus || 'pending';
+    const existingApproved = statusSelect.querySelector('option[value="approved"]');
+
+    if (complianceStatus !== 'compliant') {
+        if (existingApproved) existingApproved.remove();
+    } else if (!existingApproved) {
+        statusSelect.add(new Option('Approved / Official', 'approved'));
     }
 }
 
@@ -2452,16 +2471,23 @@ document.getElementById('upload-form-modal').addEventListener('submit', async (e
 // Handle Edit form submission
 document.getElementById('edit-form-modal').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    // Create FormData
-    const formData = new FormData(e.target);
-    
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const status = formData.get('status');
+    const complianceStatus = form.dataset.complianceStatus || 'pending';
+
+    if (status === 'approved' && complianceStatus !== 'compliant') {
+        alert('This document is not compliant. Run a compliance check before approving/publishing.');
+        return;
+    }
+
     // Show loading state
-    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="bi bi-arrow-repeat mr-2 animate-spin"></i>Updating...';
-    
+
     try {
         const response = await fetch('<?php echo DOCUMENTS_URL; ?>/api/update.php', {
             method: 'POST',
