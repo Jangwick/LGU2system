@@ -170,10 +170,10 @@ class EmbeddingService {
             FOREIGN KEY (document_id) REFERENCES legislative_documents(id) ON DELETE CASCADE
         )");
 
-        $stmt = $db->prepare("INSERT INTO document_embeddings (document_id, embedding) 
-                            VALUES (:id, :emb) 
-                            ON DUPLICATE KEY UPDATE embedding = :emb");
-        
+        $stmt = $db->prepare("INSERT INTO document_embeddings (document_id, embedding)
+                            VALUES (:id, :emb)
+                            ON DUPLICATE KEY UPDATE embedding = VALUES(embedding)");
+
         return $stmt->execute([
             ':id' => $documentId,
             ':emb' => $jsonEmbedding

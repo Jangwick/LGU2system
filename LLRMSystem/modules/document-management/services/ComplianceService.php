@@ -223,7 +223,7 @@ class ComplianceService {
         $stmt = $this->db->prepare("
             INSERT INTO document_compliance_embeddings (document_id, embedding)
             VALUES (:id, :emb)
-            ON DUPLICATE KEY UPDATE embedding = :emb
+            ON DUPLICATE KEY UPDATE embedding = VALUES(embedding)
         ");
         return $stmt->execute([':id' => $documentId, ':emb' => $json]);
     }
