@@ -1148,10 +1148,20 @@ function viewDocument(id) {
                                     </div>
                                 </section>
 
+                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                                        <i class="bi bi-shield-check mr-2 text-emerald-500"></i>
+                                        Compliance
+                                    </h3>
+                                    <div id="preview-compliance-badge" class="mb-3"></div>
+                                    <div id="preview-compliance-content"></div>
+                                </section>
+
                             </div>
                         </div>
                     </div>
                 `;
+                loadComplianceForPreviewModal(doc.id, currentUserRole);
             } else {
                 content.innerHTML = `<div class="p-12 text-center text-red-600">${res.error}</div>`;
             }
@@ -1159,6 +1169,93 @@ function viewDocument(id) {
         .catch(e => {
             content.innerHTML = `<div class="p-12 text-center text-red-600">Failed to load document details</div>`;
         });
+}
+
+function loadComplianceForPreviewModal(docId, role) {
+    const badgeEl = document.getElementById('preview-compliance-badge');
+    const contentEl = document.getElementById('preview-compliance-content');
+    if (!badgeEl || !contentEl) return;
+    contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading compliance analysis...</div>';
+    fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ document_id: docId })
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            renderPreviewModalCompliance(docId, data, role);
+        } else {
+            contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
+        }
+    }).catch(() => {
+        contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis.</p>';
+    });
+}
+
+function renderPreviewModalCompliance(docId, data, role) {
+    const contentEl = document.getElementById('preview-compliance-content');
+    if (!contentEl) return;
+    let html = '<div class="space-y-3">';
+    if (data.rejection_notes) {
+        html += '<div class="p-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40 text-red-800 dark:text-red-300 text-sm">' +
+            '<p class="font-semibold mb-1"><i class="bi bi-exclamation-circle mr-1"></i>Rejection Notes</p>' +
+            '<p>' + escapeHtml(data.rejection_notes) + '</p>' +
+        '</div>';
+    }
+    if (data.results && data.results.length > 0) {
+        html += '<div class="space-y-2">';
+        data.results.forEach(function(r) {
+            const passed = r.status === 'compliant';
+            const icon = passed ? 'bi-check-circle text-green-600 dark:text-green-400' : 'bi-x-circle text-red-600 dark:text-red-400';
+            const barColor = passed ? 'bg-green-500' : 'bg-red-500';
+            const code = escapeHtml(r.code || r.title || 'Rule');
+            const title = r.code ? escapeHtml(r.title || '') : '';
+            const score = parseInt(r.score || 0, 10);
+            html += '<div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">' +
+                '<div class="flex items-center gap-2 mb-1">' +
+                    '<i class="bi ' + icon + '"></i>' +
+                    '<span class="font-medium text-sm text-gray-800 dark:text-gray-200">' + code + '</span>' +
+                '</div>' +
+                (title ? '<p class="text-xs text-gray-500 dark:text-gray-400 mb-1">' + title + '</p>' : '') +
+                '<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">' +
+                    '<div class="' + barColor + ' h-1.5 rounded-full" style="width: ' + Math.min(100, Math.max(0, score)) + '%;"></div>' +
+                '</div>' +
+                '<p class="text-xs text-gray-500 dark:text-gray-400">' + escapeHtml(r.explanation || '') + '</p>' +
+            '</div>';
+        });
+        html += '</div>';
+    } else {
+        html += '<p class="text-sm text-gray-500 dark:text-gray-400">No compliance analysis available yet.</p>';
+    }
+    html += '</div>';
+    if (role !== 'viewer') {
+        html += '<button type="button" onclick="runComplianceCheckInPreviewModal(' + docId + ')" class="mt-4 w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition"><i class="bi bi-arrow-repeat mr-1"></i> Run Compliance Check</button>';
+    }
+    contentEl.innerHTML = html;
+}
+
+async function runComplianceCheckInPreviewModal(docId) {
+    const contentEl = document.getElementById('preview-compliance-content');
+    const badgeEl = document.getElementById('preview-compliance-badge');
+    if (contentEl) contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Running compliance check...</div>';
+    try {
+        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: docId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            showToast('Compliance status: ' + data.compliance_status, data.compliance_status === 'compliant' ? 'success' : 'warning');
+            if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            const role = (typeof currentUserRole !== 'undefined' && currentUserRole) ? currentUserRole : 'viewer';
+            loadComplianceForPreviewModal(docId, role);
+        } else {
+            if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Compliance check failed: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
+        }
+    } catch (e) {
+        if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Failed to run compliance check.</p>';
+    }
 }
 
 /**
