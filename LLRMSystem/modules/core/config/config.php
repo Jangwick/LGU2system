@@ -323,6 +323,9 @@ if (!defined('DB_PASS')) {
 if (!defined('GEMINI_API_KEY')) {
     define('GEMINI_API_KEY', ''); // Fallback to empty if not defined in local config
 }
+if (!defined('GEMINI_EMBEDDING_MODEL')) {
+    define('GEMINI_EMBEDDING_MODEL', 'models/gemini-embedding-001'); // Fallback to default model
+}
 
 // Encryption Configuration
 // Master encryption key for file encryption

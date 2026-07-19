@@ -53,14 +53,16 @@ class ComplianceRule {
     public function create($data) {
         $stmt = $this->db->prepare("
             INSERT INTO compliance_rules
-            (code, title, summary, document_type_scope, keywords, required_tags, forbidden_keywords, reference_pattern, weight, is_mandatory, is_active, effective_date)
+            (code, title, summary, example_excerpt, embedding_json, document_type_scope, keywords, required_tags, forbidden_keywords, reference_pattern, weight, is_mandatory, is_active, effective_date)
             VALUES
-            (:code, :title, :summary, :document_type_scope, :keywords, :required_tags, :forbidden_keywords, :reference_pattern, :weight, :is_mandatory, :is_active, :effective_date)
+            (:code, :title, :summary, :example_excerpt, :embedding_json, :document_type_scope, :keywords, :required_tags, :forbidden_keywords, :reference_pattern, :weight, :is_mandatory, :is_active, :effective_date)
         ");
         $stmt->execute([
             ':code' => $data['code'],
             ':title' => $data['title'],
             ':summary' => $data['summary'] ?? null,
+            ':example_excerpt' => $data['example_excerpt'] ?? null,
+            ':embedding_json' => $data['embedding_json'] ?? null,
             ':document_type_scope' => $data['document_type_scope'] ?? 'all',
             ':keywords' => $data['keywords'] ?? null,
             ':required_tags' => $data['required_tags'] ?? null,
@@ -75,7 +77,7 @@ class ComplianceRule {
     }
 
     public function update($id, $data) {
-        $allowed = ['code','title','summary','document_type_scope','keywords','required_tags','forbidden_keywords','reference_pattern','weight','is_mandatory','is_active','effective_date'];
+        $allowed = ['code','title','summary','example_excerpt','embedding_json','document_type_scope','keywords','required_tags','forbidden_keywords','reference_pattern','weight','is_mandatory','is_active','effective_date'];
         $fields = [];
         $params = [':id' => $id];
 

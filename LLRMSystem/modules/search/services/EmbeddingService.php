@@ -9,9 +9,10 @@ class EmbeddingService {
     private $model;
 
     public function __construct() {
-        // In a real app, these would come from config/ai.php
         $this->apiKey = defined('GEMINI_API_KEY') ? GEMINI_API_KEY : '';
-        $this->model = 'models/gemini-embedding-001';
+        $this->model = (defined('GEMINI_EMBEDDING_MODEL') && GEMINI_EMBEDDING_MODEL)
+            ? GEMINI_EMBEDDING_MODEL
+            : 'models/gemini-embedding-001';
     }
 
     /**
@@ -25,7 +26,7 @@ class EmbeddingService {
             return null;
         }
 
-        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=" . $this->apiKey;
+        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:embedContent?key=" . $this->apiKey;
 
         $ch = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -58,6 +59,40 @@ class EmbeddingService {
 
         error_log("EmbeddingService Gemini Error: " . json_encode($result));
         return null;
+    }
+
+    /**
+     * Prepare text for a search query embedding.
+     */
+    public static function prepareQuery($query) {
+        return "task: search result | query: " . $query;
+    }
+
+    /**
+     * Prepare text for a document embedding.
+     */
+    public static function prepareDocument($content, $title = null) {
+        $title = $title ?? 'none';
+        return "title: " . $title . " | text: " . $content;
+    }
+
+    /**
+     * Prepare text for a classification embedding.
+     */
+    public static function prepareClassificationInput($content) {
+        return "task: classification | query: " . $content;
+    }
+
+    public function generateQueryEmbedding($query) {
+        return $this->generateEmbedding(self::prepareQuery($query));
+    }
+
+    public function generateDocumentEmbedding($content, $title = null) {
+        return $this->generateEmbedding(self::prepareDocument($content, $title));
+    }
+
+    public function generateClassificationEmbedding($content) {
+        return $this->generateEmbedding(self::prepareClassificationInput($content));
     }
 
     /**

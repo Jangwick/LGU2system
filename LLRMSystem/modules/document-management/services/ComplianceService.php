@@ -3,18 +3,22 @@
 require_once __DIR__ . '/../models/Document.php';
 require_once __DIR__ . '/../models/ComplianceRule.php';
 require_once __DIR__ . '/../models/DocumentComplianceResult.php';
+require_once __DIR__ . '/../../search/services/EmbeddingService.php';
+require_once __DIR__ . '/../../search/services/SearchService.php';
 
 class ComplianceService {
     private $db;
     private $documentModel;
     private $ruleModel;
     private $resultModel;
+    private $embeddingService;
 
     public function __construct($db = null) {
         $this->db = $db ?? getDatabase();
         $this->documentModel = new Document($this->db);
         $this->ruleModel = new ComplianceRule($this->db);
         $this->resultModel = new DocumentComplianceResult($this->db);
+        $this->embeddingService = new EmbeddingService();
     }
 
     /**
@@ -31,22 +35,24 @@ class ComplianceService {
         $this->resultModel->deleteByDocumentId($documentId);
 
         $applicableRules = $this->ruleModel->getActiveApplicable($document['document_type'] ?? '');
-        $corpus = $this->buildCorpus($document);
+        $complianceText = $this->buildComplianceText($document);
+        $docVector = $this->getDocumentVector($documentId, $complianceText, $document['title'] ?? null);
 
         $hasApplicable = count($applicableRules) > 0;
-        $hasCompliantMatch = false;
         $hasForbidden = false;
+        $allCompliant = true;
         $checkedAt = date('Y-m-d H:i:s');
 
         foreach ($applicableRules as $rule) {
-            $scoreResult = $this->scoreRule($corpus, $rule, $document);
-            $ruleStatus = $scoreResult['score'] > 0 ? 'compliant' : 'non_compliant';
+            $scoreResult = $this->scoreRule($docVector, $complianceText, $rule, $document);
+            $ruleStatus = ($scoreResult['score'] >= 70 && !$this->checkForbidden($complianceText, $rule)) ? 'compliant' : 'non_compliant';
 
-            if ($this->checkForbidden($corpus, $rule)) {
-                $ruleStatus = 'non_compliant';
+            if ($this->checkForbidden($complianceText, $rule)) {
                 $hasForbidden = true;
-            } elseif ($scoreResult['score'] > 0) {
-                $hasCompliantMatch = true;
+            }
+
+            if ($ruleStatus !== 'compliant') {
+                $allCompliant = false;
             }
 
             $this->resultModel->create([
@@ -64,15 +70,12 @@ class ComplianceService {
         if (!$hasApplicable) {
             $overall = 'compliant';
             $explanation = 'No applicable compliance standards were found for this document type.';
-        } elseif ($hasForbidden) {
+        } elseif ($hasForbidden || !$allCompliant) {
             $overall = 'non_compliant';
-            $explanation = 'The document contains terms that conflict with an active compliance standard.';
-        } elseif ($hasCompliantMatch) {
-            $overall = 'compliant';
-            $explanation = 'The document aligns with one or more active ordinance/regulation standards.';
+            $explanation = 'The document does not meet one or more applicable ordinance/regulation standards.';
         } else {
-            $overall = 'non_compliant';
-            $explanation = 'The document does not align with any applicable ordinance/regulation standard.';
+            $overall = 'compliant';
+            $explanation = 'The document aligns with all applicable ordinance/regulation standards.';
         }
 
         $this->documentModel->update($documentId, [
@@ -141,16 +144,120 @@ class ComplianceService {
     }
 
     /**
-     * Score a document against a single rule.
+     * Score a document against a single rule using vector similarity
+     * (with a legacy keyword fallback if embedding generation fails).
      */
-    private function scoreRule($corpus, $rule, $document) {
+    private function scoreRule($docVector, $complianceText, $rule, $document) {
+        if ($docVector) {
+            $ruleVector = $this->getRuleVector($rule);
+            if ($ruleVector) {
+                $similarity = SearchService::cosineSimilarity($docVector, $ruleVector);
+                $score = min(100, max(0, round($similarity * 100)));
+                $explanation = 'Semantic similarity to rule example: ' . $score . '%';
+                return [
+                    'score' => $score,
+                    'matched' => 'Similarity: ' . $score . '%',
+                    'explanation' => $explanation
+                ];
+            }
+        }
+
+        return $this->keywordScoreFallback($rule, $document);
+    }
+
+    /**
+     * Build a focused compliance text from document fields for embedding.
+     */
+    private function buildComplianceText($document) {
+        $parts = [
+            $document['title'] ?? '',
+            $document['reference_number'] ?? '',
+            $document['description'] ?? '',
+            $document['tags'] ?? '',
+            substr($document['extracted_text'] ?? '', 0, 2000)
+        ];
+        return implode(' ', array_filter($parts));
+    }
+
+    /**
+     * Get or generate a document embedding vector.
+     */
+    private function getDocumentVector($documentId, $text, $title = null) {
+        $cached = $this->getCachedDocumentVector($documentId);
+        if ($cached) return $cached;
+
+        $vector = $this->embeddingService->generateDocumentEmbedding($text, $title);
+        if ($vector) {
+            $this->cacheDocumentVector($documentId, $vector);
+        }
+        return $vector;
+    }
+
+    /**
+     * Retrieve a cached document compliance embedding vector.
+     */
+    private function getCachedDocumentVector($documentId) {
+        $stmt = $this->db->prepare("SELECT embedding FROM document_compliance_embeddings WHERE document_id = :id");
+        $stmt->execute([':id' => $documentId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row && !empty($row['embedding'])) {
+            $vector = json_decode($row['embedding'], true);
+            if (is_array($vector) && !empty($vector)) {
+                return $vector;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Cache a document compliance embedding vector.
+     */
+    private function cacheDocumentVector($documentId, $vector) {
+        $json = json_encode($vector);
+        $stmt = $this->db->prepare("
+            INSERT INTO document_compliance_embeddings (document_id, embedding)
+            VALUES (:id, :emb)
+            ON DUPLICATE KEY UPDATE embedding = :emb
+        ");
+        return $stmt->execute([':id' => $documentId, ':emb' => $json]);
+    }
+
+    /**
+     * Get or generate a rule example embedding vector.
+     */
+    private function getRuleVector($rule) {
+        if (!empty($rule['embedding_json'])) {
+            $cached = json_decode($rule['embedding_json'], true);
+            if (is_array($cached) && !empty($cached)) {
+                return $cached;
+            }
+        }
+
+        $text = $rule['example_excerpt'] ?? ($rule['summary'] ?? ($rule['keywords'] ?? ''));
+        if (empty($text)) {
+            return null;
+        }
+
+        $vector = $this->embeddingService->generateDocumentEmbedding($text, $rule['code'] ?? $rule['title']);
+        if ($vector) {
+            $this->ruleModel->update($rule['id'], [
+                'embedding_json' => json_encode($vector)
+            ]);
+        }
+        return $vector;
+    }
+
+    /**
+     * Legacy keyword-based scoring used only when embeddings are unavailable.
+     */
+    private function keywordScoreFallback($rule, $document) {
+        $corpus = $this->buildCorpus($document);
         $keywords = $this->parseKeywords($rule['keywords'] ?? '');
         $matched = [];
         $matchCount = 0;
 
         foreach ($keywords as $keyword) {
             if ($keyword === '') continue;
-            // Count each keyword only once, allow partial word boundaries
             if (stripos($corpus, ' ' . strtolower($keyword) . ' ') !== false ||
                 stripos($corpus, strtolower($keyword)) !== false) {
                 $matchCount++;
@@ -161,7 +268,6 @@ class ComplianceService {
         $total = count($keywords);
         $score = ($total > 0) ? round(($matchCount / $total) * 100) : 0;
 
-        // Bonus when the document reference number matches the rule's pattern
         if (!empty($rule['reference_pattern']) && !empty($document['reference_number'])) {
             $pattern = $rule['reference_pattern'];
             $delim = substr($pattern, 0, 1);

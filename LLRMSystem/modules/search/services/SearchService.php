@@ -77,7 +77,7 @@ class SearchService {
             $docEmbedding = json_decode($row['embedding'], true);
             if (!$docEmbedding) continue;
             
-            $similarity = $this->cosineSimilarity($queryEmbedding, $docEmbedding);
+            $similarity = self::cosineSimilarity($queryEmbedding, $docEmbedding);
             
             if ($similarity > 0.6) { // Lowered threshold for more results
                 $scores[$row['document_id']] = $similarity;
@@ -166,7 +166,7 @@ class SearchService {
     /**
      * Simple Cosine Similarity calculation
      */
-    private function cosineSimilarity($vec1, $vec2) {
+    public static function cosineSimilarity($vec1, $vec2) {
         $dotProduct = 0;
         $normA = 0;
         $normB = 0;
