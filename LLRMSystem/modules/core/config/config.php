@@ -330,7 +330,7 @@ if (!defined('GROQ_API_KEY')) {
     define('GROQ_API_KEY', ''); // Set in config.local.php
 }
 if (!defined('GROQ_MODEL')) {
-    define('GROQ_MODEL', 'llama-3.1-70b-versatile');
+    define('GROQ_MODEL', 'llama-3.3-70b-versatile');
 }
 
 // Encryption Configuration
