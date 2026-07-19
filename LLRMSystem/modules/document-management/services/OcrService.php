@@ -227,14 +227,14 @@ class OcrService {
         }
 
         // Strip common OCR/PDF utility markers and page-break noise
-        $text = preg_replace('/\[[^\]]+\]|---[^-]+---|Page Break|Tesseract|Ghostscript|pdftotext|smalot|Created with|Title|Author|Subject|Keywords|Producer|Creator/i', '', $text);
+        $text = preg_replace('/\[[^\]]+\]|---[^-]+---|Page Break|Tesseract|Ghostscript|pdftotext|smalot|Created (with|by)|Title|Author|Subject|Keywords|Producer|Creator|ProducerID|ModDate|CreationDate|Scanned|OCR|PDF|Document/i', '', $text);
 
         // Collapse whitespace and count alphanumeric words/characters
         $text = preg_replace('/\s+/', '', $text);
         $clean = preg_replace('/[^A-Za-z0-9]/', '', $text);
         $wordCount = preg_match_all('/[A-Za-z0-9]+/', $text);
 
-        return strlen($clean) >= 40 && $wordCount >= 5;
+        return strlen($clean) >= 150 && $wordCount >= 20;
     }
 
     /**
