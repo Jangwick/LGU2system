@@ -35,7 +35,7 @@ class OcrService {
         $this->groqFallback = defined('OCR_GROQ_FALLBACK') ? OCR_GROQ_FALLBACK : false;
         $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : true;
         $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 0;
-        $this->groqModel = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'meta-llama/llama-4-scout-17b-16e-instruct';
+        $this->groqModel = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'qwen/qwen3.6-27b';
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
         $this->ensureTempDir();
     }
