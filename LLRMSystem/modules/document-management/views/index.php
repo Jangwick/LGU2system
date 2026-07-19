@@ -2493,14 +2493,14 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
         <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeOriginalFilePreviewModal"><div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <!-- Header -->
         <div class="mobile-preview-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
-            <div class="flex items-center gap-3 min-w-0">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex-shrink-0">
                     <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
-                <div class="min-w-0">
-                    <h3 id="original-file-preview-title" class="header-title text-xs sm:text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
+                <div class="min-w-0 w-full">
+                    <h3 id="original-file-preview-title" class="header-title w-full text-xs sm:text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
                     <p id="original-file-preview-type" class="hidden sm:block text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
-                    <div id="original-file-preview-compliance" class="mt-1 flex items-center"></div>
+                    <div id="original-file-preview-compliance" class="hidden sm:flex mt-1 items-center"></div>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
