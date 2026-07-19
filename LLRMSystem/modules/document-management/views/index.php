@@ -845,6 +845,10 @@ function formatDocumentText(rawText) {
     }
     closeList();
 
+    if (!html.trim()) {
+        return '<p class="text-gray-400 italic">No usable text could be displayed. The extracted content only contained OCR markers or the document is scanned/image-based and requires Tesseract OCR.</p>';
+    }
+
     return html;
 }
 

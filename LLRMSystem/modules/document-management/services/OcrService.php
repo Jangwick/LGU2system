@@ -252,6 +252,10 @@ class OcrService {
      * Process scanned PDFs — convert to images then OCR each page
      */
     private function processScannedPdf($filePath) {
+        if (!$this->getTesseractPath()) {
+            throw new Exception('Tesseract OCR binary not found — scanned PDF text extraction is unavailable');
+        }
+
         $images = $this->convertPdfToImages($filePath);
 
         if (empty($images)) {
