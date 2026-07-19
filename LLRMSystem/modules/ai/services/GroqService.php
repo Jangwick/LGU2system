@@ -108,6 +108,123 @@ class GroqService {
         return $decoded;
     }
 
+    /**
+     * Extract text from an image using a Groq vision model.
+     *
+     * @param string $imagePath Path to an image file
+     * @param string|null $prompt Optional prompt for the vision model
+     * @param string|null $model Optional vision model override
+     * @param int $maxTokens Maximum tokens in the response
+     * @return string|null Extracted text/description, or null on failure
+     */
+    public function extractTextFromImage($imagePath, $prompt = null, $model = null, $maxTokens = 2048) {
+        $this->lastError = null;
+        $this->lastHttpCode = null;
+
+        if (empty($this->apiKey)) {
+            $this->lastError = 'GROQ_API_KEY is missing';
+            return null;
+        }
+
+        if (!file_exists($imagePath)) {
+            $this->lastError = 'Image not found: ' . $imagePath;
+            return null;
+        }
+
+        $mime = @mime_content_type($imagePath);
+        if (empty($mime)) {
+            $ext = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+            $mimeMap = [
+                'png'  => 'image/png',
+                'jpg'  => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'gif'  => 'image/gif',
+                'bmp'  => 'image/bmp',
+                'tiff' => 'image/tiff',
+                'tif'  => 'image/tiff',
+                'webp' => 'image/webp',
+            ];
+            $mime = $mimeMap[$ext] ?? 'image/png';
+        }
+
+        $base64 = base64_encode(file_get_contents($imagePath));
+        if (empty($base64)) {
+            $this->lastError = 'Failed to read image file';
+            return null;
+        }
+        $dataUrl = 'data:' . $mime . ';base64,' . $base64;
+
+        if (empty($prompt)) {
+            $prompt = defined('OCR_GROQ_PROMPT') ? OCR_GROQ_PROMPT :
+                'Extract all readable text from this image. Also briefly describe any images, seals, signatures, stamps, diagrams, or other visible content. Return only plain text.';
+        }
+        if (empty($model)) {
+            $model = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'llama-3.2-11b-vision-preview';
+        }
+
+        $apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+
+        $payload = [
+            'model' => $model,
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => [
+                        ['type' => 'text', 'text' => $prompt],
+                        ['type' => 'image_url', 'image_url' => ['url' => $dataUrl]]
+                    ]
+                ]
+            ],
+            'temperature' => 0.2,
+            'max_tokens' => $maxTokens,
+            'top_p' => 0.9
+        ];
+
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->apiKey
+        ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($err) {
+            $this->lastError = 'Curl: ' . $err;
+            $this->lastHttpCode = $httpCode;
+            error_log('GroqService Curl Error: ' . $err);
+            return null;
+        }
+
+        $this->lastHttpCode = $httpCode;
+
+        if ($httpCode < 200 || $httpCode >= 300) {
+            $this->lastError = 'HTTP ' . $httpCode . ': ' . $response;
+            error_log('GroqService HTTP Error: ' . $httpCode . ' ' . $response);
+            return null;
+        }
+
+        $result = json_decode($response, true);
+        $content = $result['choices'][0]['message']['content'] ?? null;
+
+        if (empty($content)) {
+            $this->lastError = 'No completion content returned';
+            error_log('GroqService Error: ' . json_encode($result));
+            return null;
+        }
+
+        return trim($content);
+    }
+
     private function systemPrompt() {
         return 'You are a Philippine local-government legal compliance reviewer for Valenzuela City. ' .
             'Analyze proposed ordinances against legal standards and return only a JSON object. ' .

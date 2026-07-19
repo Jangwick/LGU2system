@@ -398,3 +398,17 @@ if (!defined('OCR_TIMEOUT')) {
 if (!defined('OCR_ASYNC_THRESHOLD')) {
     define('OCR_ASYNC_THRESHOLD', 5242880); // 5MB — files larger than this run async
 }
+
+// OCR AI vision fallback (uses Groq API when Tesseract cannot read a page/image)
+if (!defined('OCR_GROQ_FALLBACK')) {
+    define('OCR_GROQ_FALLBACK', true);
+}
+if (!defined('OCR_GROQ_MODEL')) {
+    define('OCR_GROQ_MODEL', 'llama-3.2-11b-vision-preview');
+}
+if (!defined('OCR_GROQ_MAX_PAGES')) {
+    define('OCR_GROQ_MAX_PAGES', 5);
+}
+if (!defined('OCR_GROQ_PROMPT')) {
+    define('OCR_GROQ_PROMPT', 'Extract all readable text from this image. Also briefly describe any images, seals, signatures, stamps, diagrams, or other visible content. Return only plain text.');
+}

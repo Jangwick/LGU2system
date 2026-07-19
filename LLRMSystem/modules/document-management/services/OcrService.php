@@ -8,6 +8,8 @@
  * No external API required — everything runs locally.
  */
 
+require_once dirname(dirname(dirname(__DIR__))) . '/modules/ai/services/GroqService.php';
+
 class OcrService {
     private $tesseractPath;
     private $ghostscriptPath;
@@ -15,6 +17,11 @@ class OcrService {
     private $timeout;
     private $tempDir;
     private $enabled;
+    private $groqService = null;
+    private $groqFallback = false;
+    private $groqMaxPages = 0;
+    private $groqModel = '';
+    private $groqPagesUsed = 0;
 
     public function __construct() {
         $tessConfig = defined('OCR_TESSERACT_PATH') ? OCR_TESSERACT_PATH : '';
@@ -24,8 +31,27 @@ class OcrService {
         $this->language = defined('OCR_LANGUAGE') ? OCR_LANGUAGE : 'eng';
         $this->timeout = defined('OCR_TIMEOUT') ? OCR_TIMEOUT : 30;
         $this->enabled = defined('OCR_ENABLED') ? OCR_ENABLED : true;
+        $this->groqFallback = defined('OCR_GROQ_FALLBACK') ? OCR_GROQ_FALLBACK : false;
+        $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 0;
+        $this->groqModel = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'llama-3.2-11b-vision-preview';
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
         $this->ensureTempDir();
+    }
+
+    /**
+     * Lazy-load GroqService for AI vision OCR fallback
+     */
+    private function getGroqService() {
+        if ($this->groqService !== null) {
+            return $this->groqService;
+        }
+
+        if (!defined('GROQ_API_KEY') || GROQ_API_KEY === '') {
+            return null;
+        }
+
+        $this->groqService = new GroqService();
+        return $this->groqService;
     }
 
     /**
@@ -123,33 +149,56 @@ class OcrService {
     }
 
     /**
-     * Process image files with Tesseract OCR
+     * Process image files with Tesseract OCR, falling back to Groq vision
      */
     private function processImage($filePath) {
+        $text = '';
         $tesseract = $this->getTesseractPath();
+
+        if ($tesseract) {
+            $escapedTesseract = escapeshellarg($tesseract);
+            $escapedPath = escapeshellarg($filePath);
+            // Language is a controlled alphanumeric value (e.g. "eng", "fil"), no need to escape
+            // escapeshellarg on Windows can add newlines for short strings
+            $lang = $this->language;
+
+            if (PHP_OS_FAMILY === 'Windows') {
+                $command = "$escapedTesseract $escapedPath stdout -l $lang 2>nul";
+            } else {
+                $command = "$escapedTesseract $escapedPath stdout -l $lang 2>/dev/null";
+            }
+
+            $output = shell_exec($command);
+
+            if ($output !== null) {
+                $text = trim($output);
+            }
+        }
+
+        if (!empty($text)) {
+            return $text;
+        }
+
+        // AI vision fallback via Groq when Tesseract produces no text
+        if ($this->groqFallback && $this->groqPagesUsed < $this->groqMaxPages) {
+            $groq = $this->getGroqService();
+            if ($groq) {
+                @set_time_limit(180);
+                $prompt = defined('OCR_GROQ_PROMPT') ? OCR_GROQ_PROMPT :
+                    'Extract all readable text from this image. Also briefly describe any images, seals, signatures, stamps, diagrams, or other visible content. Return only plain text.';
+                $groqText = $groq->extractTextFromImage($filePath, $prompt, $this->groqModel, 2048);
+                if (!empty($groqText)) {
+                    $this->groqPagesUsed++;
+                    return $groqText;
+                }
+            }
+        }
+
         if (!$tesseract) {
-            throw new Exception('Tesseract binary not found');
+            throw new Exception('Tesseract binary not found and Groq fallback not available');
         }
 
-        $escapedTesseract = escapeshellarg($tesseract);
-        $escapedPath = escapeshellarg($filePath);
-        // Language is a controlled alphanumeric value (e.g. "eng", "fil"), no need to escape
-        // escapeshellarg on Windows can add newlines for short strings
-        $lang = $this->language;
-
-        if (PHP_OS_FAMILY === 'Windows') {
-            $command = "$escapedTesseract $escapedPath stdout -l $lang 2>nul";
-        } else {
-            $command = "$escapedTesseract $escapedPath stdout -l $lang 2>/dev/null";
-        }
-
-        $output = shell_exec($command);
-
-        if ($output === null) {
-            throw new Exception('Tesseract command failed: ' . $command);
-        }
-
-        return $output;
+        return '';
     }
 
     /**
@@ -252,8 +301,8 @@ class OcrService {
      * Process scanned PDFs — convert to images then OCR each page
      */
     private function processScannedPdf($filePath) {
-        if (!$this->getTesseractPath()) {
-            throw new Exception('Tesseract OCR binary not found — scanned PDF text extraction is unavailable');
+        if (!$this->getTesseractPath() && !$this->getGroqService()) {
+            throw new Exception('Tesseract OCR binary not found and Groq fallback not available — scanned PDF text extraction is unavailable');
         }
 
         $images = $this->convertPdfToImages($filePath);
