@@ -429,7 +429,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?>
                                             </p>
 
-                                            <div class="flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 pt-5">
+                                            <div class="flex flex-nowrap items-center gap-6 border-t border-gray-50 pt-5 overflow-hidden">
                                                 <div class="flex items-center gap-2 text-xs font-bold text-gray-400">
                                                     <i class="bi bi-calendar-event text-red-500 text-sm"></i>
                                                     <?= date('M d, Y', strtotime($doc['created_at'])) ?>
