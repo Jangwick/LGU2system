@@ -166,7 +166,13 @@ function url($path = '') {
  */
 function asset($path) {
     $path = ltrim($path, '/');
-    return ASSETS_URL . '/' . $path;
+    $url = ASSETS_URL . '/' . $path;
+    $file = __DIR__ . '/../../../public/assets/' . $path;
+    $mtime = @filemtime($file);
+    if ($mtime) {
+        $url .= '?v=' . $mtime;
+    }
+    return $url;
 }
 
 /**
