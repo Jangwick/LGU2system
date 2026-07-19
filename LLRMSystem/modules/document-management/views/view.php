@@ -158,12 +158,25 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <span class="badge <?= $ocrBadge[0] ?>" title="OCR Status: <?= ucfirst($ocrStatus) ?>">
                             <i class="bi bi-<?= $ocrBadge[1] ?> mr-1"></i>OCR: <?= ucfirst($ocrStatus) ?>
                         </span>
+                        <?php echo getComplianceBadge($complianceStatus); ?>
                     </div>
                     <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1">Reference: <span class="font-mono font-semibold"><?= e($document['reference_number']) ?></span></p>
                     <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         Type: <?= e(ucfirst(str_replace('_', ' ', $document['document_type']))) ?> • 
                         Date: <?= date('F d, Y', strtotime($document['document_date'])) ?>
                     </p>
+                    <?php
+                    $complianceAlerts = [
+                        'non_compliant' => ['bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-900/40 dark:text-red-300', 'bi-shield-exclamation', 'This document has been flagged as non-compliant with ordinance/regulation standards. Review the alignment details below.'],
+                        'compliant'     => ['bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-900/40 dark:text-green-300', 'bi-shield-check', 'This document aligns with the ordinance/regulation standards.'],
+                        'pending'       => ['bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-900/40 dark:text-yellow-300', 'bi-hourglass-split', 'Compliance has not been checked for this document yet.']
+                    ];
+                    $complianceAlert = $complianceAlerts[$complianceStatus] ?? $complianceAlerts['pending'];
+                    ?>
+                    <div class="mt-3 p-3 rounded-lg border flex items-start gap-2 <?= $complianceAlert[0] ?>">
+                        <i class="bi bi-<?= $complianceAlert[1] ?> text-base flex-shrink-0 mt-0.5"></i>
+                        <p class="text-xs sm:text-sm font-medium"><?= $complianceAlert[2] ?></p>
+                    </div>
                 </div>
                 <div class="flex flex-wrap gap-2 sm:gap-3">
                     <?php if ($isConfidential || $isEncrypted): ?>
@@ -301,6 +314,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div>
                             <label class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 block">
                                 <i class="bi bi-file-text mr-1"></i>Extracted Text
+                                <span class="ml-2 align-middle"><?php echo getComplianceBadge($complianceStatus); ?></span>
                                 <span class="text-xs text-gray-400 ml-2">(<?= number_format(strlen($extractedText)) ?> chars)</span>
                             </label>
                             <div class="relative">

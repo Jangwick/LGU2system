@@ -1044,7 +1044,7 @@ function viewDocument(id) {
                                                             <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Document Preview</h4>
                                                         </div>
                                                         <div class="flex items-center gap-3">
-                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
+                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" data-compliance="${escapeHtml(doc.compliance_status || 'pending')}" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
                                                                 <i class="bi bi-eye"></i><span>Preview</span>
                                                             </button>
                                                             <button type="button" onclick="toggleDocPreview(this)" class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1">
@@ -1327,6 +1327,17 @@ function getStatusBadgeHTML(status) {
         'archived': '<span class="badge bg-gray-500 text-white"><i class="bi bi-archive mr-1"></i>Archived</span>'
     };
     return badges[s] || `<span class="badge badge-info">${status}</span>`;
+}
+
+function getComplianceBadgeHTML(status) {
+    if (!status) return '';
+    const s = status.toLowerCase();
+    const badges = {
+        'pending': '<span class="badge badge-warning"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>',
+        'compliant': '<span class="badge badge-success"><i class="bi bi-shield-check mr-1"></i>Compliant</span>',
+        'non_compliant': '<span class="badge badge-danger"><i class="bi bi-shield-exclamation mr-1"></i>Non-Compliant</span>'
+    };
+    return badges[s] || `<span class="badge badge-warning">${status}</span>`;
 }
 
 function formatDate(dateStr) {
@@ -2347,6 +2358,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
                 <div class="min-w-0">
                     <h3 id="original-file-preview-title" class="header-title text-xs sm:text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
                     <p id="original-file-preview-type" class="hidden sm:block text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
+                    <div id="original-file-preview-compliance" class="mt-1 flex items-center"></div>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
@@ -2369,11 +2381,12 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
 </div>
 
 <script>
-function openOriginalFilePreviewModal(docId, fileName, fileType) {
+function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatus = 'pending') {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
     const titleEl = document.getElementById('original-file-preview-title');
     const typeEl = document.getElementById('original-file-preview-type');
+    const complianceEl = document.getElementById('original-file-preview-compliance');
     const newTabLink = document.getElementById('original-file-preview-newtab');
     const downloadLink = document.getElementById('original-file-preview-download');
 
@@ -2382,6 +2395,7 @@ function openOriginalFilePreviewModal(docId, fileName, fileType) {
 
     titleEl.textContent = fileName || 'Document Preview';
     typeEl.textContent = (fileType || '').replace('application/', '').replace('image/', 'img/');
+    if (complianceEl) complianceEl.innerHTML = getComplianceBadgeHTML(complianceStatus);
 
     newTabLink.href = previewUrl;
     downloadLink.href = downloadUrl;
@@ -2469,8 +2483,9 @@ document.addEventListener('click', function(e) {
     const docId = btn.getAttribute('data-preview-id');
     const fileName = btn.getAttribute('data-preview-name');
     const fileType = btn.getAttribute('data-preview-type');
+    const complianceStatus = btn.getAttribute('data-compliance') || 'pending';
     if (docId) {
-        openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType);
+        openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType, complianceStatus);
     }
 });
 
