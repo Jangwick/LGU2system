@@ -498,17 +498,29 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <?php if (!empty($data['documents'])): ?>
                     <?php foreach ($data['documents'] as $doc): ?>
                         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mobile-doc-card transition-all active:scale-[0.98]" data-document-id="<?php echo $doc['id']; ?>">
-                            <!-- Top: Type & Date -->
-                            <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
+                            <!-- Top: Type, Date & Status -->
+                            <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
                                 <div class="flex items-center gap-2">
                                     <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
                                     <span class="badge badge-primary !text-[10px] !py-0.5">
                                         <?php echo e(ucfirst($doc['document_type'])); ?>
                                     </span>
                                 </div>
-                                <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                                    <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
-                                </span>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
+                                        <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
+                                    </span>
+                                    <div class="flex flex-wrap justify-end gap-1">
+                                        <?php echo getStatusBadge($doc['status']); ?>
+                                        <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
+                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
+                                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
+                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center p-1 text-[10px] text-blue-600 hover:text-blue-800" title="Run compliance check">
+                                            <i class="bi bi-shield-check"></i>
+                                        </button>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Middle: Icon & Title -->
@@ -522,57 +534,44 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 </div>
                             </div>
 
-                            <!-- Bottom: Status & Actions -->
-                            <div class="px-4 py-3 bg-white dark:bg-gray-800 flex items-center justify-between border-t border-gray-50 dark:border-gray-700/50">
-                                <div class="flex flex-col gap-1">
-                                    <div class="flex flex-wrap items-center gap-1">
-                                        <?php echo getStatusBadge($doc['status']); ?>
-                                        <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1">
-                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
-                                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
-                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center p-1 text-[10px] text-blue-600 hover:text-blue-800" title="Run compliance check">
-                                            <i class="bi bi-shield-check"></i>
-                                        </button>
-                                        <?php endif; ?>
-                                    </div>
-                                    <?php if (!empty($doc['status_changed_by_name'])): ?>
-                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
-                                        by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
-                                    </span>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                            <!-- Bottom: Actions & Metadata -->
+                            <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex flex-col gap-2">
+                                <?php 
+                                $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                                $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
+                                $isApproved = ($doc['status'] ?? '') === 'approved';
+                                $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                $canDelete = $canEdit; // Same policy for mobile
+                                ?>
+                                <div class="flex flex-wrap justify-end gap-2">
+                                    <button type="button" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all focus:ring-2 focus:ring-blue-500/20" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-eye"></i>
+                                        <span>View</span>
                                     </button>
-                                    <?php 
-                                    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-                                    if ($userRole !== 'viewer'): 
-                                    ?>
-                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-9 h-9 flex items-center justify-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl transition-all active:scale-90" title="Download">
+                                    <?php if ($userRole !== 'viewer'): ?>
+                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all focus:ring-2 focus:ring-green-500/20" title="Download">
                                         <i class="bi bi-download"></i>
+                                        <span>Download</span>
                                     </a>
                                     <?php endif; ?>
-                                    <?php 
-                                    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-                                    $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
-                                    $isApproved = ($doc['status'] ?? '') === 'approved';
-                                    $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                                    $canDelete = $canEdit; // Same policy for mobile
-                                    ?>
                                     <?php if ($canEdit): ?>
-                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                    <button type="button" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 active:scale-95 transition-all focus:ring-2 focus:ring-gray-500/20" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-pencil"></i>
+                                        <span>Edit</span>
                                     </button>
                                     <?php endif; ?>
-                                    <?php if (isset($canDelete) && $canDelete): ?>
-                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl transition-all active:scale-90" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                    <?php if ($canDelete): ?>
+                                    <button type="button" class="inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 active:scale-95 transition-all focus:ring-2 focus:ring-red-500/20" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-trash"></i>
+                                        <span>Delete</span>
                                     </button>
                                     <?php endif; ?>
                                 </div>
+                                <?php if (!empty($doc['status_changed_by_name'])): ?>
+                                <div class="text-right text-[10px] text-gray-500 dark:text-gray-400" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
+                                    by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
+                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
