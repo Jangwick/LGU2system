@@ -189,8 +189,14 @@ class ComplianceService {
         $vector = $this->embeddingService->generateDocumentEmbedding($text, $title);
         if ($vector) {
             $this->cacheDocumentVector($documentId, $vector);
+            return $vector;
         }
-        return $vector;
+
+        $error = $this->embeddingService->getLastError();
+        if ($error) {
+            throw new Exception('Embedding API failed: ' . $error);
+        }
+        return null;
     }
 
     /**
@@ -243,8 +249,14 @@ class ComplianceService {
             $this->ruleModel->update($rule['id'], [
                 'embedding_json' => json_encode($vector)
             ]);
+            return $vector;
         }
-        return $vector;
+
+        $error = $this->embeddingService->getLastError();
+        if ($error) {
+            throw new Exception('Embedding API failed: ' . $error);
+        }
+        return null;
     }
 
     /**

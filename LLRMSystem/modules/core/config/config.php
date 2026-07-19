@@ -324,7 +324,7 @@ if (!defined('GEMINI_API_KEY')) {
     define('GEMINI_API_KEY', ''); // Fallback to empty if not defined in local config
 }
 if (!defined('GEMINI_EMBEDDING_MODEL')) {
-    define('GEMINI_EMBEDDING_MODEL', 'models/gemini-embedding-2'); // Gemini Embedding 2
+    define('GEMINI_EMBEDDING_MODEL', 'gemini-embedding-2'); // Gemini Embedding 2
 }
 
 // Encryption Configuration

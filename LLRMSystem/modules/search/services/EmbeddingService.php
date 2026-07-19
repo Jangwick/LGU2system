@@ -20,9 +20,10 @@ class EmbeddingService {
 
     public function __construct() {
         $this->apiKey = defined('GEMINI_API_KEY') ? GEMINI_API_KEY : '';
-        $this->model = (defined('GEMINI_EMBEDDING_MODEL') && GEMINI_EMBEDDING_MODEL)
+        $configuredModel = (defined('GEMINI_EMBEDDING_MODEL') && GEMINI_EMBEDDING_MODEL)
             ? GEMINI_EMBEDDING_MODEL
-            : 'models/gemini-embedding-001';
+            : 'gemini-embedding-001';
+        $this->model = preg_replace('/^models\//', '', $configuredModel);
     }
 
     /**
@@ -46,7 +47,7 @@ class EmbeddingService {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-            'model' => $this->model,
+            'model' => 'models/' . $this->model,
             'content' => [
                 'parts' => [
                     ['text' => $text]
