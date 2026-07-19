@@ -321,10 +321,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php foreach ($results as $index => $doc): 
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
-                                <div class="result-card group bg-white dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900/50 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
-                                    <div class="result-card-inner flex flex-col md:flex-row gap-6">
+                                <div class="result-card group bg-white dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900/50 rounded-2xl p-4 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
+                                    <div class="result-card-inner flex flex-col md:flex-row gap-4 md:gap-6">
                                         <!-- Doc Icon -->
-                                        <div class="w-16 h-16 shrink-0 rounded-2xl bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-700 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 group-hover:border-red-100 dark:group-hover:border-red-900 transition-all duration-300">
+                                        <div class="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-700 flex items-center justify-center text-2xl md:text-3xl group-hover:scale-110 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 group-hover:border-red-100 dark:group-hover:border-red-900 transition-all duration-300">
                                             <i class="bi <?= getTypeIcon($doc['document_type']) ?>"></i>
                                         </div>
 
@@ -346,15 +346,15 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                 <?php endif; ?>
                                             </div>
 
-                                            <h3 class="text-xl font-black text-gray-800 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-1 mb-2">
+                                            <h3 class="text-lg md:text-xl font-black text-gray-800 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-1 mb-2">
                                                 <?= htmlspecialchars($doc['title']) ?>
                                             </h3>
 
-                                            <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-6 leading-relaxed font-medium">
+                                            <p class="text-gray-500 dark:text-gray-400 text-xs md:text-sm line-clamp-2 mb-4 md:mb-6 leading-relaxed font-medium">
                                                 <?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?>
                                             </p>
 
-                                            <div class="result-card-footer flex flex-wrap items-center gap-y-4 gap-x-6 border-t border-gray-50 dark:border-gray-700 pt-5">
+                                            <div class="result-card-footer flex flex-col md:flex-row md:flex-wrap md:items-center gap-3 md:gap-y-4 md:gap-x-6 border-t border-gray-50 dark:border-gray-700 pt-4 md:pt-5">
                                                 <div class="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
                                                     <i class="bi bi-calendar-event text-red-500 dark:text-red-400 text-sm"></i>
                                                     <?= date('M d, Y', strtotime($doc['created_at'])) ?>
@@ -371,8 +371,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                                     <?php endforeach; ?>
                                                 </div>
 
-                                                <div class="card-actions ml-auto flex items-center gap-3">
-                                                    <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-6 py-2.5 rounded-xl bg-gray-800 dark:bg-black hover:bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn">
+                                                <div class="card-actions mt-3 md:mt-0 md:ml-auto flex items-center gap-3">
+                                                    <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-4 py-2 md:px-6 md:py-2.5 rounded-xl bg-gray-800 dark:bg-black hover:bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 dark:shadow-none group/btn">
                                                         <i class="bi bi-eye mr-2 group-hover/btn:scale-125 transition-transform"></i> Preview
                                                     </button>
                                                     <?php if ($userRole !== 'viewer'): ?>
