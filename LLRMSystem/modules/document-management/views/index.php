@@ -1232,6 +1232,13 @@ function renderPreviewModalCompliance(docId, data, role) {
     if (role !== 'viewer') {
         html += '<button type="button" onclick="runComplianceCheckInPreviewModal(' + docId + ')" class="mt-4 w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition"><i class="bi bi-arrow-repeat mr-1"></i> Run Compliance Check</button>';
     }
+    if (role !== 'viewer' && data.compliance_status === 'non_compliant') {
+        html += '<div class="mt-4 p-4 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40">' +
+            '<label class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Non-compliance comment</label>' +
+            '<textarea id="reject-comment-preview" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-red-500 focus:border-red-500 mb-2" placeholder="Explain why this document is non-compliant..."></textarea>' +
+            '<button type="button" onclick="rejectDocumentFromPreview(' + docId + ')" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition"><i class="bi bi-x-circle mr-1"></i> Send Back for Revision</button>' +
+        '</div>';
+    }
     contentEl.innerHTML = html;
 }
 
@@ -1256,6 +1263,31 @@ async function runComplianceCheckInPreviewModal(docId) {
         }
     } catch (e) {
         if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Failed to run compliance check.</p>';
+    }
+}
+
+async function rejectDocumentFromPreview(documentId) {
+    const commentEl = document.getElementById('reject-comment-preview');
+    const comment = commentEl ? commentEl.value.trim() : '';
+    if (!comment) {
+        showToast('Please enter a non-compliance comment.', 'warning');
+        return;
+    }
+    try {
+        const response = await fetch(App.apiUrl('documents', 'reject-document.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: documentId, comment: comment })
+        });
+        const data = await response.json();
+        if (data.success) {
+            showToast('Document rejected and marked as non-compliant.', 'success');
+            viewDocument(documentId);
+        } else {
+            showToast('Rejection failed: ' + (data.error || 'Unknown error'), 'error');
+        }
+    } catch (error) {
+        showToast('Failed to reject document.', 'error');
     }
 }
 
