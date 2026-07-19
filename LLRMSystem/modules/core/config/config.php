@@ -403,6 +403,9 @@ if (!defined('OCR_ASYNC_THRESHOLD')) {
 if (!defined('OCR_GROQ_FALLBACK')) {
     define('OCR_GROQ_FALLBACK', true);
 }
+if (!defined('OCR_GROQ_ENHANCE')) {
+    define('OCR_GROQ_ENHANCE', true);
+}
 if (!defined('OCR_GROQ_MODEL')) {
     define('OCR_GROQ_MODEL', 'llama-3.2-11b-vision-preview');
 }

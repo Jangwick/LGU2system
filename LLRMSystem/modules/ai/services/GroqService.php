@@ -117,7 +117,7 @@ class GroqService {
      * @param int $maxTokens Maximum tokens in the response
      * @return string|null Extracted text/description, or null on failure
      */
-    public function extractTextFromImage($imagePath, $prompt = null, $model = null, $maxTokens = 2048) {
+    public function extractTextFromImage($imagePath, $tesseractText = '', $model = null, $maxTokens = 2048) {
         $this->lastError = null;
         $this->lastHttpCode = null;
 
@@ -154,10 +154,26 @@ class GroqService {
         }
         $dataUrl = 'data:' . $mime . ';base64,' . $base64;
 
-        if (empty($prompt)) {
-            $prompt = defined('OCR_GROQ_PROMPT') ? OCR_GROQ_PROMPT :
-                'Extract all readable text from this image. Also briefly describe any images, seals, signatures, stamps, diagrams, or other visible content. Return only plain text.';
+        $hasExisting = !empty(trim($tesseractText));
+        $tesseractContext = '';
+        if ($hasExisting) {
+            $escapedExisting = substr($tesseractText, 0, 1500);
+            $tesseractContext = " Tesseract OCR already extracted this text from the image:\n---\n{$escapedExisting}\n---\n";
         }
+
+        $jsonShape = $hasExisting
+            ? '{"additional_text": "...", "visual_elements": "..."}'
+            : '{"text": "...", "visual_elements": "..."}';
+        $textInstruction = $hasExisting
+            ? 'Return only additional readable text that Tesseract missed in the "additional_text" field.'
+            : 'Return all readable text from the image in the "text" field.';
+
+        $prompt = "Analyze the provided document image. {$textInstruction} " .
+            "Also describe any images, seals, signatures, stamps, diagrams, or other non-text visual content in the \"visual_elements\" field. " .
+            "Use empty strings if none are found." .
+            $tesseractContext .
+            "\n\nReturn only this JSON object and no commentary: {$jsonShape}";
+
         if (empty($model)) {
             $model = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'llama-3.2-11b-vision-preview';
         }
@@ -222,7 +238,21 @@ class GroqService {
             return null;
         }
 
-        return trim($content);
+        $content = $this->extractJson($content);
+        $decoded = json_decode($content, true);
+
+        if (!is_array($decoded)) {
+            // Non-JSON response: treat the whole reply as text
+            return $hasExisting
+                ? ['text' => '', 'additional_text' => trim($content), 'visual_elements' => '']
+                : ['text' => trim($content), 'additional_text' => '', 'visual_elements' => ''];
+        }
+
+        return [
+            'text' => trim($decoded['text'] ?? ''),
+            'additional_text' => trim($decoded['additional_text'] ?? ''),
+            'visual_elements' => trim($decoded['visual_elements'] ?? '')
+        ];
     }
 
     private function systemPrompt() {
@@ -234,7 +264,7 @@ class GroqService {
     }
 
     private function buildPrompt($documentText, array $rules) {
-        $documentText = substr($documentText, 0, 4000);
+        $documentText = substr($documentText, 0, 12000);
 
         $rulesText = '';
         foreach ($rules as $r) {
@@ -254,6 +284,8 @@ class GroqService {
             "Return only a JSON object where every key is a rule code and the value is an object with three fields: " .
             "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"analysis\": \"2-4 sentence legal reasoning\"}. " .
             "If a rule is not applicable to the document subject, mark it compliant with low confidence and explain why. " .
+            "The ordinance text below may contain [Visual elements] sections describing seals, signatures, stamps, or diagrams. " .
+            "Treat those descriptions as evidence of the document's formal validity and completeness. " .
             "Consider the vector similarity score as a hint, but use the legal reference text and the ordinance content to decide.\n\n" .
             "Ordinance Text:\n{$documentText}\n\n" .
             "Legal Standards:\n{$rulesText}\n\n" .

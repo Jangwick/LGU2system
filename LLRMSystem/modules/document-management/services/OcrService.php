@@ -19,6 +19,7 @@ class OcrService {
     private $enabled;
     private $groqService = null;
     private $groqFallback = false;
+    private $groqEnhance = false;
     private $groqMaxPages = 0;
     private $groqModel = '';
     private $groqPagesUsed = 0;
@@ -32,6 +33,7 @@ class OcrService {
         $this->timeout = defined('OCR_TIMEOUT') ? OCR_TIMEOUT : 30;
         $this->enabled = defined('OCR_ENABLED') ? OCR_ENABLED : true;
         $this->groqFallback = defined('OCR_GROQ_FALLBACK') ? OCR_GROQ_FALLBACK : false;
+        $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : true;
         $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 0;
         $this->groqModel = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'llama-3.2-11b-vision-preview';
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
@@ -175,30 +177,44 @@ class OcrService {
             }
         }
 
-        if (!empty($text)) {
-            return $text;
+        // Use Groq vision to either supplement Tesseract (enhance) or replace it (fallback)
+        $useGroq = false;
+        if ($this->groqPagesUsed < $this->groqMaxPages) {
+            if ($this->groqEnhance) {
+                $useGroq = true;
+            } elseif ($this->groqFallback && empty($text)) {
+                $useGroq = true;
+            }
         }
 
-        // AI vision fallback via Groq when Tesseract produces no text
-        if ($this->groqFallback && $this->groqPagesUsed < $this->groqMaxPages) {
+        if ($useGroq) {
             $groq = $this->getGroqService();
             if ($groq) {
                 @set_time_limit(180);
-                $prompt = defined('OCR_GROQ_PROMPT') ? OCR_GROQ_PROMPT :
-                    'Extract all readable text from this image. Also briefly describe any images, seals, signatures, stamps, diagrams, or other visible content. Return only plain text.';
-                $groqText = $groq->extractTextFromImage($filePath, $prompt, $this->groqModel, 2048);
-                if (!empty($groqText)) {
+                $result = $groq->extractTextFromImage($filePath, $text, $this->groqModel, 2048);
+                if (is_array($result)) {
                     $this->groqPagesUsed++;
-                    return $groqText;
+                    if (empty($text)) {
+                        $text = $result['text'] ?? '';
+                    } else {
+                        $additional = $result['additional_text'] ?? '';
+                        if (!empty($additional)) {
+                            $text .= "\n\n[Additional text detected by AI OCR]\n" . trim($additional);
+                        }
+                    }
+                    $visual = $result['visual_elements'] ?? '';
+                    if (!empty($visual)) {
+                        $text .= "\n\n[Visual elements]\n" . trim($visual);
+                    }
                 }
             }
         }
 
-        if (!$tesseract) {
+        if (empty($text) && !$tesseract) {
             throw new Exception('Tesseract binary not found and Groq fallback not available');
         }
 
-        return '';
+        return $text;
     }
 
     /**

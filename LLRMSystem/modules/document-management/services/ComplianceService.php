@@ -239,7 +239,7 @@ class ComplianceService {
             $document['reference_number'] ?? '',
             $document['description'] ?? '',
             $document['tags'] ?? '',
-            substr($document['extracted_text'] ?? '', 0, 4000)
+            substr($document['extracted_text'] ?? '', 0, 12000)
         ];
         return implode(' ', array_filter($parts));
     }
