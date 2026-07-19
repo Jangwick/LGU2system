@@ -225,6 +225,14 @@ class DocumentService {
         $oldStatus = $document['status'] ?? '';
         $newStatus = $data['status'] ?? $oldStatus;
 
+        // Prevent approving/publishing non-compliant documents
+        if ($newStatus === 'approved' && ($document['compliance_status'] ?? 'pending') !== 'compliant') {
+            return [
+                'success' => false,
+                'error' => 'Document cannot be approved or published until it passes compliance checks.'
+            ];
+        }
+
         // Track status changes
         if ($oldStatus !== $newStatus) {
             $userId = $_SESSION['user_id'] ?? null;

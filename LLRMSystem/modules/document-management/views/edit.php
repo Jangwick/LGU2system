@@ -127,7 +127,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status *</label>
-                            <select name="status"
+                            <select id="statusSelect" name="status"
                                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
                                     required>
                                 <option value="draft" <?= $document['status'] === 'draft' ? 'selected' : '' ?>>Draft</option>
@@ -238,6 +238,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 
 <script>
 let selectedTags = <?= json_encode(array_column($documentTags, 'id')) ?>;
+const complianceStatus = <?= json_encode($document['compliance_status'] ?? 'pending') ?>;
+
+const statusSelect = document.getElementById('statusSelect');
+const approvedOption = statusSelect ? statusSelect.querySelector('option[value="approved"]') : null;
+if (approvedOption && complianceStatus !== 'compliant') {
+    approvedOption.disabled = true;
+    approvedOption.textContent += ' (not compliant)';
+}
 
 document.getElementById('replacementFile').addEventListener('change', function() {
     const changeDescDiv = document.getElementById('changeDescriptionDiv');
@@ -308,14 +316,20 @@ function createTag() {
 
 document.getElementById('editDocumentForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
+
     const formData = new FormData(this);
+
+    if (formData.get('status') === 'approved' && complianceStatus !== 'compliant') {
+        alert('This document is not compliant. Run a compliance check before approving/publishing.');
+        return;
+    }
+
     const hasFile = document.getElementById('replacementFile').files.length > 0;
-    
-    const url = hasFile 
+
+    const url = hasFile
         ? App.apiUrl('documents', 'update-with-file.php')
         : App.apiUrl('documents', 'update.php');
-    
+
     fetch(url, {
         method: 'POST',
         body: formData
