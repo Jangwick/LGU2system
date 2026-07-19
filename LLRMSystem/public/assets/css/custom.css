@@ -2204,3 +2204,8 @@ button .ripple {
         padding-bottom: 0;
     }
 }
+
+@media (min-width: 768px) {
+    #results-list.grid .result-card-desktop { display: none !important; }
+    #results-list.grid .result-card-mobile { display: block !important; }
+}
