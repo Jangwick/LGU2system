@@ -26,10 +26,11 @@ class EmbeddingService {
             return null;
         }
 
-        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:embedContent?key=" . $this->apiKey;
+        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:embedContent";
 
         $ch = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'model' => $this->model,
             'content' => [
@@ -39,11 +40,17 @@ class EmbeddingService {
             ]
         ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json'
+            'Content-Type: application/json',
+            'x-goog-api-key: ' . $this->apiKey
         ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
 
         $response = curl_exec($ch);
         $err = curl_error($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         if ($err) {
@@ -51,8 +58,13 @@ class EmbeddingService {
             return null;
         }
 
+        if ($httpCode < 200 || $httpCode >= 300) {
+            error_log("EmbeddingService HTTP Error: " . $httpCode . " Response: " . $response);
+            return null;
+        }
+
         $result = json_decode($response, true);
-        
+
         if (isset($result['embedding']['values'])) {
             return $result['embedding']['values'];
         }
