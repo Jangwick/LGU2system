@@ -10,7 +10,7 @@ class GroqService {
 
     public function __construct() {
         $this->apiKey = defined('GROQ_API_KEY') ? GROQ_API_KEY : '';
-        $this->model = (defined('GROQ_MODEL') && GROQ_MODEL) ? GROQ_MODEL : 'llama-3.1-70b-versatile';
+        $this->model = (defined('GROQ_MODEL') && GROQ_MODEL) ? GROQ_MODEL : 'llama-3.3-70b-versatile';
     }
 
     public function getLastError() {
