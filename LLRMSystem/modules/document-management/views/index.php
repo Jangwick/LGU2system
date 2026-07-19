@@ -1097,6 +1097,16 @@ function viewDocument(id) {
                                         </div>
                                     `}
                                 </section>
+
+                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 md:p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                                        <span class="w-1.5 h-6 bg-emerald-600 rounded-full mr-3"></span>
+                                        Compliance
+                                    </h3>
+                                    <div id="preview-compliance-badge" class="mb-3"></div>
+                                    <div id="preview-compliance-content"></div>
+                                </section>
+
                             </div>
 
                             <!-- Right: Sidebar Information -->
@@ -1146,15 +1156,6 @@ function viewDocument(id) {
                                             ` : ''}
                                         </div>
                                     </div>
-                                </section>
-
-                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
-                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
-                                        <i class="bi bi-shield-check mr-2 text-emerald-500"></i>
-                                        Compliance
-                                    </h3>
-                                    <div id="preview-compliance-badge" class="mb-3"></div>
-                                    <div id="preview-compliance-content"></div>
                                 </section>
 
                             </div>
