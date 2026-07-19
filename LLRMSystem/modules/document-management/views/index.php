@@ -108,7 +108,7 @@ function getComplianceBadge($complianceStatus, $compact = false) {
         $badges = [
             'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="Compliance check pending"><i class="bi bi-hourglass-split"></i>Pending</span>',
             'compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="Compliant"><i class="bi bi-shield-check"></i>Compliant</span>',
-            'non_compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non-Comp</span>',
+            'non_compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non Compliance</span>',
         ];
         return $badges[$status] ?? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">Unknown</span>';
     }
