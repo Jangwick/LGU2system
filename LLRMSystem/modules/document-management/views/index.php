@@ -1044,7 +1044,7 @@ function viewDocument(id) {
                                                             <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Document Preview</h4>
                                                         </div>
                                                         <div class="flex items-center gap-3">
-                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" data-compliance="${escapeHtml(doc.compliance_status || 'pending')}" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
+                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" data-compliance="${escapeHtml(doc.compliance_status || 'pending')}" data-rejection-notes="${escapeHtml(doc.rejection_notes || '')}" data-can-run="<?php echo (strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer' ? '1' : '0'); ?>" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
                                                                 <i class="bi bi-eye"></i><span>Preview</span>
                                                             </button>
                                                             <button type="button" onclick="toggleDocPreview(this)" class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1">
@@ -2369,19 +2369,29 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
                     <i class="bi bi-download text-base"></i>
                     <span class="hidden sm:inline">Download</span>
                 </a>
+                <button type="button" id="original-file-run-compliance" onclick="runComplianceCheckInModal()" class="inline-flex items-center justify-center gap-1.5 h-11 w-11 sm:w-auto sm:px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
+                    <i class="bi bi-shield-check text-base"></i>
+                    <span class="hidden sm:inline">Compliance</span>
+                </button>
                 <button type="button" onclick="closeOriginalFilePreviewModal()" class="h-11 w-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
                     <i class="bi bi-x-lg text-base"></i>
                 </button>
             </div>
         </div>
-        <!-- Body -->
-        <div id="original-file-preview-body" class="mobile-preview-body flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+        <!-- Preview + Compliance -->
+        <div class="flex flex-col sm:flex-row flex-1 overflow-hidden">
+            <div id="original-file-preview-body" class="mobile-preview-body flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+            </div>
+            <div id="original-file-preview-analysis" class="w-full sm:w-80 border-t sm:border-t-0 sm:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 overflow-y-auto p-4 text-sm">
+                <div id="original-file-analysis-content" class="space-y-4"></div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatus = 'pending') {
+function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatus = 'pending', rejectionNotes = '', canRun = '0') {
+    window.currentPreviewDocId = docId;
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
     const titleEl = document.getElementById('original-file-preview-title');
@@ -2389,6 +2399,7 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     const complianceEl = document.getElementById('original-file-preview-compliance');
     const newTabLink = document.getElementById('original-file-preview-newtab');
     const downloadLink = document.getElementById('original-file-preview-download');
+    const runComplianceBtn = document.getElementById('original-file-run-compliance');
 
     const previewUrl = App.apiUrl('documents', `preview.php?id=${docId}`);
     const downloadUrl = App.apiUrl('documents', `download.php?id=${docId}`);
@@ -2396,9 +2407,12 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     titleEl.textContent = fileName || 'Document Preview';
     typeEl.textContent = (fileType || '').replace('application/', '').replace('image/', 'img/');
     if (complianceEl) complianceEl.innerHTML = getComplianceBadgeHTML(complianceStatus);
+    if (runComplianceBtn) runComplianceBtn.style.display = canRun === '1' ? '' : 'none';
 
     newTabLink.href = previewUrl;
     downloadLink.href = downloadUrl;
+
+    loadComplianceAnalysis(docId);
 
     const ft = (fileType || '').toLowerCase();
     const ext = ((fileName || '').split('.').pop() || '').toLowerCase();
@@ -2452,10 +2466,115 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     }, 10);
 }
 
+async function loadComplianceAnalysis(docId) {
+    const container = document.getElementById('original-file-analysis-content');
+    if (!container) return;
+    container.innerHTML = '<div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading analysis...</div>';
+    try {
+        const response = await fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: docId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            renderComplianceAnalysis(data);
+        } else {
+            container.innerHTML = '<p class="text-xs text-red-500">Could not load analysis: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
+        }
+    } catch (error) {
+        container.innerHTML = '<p class="text-xs text-red-500">Could not load analysis.</p>';
+    }
+}
+
+function renderComplianceAnalysis(data) {
+    const container = document.getElementById('original-file-analysis-content');
+    if (!container) return;
+    const status = data.compliance_status || 'pending';
+    const badge = getComplianceBadgeHTML(status);
+
+    let resultsHtml = '';
+    if (data.results && data.results.length > 0) {
+        resultsHtml = '<div class="space-y-2">';
+        data.results.forEach(function(r) {
+            const passed = r.status === 'compliant';
+            const icon = passed ? 'bi-check-circle text-green-600 dark:text-green-400' : 'bi-x-circle text-red-600 dark:text-red-400';
+            const barColor = passed ? 'bg-green-500' : 'bg-red-500';
+            const code = escapeHtml(r.code || r.title || 'Rule');
+            const title = r.code ? escapeHtml(r.title || '') : '';
+            const score = parseInt(r.score || 0, 10);
+            resultsHtml += '<div class="p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">' +
+                '<div class="flex items-center gap-2 mb-1">' +
+                    '<i class="bi ' + icon + '"></i>' +
+                    '<span class="font-medium text-xs text-gray-800 dark:text-gray-200">' + code + '</span>' +
+                '</div>' +
+                (title ? '<p class="text-[10px] text-gray-500 dark:text-gray-400 mb-1">' + title + '</p>' : '') +
+                '<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">' +
+                    '<div class="' + barColor + ' h-1.5 rounded-full" style="width: ' + Math.min(100, Math.max(0, score)) + '%;"></div>' +
+                '</div>' +
+                '<p class="text-[10px] text-gray-500 dark:text-gray-400">' + escapeHtml(r.explanation || '') + '</p>' +
+            '</div>';
+        });
+        resultsHtml += '</div>';
+    } else {
+        resultsHtml = '<p class="text-xs text-gray-500 dark:text-gray-400">No analysis available. Click Compliance to run a check.</p>';
+    }
+
+    container.innerHTML = '<div class="space-y-4">' +
+        '<div>' +
+            '<p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Compliance Status</p>' +
+            '<div>' + badge + '</div>' +
+        '</div>' +
+        (data.rejection_notes ? '<div class="p-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40 text-red-800 dark:text-red-300 text-xs">' +
+            '<p class="font-semibold mb-1"><i class="bi bi-exclamation-circle mr-1"></i>Rejection Notes</p>' +
+            '<p>' + escapeHtml(data.rejection_notes) + '</p>' +
+        '</div>' : '') +
+        '<div>' +
+            '<p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Rule Analysis</p>' +
+            resultsHtml +
+        '</div>' +
+    '</div>';
+}
+
+async function runComplianceCheckInModal() {
+    const docId = window.currentPreviewDocId;
+    if (!docId) return;
+    const btn = document.getElementById('original-file-run-compliance');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin text-base"></i><span class="hidden sm:inline">Checking...</span>';
+    }
+    try {
+        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_id: docId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            const isCompliant = data.compliance_status === 'compliant';
+            showToast('Compliance status: ' + data.compliance_status, isCompliant ? 'success' : 'warning');
+            const badgeEl = document.getElementById('original-file-preview-compliance');
+            if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            renderComplianceAnalysis(data);
+        } else {
+            showToast('Compliance check failed: ' + (data.error || 'Unknown error'), 'error');
+        }
+    } catch (error) {
+        showToast('Failed to run compliance check.', 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-shield-check text-base"></i><span class="hidden sm:inline">Compliance</span>';
+        }
+    }
+}
+
 function closeOriginalFilePreviewModal() {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
     const content = document.getElementById('original-file-preview-content');
+    const analysisContent = document.getElementById('original-file-analysis-content');
     if (content) {
         content.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
         content.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
@@ -2463,6 +2582,8 @@ function closeOriginalFilePreviewModal() {
     setTimeout(() => {
         modal.classList.add('hidden');
         body.innerHTML = '';
+        if (analysisContent) analysisContent.innerHTML = '';
+        window.currentPreviewDocId = null;
         document.body.style.overflow = '';
     }, 300);
 }
@@ -2484,8 +2605,10 @@ document.addEventListener('click', function(e) {
     const fileName = btn.getAttribute('data-preview-name');
     const fileType = btn.getAttribute('data-preview-type');
     const complianceStatus = btn.getAttribute('data-compliance') || 'pending';
+    const rejectionNotes = btn.getAttribute('data-rejection-notes') || '';
+    const canRun = btn.getAttribute('data-can-run') || '0';
     if (docId) {
-        openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType, complianceStatus);
+        openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType, complianceStatus, rejectionNotes, canRun);
     }
 });
 
