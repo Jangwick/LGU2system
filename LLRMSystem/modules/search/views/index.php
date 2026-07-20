@@ -334,7 +334,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
                                                                 <div class="md:hidden">
-<div class="result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-out active:scale-[0.98] hover:scale-[1.02] hover:-translate-y-1 hover:shadow-md animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
+<div class="mobile-list-card result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-out active:scale-[0.98] hover:scale-[1.02] hover:-translate-y-1 hover:shadow-md animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
                                     <!-- Top: Type, Date & Status -->
                                     <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
                                         <div class="flex items-center gap-2">
@@ -383,6 +383,34 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             by <?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?>
                                         </span>
                                                                                 <div class="card-actions flex items-center gap-1.5">
+                                            <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="Preview">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <?php if ($userRole !== 'viewer'): ?>
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download">
+                                                <i class="bi bi-download"></i>
+                                            </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mobile-grid-card hidden group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-out active:scale-[0.98] hover:scale-[1.02] hover:-translate-y-1 hover:shadow-md animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
+                                    <div class="p-4 flex flex-col items-center text-center gap-3">
+                                        <div class="w-16 h-16 rounded-2xl <?= getTypeIconBgClass($doc['document_type']) ?> flex items-center justify-center shadow-sm">
+                                            <i class="bi <?= getTypeIcon($doc['document_type']) ?> text-3xl"></i>
+                                        </div>
+                                        <div class="w-full">
+                                            <div class="flex items-center justify-center flex-wrap gap-1 mb-1">
+                                                <span class="badge badge-primary !text-[10px] !py-0.5"><?= e(ucfirst($doc['document_type'])) ?></span>
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap <?= getStatusBadgeClass($doc['status']) ?>"><?= e($doc['status']) ?></span>
+                                            </div>
+                                            <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 leading-tight line-clamp-2"><?= htmlspecialchars($doc['title']) ?></h4>
+                                            <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+                                                <i class="bi bi-calendar-event mr-1"></i><?= date('M d, Y', strtotime($doc['created_at'])) ?>
+                                            </p>
+                                            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1 truncate">REF: <?= e($doc['reference_number'] ?? 'N/A') ?></p>
+                                        </div>
+                                        <div class="card-actions flex items-center justify-center gap-3 w-full mt-1">
                                             <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="Preview">
                                                 <i class="bi bi-eye"></i>
                                             </button>

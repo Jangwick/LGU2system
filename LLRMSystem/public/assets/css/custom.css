@@ -2216,3 +2216,8 @@ button .ripple {
     align-self: start;
     width: 100%;
 }
+/* Mobile list/grid view card toggles */
+#results-list .mobile-list-card { display: block !important; }
+#results-list.grid .mobile-list-card { display: none !important; }
+#results-list .mobile-grid-card { display: none !important; }
+#results-list.grid .mobile-grid-card { display: block !important; }
