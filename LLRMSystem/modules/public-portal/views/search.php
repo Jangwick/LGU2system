@@ -149,15 +149,19 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                 <img src="<?= BASE_URL ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 mr-2 rounded-full shadow-sm" onerror="this.src='<?= BASE_URL ?>/public/assets/images/valenzuela-logo.webp'">
                 <span class="text-lg font-black text-[#002d72] dark:text-blue-400 tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
             </a>
-            <div class="flex items-center gap-3 absolute right-2 top-2 sm:relative sm:inset-auto sm:ml-auto">
-                <a href="<?= BASE_URL ?>" class="hidden sm:inline-flex items-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-red-300 hover:text-red-600 text-gray-600 dark:text-gray-300 font-bold px-4 py-2 rounded-full text-xs transition-all">
+            <!-- Desktop top-right actions -->
+            <div class="hidden sm:flex items-center gap-3">
+                <a href="<?= BASE_URL ?>" class="inline-flex items-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-red-300 hover:text-red-600 text-gray-600 dark:text-gray-300 font-bold px-4 py-2 rounded-full text-xs transition-all">
                     <i class="bi bi-arrow-left"></i> Back to Home
                 </a>
-                <button type="button" onclick="toggleDarkMode()" class="sm:hidden dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                <a href="<?= LOGIN_URL ?>" class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-black px-4 py-2 rounded-full text-xs shadow-lg shadow-red-200/50 dark:shadow-none transition-all">Sign In</a>
+            </div>
+            <!-- Mobile top-right actions -->
+            <div class="flex sm:hidden items-center gap-2 absolute right-2 top-2">
+                <button type="button" onclick="toggleDarkMode()" class="dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                     <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                 </button>
-                <a href="<?= LOGIN_URL ?>" class="hidden sm:inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-black px-4 py-2 rounded-full text-xs shadow-lg shadow-red-200/50 dark:shadow-none transition-all">Sign In</a>
-                <button type="button" id="mobile-nav-toggle" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
+                <button type="button" id="mobile-nav-toggle" class="flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
                     <i class="bi bi-list text-2xl"></i>
                 </button>
             </div>
