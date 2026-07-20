@@ -61,13 +61,13 @@ function getFileIconClass($mimeType, $fileName = '') {
 function getStatusBadge($status, $compact = false) {
     if ($compact) {
         $badges = [
-            'draft' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"><i class="bi bi-pencil"></i>Draft</span>',
-            'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"><i class="bi bi-clock"></i>Pending</span>',
-            'approved' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"><i class="bi bi-check-circle"></i>Approved</span>',
-            'rejected' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"><i class="bi bi-x-circle"></i>Rejected</span>',
-            'archived' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-500 text-white dark:bg-gray-600"><i class="bi bi-archive"></i>Archived</span>'
+            'draft' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"><i class="bi bi-pencil"></i>Draft</span>',
+            'pending' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"><i class="bi bi-clock"></i>Pending</span>',
+            'approved' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"><i class="bi bi-check-circle"></i>Approved</span>',
+            'rejected' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"><i class="bi bi-x-circle"></i>Rejected</span>',
+            'archived' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-500 text-white dark:bg-gray-600"><i class="bi bi-archive"></i>Archived</span>'
         ];
-        return $badges[$status] ?? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">' . ucfirst($status) . '</span>';
+        return $badges[$status] ?? '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">' . ucfirst($status) . '</span>';
     }
 
     $badges = [
@@ -83,10 +83,10 @@ function getStatusBadge($status, $compact = false) {
 function getOcrBadge($ocrStatus, $compact = false) {
     if ($compact) {
         $badges = [
-            'completed' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="OCR Completed"><i class="bi bi-check-circle"></i>OCR</span>',
-            'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="OCR Pending"><i class="bi bi-hourglass-split"></i>OCR</span>',
-            'processing' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" title="OCR Processing"><i class="bi bi-arrow-repeat"></i>OCR</span>',
-            'failed' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="OCR Failed"><i class="bi bi-x-circle"></i>OCR</span>',
+            'completed' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="OCR Completed"><i class="bi bi-check-circle"></i>OCR</span>',
+            'pending' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="OCR Pending"><i class="bi bi-hourglass-split"></i>OCR</span>',
+            'processing' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" title="OCR Processing"><i class="bi bi-arrow-repeat"></i>OCR</span>',
+            'failed' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="OCR Failed"><i class="bi bi-x-circle"></i>OCR</span>',
             'skipped' => '',
         ];
         return $badges[$ocrStatus] ?? '';
@@ -106,11 +106,11 @@ function getComplianceBadge($complianceStatus, $compact = false) {
     $status = $complianceStatus ?? 'pending';
     if ($compact) {
         $badges = [
-            'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="Compliance check pending"><i class="bi bi-hourglass-split"></i>Pending</span>',
-            'compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="Compliant"><i class="bi bi-shield-check"></i>Compliant</span>',
-            'non_compliant' => '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non-Comp</span>',
+            'pending' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="Compliance check pending"><i class="bi bi-hourglass-split"></i>Pending</span>',
+            'compliant' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="Compliant"><i class="bi bi-shield-check"></i>Compliant</span>',
+            'non_compliant' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non-Comp</span>',
         ];
-        return $badges[$status] ?? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">Unknown</span>';
+        return $badges[$status] ?? '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">Unknown</span>';
     }
 
     $badges = [
@@ -522,20 +522,20 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
                                 <div class="flex items-center gap-2">
                                     <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
-                                    <span class="badge badge-primary !text-[10px] !py-0.5">
+                                    <span class="badge badge-primary !text-[9px] !px-1.5 !py-0.5">
                                         <?php echo e(ucfirst($doc['document_type'])); ?>
                                     </span>
                                 </div>
-                                <div class="flex flex-col items-start gap-1 min-w-0 max-w-full">
+                                <div class="flex flex-col items-start gap-0.5 min-w-0 max-w-full">
                                     <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap">
                                         <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </span>
-                                    <div class="flex flex-nowrap items-center gap-1 overflow-x-auto max-w-full min-w-0">
+                                    <div class="flex flex-nowrap items-center gap-0.5 overflow-x-auto max-w-full min-w-0">
                                         <?php echo getStatusBadge($doc['status'], true); ?>
                                         <?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?>
                                         <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
                                         <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
-                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] active:scale-95" title="Run compliance check">
+                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[9px] active:scale-95" title="Run compliance check">
                                             <i class="bi bi-shield-check"></i>
                                         </button>
                                         <?php endif; ?>
