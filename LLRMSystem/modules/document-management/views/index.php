@@ -580,7 +580,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     <?php endif; ?>
                 </div>
-                <div class="px-3 py-2 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-wrap items-center gap-1.5">
+                <div class="px-3 py-2 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-wrap items-center justify-end gap-1.5">
                     <button type="button" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye"></i></button>
                     <?php if ($userRole !== 'viewer'): ?>
                     <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download"><i class="bi bi-download"></i></a>
