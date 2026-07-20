@@ -23,7 +23,7 @@ $filters = [
 ];
 
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$perPage = 20;
+$perPage = 10;
 
 try {
     $result = $controller->getAuditLogs($filters, $page, $perPage);
