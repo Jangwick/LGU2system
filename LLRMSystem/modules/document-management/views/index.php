@@ -535,30 +535,30 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <span class="text-[10px] text-gray-500 dark:text-gray-400 whitespace-nowrap flex-shrink-0"><?php echo date('M d, Y', strtotime($doc['document_date'])); ?></span>
                 </div>
                 <div class="px-3 py-2 space-y-1.5 text-[11px]">
-                    <div class="flex justify-between gap-2">
+                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
                         <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Type</span>
                         <span class="font-bold text-gray-900 dark:text-white text-right"><?php echo e(ucfirst($doc['document_type'])); ?></span>
                     </div>
-                    <div class="flex justify-between gap-2">
+                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
                         <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Reference</span>
                         <span class="font-medium text-gray-700 dark:text-gray-300 truncate text-right" title="<?php echo htmlspecialchars($doc['reference_number'] ?? ''); ?>"><?php echo htmlspecialchars($doc['reference_number'] ?? ''); ?></span>
                     </div>
-                    <div class="flex justify-between gap-2">
+                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
                         <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Status</span>
                         <span class="flex items-center justify-end gap-1 flex-shrink-1"><?php echo getStatusBadge($doc['status'], true); ?><?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?></span>
                     </div>
-                    <div class="flex justify-between gap-2">
+                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
                         <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Compliance</span>
                         <span class="flex items-center justify-end gap-1 flex-shrink-1"><?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
                         <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && $userRole !== 'viewer'): ?>
                         <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[7px] active:scale-95" title="Run compliance check"><i class="bi bi-shield-check"></i></button>
                         <?php endif; ?></span>
                     </div>
-                    <div class="flex justify-between gap-2">
+                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
                         <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">File</span>
                         <span class="truncate text-right" title="<?php echo htmlspecialchars($doc['file_name']); ?>"><?php echo htmlspecialchars($doc['file_name']); ?> <span class="text-gray-400">(<?php echo formatFileSize($doc['file_size']); ?>)</span></span>
                     </div>
-                    <div class="flex justify-between gap-2 items-start">
+                    <div class="flex justify-between gap-2 items-start dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
                         <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Description</span>
                         <div class="text-right leading-snug">
                             <?php if ($desc): ?>
@@ -574,7 +574,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
                     </div>
                     <?php if (!empty($doc['status_changed_by_name'])): ?>
-                    <div class="flex justify-between gap-2">
+                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
                         <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Updated by</span>
                         <span class="truncate text-right text-gray-600 dark:text-gray-400" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>"><?php echo htmlspecialchars($doc['status_changed_by_name']); ?></span>
                     </div>
