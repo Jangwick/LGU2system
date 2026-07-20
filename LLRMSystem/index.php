@@ -288,7 +288,7 @@ $pageTitle = "Home";
                         <button type="button" class="flex items-center text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all py-2">
                             About <i class="bi bi-caret-down-fill ml-1 text-[10px]"></i>
                         </button>
-                        <div class="hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-1 w-44 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
+                        <div class="nav-dropdown absolute top-full mt-2 w-44 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-2xl ring-1 ring-black/5 dark:ring-gray-700 border border-gray-100 dark:border-gray-700 overflow-hidden z-50 origin-top">
                             <a href="#roots" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Our History</a>
                             <a href="#governance" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Governance</a>
                             <a href="#recognition" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Awards</a>
@@ -299,7 +299,7 @@ $pageTitle = "Home";
                         <button type="button" class="flex items-center text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all py-2">
                             Legislation <i class="bi bi-caret-down-fill ml-1 text-[10px]"></i>
                         </button>
-                        <div class="hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
+                        <div class="nav-dropdown absolute top-full mt-2 w-48 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-2xl ring-1 ring-black/5 dark:ring-gray-700 border border-gray-100 dark:border-gray-700 overflow-hidden z-50 origin-top">
                             <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Public Portal</a>
                             <a href="#landmarks" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Landmarks</a>
                         </div>
@@ -308,7 +308,7 @@ $pageTitle = "Home";
                         <button type="button" class="flex items-center text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all py-2">
                             Services <i class="bi bi-caret-down-fill ml-1 text-[10px]"></i>
                         </button>
-                        <div class="hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-1 w-44 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
+                        <div class="nav-dropdown absolute top-full mt-2 w-44 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-2xl ring-1 ring-black/5 dark:ring-gray-700 border border-gray-100 dark:border-gray-700 overflow-hidden z-50 origin-top">
                             <a href="#infrastructure" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Infrastructure</a>
                         </div>
                     </div>
@@ -1677,6 +1677,22 @@ $pageTitle = "Home";
         }
         .animate-bounce-in {
             animation: bounce-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .nav-dropdown {
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s linear;
+            transition-delay: 0.2s;
+        }
+        .group:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+            transition-delay: 0s;
         }
     </style>
 
