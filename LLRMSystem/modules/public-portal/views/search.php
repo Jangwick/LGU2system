@@ -149,7 +149,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                 <img src="<?= BASE_URL ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 mr-2 rounded-full shadow-sm" onerror="this.src='<?= BASE_URL ?>/public/assets/images/valenzuela-logo.webp'">
                 <span class="text-lg font-black text-[#002d72] dark:text-blue-400 tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
             </a>
-            <div class="flex items-center gap-3 absolute right-2 top-2 sm:static">
+            <div class="flex items-center gap-3 absolute right-2 top-2 sm:relative sm:inset-auto sm:ml-auto">
                 <a href="<?= BASE_URL ?>" class="hidden sm:inline-flex items-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-red-300 hover:text-red-600 text-gray-600 dark:text-gray-300 font-bold px-4 py-2 rounded-full text-xs transition-all">
                     <i class="bi bi-arrow-left"></i> Back to Home
                 </a>
