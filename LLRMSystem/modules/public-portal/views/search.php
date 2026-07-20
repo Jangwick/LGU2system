@@ -351,7 +351,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
     </footer>
 
     <!-- Back to Top Button -->
-    <button id="back-to-top" class="no-ripple fixed bottom-24 right-6 md:bottom-24 md:right-6 z-[40] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
+    <button id="back-to-top" class="no-ripple fixed bottom-12 right-6 md:bottom-12 md:right-6 z-[9999] w-12 h-12 md:w-[46px] md:h-[46px] bg-red-600 text-white rounded-full border-3 border-white cursor-pointer shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:bg-red-700 hover:scale-110 active:scale-95 hidden"
             title="Back to top"
             aria-label="Scroll to top">
         <i class="bi bi-arrow-up text-xl md:text-base leading-none pointer-events-none"></i>
