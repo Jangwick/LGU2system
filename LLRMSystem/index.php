@@ -281,10 +281,6 @@ $pageTitle = "Home";
                     </div>
                 </a>
 
-                <!-- Mobile Header: Sign In -->
-                <div class="flex lg:hidden flex-1 justify-center px-2">
-                    <a href="<?php echo LOGIN_URL; ?>" class="text-slate-600 hover:text-red-600 font-black uppercase tracking-widest text-[10px] sm:text-xs transition-all whitespace-nowrap">Sign In</a>
-                </div>
 
                 <div class="hidden lg:flex items-center space-x-4 xl:space-x-7">
                     <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="text-red-600 hover:text-red-700 font-black text-[10px] leading-tight transition-all flex flex-col items-center border-l border-gray-100 pl-3 ml-1 uppercase tracking-tighter">
@@ -301,24 +297,20 @@ $pageTitle = "Home";
                 </div>
                 <div class="flex items-center space-x-2 xl:space-x-6">
                     <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[11px] xl:text-sm transition-all whitespace-nowrap">Sign In</a>
-                    <a href="<?php echo REGISTER_URL; ?>" class="btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
+                    <a href="<?php echo REGISTER_URL; ?>" class="hidden lg:inline-flex btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
                         Get Started
                     </a>
                     <button type="button" onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                         <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
+                    </button>
+                    <button type="button" id="mobile-landing-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
+                        <i class="bi bi-list text-2xl"></i>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Floating Mobile Toggle -->
-    <button id="mobile-landing-toggle" class="lg:hidden fixed top-[55px] left-1/2 -translate-x-1/2 z-40 p-1.5 text-gray-900 bg-white/90 backdrop-blur-md border-x border-b border-gray-100 rounded-b-lg shadow-xl hover:bg-gray-50 transition-all flex items-center justify-center animate-bounce-in min-w-[48px]">
-        <div class="flex flex-col items-center">
-            <i class="bi bi-list text-base leading-none mb-0.5"></i>
-            <span class="text-[7px] font-black uppercase tracking-tighter leading-none">Menu</span>
-        </div>
-    </button>
     
     <!-- Mobile Menu Overlay -->
     <div id="mobile-landing-menu" class="hidden fixed inset-0 z-[200] bg-white overflow-y-auto animate-fade-in lg:hidden">
@@ -357,9 +349,9 @@ $pageTitle = "Home";
                 <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Theme</span>
             </div>
 
-            <div class="pt-8 w-full border-t border-gray-50 flex flex-col space-y-6">
-                <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 font-black uppercase tracking-widest text-sm py-2">Sign In</a>
-                <a href="<?php echo REGISTER_URL; ?>" class="bg-red-600 text-white font-black uppercase tracking-widest text-sm py-4 rounded-xl shadow-xl shadow-red-200">Get Started</a>
+            <div class="pt-8 w-full border-t border-gray-50 dark:border-gray-800 grid grid-cols-2 gap-4">
+                <a href="<?php echo LOGIN_URL; ?>" class="flex items-center justify-center border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-red-600 hover:border-red-300 dark:hover:border-red-500 font-black uppercase tracking-widest text-sm py-4 rounded-xl transition-all">Sign In</a>
+                <a href="<?php echo REGISTER_URL; ?>" class="flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-sm py-4 rounded-xl shadow-xl shadow-red-200/50">Get Started</a>
             </div>
         </div>
     </div>
