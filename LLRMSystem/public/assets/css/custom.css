@@ -2208,3 +2208,11 @@ button .ripple {
 #results-list .result-card-desktop-grid { display: none !important; }
 #results-list.grid .result-card-desktop-list { display: none !important; }
 #results-list.grid .result-card-desktop-grid { display: block !important; }
+
+/* Pagination always spans the full bottom row in grid mode */
+#results-list.grid #pagination {
+    grid-column: 1 / -1;
+    justify-self: center;
+    align-self: start;
+    width: 100%;
+}
