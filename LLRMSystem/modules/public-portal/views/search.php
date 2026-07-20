@@ -144,7 +144,11 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
 <nav class="fixed top-0 w-full z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <a href="<?= BASE_URL ?>" class="flex items-center group flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <a href="<?= BASE_URL ?>" class="sm:hidden inline-flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-red-600 font-bold text-xs transition-all">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+                <a href="<?= BASE_URL ?>" class="flex items-center group flex-shrink-0">
                 <img src="<?= BASE_URL ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 mr-2 rounded-full shadow-sm" onerror="this.src='<?= BASE_URL ?>/public/assets/images/valenzuela-logo.webp'">
                 <span class="text-lg font-black text-[#002d72] dark:text-blue-400 tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
             </a>
