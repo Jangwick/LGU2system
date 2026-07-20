@@ -150,7 +150,9 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                 <span class="text-lg font-black text-[#002d72] dark:text-blue-400 tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
             </a>
             <div class="flex items-center gap-3 absolute right-2 top-2 sm:static">
-                <span class="hidden sm:inline text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Public Portal</span>
+                <a href="<?= BASE_URL ?>" class="hidden sm:inline-flex items-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-red-300 hover:text-red-600 text-gray-600 dark:text-gray-300 font-bold px-4 py-2 rounded-full text-xs transition-all">
+                    <i class="bi bi-arrow-left"></i> Back to Home
+                </a>
                 <button type="button" onclick="toggleDarkMode()" class="sm:hidden dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                     <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                 </button>
