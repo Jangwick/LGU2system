@@ -486,13 +486,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
-                                        <div class="flex justify-end gap-3">
-                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye mr-1"></i> View</button>
+                                        <div class="flex justify-end gap-2">
+                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye mr-1"></i> View</button>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                             if ($userRole !== 'viewer'): 
                                             ?>
-                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="no-ripple inline-flex items-center justify-center bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Download"><i class="bi bi-download mr-1"></i> Download</a>
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="no-ripple inline-flex items-center justify-center bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Download"><i class="bi bi-download mr-1"></i> Download</a>
                                             <?php endif; ?>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
@@ -502,10 +502,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 mr-2 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-pencil mr-1"></i> Edit</button>
+                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-pencil mr-1"></i> Edit</button>
                                             <?php endif; ?>
                                             <?php if ($canDelete): ?>
-                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-trash mr-1"></i> Delete</button>
+                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-trash mr-1"></i> Delete</button>
                                             <?php endif; ?>
                                         </div>
                                     </td>
