@@ -155,8 +155,8 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                     <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                 </button>
                 <a href="<?= LOGIN_URL ?>" class="hidden sm:inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-black px-4 py-2 rounded-full text-xs shadow-lg shadow-red-200/50 dark:shadow-none transition-all">Sign In</a>
-                <button type="button" onclick="togglePortalMobileMenu()" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
-                    <i id="portal-menu-icon" class="bi bi-list text-2xl"></i>
+                <button type="button" id="mobile-portal-toggle" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
+                    <i class="bi bi-list text-2xl"></i>
                 </button>
             </div>
         </div>
@@ -164,9 +164,22 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
 </nav>
 
 <!-- Mobile Portal Menu -->
-<div id="portal-mobile-menu" class="hidden sm:hidden fixed top-16 left-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-lg p-4 z-40 flex flex-col gap-2">
-    <a href="<?= BASE_URL ?>" class="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-bold text-sm p-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all"><i class="bi bi-house"></i> Home</a>
-    <a href="<?= LOGIN_URL ?>" class="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold text-sm p-2 rounded-lg hover:bg-red-50 transition-all"><i class="bi bi-box-arrow-in-right"></i> Sign In</a>
+<div id="mobile-portal-menu" class="hidden fixed inset-0 z-[200] bg-white overflow-y-auto animate-fade-in-up sm:hidden">
+    <div class="fixed top-0 w-full p-4 flex justify-between items-center border-b border-gray-100 bg-white/80 backdrop-blur-md z-10">
+        <div class="flex items-center">
+            <img src="<?= BASE_URL ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 mr-2 rounded-full shadow-sm" onerror="this.src='<?= BASE_URL ?>/public/assets/images/valenzuela-logo.webp'">
+            <span class="text-xl font-black text-[#002d72] tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
+        </div>
+        <button id="mobile-portal-close" class="p-2 text-gray-500 hover:text-red-600 transition-colors">
+            <i class="bi bi-x-lg text-2xl"></i>
+        </button>
+    </div>
+    <div class="pt-24 pb-12 px-8 flex flex-col items-center space-y-8 text-center animate-fade-in-up">
+        <h3 class="text-gray-900 font-black uppercase tracking-widest text-[10px] mb-2 opacity-50">Quick Links</h3>
+        <div class="h-px w-8 bg-red-600/20"></div>
+        <a href="<?= BASE_URL ?>" class="mobile-portal-link text-3xl font-black text-slate-800 uppercase tracking-tighter hover:text-red-600 transition-colors">Home</a>
+        <a href="<?= LOGIN_URL ?>" class="mobile-portal-link text-3xl font-black text-red-600 uppercase tracking-tighter hover:text-red-700 transition-colors flex items-center gap-3"><i class="bi bi-box-arrow-in-right"></i>Sign In</a>
+    </div>
 </div>
 
 <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 pt-20 px-2 pb-2 md:pt-22 md:px-6 md:pb-6">
@@ -688,5 +701,16 @@ document.addEventListener('DOMContentLoaded',function(){setView(currentView);sea
     </div>
 </div>
 
+    <script>
+        (function(){
+            const toggle = document.getElementById('mobile-portal-toggle');
+            const close = document.getElementById('mobile-portal-close');
+            const menu = document.getElementById('mobile-portal-menu');
+            const links = document.querySelectorAll('.mobile-portal-link');
+            if(toggle) toggle.addEventListener('click', function(){ menu.classList.remove('hidden'); document.body.style.overflow='hidden'; });
+            if(close) close.addEventListener('click', function(){ menu.classList.add('hidden'); document.body.style.overflow='auto'; });
+            links.forEach(function(link){ link.addEventListener('click', function(){ menu.classList.add('hidden'); document.body.style.overflow='auto'; }); });
+        })();
+    </script>
 </body>
 </html>
