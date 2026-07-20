@@ -224,27 +224,27 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label class="text-sm font-medium text-gray-500 dark:text-gray-400">File Name</label>
-                            <p class="text-gray-800 dark:text-gray-300"><?= htmlspecialchars($document['file_name']) ?></p>
+                            <p class="text-gray-800 dark:text-gray-300 break-words"><?= htmlspecialchars($document['file_name']) ?></p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-500 dark:text-gray-400">File Size</label>
-                            <p class="text-gray-800 dark:text-gray-300"><?= formatFileSize($document['file_size']) ?></p>
+                            <p class="text-gray-800 dark:text-gray-300 break-words"><?= formatFileSize($document['file_size']) ?></p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-500 dark:text-gray-400">File Type</label>
-                            <p class="text-gray-800 dark:text-gray-300"><?= htmlspecialchars($document['file_type']) ?></p>
+                            <p class="text-gray-800 dark:text-gray-300 break-words"><?= htmlspecialchars($document['file_type']) ?></p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Uploaded By</label>
-                            <p class="text-gray-800 dark:text-gray-300"><?= htmlspecialchars($document['uploaded_by_name']) ?></p>
+                            <p class="text-gray-800 dark:text-gray-300 break-words"><?= htmlspecialchars($document['uploaded_by_name']) ?></p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</label>
-                            <p class="text-gray-800 dark:text-gray-300"><?= date('F d, Y g:i A', strtotime($document['created_at'])) ?></p>
+                            <p class="text-gray-800 dark:text-gray-300 break-words"><?= date('F d, Y g:i A', strtotime($document['created_at'])) ?></p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</label>
-                            <p class="text-gray-800 dark:text-gray-300"><?= date('F d, Y g:i A', strtotime($document['updated_at'])) ?></p>
+                            <p class="text-gray-800 dark:text-gray-300 break-words"><?= date('F d, Y g:i A', strtotime($document['updated_at'])) ?></p>
                         </div>
                     </div>
 
@@ -318,7 +318,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <span class="text-xs text-gray-400 ml-2">(<?= number_format(strlen($extractedText)) ?> chars)</span>
                             </label>
                             <div class="relative">
-                                <div id="extracted-text-preview" class="p-3 sm:p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 max-h-64 overflow-y-auto text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                                <div id="extracted-text-preview" class="p-3 sm:p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 max-h-64 overflow-y-auto text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap break-words">
                                     <?= nl2br(htmlspecialchars(substr($extractedText, 0, 2000))) ?>
                                     <?php if (strlen($extractedText) > 2000): ?>
                                     <span class="text-gray-400 italic">... (truncated, <?= number_format(strlen($extractedText) - 2000) ?> more chars)</span>
@@ -473,7 +473,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6">
                     <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">Quick Actions</h2>
                     
-                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-2">
+                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-2 break-words">
                         <button type="button" onclick="shareDocument()" class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition flex items-center text-gray-700 dark:text-gray-200">
                             <i class="bi bi-share mr-2 text-gray-600 dark:text-gray-400"></i><span class="hidden xs:inline">Share </span>Document
                         </button>

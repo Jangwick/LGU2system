@@ -154,16 +154,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button type="button" onclick="openUploadModal()" class="no-ripple inline-flex items-center justify-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[165px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                    <button type="button" onclick="openUploadModal()" class="no-ripple inline-flex items-center justify-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-0 h-10 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-plus-circle mr-2"></i>
-                        Upload Document
+                        <span class="min-w-0 truncate">Upload Document</span>
                     </button>
                     <?php endif; ?>
                     <?php if ($userRole !== 'viewer'): ?>
                     <div class="relative" id="export-dropdown">
-                        <button type="button" onclick="toggleExportMenu(event)" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
+                        <button type="button" onclick="toggleExportMenu(event)" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-0 h-10 transform-none hover:transform-none active:transform-none">
                             <i class="bi bi-download mr-2"></i>
-                            Export
+                            <span class="min-w-0 truncate">Export</span>
                             <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>
                         </button>
                         <div id="export-menu" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700" style="position: fixed; width: 224px; z-index: 99999;">
@@ -530,7 +530,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
                                         <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </span>
-                                    <div class="flex flex-nowrap items-center gap-1 overflow-x-auto">
+                                    <div class="flex flex-wrap items-center gap-1">
                                         <?php echo getStatusBadge($doc['status'], true); ?>
                                         <?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?>
                                         <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
@@ -555,7 +555,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </div>
 
                             <!-- Bottom: Actions & Metadata -->
-                            <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex items-center justify-between gap-3">
+                            <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex flex-wrap items-center justify-between gap-3">
                                 <?php if (!empty($doc['status_changed_by_name'])): ?>
                                 <span class="text-[10px] text-gray-500 dark:text-gray-400 truncate" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
                                     by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
@@ -570,7 +570,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                 $canDelete = $canEdit;
                                 ?>
-                                <div class="flex items-center gap-1.5">
+                                <div class="flex flex-wrap items-center gap-1.5">
                                     <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-eye"></i>
                                     </button>
