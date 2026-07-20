@@ -230,14 +230,6 @@
                 <span>Reports & Analytics</span>
             </a>
 
-            <div class="mt-4 mb-2 px-4">
-                <p class="text-xs font-semibold text-red-300/80 uppercase tracking-wider">Research & Analysis</p>
-            </div>
-            
-            <a href="<?php echo RESEARCH_URL; ?>/views/index.php" class="flex items-center px-4 py-3 text-white hover:bg-red-700/70 rounded-lg mb-1 transition-all duration-200 hover:translate-x-1 <?php echo ($currentPage ?? '') === 'research-analysis' ? 'bg-red-700' : ''; ?>">
-                <i class="bi bi-lightbulb mr-3 text-lg"></i>
-                <span>Legislative Analysis</span>
-            </a>
             <?php endif; ?>
             
             <!-- Administration - Admin only -->
