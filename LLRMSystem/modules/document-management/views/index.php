@@ -514,7 +514,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
                 
             <!-- Mobile Card View -->
-            <div class="md:hidden space-y-4 p-2">
+            <div class="md:hidden space-y-4 py-2">
                 <?php if (!empty($data['documents'])): ?>
                     <?php foreach ($data['documents'] as $doc): ?>
                         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mobile-doc-card transition-all active:scale-[0.98]" data-document-id="<?php echo $doc['id']; ?>">
