@@ -319,7 +319,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </div>
 
                         <!-- Results List -->
-                        <div id="results-list" class="space-y-4">
+                        <div id="results-list" class="space-y-4 transition-opacity duration-200">
                             <?php if (empty($results)): ?>
                                 <!-- Empty State -->
                                 <div class="bg-white dark:bg-gray-800 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-3xl p-16 md:p-24 text-center shadow-sm animate-bounce-in">
@@ -334,7 +334,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
                                                                 <div class="md:hidden">
-<div class="result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
+<div class="result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-out active:scale-[0.98] hover:scale-[1.02] hover:-translate-y-1 hover:shadow-md animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
                                     <!-- Top: Type, Date & Status -->
                                     <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
                                         <div class="flex items-center gap-2">
@@ -800,7 +800,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Set View (Grid/List)
-            function setView(view) {
+            function setView(view, animate = true) {
                 currentView = view;
                 localStorage.setItem('searchView', view);
                 
@@ -808,6 +808,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const gridBtn = document.getElementById('view-grid');
                 const listBtn = document.getElementById('view-list');
                 
+            const doSwitch = () => {
                 if (view === 'grid') {
                     resultsList.classList.remove('space-y-4');
                     resultsList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
@@ -882,6 +883,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         bar.classList.add('ml-auto');
                         bar.classList.remove('mb-2');
                     });
+                }
+            };
+
+                if (animate) {
+                    resultsList.classList.add('opacity-0');
+                    setTimeout(() => {
+                        doSwitch();
+                        resultsList.classList.remove('opacity-0');
+                    }, 200);
+                } else {
+                    doSwitch();
                 }
             }
 
@@ -1275,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (newMeta) searchMeta.innerHTML = newMeta.innerHTML;
                     
                     // Re-apply view style
-                    setView(currentView);
+                    setView(currentView, false);
                     
                     // Update URL without refreshing
                     window.history.pushState({}, '', url);
@@ -1362,7 +1374,7 @@ document.addEventListener('DOMContentLoaded', function() {
              */
             document.addEventListener('DOMContentLoaded', function() {
                 // Initialize view
-                setView(currentView);
+                setView(currentView, false);
 
                 if (typeof AOS !== 'undefined') {
                     AOS.init({
