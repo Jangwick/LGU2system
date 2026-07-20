@@ -149,6 +149,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                 <img src="<?= BASE_URL ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 mr-2 rounded-full shadow-sm" onerror="this.src='<?= BASE_URL ?>/public/assets/images/valenzuela-logo.webp'">
                 <span class="text-lg font-black text-[#002d72] dark:text-blue-400 tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
             </a>
+            </div>
             <!-- Desktop top-right actions -->
             <div class="hidden sm:flex items-center gap-3">
                 <a href="<?= BASE_URL ?>" class="inline-flex items-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-red-300 hover:text-red-600 text-gray-600 dark:text-gray-300 font-bold px-4 py-2 rounded-full text-xs transition-all">
