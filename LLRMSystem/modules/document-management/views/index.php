@@ -207,7 +207,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </button>
         
         <!-- Filters Section -->
-        <div id="filters-section" class="relative z-50 bg-white dark:bg-gray-900 rounded-xl shadow-md p-2 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
+        <div id="filters-section" class="relative z-50 w-full bg-white dark:bg-gray-900 rounded-xl shadow-md p-2 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="sm:col-span-2 md:col-span-2">
@@ -225,7 +225,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Document Type Filter -->
                 <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Document Type</label>
-                    <div class="relative custom-select-container">
+                    <div class="relative custom-select-container w-full">
                         <div id="type-filter-trigger" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 hover:border-red-300 dark:hover:border-red-900 cursor-pointer flex items-center justify-between">
                             <span id="type-filter-value">All Types</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
@@ -250,7 +250,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Status Filter -->
                 <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                    <div class="relative custom-select-container">
+                    <div class="relative custom-select-container w-full">
                         <div id="status-filter-trigger" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 cursor-pointer flex items-center justify-between">
                             <span id="status-filter-value">All Status</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
