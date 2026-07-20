@@ -501,11 +501,24 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
-                                            <?php if ($canEdit): ?>
-                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-pencil mr-1"></i> Edit</button>
-                                            <?php endif; ?>
-                                            <?php if ($canDelete): ?>
-                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-trash mr-1"></i> Delete</button>
+                                            <?php if ($canEdit || $canDelete): ?>
+                                            <div class="relative inline-block group">
+                                                <button type="button" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
+                                                    <i class="bi bi-pencil mr-1"></i> Edit <i class="bi bi-caret-down-fill ml-1 text-[9px]"></i>
+                                                </button>
+                                                <div class="hidden group-hover:block absolute right-0 top-full mt-1 w-28 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 overflow-hidden">
+                                                    <?php if ($canEdit): ?>
+                                                    <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>)" class="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                                        <i class="bi bi-pencil"></i> Edit
+                                                    </button>
+                                                    <?php endif; ?>
+                                                    <?php if ($canDelete): ?>
+                                                    <button type="button" onclick="deleteDocument(<?php echo $doc['id']; ?>)" class="w-full text-left px-3 py-2 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
+                                                        <i class="bi bi-trash"></i> Delete
+                                                    </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
                                             <?php endif; ?>
                                         </div>
                                     </td>
