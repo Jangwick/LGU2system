@@ -526,7 +526,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo e(ucfirst($doc['document_type'])); ?>
                                     </span>
                                 </div>
-                                <div class="flex flex-col items-end gap-1 min-w-0 max-w-full">
+                                <div class="flex flex-col items-start gap-1 min-w-0 max-w-full">
                                     <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap">
                                         <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </span>
