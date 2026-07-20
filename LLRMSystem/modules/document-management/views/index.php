@@ -514,97 +514,129 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
                 
             <!-- Mobile Card View -->
-            <div class="md:hidden space-y-4 py-2">
-                <?php if (!empty($data['documents'])): ?>
-                    <?php foreach ($data['documents'] as $doc): ?>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mobile-doc-card transition-all active:scale-[0.98]" data-document-id="<?php echo $doc['id']; ?>">
-                            <!-- Top: Type, Date & Status -->
-                            <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex flex-col gap-2">
-                                <div class="flex items-center justify-between gap-3">
-                                    <div class="flex items-center gap-2 min-w-0">
-                                        <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
-                                        <span class="badge badge-primary !text-[9px] !px-1.5 !py-0.5">
-                                            <?php echo e(ucfirst($doc['document_type'])); ?>
-                                        </span>
-                                    </div>
-                                    <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap flex-shrink-0">
-                                        <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
-                                    </span>
-                                </div>
-                                <div class="flex flex-nowrap items-center gap-0.5 w-full min-w-0">
-                                    <?php echo getStatusBadge($doc['status'], true); ?>
-                                    <?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?>
-                                    <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
-                                    <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
-                                    <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[9px] active:scale-95 flex-shrink-0" title="Run compliance check">
-                                        <i class="bi bi-shield-check"></i>
-                                    </button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-
-                            <!-- Middle: Title, Filename & Icon -->
-                            <div class="p-4 flex flex-col items-center gap-3">
-                                <div class="min-w-0 w-full">
-                                    <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2"><?php echo htmlspecialchars($doc['title']); ?></h4>
-                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80"><?php echo htmlspecialchars($doc['file_name']); ?></p>
-                                </div>
-                                <div class="w-full h-16 rounded-2xl <?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> flex items-center justify-center flex-shrink-0 shadow-sm">
-                                    <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-3xl"></i>
-                                </div>
-                            </div>
-
-                            <!-- Bottom: Actions & Metadata -->
-                            <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex flex-wrap items-center justify-between gap-3">
-                                <?php if (!empty($doc['status_changed_by_name'])): ?>
-                                <span class="text-[10px] text-gray-500 dark:text-gray-400 truncate" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
-                                    by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
-                                </span>
-                                <?php else: ?>
-                                <span></span>
-                                <?php endif; ?>
-                                <?php 
-                                $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-                                $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
-                                $isApproved = ($doc['status'] ?? '') === 'approved';
-                                $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                                $canDelete = $canEdit;
-                                ?>
-                                <div class="flex flex-wrap items-center gap-1.5">
-                                    <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <?php if ($userRole !== 'viewer'): ?>
-                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download">
-                                        <i class="bi bi-download"></i>
-                                    </a>
-                                    <?php endif; ?>
-                                    <?php if ($canEdit): ?>
-                                    <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 active:scale-95 transition-all" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <?php endif; ?>
-                                    <?php if ($canDelete): ?>
-                                    <button type="button" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 active:scale-95 transition-all" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="p-12 text-center">
-                        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                            <i class="bi bi-file-earmark-text text-4xl text-gray-300"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">No documents found</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your filters or search keywords</p>
+<div class="md:hidden space-y-3 py-2">
+    <?php if (!empty($data['documents'])): ?>
+        <?php foreach ($data['documents'] as $doc): 
+            $desc = trim($doc['description'] ?? '');
+            $descShort = $desc ? (mb_strlen($desc) > 100 ? mb_substr($desc, 0, 100) . '...' : $desc) : '';
+            $isDescLong = mb_strlen($desc) > 100;
+            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+            $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
+            $isApproved = ($doc['status'] ?? '') === 'approved';
+            $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+            $canDelete = $canEdit;
+        ?>
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden mobile-doc-card" data-document-id="<?php echo $doc['id']; ?>">
+                <div class="px-3 py-2 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/30 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <input type="checkbox" class="document-checkbox w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800 flex-shrink-0" value="<?php echo $doc['id']; ?>">
+                        <span class="text-xs font-black text-gray-900 dark:text-white truncate leading-tight"><?php echo htmlspecialchars($doc['title']); ?></span>
                     </div>
-                <?php endif; ?>
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400 whitespace-nowrap flex-shrink-0"><?php echo date('M d, Y', strtotime($doc['document_date'])); ?></span>
+                </div>
+                <div class="px-3 py-2 space-y-1.5 text-[11px]">
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Type</span>
+                        <span class="font-bold text-gray-900 dark:text-white text-right"><?php echo e(ucfirst($doc['document_type'])); ?></span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Reference</span>
+                        <span class="font-medium text-gray-700 dark:text-gray-300 truncate text-right" title="<?php echo htmlspecialchars($doc['reference_number'] ?? ''); ?>"><?php echo htmlspecialchars($doc['reference_number'] ?? ''); ?></span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Status</span>
+                        <span class="flex items-center justify-end gap-1 flex-shrink-1"><?php echo getStatusBadge($doc['status'], true); ?><?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?></span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Compliance</span>
+                        <span class="flex items-center justify-end gap-1 flex-shrink-1"><?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
+                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && $userRole !== 'viewer'): ?>
+                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[7px] active:scale-95" title="Run compliance check"><i class="bi bi-shield-check"></i></button>
+                        <?php endif; ?></span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">File</span>
+                        <span class="truncate text-right" title="<?php echo htmlspecialchars($doc['file_name']); ?>"><?php echo htmlspecialchars($doc['file_name']); ?> <span class="text-gray-400">(<?php echo formatFileSize($doc['file_size']); ?>)</span></span>
+                    </div>
+                    <div class="flex justify-between gap-2 items-start">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Description</span>
+                        <div class="text-right leading-snug">
+                            <?php if ($desc): ?>
+                                <?php if ($isDescLong): ?>
+                                    <span class="text-gray-700 dark:text-gray-300"><?php echo htmlspecialchars($descShort); ?></span>
+                                    <button type="button" class="ml-1 text-red-600 font-bold text-[10px] underline" data-title="<?php echo htmlspecialchars($doc['title'], ENT_QUOTES, 'UTF-8'); ?>" data-desc="<?php echo htmlspecialchars($desc, ENT_QUOTES, 'UTF-8'); ?>" onclick="showDescriptionModal(this)">View Details</button>
+                                <?php else: ?>
+                                    <span class="text-gray-700 dark:text-gray-300"><?php echo htmlspecialchars($desc); ?></span>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <span class="text-gray-400 italic">No description</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php if (!empty($doc['status_changed_by_name'])): ?>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Updated by</span>
+                        <span class="truncate text-right text-gray-600 dark:text-gray-400" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>"><?php echo htmlspecialchars($doc['status_changed_by_name']); ?></span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <div class="px-3 py-2 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-wrap items-center gap-1.5">
+                    <button type="button" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye"></i></button>
+                    <?php if ($userRole !== 'viewer'): ?>
+                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download"><i class="bi bi-download"></i></a>
+                    <?php endif; ?>
+                    <?php if ($canEdit): ?>
+                    <button type="button" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 active:scale-95 transition-all" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-pencil"></i></button>
+                    <?php endif; ?>
+                    <?php if ($canDelete): ?>
+                    <button type="button" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 active:scale-95 transition-all" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-trash"></i></button>
+                    <?php endif; ?>
+                </div>
             </div>
-            
-            <!-- Pagination -->
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="p-12 text-center">
+            <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                <i class="bi bi-file-earmark-text text-4xl text-gray-300"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">No documents found</h3>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your filters or search keywords</p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Description Modal -->
+<div id="description-modal" class="hidden fixed inset-0 z-[100004] overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDescriptionModal()"></div>
+        <div class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col transform transition-all">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 id="desc-modal-title" class="text-lg font-black text-gray-900 dark:text-white truncate pr-4"></h3>
+                <button type="button" onclick="closeDescriptionModal()" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-red-600 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="p-4 overflow-y-auto">
+                <p id="desc-modal-body" class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed"></p>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                <button type="button" onclick="closeDescriptionModal()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showDescriptionModal(btn) {
+    const title = btn.getAttribute('data-title') || 'Description';
+    const desc = btn.getAttribute('data-desc') || 'No description available.';
+    document.getElementById('desc-modal-title').textContent = title;
+    document.getElementById('desc-modal-body').textContent = desc;
+    document.getElementById('description-modal').classList.remove('hidden');
+}
+function closeDescriptionModal() {
+    document.getElementById('description-modal').classList.add('hidden');
+}
+</script>
+<!-- Pagination -->
             <?php if (isset($data['pagination']) && $data['pagination']['total_pages'] > 1): ?>
                 <?php
                     $otherParams = array_diff_key($_GET, ['page' => '']);
