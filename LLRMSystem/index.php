@@ -314,9 +314,12 @@ $pageTitle = "Home";
                     </div>
                     <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">News</a>
                     <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Contact</a>
-                    <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all whitespace-nowrap">Sign In</a>
                 </div>
                 <div class="flex items-center space-x-2 xl:space-x-6">
+                    <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[11px] xl:text-sm transition-all whitespace-nowrap">Sign In</a>
+                    <a href="<?php echo REGISTER_URL; ?>" class="hidden lg:inline-flex btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
+                        Get Started
+                    </a>
                     <button type="button" onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                         <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                     </button>
