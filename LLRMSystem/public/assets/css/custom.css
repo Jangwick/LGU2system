@@ -1596,9 +1596,8 @@ nav ul li a.bg-red-600 {
     
     /* Full width cards */
     .card, .bg-white.rounded-xl {
-        margin-left: -0.5rem;
-        margin-right: -0.5rem;
-        border-radius: 0 !important;
+        margin-left: 0;
+        margin-right: 0;
     }
     
     /* Adjust card content */
