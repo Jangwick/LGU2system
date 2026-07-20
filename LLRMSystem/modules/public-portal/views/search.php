@@ -287,7 +287,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                         <div class="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 md:px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-[9px] md:text-[10px] font-black text-gray-500 dark:text-gray-400 shadow-sm uppercase tracking-widest"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span><?= ucfirst($mode) ?> Engine</div>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-auto">
-                        <button type="button" onclick="setView('grid')" id="view-grid" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded-lg shadow-sm"><i class="bi bi-grid-fill"></i></button>
+                        <button type="button" onclick="setView('grid')" id="view-grid" class="hidden sm:flex w-8 h-8 md:w-9 md:h-9 items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded-lg shadow-sm"><i class="bi bi-grid-fill"></i></button>
                         <button type="button" onclick="setView('list')" id="view-list" class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm"><i class="bi bi-list-task"></i></button>
                     </div>
                 </div>
