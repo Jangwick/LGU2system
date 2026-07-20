@@ -318,7 +318,10 @@ $pageTitle = "Home";
     <!-- Mobile Menu Overlay -->
     <div id="mobile-landing-menu" class="hidden fixed inset-0 z-[200] bg-white overflow-y-auto animate-fade-in lg:hidden">
         <div class="fixed top-0 w-full p-4 flex justify-between items-center border-b border-gray-100 bg-white/80 backdrop-blur-md z-10">
-            <span class="text-xl font-black text-[#002d72] tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
+            <div class="flex items-center">
+                <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Logo" class="h-8 w-8 mr-2 rounded-full shadow-sm" onerror="this.src='<?php echo BASE_URL; ?>/public/assets/images/valenzuela-logo.webp'">
+                <span class="text-xl font-black text-[#002d72] tracking-tighter">VALENZUELA<span class="text-red-600">LRMS</span></span>
+            </div>
             <button id="mobile-landing-close" class="p-2 text-gray-500 hover:text-red-600 transition-colors">
                 <i class="bi bi-x-lg text-2xl"></i>
             </button>
