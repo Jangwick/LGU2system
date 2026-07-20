@@ -303,8 +303,8 @@ $pageTitle = "Home";
                     <button type="button" onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                         <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                     </button>
-                    <button type="button" onclick="toggleDarkMode()" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
-                        <i id="darkModeIconMobile" class="bi bi-moon-fill text-xl"></i>
+                    <button type="button" onclick="toggleDarkMode()" class="lg:hidden dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                        <i id="darkModeIconMobile" class="bi bi-moon-fill text-sm"></i>
                     </button>
                     <button type="button" id="mobile-landing-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
                         <i class="bi bi-list text-2xl"></i>
@@ -1777,7 +1777,7 @@ $pageTitle = "Home";
             const desktopIcon = document.getElementById('darkModeIcon');
             const mobileIcon = document.getElementById('darkModeIconMobile');
             if (desktopIcon) desktopIcon.className = isDark ? 'bi bi-sun-fill text-sm' : 'bi bi-moon-fill text-sm';
-            if (mobileIcon) mobileIcon.className = isDark ? 'bi bi-sun-fill text-xl' : 'bi bi-moon-fill text-xl';
+            if (mobileIcon) mobileIcon.className = isDark ? 'bi bi-sun-fill text-sm' : 'bi bi-moon-fill text-sm';
         }
 
         // Initialize dark mode icons on load
