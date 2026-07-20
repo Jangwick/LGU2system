@@ -282,24 +282,41 @@ $pageTitle = "Home";
                 </a>
 
 
-                <div class="hidden lg:flex items-center space-x-4 xl:space-x-7">
-                    <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="text-red-600 hover:text-red-700 font-black text-[10px] leading-tight transition-all flex flex-col items-center border-l border-gray-100 pl-3 ml-1 uppercase tracking-tighter">
-                        <span>Public</span>
-                        <span>Portal</span>
-                    </a>
+                <div class="hidden lg:flex items-center space-x-2 xl:space-x-4">
+                    <a href="<?php echo BASE_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Home</a>
+                    <div class="relative group">
+                        <button type="button" class="flex items-center text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all py-2">
+                            About <i class="bi bi-caret-down-fill ml-1 text-[10px]"></i>
+                        </button>
+                        <div class="hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-1 w-44 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
+                            <a href="#roots" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Our History</a>
+                            <a href="#governance" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Governance</a>
+                            <a href="#recognition" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Awards</a>
+                        </div>
+                    </div>
                     <a href="#leadership" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Officials</a>
-                    <a href="#roots" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">History</a>
-                    <a href="#governance" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Governance</a>
-                    <a href="#recognition" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Awards</a>
-                    <a href="#infrastructure" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Infrastructure</a>
-                    <a href="#landmarks" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Landmarks</a>
+                    <div class="relative group">
+                        <button type="button" class="flex items-center text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all py-2">
+                            Legislation <i class="bi bi-caret-down-fill ml-1 text-[10px]"></i>
+                        </button>
+                        <div class="hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
+                            <a href="<?php echo PUBLIC_PORTAL_URL; ?>" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Public Portal</a>
+                            <a href="#landmarks" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Landmarks</a>
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <button type="button" class="flex items-center text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all py-2">
+                            Services <i class="bi bi-caret-down-fill ml-1 text-[10px]"></i>
+                        </button>
+                        <div class="hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-1 w-44 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
+                            <a href="#infrastructure" class="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-all">Infrastructure</a>
+                        </div>
+                    </div>
                     <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">News</a>
+                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Contact</a>
+                    <a href="<?php echo LOGIN_URL; ?>" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all whitespace-nowrap">Sign In</a>
                 </div>
                 <div class="flex items-center space-x-2 xl:space-x-6">
-                    <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[11px] xl:text-sm transition-all whitespace-nowrap">Sign In</a>
-                    <a href="<?php echo REGISTER_URL; ?>" class="hidden lg:inline-flex btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
-                        Get Started
-                    </a>
                     <button type="button" onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                         <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                     </button>
