@@ -1733,11 +1733,13 @@ $pageTitle = "Home";
         function openMobileMenu() {
             mobileMenu.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            window.dispatchEvent(new Event('scroll'));
         }
 
         function closeMobileMenu() {
             mobileMenu.classList.add('hidden');
             document.body.style.overflow = 'auto';
+            window.dispatchEvent(new Event('scroll'));
         }
 
         mobileToggle.addEventListener('click', openMobileMenu);
@@ -1754,6 +1756,11 @@ $pageTitle = "Home";
             if (!btn) return;
 
             function checkScroll() {
+                if (document.body.style.overflow === 'hidden') {
+                    btn.classList.add('hidden');
+                    btn.classList.remove('flex');
+                    return;
+                }
                 let scrolled = false;
                 if (window.pageYOffset > 200 || document.documentElement.scrollTop > 200) {
                     scrolled = true;
