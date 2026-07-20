@@ -198,7 +198,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Mobile Filter Toggle Button -->
-        <button id="mobile-filter-toggle" class="md:hidden w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-4 flex items-center justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
+        <button id="mobile-filter-toggle" class="md:hidden w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-2 mb-4 flex items-center justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
             <span class="flex items-center">
                 <i class="bi bi-funnel mr-2 text-red-600 dark:text-red-500"></i>
                 <span class="font-medium">Filters & Search</span>
@@ -207,7 +207,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </button>
         
         <!-- Filters Section -->
-        <div id="filters-section" class="relative z-50 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
+        <div id="filters-section" class="relative z-50 bg-white dark:bg-gray-900 rounded-xl shadow-md p-2 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="sm:col-span-2 md:col-span-2">
