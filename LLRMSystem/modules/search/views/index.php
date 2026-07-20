@@ -309,7 +309,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php endif; ?>
                             </div>
                             <div class="flex items-center gap-2 self-end sm:self-auto">
-                                <button type="button" onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
+                                <button type="button" onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 hidden md:inline-flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
                                     <i class="bi bi-grid-fill leading-none pointer-events-none"></i>
                                 </button>
                                 <button type="button" onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm">
@@ -334,66 +334,54 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     $delayClass = $index < 10 ? 'animation-delay-' . (($index + 2) * 100) : '';
                                 ?>
                                                                 <div class="md:hidden">
-<div class="mobile-list-card result-card group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-out active:scale-[0.98] hover:scale-[1.02] hover:-translate-y-1 hover:shadow-md animate-fade-in-up <?= $delayClass ?>" data-document-id="<?= $doc['id'] ?>">
-                                    <!-- Top: Type, Date & Status -->
-                                    <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
-                                        <div class="flex items-center gap-2">
-                                            <span class="badge badge-primary !text-[10px] !py-0.5">
-                                                <?= e(ucfirst($doc['document_type'])) ?>
-                                            </span>
-                                        </div>
-                                        <div class="flex flex-col items-end gap-1">
-                                            <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                                                <i class="bi bi-calendar-event mr-1"></i><?= date('M d, Y', strtotime($doc['created_at'])) ?>
-                                            </span>
-                                            <div class="flex flex-nowrap items-center gap-1 overflow-x-auto">
-                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap <?= getStatusBadgeClass($doc['status']) ?>">
-                                                    <?= e($doc['status']) ?>
-                                                </span>
-                                                <?php if(isset($doc['relevance_score'])): ?>
-                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="AI Relevance">
-                                                    <i class="bi bi-stars"></i><?= round($doc['relevance_score'] * 100) ?>%
-                                                </span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Middle: Title, Ref/Description & Icon -->
-                                    <div class="p-4 flex flex-col items-center gap-3">
-                                        <div class="min-w-0 w-full">
-                                            <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2">
-                                                <?= htmlspecialchars($doc['title']) ?>
-                                            </h4>
-                                            <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80">
-                                                REF: <?= e($doc['reference_number'] ?? 'N/A') ?>
-                                            </p>
-                                            <p class="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 mt-1 leading-relaxed">
-                                                <?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?>
-                                            </p>
-                                        </div>
-                                        <div class="w-full h-16 rounded-2xl <?= getTypeIconBgClass($doc['document_type']) ?> flex items-center justify-center flex-shrink-0 shadow-sm">
-                                            <i class="bi <?= getTypeIcon($doc['document_type']) ?> text-3xl"></i>
-                                        </div>
-                                    </div>
-
-                                    <!-- Bottom: Actions & Metadata -->
-                                    <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex items-center justify-between gap-3">
-                                        <span class="text-[10px] text-gray-500 dark:text-gray-400 truncate">
-                                            by <?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?>
-                                        </span>
-                                                                                <div class="card-actions flex items-center gap-1.5">
-                                            <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="Preview">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <?php if ($userRole !== 'viewer'): ?>
-                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download">
-                                                <i class="bi bi-download"></i>
-                                            </a>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
+<div class="mobile-list-card result-card group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?> h-full flex flex-col" data-document-id="<?= $doc['id'] ?>">
+    <div class="px-3 py-2 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-2">
+        <div class="flex items-center gap-1">
+            <span class="badge badge-primary !text-[9px] !py-0.5"><?= e(ucfirst($doc['document_type'])) ?></span>
+        </div>
+        <div class="flex flex-col items-end gap-0.5">
+            <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider"><i class="bi bi-calendar-event mr-1"></i><?= date('M d, Y', strtotime($doc['created_at'])) ?></span>
+            <div class="flex flex-nowrap items-center gap-1 overflow-x-auto">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap <?= getStatusBadgeClass($doc['status']) ?>"><?= e($doc['status']) ?></span>
+                <?php if(isset($doc['relevance_score'])): ?>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="AI Relevance"><i class="bi bi-stars"></i><?= round($doc['relevance_score'] * 100) ?>%</span>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div class="p-3 flex flex-col items-center gap-2 flex-1">
+        <div class="min-w-0 w-full">
+            <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2"><?= htmlspecialchars($doc['title']) ?></h4>
+            <p class="text-[10px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80">REF: <?= e($doc['reference_number'] ?? 'N/A') ?></p>
+            <p class="text-[11px] text-gray-600 dark:text-gray-300 line-clamp-2 mt-1 leading-relaxed"><?= htmlspecialchars($doc['description'] ?? 'No description available for this legislative record.') ?></p>
+        </div>
+        <div class="w-full h-16 rounded-2xl <?= getTypeIconBgClass($doc['document_type']) ?> flex items-center justify-center flex-shrink-0 shadow-sm">
+            <i class="bi <?= getTypeIcon($doc['document_type']) ?> text-3xl"></i>
+        </div>
+    </div>
+    <div class="px-3 py-2 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex flex-col gap-2">
+        <div class="flex items-center justify-between gap-1 text-[9px] text-gray-500 dark:text-gray-400">
+            <span class="truncate"><i class="bi bi-person-circle mr-1 text-gray-300"></i><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
+            <div class="flex items-center gap-1">
+                <?php
+                $tags = explode(',', $doc['tags'] ?? '');
+                foreach(array_slice($tags, 0, 3) as $tag): if(empty($tag)) continue; ?>
+                <span class="px-1.5 py-0.5 rounded-lg bg-gray-50 dark:bg-gray-900 text-[8px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 dark:border-gray-700 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer">#<?= trim($tag) ?></span>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="card-actions flex items-center justify-end gap-2">
+            <button type="button" onclick="previewDocument(<?= $doc['id'] ?>)" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-900 text-white text-[9px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-gray-200 group/btn">
+                <i class="bi bi-eye mr-1 group-hover/btn:scale-125 transition-transform"></i> Preview
+            </button>
+            <?php if ($userRole !== 'viewer'): ?>
+            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?= $doc['id'] ?>" class="w-9 h-9 rounded-xl bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all shadow-lg shadow-red-600/30 transform active:scale-90 group/dl">
+                <i class="bi bi-download group-hover/dl:translate-y-0.5 transition-transform"></i>
+            </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
                                                                                                 <div class="mobile-grid-card hidden group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?> h-full flex flex-col" data-document-id="<?= $doc['id'] ?>">
     <div class="px-3 py-2 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-2">
         <div class="flex items-center gap-1">
