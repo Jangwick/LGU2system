@@ -1169,13 +1169,6 @@ function viewDocument(id) {
                                         <button type="button" onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
-                                        <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
-                                            ${doc.status !== 'approved' ? `
-                                            <button type="button" onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
-                                                <i class="bi bi-trash mr-3"></i> Delete Document
-                                            </button>
-                                            ` : ''}
-                                        </div>
                                     </div>
                                 </section>
 
