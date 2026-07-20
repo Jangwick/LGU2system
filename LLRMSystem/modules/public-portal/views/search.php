@@ -180,7 +180,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                 <h1 class="text-2xl md:text-4xl font-black mb-1 md:mb-2 italic">Public Document Portal</h1>
                 <p class="text-red-50 text-xs md:text-base max-w-xl opacity-90 font-medium">Search and preview approved legislative records. Hybrid engine combining keywords with semantic understanding.</p>
                 <div class="mt-3 md:mt-4 flex flex-wrap items-center gap-2">
-                    <a href="<?= BASE_URL ?>" class="inline-flex items-center gap-2 bg-white text-red-700 hover:bg-red-50 font-black px-4 py-2 rounded-full text-xs shadow-lg transition-all">
+                    <a href="<?= BASE_URL ?>" class="sm:hidden inline-flex items-center gap-2 bg-white text-red-700 hover:bg-red-50 font-black px-4 py-2 rounded-full text-xs shadow-lg transition-all">
                         <i class="bi bi-arrow-left"></i> Back to Home
                     </a>
                     <a href="<?= LOGIN_URL ?>" class="sm:hidden inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-black px-4 py-2 rounded-full text-xs border border-white/30 shadow-lg transition-all">
