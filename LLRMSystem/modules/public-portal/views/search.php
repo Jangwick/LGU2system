@@ -184,14 +184,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
                 <div class="flex items-center gap-2 text-red-100 font-bold tracking-wider text-[10px] md:text-xs uppercase mb-2 md:mb-3"><span class="w-6 md:w-8 h-0.5 bg-red-100/50"></span>Open Access &middot; AI-Powered Intelligence</div>
                 <h1 class="text-2xl md:text-4xl font-black mb-1 md:mb-2 italic">Public Document Portal</h1>
                 <p class="text-red-50 text-xs md:text-base max-w-xl opacity-90 font-medium">Search and preview approved legislative records. Hybrid engine combining keywords with semantic understanding.</p>
-                <div class="mt-3 md:mt-4 flex flex-wrap items-center gap-2">
-                    <a href="<?= BASE_URL ?>" class="sm:hidden inline-flex items-center gap-2 bg-white text-red-700 hover:bg-red-50 font-black px-4 py-2 rounded-full text-xs shadow-lg transition-all">
-                        <i class="bi bi-arrow-left"></i> Back to Home
-                    </a>
-                    <a href="<?= LOGIN_URL ?>" class="sm:hidden inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-black px-4 py-2 rounded-full text-xs border border-white/30 shadow-lg transition-all">
-                        <i class="bi bi-box-arrow-in-right"></i> Sign In
-                    </a>
-                </div>
+                <div class="mt-3 md:mt-4 flex flex-wrap items-center gap-2"></div>
             </div>
             <div class="flex items-center gap-1.5 bg-black/10 p-1 rounded-lg md:rounded-xl backdrop-blur-md border border-white/10 w-fit">
                 <button class="hero-toggle-btn px-4 md:px-5 py-2 md:py-2.5 rounded-md md:rounded-lg bg-white !text-red-700 font-black text-[10px] md:text-sm shadow-lg whitespace-nowrap uppercase tracking-tight">Documents</button>
