@@ -349,7 +349,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
                 <div class="flex flex-wrap items-center justify-between gap-y-4">
                     <!-- Left: Select All -->
-                    <div class="flex items-center">
+                    <div class="hidden md:flex items-center">
                         <label class="flex items-center cursor-pointer group">
                             <div class="relative flex items-center justify-center">
                                 <input type="checkbox" id="select-all-top" class="peer h-6 w-6 cursor-pointer appearance-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 checked:bg-red-600 checked:border-red-600 transition-all focus:ring-0 focus:ring-offset-0" onchange="toggleSelectAll(this)">
@@ -360,7 +360,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Right: Bulk Actions -->
-                    <div class="flex items-center gap-2">
+                    <div class="hidden md:flex items-center gap-2">
                         <?php if ($userRole !== 'viewer'): ?>
                         <button class="w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl transition-all" title="Download Selected">
                             <i class="bi bi-download text-lg"></i>
