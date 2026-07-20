@@ -501,24 +501,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
-                                            <?php if ($canEdit || $canDelete): ?>
-                                            <div class="relative inline-block group">
-                                                <button type="button" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
-                                                    <i class="bi bi-pencil mr-1"></i> Edit <i class="bi bi-caret-down-fill ml-1 text-[9px]"></i>
-                                                </button>
-                                                <div class="hidden group-hover:block absolute right-0 top-full mt-1 w-28 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 overflow-hidden">
-                                                    <?php if ($canEdit): ?>
-                                                    <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>)" class="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
-                                                        <i class="bi bi-pencil"></i> Edit
-                                                    </button>
-                                                    <?php endif; ?>
-                                                    <?php if ($canDelete): ?>
-                                                    <button type="button" onclick="deleteDocument(<?php echo $doc['id']; ?>)" class="w-full text-left px-3 py-2 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
-                                                        <i class="bi bi-trash"></i> Delete
-                                                    </button>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
+                                            <?php if ($canEdit): ?>
+                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-pencil mr-1"></i> Edit</button>
                                             <?php endif; ?>
                                         </div>
                                     </td>
@@ -1942,6 +1926,9 @@ document.addEventListener('keydown', function(e) {
 
                 <!-- Sticky Footer within Scroll Area for Forms -->
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-800 mt-4">
+                    <button type="button" onclick="deleteDocument(document.getElementById('edit-form-modal').querySelector('input[name=document_id]').value)" class="w-full sm:w-auto px-6 py-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all flex items-center justify-center">
+                        <i class="bi bi-trash mr-2"></i> Delete
+                    </button>
                     <button type="button" onclick="closeEditModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
                         Discard Changes
                     </button>
