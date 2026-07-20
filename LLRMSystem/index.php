@@ -313,7 +313,6 @@ $pageTitle = "Home";
                         </div>
                     </div>
                     <a href="#updates" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">News</a>
-                    <a href="<?php echo HELP_URL; ?>/views/contact.php" class="text-gray-600 hover:text-red-600 font-bold text-[11px] xl:text-sm transition-all">Contact</a>
                 </div>
                 <div class="flex items-center space-x-2 xl:space-x-6">
                     <a href="<?php echo LOGIN_URL; ?>" class="hidden lg:block text-gray-600 hover:text-red-600 font-bold px-3 py-2 text-[11px] xl:text-sm transition-all whitespace-nowrap">Sign In</a>
