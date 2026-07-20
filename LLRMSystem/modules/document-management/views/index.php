@@ -108,7 +108,7 @@ function getComplianceBadge($complianceStatus, $compact = false) {
         $badges = [
             'pending' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="Compliance check pending"><i class="bi bi-hourglass-split"></i>Pending</span>',
             'compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="Compliant"><i class="bi bi-shield-check"></i>Compliant</span>',
-            'non_compliant' => '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non Compliance</span>',
+            'non_compliant' => '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non-Comp</span>',
         ];
         return $badges[$status] ?? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">Unknown</span>';
     }
@@ -384,35 +384,35 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Table -->
             <!-- Desktop Table View -->
-            <div class="hidden md:block drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <div class="hidden md:block overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
-                            <th class="px-4 md:px-6 py-3 text-left w-12">
+                            <th class="px-2 py-2 text-left w-12">
                                 <!-- Redundant checkbox removed -->
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Document
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Type
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Reference
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Compliance
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Date
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Size
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-2 py-2 text-right text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -440,17 +440,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php foreach ($data['documents'] as $doc): ?>
                                 <!-- Table Row -->
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors" data-document-id="<?php echo $doc['id']; ?>">
-                                    <td class="px-4 md:px-6 py-4 w-12 text-center">
+                                    <td class="px-2 py-2 w-12 text-center">
                                         <input type="checkbox" class="document-checkbox w-4 h-4 text-red-600 dark:text-red-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
                                     </td>
                                     <td class="px-4 md:px-6 py-4">
                                         <div class="flex items-center">
-                                            <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-2 mr-3 flex-shrink-0">
-                                                <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-xl"></i>
+                                            <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-1.5 mr-2 flex-shrink-0">
+                                                <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-lg"></i>
                                             </div>
                                             <div class="min-w-0 flex-1">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                                <p class="text-xs font-medium text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
+                                                <p class="text-[10px] text-gray-500 dark:text-gray-400 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                             </div>
                                         </div>
                                     </td>
@@ -485,7 +485,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
+                                    <td class="px-2 py-2 text-right text-xs font-medium">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye mr-1"></i> View</button>
                                             <?php 
