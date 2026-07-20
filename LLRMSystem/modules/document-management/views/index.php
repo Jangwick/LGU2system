@@ -519,27 +519,27 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <?php foreach ($data['documents'] as $doc): ?>
                         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mobile-doc-card transition-all active:scale-[0.98]" data-document-id="<?php echo $doc['id']; ?>">
                             <!-- Top: Type, Date & Status -->
-                            <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
-                                <div class="flex items-center gap-2">
-                                    <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
-                                    <span class="badge badge-primary !text-[9px] !px-1.5 !py-0.5">
-                                        <?php echo e(ucfirst($doc['document_type'])); ?>
-                                    </span>
-                                </div>
-                                <div class="flex flex-col items-start gap-0.5 min-w-0 max-w-full">
-                                    <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap">
+                            <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex flex-col gap-2">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
+                                        <span class="badge badge-primary !text-[9px] !px-1.5 !py-0.5">
+                                            <?php echo e(ucfirst($doc['document_type'])); ?>
+                                        </span>
+                                    </div>
+                                    <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap flex-shrink-0">
                                         <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </span>
-                                    <div class="flex flex-nowrap items-center gap-0.5 overflow-x-auto max-w-full min-w-0">
-                                        <?php echo getStatusBadge($doc['status'], true); ?>
-                                        <?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?>
-                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
-                                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
-                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[9px] active:scale-95" title="Run compliance check">
-                                            <i class="bi bi-shield-check"></i>
-                                        </button>
-                                        <?php endif; ?>
-                                    </div>
+                                </div>
+                                <div class="flex flex-nowrap items-center gap-0.5 w-full min-w-0">
+                                    <?php echo getStatusBadge($doc['status'], true); ?>
+                                    <?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?>
+                                    <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
+                                    <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
+                                    <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[9px] active:scale-95 flex-shrink-0" title="Run compliance check">
+                                        <i class="bi bi-shield-check"></i>
+                                    </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 
