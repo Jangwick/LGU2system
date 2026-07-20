@@ -530,7 +530,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
                                         <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </span>
-                                    <div class="flex flex-wrap items-center gap-1">
+                                    <div class="flex flex-nowrap items-center gap-1 overflow-x-auto">
                                         <?php echo getStatusBadge($doc['status'], true); ?>
                                         <?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?>
                                         <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
