@@ -155,6 +155,32 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
 
+        <!-- Extra Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-450 group cursor-pointer">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                        <i class="bi bi-calendar-check-fill text-cyan-600 dark:text-cyan-400 text-4xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">New Documents (30 Days)</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['new_documents_30days']); ?></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-500 group cursor-pointer">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                        <i class="bi bi-lightning-charge-fill text-pink-600 dark:text-pink-400 text-4xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200 group-hover:text-pink-600 dark:group-hover:text-pink-400">Activities (24 Hours)</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white transform transition-all duration-300 group-hover:scale-110"><?php echo number_format($stats['activities_24h']); ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Charts Row 1 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Documents by Type -->
