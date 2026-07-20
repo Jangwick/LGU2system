@@ -175,7 +175,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                 <p class="text-gray-500 dark:text-gray-400">No audit logs found.</p>
             </div>
             <?php else: ?>
-            <div class="overflow-x-auto">
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full">
                     <thead>
                         <tr class="border-b border-gray-200 dark:border-gray-700">
@@ -217,6 +217,56 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Audit Logs View -->
+            <div class="md:hidden space-y-3 py-2">
+                <?php foreach ($logs as $log):
+                    $desc = htmlspecialchars($log['description'] ?? '');
+                    $descShort = $desc ? (strlen($desc) > 100 ? substr($desc, 0, 100) . '...' : $desc) : '';
+                    $isDescLong = strlen($desc) > 100;
+                ?>
+                <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700 p-3 space-y-1.5 text-[11px]">
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Date/Time</span>
+                        <span class="font-medium text-gray-800 dark:text-white text-right"><?= date('M d, Y g:i A', strtotime($log['created_at'])) ?></span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">User</span>
+                        <div class="text-right">
+                            <span class="font-medium text-gray-800 dark:text-white block"><?= htmlspecialchars($log['full_name'] ?? $log['username'] ?? 'Unknown') ?></span>
+                            <span class="text-[10px] text-gray-500 dark:text-gray-400 block"><?= htmlspecialchars($log['email'] ?? '') ?></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Action</span>
+                        <span class="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-full text-[10px] font-bold"><?= htmlspecialchars($log['action']) ?></span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Table</span>
+                        <span class="font-medium text-gray-700 dark:text-gray-300 text-right"><?= htmlspecialchars($log['table_name']) ?></span>
+                    </div>
+                    <div class="flex justify-between gap-2 items-start">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Description</span>
+                        <div class="text-right leading-snug">
+                            <?php if ($desc): ?>
+                                <?php if ($isDescLong): ?>
+                                    <span class="text-gray-700 dark:text-gray-300"><?= $descShort ?></span>
+                                    <button type="button" class="ml-1 text-red-600 font-bold text-[10px] underline" data-title="Audit Details" data-desc="<?= htmlspecialchars($log['description'], ENT_QUOTES, 'UTF-8') ?>" onclick="showDescriptionModal(this)">View Details</button>
+                                <?php else: ?>
+                                    <span class="text-gray-700 dark:text-gray-300"><?= $desc ?></span>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <span class="text-gray-400 italic">No description</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">IP Address</span>
+                        <span class="font-mono text-gray-700 dark:text-gray-300 text-right"><?= htmlspecialchars($log['ip_address']) ?></span>
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
 
             <!-- Pagination -->
@@ -488,5 +538,37 @@ if (sidebarOverlay) {
 }
 </script>
 </div>
+
+<!-- Description Modal -->
+<div id="description-modal" class="hidden fixed inset-0 z-[100004] overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDescriptionModal()"></div>
+        <div class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col transform transition-all">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 id="desc-modal-title" class="text-lg font-black text-gray-900 dark:text-white truncate pr-4"></h3>
+                <button type="button" onclick="closeDescriptionModal()" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-red-600 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="p-4 overflow-y-auto">
+                <p id="desc-modal-body" class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed"></p>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                <button type="button" onclick="closeDescriptionModal()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showDescriptionModal(btn) {
+    const title = btn.getAttribute('data-title') || 'Description';
+    const desc = btn.getAttribute('data-desc') || 'No description available.';
+    document.getElementById('desc-modal-title').textContent = title;
+    document.getElementById('desc-modal-body').textContent = desc;
+    document.getElementById('description-modal').classList.remove('hidden');
+}
+function closeDescriptionModal() {
+    document.getElementById('description-modal').classList.add('hidden');
+}
+</script>
 
 <?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>
