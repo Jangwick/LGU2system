@@ -303,6 +303,9 @@ $pageTitle = "Home";
                     <button type="button" onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                         <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                     </button>
+                    <button type="button" onclick="toggleDarkMode()" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                        <i id="darkModeIconMobile" class="bi bi-moon-fill text-xl"></i>
+                    </button>
                     <button type="button" id="mobile-landing-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
                         <i class="bi bi-list text-2xl"></i>
                     </button>
@@ -341,13 +344,6 @@ $pageTitle = "Home";
             <h3 class="text-gray-400 font-black uppercase tracking-widest text-[10px] mb-0">Help & Legal</h3>
             <a href="<?php echo HELP_URL; ?>/views/privacy.php" class="mobile-nav-link text-lg font-bold text-gray-400 uppercase tracking-wider hover:text-red-600 transition-colors">Privacy</a>
             <a href="<?php echo HELP_URL; ?>/views/terms.php" class="mobile-nav-link text-lg font-bold text-gray-400 uppercase tracking-wider hover:text-red-600 transition-colors">Terms</a>
-            
-            <div class="flex flex-col items-center space-y-3">
-                <button type="button" onclick="toggleDarkMode()" class="dark-toggle w-14 h-14 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-600 hover:border-red-200 transition-all" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
-                    <i id="darkModeIconMobile" class="bi bi-moon-fill text-xl"></i>
-                </button>
-                <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Theme</span>
-            </div>
 
             <div class="pt-8 w-full border-t border-gray-50 dark:border-gray-800 grid grid-cols-2 gap-4">
                 <a href="<?php echo LOGIN_URL; ?>" class="flex items-center justify-center border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-red-600 hover:border-red-300 dark:hover:border-red-500 font-black uppercase tracking-widest text-sm py-4 rounded-xl transition-all">Sign In</a>
