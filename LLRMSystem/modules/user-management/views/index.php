@@ -511,8 +511,8 @@ function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass
         if (isHidden) {
             // Position the dropdown below the trigger
             const rect = trigger.getBoundingClientRect();
-            const filterContainer = document.querySelector('.relative.z-\\[100\\]');
-            const containerRect = filterContainer.getBoundingClientRect();
+            const filterContainer = document.querySelector('.relative.z-10');
+            const containerRect = filterContainer ? filterContainer.getBoundingClientRect() : { top: 0, left: 0 };
             
             dropdown.style.top = (rect.bottom - containerRect.top + 4) + 'px';
             dropdown.style.left = (rect.left - containerRect.left) + 'px';
