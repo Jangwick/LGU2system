@@ -58,18 +58,7 @@ function getFileIconClass($mimeType, $fileName = '') {
     return 'bg-gray-100 dark:bg-gray-800';
 }
 
-function getStatusBadge($status, $compact = false) {
-    if ($compact) {
-        $badges = [
-            'draft' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"><i class="bi bi-pencil"></i>Draft</span>',
-            'pending' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"><i class="bi bi-clock"></i>Pending</span>',
-            'approved' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"><i class="bi bi-check-circle"></i>Approved</span>',
-            'rejected' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"><i class="bi bi-x-circle"></i>Rejected</span>',
-            'archived' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-500 text-white dark:bg-gray-600"><i class="bi bi-archive"></i>Archived</span>'
-        ];
-        return $badges[$status] ?? '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">' . ucfirst($status) . '</span>';
-    }
-
+function getStatusBadge($status) {
     $badges = [
         'draft' => '<span class="badge badge-secondary"><i class="bi bi-pencil mr-1"></i>Draft</span>',
         'pending' => '<span class="badge badge-warning"><i class="bi bi-clock mr-1"></i>Pending</span>',
@@ -80,18 +69,7 @@ function getStatusBadge($status, $compact = false) {
     return $badges[$status] ?? '<span class="badge badge-info">' . ucfirst($status) . '</span>';
 }
 
-function getOcrBadge($ocrStatus, $compact = false) {
-    if ($compact) {
-        $badges = [
-            'completed' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="OCR Completed"><i class="bi bi-check-circle"></i>OCR</span>',
-            'pending' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="OCR Pending"><i class="bi bi-hourglass-split"></i>OCR</span>',
-            'processing' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" title="OCR Processing"><i class="bi bi-arrow-repeat"></i>OCR</span>',
-            'failed' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="OCR Failed"><i class="bi bi-x-circle"></i>OCR</span>',
-            'skipped' => '',
-        ];
-        return $badges[$ocrStatus] ?? '';
-    }
-
+function getOcrBadge($ocrStatus) {
     $badges = [
         'completed' => '<span class="badge badge-success text-[10px]" title="OCR Completed"><i class="bi bi-check-circle mr-0.5"></i>OCR</span>',
         'pending' => '<span class="badge badge-warning text-[10px]" title="OCR Pending"><i class="bi bi-hourglass-split mr-0.5"></i>OCR</span>',
@@ -100,25 +78,6 @@ function getOcrBadge($ocrStatus, $compact = false) {
         'skipped' => '',
     ];
     return $badges[$ocrStatus] ?? '';
-}
-
-function getComplianceBadge($complianceStatus, $compact = false) {
-    $status = $complianceStatus ?? 'pending';
-    if ($compact) {
-        $badges = [
-            'pending' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300" title="Compliance check pending"><i class="bi bi-hourglass-split"></i>Pending</span>',
-            'compliant' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" title="Compliant"><i class="bi bi-shield-check"></i>Compliant</span>',
-            'non_compliant' => '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Non-Compliant"><i class="bi bi-shield-exclamation"></i>Non-Comp</span>',
-        ];
-        return $badges[$status] ?? '<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wide bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">Unknown</span>';
-    }
-
-    $badges = [
-        'pending' => '<span class="badge badge-warning" title="Compliance check pending"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>',
-        'compliant' => '<span class="badge badge-success" title="Compliant"><i class="bi bi-shield-check mr-1"></i>Compliant</span>',
-        'non_compliant' => '<span class="badge badge-danger" title="Non-Compliant"><i class="bi bi-shield-exclamation mr-1"></i>Non-Compliant</span>',
-    ];
-    return $badges[$status] ?? '<span class="badge badge-secondary">Unknown</span>';
 }
 
 function formatFileSize($bytes) {
@@ -154,16 +113,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                     if (!in_array($userRole, ['viewer'])): 
                     ?>
-                    <button type="button" onclick="openUploadModal()" class="no-ripple inline-flex items-center justify-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-0 h-10 transform-none hover:transform-none active:transform-none">
+                    <button type="button" onclick="openUploadModal()" class="no-ripple inline-flex items-center justify-center px-4 py-2 !bg-white !text-red-600 border border-red-600 rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[165px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                         <i class="bi bi-plus-circle mr-2"></i>
-                        <span class="min-w-0 truncate">Upload Document</span>
+                        Upload Document
                     </button>
                     <?php endif; ?>
                     <?php if ($userRole !== 'viewer'): ?>
                     <div class="relative" id="export-dropdown">
-                        <button type="button" onclick="toggleExportMenu(event)" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-0 h-10 transform-none hover:transform-none active:transform-none">
+                        <button type="button" onclick="toggleExportMenu(event)" class="no-ripple inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg font-bold hover:shadow-lg transition-shadow duration-200 shadow-sm min-w-[120px] h-10 flex-shrink-0 transform-none hover:transform-none active:transform-none">
                             <i class="bi bi-download mr-2"></i>
-                            <span class="min-w-0 truncate">Export</span>
+                            Export
                             <i class="bi bi-chevron-down ml-2 transition-transform" id="export-chevron"></i>
                         </button>
                         <div id="export-menu" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700" style="position: fixed; width: 224px; z-index: 99999;">
@@ -198,7 +157,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </div>
         
         <!-- Mobile Filter Toggle Button -->
-        <button id="mobile-filter-toggle" class="md:hidden w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-2 mb-4 flex items-center justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
+        <button id="mobile-filter-toggle" class="md:hidden w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-4 flex items-center justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
             <span class="flex items-center">
                 <i class="bi bi-funnel mr-2 text-red-600 dark:text-red-500"></i>
                 <span class="font-medium">Filters & Search</span>
@@ -207,7 +166,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         </button>
         
         <!-- Filters Section -->
-        <div id="filters-section" class="relative z-50 w-full bg-white dark:bg-gray-900 rounded-xl shadow-md p-2 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
+        <div id="filters-section" class="relative z-50 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 md:p-6 mb-6 animate-fade-in-up hidden md:block border border-transparent dark:border-gray-800">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="sm:col-span-2 md:col-span-2">
@@ -225,7 +184,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Document Type Filter -->
                 <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Document Type</label>
-                    <div class="relative custom-select-container w-full">
+                    <div class="relative custom-select-container">
                         <div id="type-filter-trigger" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 hover:border-red-300 dark:hover:border-red-900 cursor-pointer flex items-center justify-between">
                             <span id="type-filter-value">All Types</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
@@ -250,7 +209,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <!-- Status Filter -->
                 <div class="relative z-40">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                    <div class="relative custom-select-container w-full">
+                    <div class="relative custom-select-container">
                         <div id="status-filter-trigger" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 cursor-pointer flex items-center justify-between">
                             <span id="status-filter-value">All Status</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
@@ -319,16 +278,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
                         <input type="text" id="filter-tags" placeholder="e.g. budget, land" value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
-                    <!-- Compliance Status -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Compliance</label>
-                        <select id="filter-compliance" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
-                            <option value="">All</option>
-                            <option value="pending" <?php echo (($_GET['compliance_status'] ?? '') === 'pending') ? 'selected' : ''; ?>>Pending</option>
-                            <option value="compliant" <?php echo (($_GET['compliance_status'] ?? '') === 'compliant') ? 'selected' : ''; ?>>Compliant</option>
-                            <option value="non_compliant" <?php echo (($_GET['compliance_status'] ?? '') === 'non_compliant') ? 'selected' : ''; ?>>Non-Compliant</option>
-                        </select>
-                    </div>
                 </div>
                 
                 <div class="mt-4 flex flex-col sm:flex-row justify-end gap-3">
@@ -349,7 +298,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
                 <div class="flex flex-wrap items-center justify-between gap-y-4">
                     <!-- Left: Select All -->
-                    <div class="hidden md:flex items-center">
+                    <div class="flex items-center">
                         <label class="flex items-center cursor-pointer group">
                             <div class="relative flex items-center justify-center">
                                 <input type="checkbox" id="select-all-top" class="peer h-6 w-6 cursor-pointer appearance-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 checked:bg-red-600 checked:border-red-600 transition-all focus:ring-0 focus:ring-offset-0" onchange="toggleSelectAll(this)">
@@ -360,7 +309,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                     
                     <!-- Right: Bulk Actions -->
-                    <div class="hidden md:flex items-center gap-2">
+                    <div class="flex items-center gap-2">
                         <?php if ($userRole !== 'viewer'): ?>
                         <button class="w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl transition-all" title="Download Selected">
                             <i class="bi bi-download text-lg"></i>
@@ -384,35 +333,32 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             
             <!-- Table -->
             <!-- Desktop Table View -->
-            <div class="hidden md:block overflow-x-auto">
-                <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <div class="hidden md:block drag-scroll overflow-x-auto cursor-grab active:cursor-grabbing select-none">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
-                            <th class="px-2 py-2 text-left w-12">
+                            <th class="px-4 md:px-6 py-3 text-left w-12">
                                 <!-- Redundant checkbox removed -->
                             </th>
-                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
                             </th>
-                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Type
                             </th>
-                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Reference
                             </th>
-                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
-                                Compliance
-                            </th>
-                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Date
                             </th>
-                            <th class="px-2 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Size
                             </th>
-                            <th class="px-2 py-2 text-right text-[10px] font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-4 md:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -420,7 +366,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <?php if (isset($data['error'])): ?>
                             <tr>
-                                <td colspan="9" class="px-6 py-12 text-center">
+                                <td colspan="8" class="px-6 py-12 text-center">
                                     <div class="text-red-600">
                                         <i class="bi bi-exclamation-circle text-4xl mb-2"></i>
                                         <p><?php echo htmlspecialchars($data['message']); ?></p>
@@ -429,7 +375,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php elseif (empty($data['documents'])): ?>
                             <tr>
-                                <td colspan="9" class="px-6 py-12 text-center">
+                                <td colspan="8" class="px-6 py-12 text-center">
                                     <div class="text-gray-500">
                                         <i class="bi bi-inbox text-4xl mb-2"></i>
                                         <p>No documents found</p>
@@ -440,17 +386,17 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php foreach ($data['documents'] as $doc): ?>
                                 <!-- Table Row -->
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors" data-document-id="<?php echo $doc['id']; ?>">
-                                    <td class="px-2 py-2 w-12 text-center">
+                                    <td class="px-4 md:px-6 py-4 w-12 text-center">
                                         <input type="checkbox" class="document-checkbox w-4 h-4 text-red-600 dark:text-red-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
                                     </td>
                                     <td class="px-4 md:px-6 py-4">
                                         <div class="flex items-center">
-                                            <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-1.5 mr-2 flex-shrink-0">
-                                                <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-lg"></i>
+                                            <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-2 mr-3 flex-shrink-0">
+                                                <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-xl"></i>
                                             </div>
                                             <div class="min-w-0 flex-1">
-                                                <p class="text-xs font-medium text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
-                                                <p class="text-[10px] text-gray-500 dark:text-gray-400 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                             </div>
                                         </div>
                                     </td>
@@ -471,28 +417,24 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </p>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
-                                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer'): ?>
-                                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="ml-1 inline-flex items-center p-1 text-xs text-blue-600 hover:text-blue-800" title="Run compliance check">
-                                            <i class="bi bi-shield-check"></i>
-                                        </button>
-                                        <?php endif; ?>
-                                    </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
-                                    <td class="px-2 py-2 text-right text-xs font-medium">
-                                        <div class="flex justify-end gap-2">
-                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye mr-1"></i> View</button>
+                                    <td class="px-4 md:px-6 py-4 text-right text-sm font-medium">
+                                        <div class="flex justify-end gap-3">
+                                            <button type="button" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                             if ($userRole !== 'viewer'): 
                                             ?>
-                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="no-ripple inline-flex items-center justify-center bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Download"><i class="bi bi-download mr-1"></i> Download</a>
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors" title="Download">
+                                                <i class="bi bi-download"></i>
+                                            </a>
                                             <?php endif; ?>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
@@ -502,7 +444,14 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button type="button" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-2 py-1 text-xs rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-pencil mr-1"></i> Edit</button>
+                                            <button type="button" class="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete): ?>
+                                            <button type="button" class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                             <?php endif; ?>
                                         </div>
                                     </td>
@@ -514,129 +463,92 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
                 
             <!-- Mobile Card View -->
-<div class="md:hidden space-y-3 py-2">
-    <?php if (!empty($data['documents'])): ?>
-        <?php foreach ($data['documents'] as $doc): 
-            $desc = trim($doc['description'] ?? '');
-            $descShort = $desc ? (mb_strlen($desc) > 100 ? mb_substr($desc, 0, 100) . '...' : $desc) : '';
-            $isDescLong = mb_strlen($desc) > 100;
-            $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
-            $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
-            $isApproved = ($doc['status'] ?? '') === 'approved';
-            $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-            $canDelete = $canEdit;
-        ?>
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden mobile-doc-card" data-document-id="<?php echo $doc['id']; ?>">
-                <div class="px-3 py-2 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/30 flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2 min-w-0">
-                        <input type="checkbox" class="document-checkbox w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800 flex-shrink-0" value="<?php echo $doc['id']; ?>">
-                        <span class="text-xs font-black text-gray-900 dark:text-white truncate leading-tight"><?php echo htmlspecialchars($doc['title']); ?></span>
-                    </div>
-                    <span class="text-[10px] text-gray-500 dark:text-gray-400 whitespace-nowrap flex-shrink-0"><?php echo date('M d, Y', strtotime($doc['document_date'])); ?></span>
-                </div>
-                <div class="px-3 py-2 space-y-1.5 text-[11px]">
-                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
-                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Type</span>
-                        <span class="font-bold text-gray-900 dark:text-white text-right"><?php echo e(ucfirst($doc['document_type'])); ?></span>
-                    </div>
-                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
-                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Reference</span>
-                        <span class="font-medium text-gray-700 dark:text-gray-300 truncate text-right" title="<?php echo htmlspecialchars($doc['reference_number'] ?? ''); ?>"><?php echo htmlspecialchars($doc['reference_number'] ?? ''); ?></span>
-                    </div>
-                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
-                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Status</span>
-                        <span class="flex items-center justify-end gap-1 flex-shrink-1"><?php echo getStatusBadge($doc['status'], true); ?><?php echo getOcrBadge($doc['ocr_status'] ?? '', true); ?></span>
-                    </div>
-                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
-                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Compliance</span>
-                        <span class="flex items-center justify-end gap-1 flex-shrink-1"><?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending', true); ?>
-                        <?php if (($doc['compliance_status'] ?? 'pending') === 'pending' && $userRole !== 'viewer'): ?>
-                        <button type="button" onclick="checkCompliance(<?php echo $doc['id']; ?>, this)" class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[7px] active:scale-95" title="Run compliance check"><i class="bi bi-shield-check"></i></button>
-                        <?php endif; ?></span>
-                    </div>
-                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
-                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">File</span>
-                        <span class="truncate text-right" title="<?php echo htmlspecialchars($doc['file_name']); ?>"><?php echo htmlspecialchars($doc['file_name']); ?> <span class="text-gray-400">(<?php echo formatFileSize($doc['file_size']); ?>)</span></span>
-                    </div>
-                    <div class="flex justify-between gap-2 items-start dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
-                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Description</span>
-                        <div class="text-right leading-snug">
-                            <?php if ($desc): ?>
-                                <?php if ($isDescLong): ?>
-                                    <span class="text-gray-700 dark:text-gray-300"><?php echo htmlspecialchars($descShort); ?></span>
-                                    <button type="button" class="ml-1 text-red-600 font-bold text-[10px] underline" data-title="<?php echo htmlspecialchars($doc['title'], ENT_QUOTES, 'UTF-8'); ?>" data-desc="<?php echo htmlspecialchars($desc, ENT_QUOTES, 'UTF-8'); ?>" onclick="showDescriptionModal(this)">View Details</button>
-                                <?php else: ?>
-                                    <span class="text-gray-700 dark:text-gray-300"><?php echo htmlspecialchars($desc); ?></span>
-                                <?php endif; ?>
-                            <?php else: ?>
-                                <span class="text-gray-400 italic">No description</span>
-                            <?php endif; ?>
+            <div class="md:hidden space-y-4 p-2">
+                <?php if (!empty($data['documents'])): ?>
+                    <?php foreach ($data['documents'] as $doc): ?>
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mobile-doc-card transition-all active:scale-[0.98]" data-document-id="<?php echo $doc['id']; ?>">
+                            <!-- Top: Type & Date -->
+                            <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
+                                    <span class="badge badge-primary !text-[10px] !py-0.5">
+                                        <?php echo e(ucfirst($doc['document_type'])); ?>
+                                    </span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
+                                    <i class="bi bi-calendar-event mr-1"></i><?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
+                                </span>
+                            </div>
+
+                            <!-- Middle: Icon & Title -->
+                            <div class="p-4 flex gap-4">
+                                <div class="w-16 h-16 rounded-2xl <?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> flex items-center justify-center flex-shrink-0 shadow-sm">
+                                    <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-3xl"></i>
+                                </div>
+                                <div class="flex-1 min-w-0 flex flex-col justify-center">
+                                    <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2"><?php echo htmlspecialchars($doc['title']); ?></h4>
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate font-medium opacity-80"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                </div>
+                            </div>
+
+                            <!-- Bottom: Status & Actions -->
+                            <div class="px-4 py-3 bg-white dark:bg-gray-800 flex items-center justify-between border-t border-gray-50 dark:border-gray-700/50">
+                                <div class="flex flex-col">
+                                    <div class="flex flex-wrap items-center gap-1">
+                                        <?php echo getStatusBadge($doc['status']); ?>
+                                        <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
+                                    </div>
+                                    <?php if (!empty($doc['status_changed_by_name'])): ?>
+                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
+                                        by <?php echo htmlspecialchars($doc['status_changed_by_name']); ?>
+                                    </span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <?php 
+                                    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                                    if ($userRole !== 'viewer'): 
+                                    ?>
+                                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-9 h-9 flex items-center justify-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl transition-all active:scale-90" title="Download">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php 
+                                    $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+                                    $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
+                                    $isApproved = ($doc['status'] ?? '') === 'approved';
+                                    $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
+                                    $canDelete = $canEdit; // Same policy for mobile
+                                    ?>
+                                    <?php if ($canEdit): ?>
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <?php endif; ?>
+                                    <?php if (isset($canDelete) && $canDelete): ?>
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl transition-all active:scale-90" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="p-12 text-center">
+                        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                            <i class="bi bi-file-earmark-text text-4xl text-gray-300"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">No documents found</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your filters or search keywords</p>
                     </div>
-                    <?php if (!empty($doc['status_changed_by_name'])): ?>
-                    <div class="flex justify-between gap-2 dark:rounded-md dark:px-2 dark:py-1 transition-colors dark:bg-gray-700/30">
-                        <span class="text-gray-500 dark:text-gray-400 flex-shrink-0">Updated by</span>
-                        <span class="truncate text-right text-gray-600 dark:text-gray-400" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>"><?php echo htmlspecialchars($doc['status_changed_by_name']); ?></span>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <div class="px-3 py-2 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-wrap items-center justify-end gap-1.5">
-                    <button type="button" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 active:scale-95 transition-all" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-eye"></i></button>
-                    <?php if ($userRole !== 'viewer'): ?>
-                    <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 active:scale-95 transition-all" title="Download"><i class="bi bi-download"></i></a>
-                    <?php endif; ?>
-                    <?php if ($canEdit): ?>
-                    <button type="button" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 active:scale-95 transition-all" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-pencil"></i></button>
-                    <?php endif; ?>
-                    <?php if ($canDelete): ?>
-                    <button type="button" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 active:scale-95 transition-all" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)"><i class="bi bi-trash"></i></button>
-                    <?php endif; ?>
-                </div>
+                <?php endif; ?>
             </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div class="p-12 text-center">
-            <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                <i class="bi bi-file-earmark-text text-4xl text-gray-300"></i>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">No documents found</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Try adjusting your filters or search keywords</p>
-        </div>
-    <?php endif; ?>
-</div>
-
-<!-- Description Modal -->
-<div id="description-modal" class="hidden fixed inset-0 z-[100004] overflow-y-auto" role="dialog" aria-modal="true">
-    <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
-        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDescriptionModal()"></div>
-        <div class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col transform transition-all">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                <h3 id="desc-modal-title" class="text-lg font-black text-gray-900 dark:text-white truncate pr-4"></h3>
-                <button type="button" onclick="closeDescriptionModal()" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-red-600 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <div class="p-4 overflow-y-auto">
-                <p id="desc-modal-body" class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed"></p>
-            </div>
-            <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
-                <button type="button" onclick="closeDescriptionModal()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-function showDescriptionModal(btn) {
-    const title = btn.getAttribute('data-title') || 'Description';
-    const desc = btn.getAttribute('data-desc') || 'No description available.';
-    document.getElementById('desc-modal-title').textContent = title;
-    document.getElementById('desc-modal-body').textContent = desc;
-    document.getElementById('description-modal').classList.remove('hidden');
-}
-function closeDescriptionModal() {
-    document.getElementById('description-modal').classList.add('hidden');
-}
-</script>
-<!-- Pagination -->
+            
+            <!-- Pagination -->
             <?php if (isset($data['pagination']) && $data['pagination']['total_pages'] > 1): ?>
                 <?php
                     $otherParams = array_diff_key($_GET, ['page' => '']);
@@ -894,10 +806,6 @@ function formatDocumentText(rawText) {
     }
     closeList();
 
-    if (!html.trim()) {
-        return '<p class="text-gray-400 italic">No usable text could be displayed. The extracted content only contained OCR markers or the document is scanned/image-based and requires Tesseract OCR.</p>';
-    }
-
     return html;
 }
 
@@ -1097,7 +1005,7 @@ function viewDocument(id) {
                                                             <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Document Preview</h4>
                                                         </div>
                                                         <div class="flex items-center gap-3">
-                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" data-compliance="${escapeHtml(doc.compliance_status || 'pending')}" data-rejection-notes="${escapeHtml(doc.rejection_notes || '')}" data-can-run="<?php echo (strtolower(trim($_SESSION['user_role'] ?? 'viewer')) !== 'viewer' ? '1' : '0'); ?>" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
+                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
                                                                 <i class="bi bi-eye"></i><span>Preview</span>
                                                             </button>
                                                             <button type="button" onclick="toggleDocPreview(this)" class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1">
@@ -1150,16 +1058,6 @@ function viewDocument(id) {
                                         </div>
                                     `}
                                 </section>
-
-                                <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 md:p-6">
-                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                                        <span class="w-1.5 h-6 bg-emerald-600 rounded-full mr-3"></span>
-                                        Compliance
-                                    </h3>
-                                    <div id="preview-compliance-badge" class="mb-3"></div>
-                                    <div id="preview-compliance-content"></div>
-                                </section>
-
                             </div>
 
                             <!-- Right: Sidebar Information -->
@@ -1201,6 +1099,13 @@ function viewDocument(id) {
                                         <button type="button" onclick="viewActivityHistory(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors">
                                             <i class="bi bi-clock-history mr-3 text-purple-500"></i> Activity History
                                         </button>
+                                        <div class="mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
+                                            ${doc.status !== 'approved' ? `
+                                            <button type="button" onclick="deleteDocument(${doc.id})" class="flex items-center w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
+                                                <i class="bi bi-trash mr-3"></i> Delete Document
+                                            </button>
+                                            ` : ''}
+                                        </div>
                                     </div>
                                 </section>
 
@@ -1208,7 +1113,6 @@ function viewDocument(id) {
                         </div>
                     </div>
                 `;
-                loadComplianceForPreviewModal(doc.id, currentUserRole);
             } else {
                 content.innerHTML = `<div class="p-12 text-center text-red-600">${res.error}</div>`;
             }
@@ -1216,133 +1120,6 @@ function viewDocument(id) {
         .catch(e => {
             content.innerHTML = `<div class="p-12 text-center text-red-600">Failed to load document details</div>`;
         });
-}
-
-function loadComplianceForPreviewModal(docId, role) {
-    const badgeEl = document.getElementById('preview-compliance-badge');
-    const contentEl = document.getElementById('preview-compliance-content');
-    if (!badgeEl || !contentEl) return;
-    contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading compliance analysis...</div>';
-    fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ document_id: docId })
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
-            badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
-            renderPreviewModalCompliance(docId, data, role);
-        } else {
-            contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
-        }
-    }).catch(() => {
-        contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis.</p>';
-    });
-}
-
-function renderPreviewModalCompliance(docId, data, role) {
-    const contentEl = document.getElementById('preview-compliance-content');
-    if (!contentEl) return;
-    let html = '<div class="space-y-3">';
-    if (data.rejection_notes) {
-        html += '<div class="p-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40 text-red-800 dark:text-red-300 text-sm">' +
-            '<p class="font-semibold mb-1"><i class="bi bi-exclamation-circle mr-1"></i>Rejection Notes</p>' +
-            '<p>' + escapeHtml(data.rejection_notes) + '</p>' +
-        '</div>';
-    }
-    if (data.results && data.results.length > 0) {
-        html += '<div class="space-y-2">';
-        data.results.forEach(function(r) {
-            const passed = r.status === 'compliant';
-            const icon = passed ? 'bi-check-circle text-green-600 dark:text-green-400' : 'bi-x-circle text-red-600 dark:text-red-400';
-            const barColor = passed ? 'bg-green-500' : 'bg-red-500';
-            const code = escapeHtml(r.code || r.title || 'Rule');
-            const title = r.code ? escapeHtml(r.title || '') : '';
-            const score = parseInt(r.score || 0, 10);
-            let aiHtml = '';
-            if (r.ai_analysis) {
-                try {
-                    const ai = JSON.parse(r.ai_analysis);
-                    aiHtml = '<p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1"><i class="bi bi-robot mr-1"></i><strong>AI Analysis' + (ai.confidence ? ' (' + ai.confidence + '%)' : '') + ':</strong> ' + escapeHtml(ai.analysis || ai.reason || '') + '</p>';
-                } catch (e) {}
-            }
-            html += '<div class="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">' +
-                '<div class="flex items-center gap-2 mb-1">' +
-                    '<i class="bi ' + icon + '"></i>' +
-                    '<span class="font-medium text-sm text-gray-800 dark:text-gray-200">' + code + '</span>' +
-                '</div>' +
-                (title ? '<p class="text-xs text-gray-500 dark:text-gray-400 mb-1">' + title + '</p>' : '') +
-                '<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">' +
-                    '<div class="' + barColor + ' h-1.5 rounded-full" style="width: ' + Math.min(100, Math.max(0, score)) + '%;"></div>' +
-                '</div>' +
-                '<p class="text-xs text-gray-500 dark:text-gray-400">' + escapeHtml(r.explanation || '') + '</p>' +
-                aiHtml +
-            '</div>';
-        });
-        html += '</div>';
-    } else {
-        html += '<p class="text-sm text-gray-500 dark:text-gray-400">No compliance analysis available yet.</p>';
-    }
-    html += '</div>';
-    if (role !== 'viewer') {
-        html += '<button type="button" onclick="runComplianceCheckInPreviewModal(' + docId + ')" class="mt-4 w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition"><i class="bi bi-arrow-repeat mr-1"></i> Run Compliance Check</button>';
-    }
-    if (role !== 'viewer' && data.compliance_status === 'non_compliant') {
-        html += '<div class="mt-4 p-4 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40">' +
-            '<label class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Non-compliance comment</label>' +
-            '<textarea id="reject-comment-preview" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-red-500 focus:border-red-500 mb-2" placeholder="Explain why this document is non-compliant..."></textarea>' +
-            '<button type="button" onclick="rejectDocumentFromPreview(' + docId + ')" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition"><i class="bi bi-x-circle mr-1"></i> Send Back for Revision</button>' +
-        '</div>';
-    }
-    contentEl.innerHTML = html;
-}
-
-async function runComplianceCheckInPreviewModal(docId) {
-    const contentEl = document.getElementById('preview-compliance-content');
-    const badgeEl = document.getElementById('preview-compliance-badge');
-    if (contentEl) contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Running compliance check...</div>';
-    try {
-        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ document_id: docId })
-        });
-        const data = await response.json();
-        if (data.success) {
-            showToast('Compliance status: ' + data.compliance_status, data.compliance_status === 'compliant' ? 'success' : 'warning');
-            if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
-            const role = (typeof currentUserRole !== 'undefined' && currentUserRole) ? currentUserRole : 'viewer';
-            loadComplianceForPreviewModal(docId, role);
-        } else {
-            if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Compliance check failed: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
-        }
-    } catch (e) {
-        if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Failed to run compliance check.</p>';
-    }
-}
-
-async function rejectDocumentFromPreview(documentId) {
-    const commentEl = document.getElementById('reject-comment-preview');
-    const comment = commentEl ? commentEl.value.trim() : '';
-    if (!comment) {
-        showToast('Please enter a non-compliance comment.', 'warning');
-        return;
-    }
-    try {
-        const response = await fetch(App.apiUrl('documents', 'reject-document.php'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ document_id: documentId, comment: comment })
-        });
-        const data = await response.json();
-        if (data.success) {
-            showToast('Document rejected and marked as non-compliant.', 'success');
-            viewDocument(documentId);
-        } else {
-            showToast('Rejection failed: ' + (data.error || 'Unknown error'), 'error');
-        }
-    } catch (error) {
-        showToast('Failed to reject document.', 'error');
-    }
 }
 
 /**
@@ -1511,17 +1288,6 @@ function getStatusBadgeHTML(status) {
         'archived': '<span class="badge bg-gray-500 text-white"><i class="bi bi-archive mr-1"></i>Archived</span>'
     };
     return badges[s] || `<span class="badge badge-info">${status}</span>`;
-}
-
-function getComplianceBadgeHTML(status) {
-    if (!status) return '';
-    const s = status.toLowerCase();
-    const badges = {
-        'pending': '<span class="badge badge-warning"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>',
-        'compliant': '<span class="badge badge-success"><i class="bi bi-shield-check mr-1"></i>Compliant</span>',
-        'non_compliant': '<span class="badge badge-danger"><i class="bi bi-shield-exclamation mr-1"></i>Non-Compliant</span>'
-    };
-    return badges[s] || `<span class="badge badge-warning">${status}</span>`;
 }
 
 function formatDate(dateStr) {
@@ -1828,25 +1594,25 @@ document.addEventListener('keydown', function(e) {
 <div id="edit-modal" class="hidden fixed inset-0 z-[100004] overflow-y-auto">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
-        <div id="edit-modal-panel" class="modal-panel-mobile relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full sm:h-auto sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div id="edit-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full sm:h-auto sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
-        <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeEditModal">
-            <div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+            <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
         </div>
         
         <!-- Modal Header -->
-        <div class="modal-sticky-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 z-10">
-            <h2 class="text-lg md:text-2xl font-black text-gray-900 dark:text-white flex items-center tracking-tight uppercase">
+        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+            <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white flex items-center tracking-tight uppercase">
                 <i class="bi bi-pencil-square mr-3 text-red-600"></i>
                 Edit Document
             </h2>
-            <button type="button" onclick="closeEditModal()" class="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all">
+            <button type="button" onclick="closeEditModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <div class="modal-body-scroll overflow-y-auto flex-1 min-h-0 custom-scrollbar">
+        <div class="overflow-y-auto flex-1 min-h-0 custom-scrollbar">
             <form id="edit-form-modal" class="p-4 md:p-8 bg-white dark:bg-gray-900">
                 <input type="hidden" name="document_id">
                 
@@ -1951,9 +1717,6 @@ document.addEventListener('keydown', function(e) {
 
                 <!-- Sticky Footer within Scroll Area for Forms -->
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-800 mt-4">
-                    <button type="button" onclick="deleteDocument(document.getElementById('edit-form-modal').querySelector('input[name=document_id]').value)" class="w-full sm:w-auto px-6 py-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all flex items-center justify-center">
-                        <i class="bi bi-trash mr-2"></i> Delete
-                    </button>
                     <button type="button" onclick="closeEditModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
                         Discard Changes
                     </button>
@@ -1971,14 +1734,14 @@ document.addEventListener('keydown', function(e) {
 <div id="preview-modal" class="hidden fixed inset-0 z-[100002] overflow-y-auto">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
-<div id="preview-modal-panel" class="modal-panel-mobile relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full sm:h-[85vh] sm:max-h-[85vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div id="preview-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full sm:h-[85vh] sm:max-h-[85vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800" style="max-height: 100dvh;">
         <!-- Mobile Drag Handle -->
-        <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closePreviewModal">
-            <div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+            <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
         </div>
 
         <!-- Sticky Modal Header -->
-        <div class="modal-sticky-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-10">
+        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
             <div class="flex items-center">
                 <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-xl mr-3">
                     <i class="bi bi-file-earmark-pdf text-red-600 text-xl"></i>
@@ -1987,13 +1750,13 @@ document.addEventListener('keydown', function(e) {
                     <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest">Document Preview</h3>
                 </div>
             </div>
-            <button type="button" onclick="closePreviewModal()" class="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
+            <button type="button" onclick="closePreviewModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
 
         <!-- Scrollable Modal Content -->
-        <div id="preview-content" class="modal-body-scroll overflow-y-auto overflow-x-hidden flex-1 min-h-0 bg-white dark:bg-gray-900" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+        <div id="preview-content" class="overflow-y-auto overflow-x-hidden flex-1 min-h-0 bg-white dark:bg-gray-900" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
             <!-- Content injected by JS -->
         </div>
         </div>
@@ -2004,17 +1767,17 @@ document.addEventListener('keydown', function(e) {
 <div id="activity-modal" class="hidden fixed inset-0 z-[100003] overflow-y-auto">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
-        <div id="activity-modal-content" class="modal-panel-mobile relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
-            <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeActivityModal">
-                <div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        <div id="activity-modal-content" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+            <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+                <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
             </div>
-            <div class="modal-sticky-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-10">
+            <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
                 <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest">Activity History</h3>
-                <button type="button" onclick="closeActivityModal()" class="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
+                <button type="button" onclick="closeActivityModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all transform-none">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
-            <div id="activity-content" class="modal-body-scroll overflow-y-auto flex-1 min-h-0 custom-scrollbar">
+            <div id="activity-content" class="overflow-y-auto flex-1 min-h-0 custom-scrollbar">
                 <!-- Content injected by JS -->
             </div>
         </div>
@@ -2026,25 +1789,25 @@ document.addEventListener('keydown', function(e) {
 <div id="upload-modal" class="hidden fixed inset-0 z-[100004] overflow-y-auto">
     <div class="flex items-stretch justify-center min-h-screen sm:items-center sm:p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
-        <div id="upload-modal-panel" class="modal-panel-mobile relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full sm:h-auto sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div id="upload-modal-panel" class="relative z-10 bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-w-4xl w-full sm:h-auto sm:max-h-[90vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <!-- Mobile Drag Handle -->
-        <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeUploadModal">
-            <div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]">
+            <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
         </div>
 
         <!-- Modal Header -->
-        <div class="modal-sticky-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 z-10">
-            <h2 class="text-lg md:text-2xl font-black text-gray-900 dark:text-white flex items-center tracking-tight uppercase">
+        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+            <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white flex items-center tracking-tight uppercase">
                 <i class="bi bi-cloud-arrow-up mr-3 text-red-600"></i>
                 Upload Repository
             </h2>
-            <button type="button" onclick="closeUploadModal()" class="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all transform-none">
+            <button type="button" onclick="closeUploadModal()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-600 transition-all transform-none">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>
 
         <!-- Modal Body -->
-        <div class="modal-body-scroll overflow-y-auto flex-1 min-h-0 custom-scrollbar">
+        <div class="overflow-y-auto flex-1 min-h-0 custom-scrollbar">
             <form id="upload-form-modal" class="p-4 md:p-8 bg-white dark:bg-gray-900">
                 <!-- File Upload Section -->
                 <div class="mb-10">
@@ -2369,32 +2132,13 @@ async function editDocument(id) {
             form.querySelector('[name="status"]').value = doc.status;
             form.querySelector('[name="description"]').value = doc.description || '';
             form.querySelector('[name="tags"]').value = doc.tags || '';
-
-            // Track compliance status to gate the approve/publish option
-            form.dataset.complianceStatus = doc.compliance_status || 'pending';
-            updateApprovedOptionState();
-
+            
             openEditModal();
         } else {
             alert(res.error || 'Failed to load document details');
         }
     } catch (e) {
         alert('Failed to connect to server');
-    }
-}
-
-function updateApprovedOptionState() {
-    const form = document.getElementById('edit-form-modal');
-    const statusSelect = form?.querySelector('[name="status"]');
-    if (!statusSelect) return;
-
-    const complianceStatus = form.dataset.complianceStatus || 'pending';
-    const existingApproved = statusSelect.querySelector('option[value="approved"]');
-
-    if (complianceStatus !== 'compliant') {
-        if (existingApproved) existingApproved.remove();
-    } else if (!existingApproved) {
-        statusSelect.add(new Option('Approved / Official', 'approved'));
     }
 }
 
@@ -2516,23 +2260,16 @@ document.getElementById('upload-form-modal').addEventListener('submit', async (e
 // Handle Edit form submission
 document.getElementById('edit-form-modal').addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-    const status = formData.get('status');
-    const complianceStatus = form.dataset.complianceStatus || 'pending';
-
-    if (status === 'approved' && complianceStatus !== 'compliant') {
-        alert('This document is not compliant. Run a compliance check before approving/publishing.');
-        return;
-    }
-
+    
+    // Create FormData
+    const formData = new FormData(e.target);
+    
     // Show loading state
-    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="bi bi-arrow-repeat mr-2 animate-spin"></i>Updating...';
-
+    
     try {
         const response = await fetch('<?php echo DOCUMENTS_URL; ?>/api/update.php', {
             method: 'POST',
@@ -2560,76 +2297,56 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
 
 <!-- Original File Preview Modal -->
 <div id="original-file-preview-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100003] flex items-stretch sm:items-center justify-center sm:p-4" onclick="if(event.target===this) closeOriginalFilePreviewModal()">
-    <div id="original-file-preview-content" class="modal-panel-mobile relative bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
-        <div class="modal-drag-handle sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]" data-close-fn="closeOriginalFilePreviewModal"><div class="drag-bar w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
+    <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
+        <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <!-- Header -->
-        <div class="mobile-preview-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
-            <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
+            <div class="flex items-center gap-3 min-w-0">
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex-shrink-0">
                     <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
-                <div class="min-w-0 w-full">
-                    <h3 id="original-file-preview-title" class="header-title w-full text-xs sm:text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
-                    <p id="original-file-preview-type" class="hidden sm:block text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
-                    <div id="original-file-preview-compliance" class="hidden sm:flex mt-1 items-center"></div>
+                <div class="min-w-0">
+                    <h3 id="original-file-preview-title" class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
+                    <p id="original-file-preview-type" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
                 <a id="original-file-preview-newtab" href="#" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <i class="bi bi-box-arrow-up-right"></i> New Tab
                 </a>
-                <a id="original-file-preview-download" href="#" class="inline-flex items-center justify-center gap-1.5 h-11 w-11 sm:w-auto sm:px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
-                    <i class="bi bi-download text-base"></i>
-                    <span class="hidden sm:inline">Download</span>
+                <?php if ($userRole !== 'viewer'): ?>
+                <a id="original-file-preview-download" href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-colors">
+                    <i class="bi bi-download"></i> Download
                 </a>
-                <button type="button" id="original-file-run-compliance" onclick="runComplianceCheckInModal()" class="inline-flex items-center justify-center gap-1.5 h-11 w-11 sm:w-auto sm:px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
-                    <i class="bi bi-shield-check text-base"></i>
-                    <span class="hidden sm:inline">Compliance</span>
-                </button>
-                <button type="button" onclick="closeOriginalFilePreviewModal()" class="h-11 w-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-                    <i class="bi bi-x-lg text-base"></i>
+                <?php endif; ?>
+                <button type="button" onclick="closeOriginalFilePreviewModal()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <i class="bi bi-x-lg text-sm"></i>
                 </button>
             </div>
         </div>
-        <!-- Preview + Compliance -->
-        <div class="flex flex-col sm:flex-row flex-1 overflow-hidden">
-            <div id="original-file-preview-body" class="mobile-preview-body flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
-            </div>
-            <div id="original-file-preview-analysis" class="compliance-sheet w-full sm:w-80 border-t sm:border-t-0 sm:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden sm:overflow-y-auto">
-                <button type="button" onclick="toggleComplianceSheet()" class="compliance-sheet-handle sm:hidden w-full px-4 py-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Compliance</span>
-                    <i class="bi bi-chevron-up compliance-sheet-chevron transition-transform duration-300"></i>
-                </button>
-                <div id="original-file-analysis-content" class="compliance-sheet-body p-4 text-sm overflow-y-auto"></div>
-            </div>
+        <!-- Body -->
+        <div id="original-file-preview-body" class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
         </div>
     </div>
 </div>
 
 <script>
-function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatus = 'pending', rejectionNotes = '', canRun = '0') {
-    window.currentPreviewDocId = docId;
+function openOriginalFilePreviewModal(docId, fileName, fileType) {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
     const titleEl = document.getElementById('original-file-preview-title');
     const typeEl = document.getElementById('original-file-preview-type');
-    const complianceEl = document.getElementById('original-file-preview-compliance');
     const newTabLink = document.getElementById('original-file-preview-newtab');
     const downloadLink = document.getElementById('original-file-preview-download');
-    const runComplianceBtn = document.getElementById('original-file-run-compliance');
 
     const previewUrl = App.apiUrl('documents', `preview.php?id=${docId}`);
     const downloadUrl = App.apiUrl('documents', `download.php?id=${docId}`);
 
     titleEl.textContent = fileName || 'Document Preview';
     typeEl.textContent = (fileType || '').replace('application/', '').replace('image/', 'img/');
-    if (complianceEl) complianceEl.innerHTML = getComplianceBadgeHTML(complianceStatus);
-    if (runComplianceBtn) runComplianceBtn.style.display = canRun === '1' ? '' : 'none';
 
-    newTabLink.href = previewUrl;
-    downloadLink.href = downloadUrl;
-
-    loadComplianceAnalysis(docId);
+    if (newTabLink) newTabLink.href = previewUrl;
+    if (downloadLink) downloadLink.href = downloadUrl;
 
     const ft = (fileType || '').toLowerCase();
     const ext = ((fileName || '').split('.').pop() || '').toLowerCase();
@@ -2638,23 +2355,7 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', '')) || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
 
     if (isPdf || isDocx) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'preview-iframe-wrapper relative w-full h-full';
-        const loader = document.createElement('div');
-        loader.className = 'iframe-loader';
-        loader.innerHTML = '<div class="inline-block w-8 h-8 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin"></div>';
-        const iframe = document.createElement('iframe');
-        iframe.src = previewUrl;
-        iframe.title = 'Document Preview';
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('scrolling', 'auto');
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.className = 'preview-iframe w-full h-full border-0 block';
-        iframe.onload = function() { loader.remove(); };
-        wrapper.appendChild(loader);
-        wrapper.appendChild(iframe);
-        body.innerHTML = '';
-        body.appendChild(wrapper);
+        body.innerHTML = `<iframe src="${previewUrl}" title="Document Preview" frameborder="0" scrolling="auto" allowfullscreen class="w-full h-full border-0 block" style="width: 100%; height: 100%; min-height: 400px;"></iframe>`;
     } else if (isImage) {
         body.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
     } else {
@@ -2666,9 +2367,9 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
                 </div>
                 <h4 class="text-base font-bold text-gray-700 dark:text-gray-300 mb-2">Cannot preview ${ext} files in browser</h4>
                 <p class="text-sm text-gray-400 dark:text-gray-500 max-w-md mb-6">This file type cannot be displayed directly in the web browser. You can download it to view the full document.</p>
-                <a href="${downloadUrl}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">
+                ${currentUserRole !== 'viewer' ? `<a href="${downloadUrl}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">
                     <i class="bi bi-download text-base"></i> Download File
-                </a>
+                </a>` : '<p class="text-sm text-gray-400 dark:text-gray-500 max-w-md">Contact an administrator if you need a copy of this document.</p>'}
             </div>`;
     }
 
@@ -2683,126 +2384,17 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     }, 10);
 }
 
-async function loadComplianceAnalysis(docId) {
-    const container = document.getElementById('original-file-analysis-content');
-    if (!container) return;
-    container.innerHTML = '<div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading analysis...</div>';
-    try {
-        const response = await fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ document_id: docId })
-        });
-        const data = await response.json();
-        if (data.success) {
-            renderComplianceAnalysis(data);
-        } else {
-            container.innerHTML = '<p class="text-xs text-red-500">Could not load analysis: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
-        }
-    } catch (error) {
-        container.innerHTML = '<p class="text-xs text-red-500">Could not load analysis.</p>';
-    }
-}
-
-function renderComplianceAnalysis(data) {
-    const container = document.getElementById('original-file-analysis-content');
-    if (!container) return;
-    const status = data.compliance_status || 'pending';
-    const badge = getComplianceBadgeHTML(status);
-
-    let resultsHtml = '';
-    if (data.results && data.results.length > 0) {
-        resultsHtml = '<div class="space-y-2">';
-        data.results.forEach(function(r) {
-            const passed = r.status === 'compliant';
-            const icon = passed ? 'bi-check-circle text-green-600 dark:text-green-400' : 'bi-x-circle text-red-600 dark:text-red-400';
-            const barColor = passed ? 'bg-green-500' : 'bg-red-500';
-            const code = escapeHtml(r.code || r.title || 'Rule');
-            const title = r.code ? escapeHtml(r.title || '') : '';
-            const score = parseInt(r.score || 0, 10);
-            resultsHtml += '<div class="p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">' +
-                '<div class="flex items-center gap-2 mb-1">' +
-                    '<i class="bi ' + icon + '"></i>' +
-                    '<span class="font-medium text-xs text-gray-800 dark:text-gray-200">' + code + '</span>' +
-                '</div>' +
-                (title ? '<p class="text-[10px] text-gray-500 dark:text-gray-400 mb-1">' + title + '</p>' : '') +
-                '<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">' +
-                    '<div class="' + barColor + ' h-1.5 rounded-full" style="width: ' + Math.min(100, Math.max(0, score)) + '%;"></div>' +
-                '</div>' +
-                '<p class="text-[10px] text-gray-500 dark:text-gray-400">' + escapeHtml(r.explanation || '') + '</p>' +
-            '</div>';
-        });
-        resultsHtml += '</div>';
-    } else {
-        resultsHtml = '<p class="text-xs text-gray-500 dark:text-gray-400">No analysis available. Click Compliance to run a check.</p>';
-    }
-
-    container.innerHTML = '<div class="space-y-4">' +
-        '<div>' +
-            '<p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Compliance Status</p>' +
-            '<div>' + badge + '</div>' +
-        '</div>' +
-        (data.rejection_notes ? '<div class="p-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40 text-red-800 dark:text-red-300 text-xs">' +
-            '<p class="font-semibold mb-1"><i class="bi bi-exclamation-circle mr-1"></i>Rejection Notes</p>' +
-            '<p>' + escapeHtml(data.rejection_notes) + '</p>' +
-        '</div>' : '') +
-        '<div>' +
-            '<p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Rule Analysis</p>' +
-            resultsHtml +
-        '</div>' +
-    '</div>';
-}
-
-async function runComplianceCheckInModal() {
-    const docId = window.currentPreviewDocId;
-    if (!docId) return;
-    const btn = document.getElementById('original-file-run-compliance');
-    if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin text-base"></i><span class="hidden sm:inline">Checking...</span>';
-    }
-    try {
-        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ document_id: docId })
-        });
-        const data = await response.json();
-        if (data.success) {
-            const isCompliant = data.compliance_status === 'compliant';
-            showToast('Compliance status: ' + data.compliance_status, isCompliant ? 'success' : 'warning');
-            const badgeEl = document.getElementById('original-file-preview-compliance');
-            if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
-            renderComplianceAnalysis(data);
-        } else {
-            showToast('Compliance check failed: ' + (data.error || 'Unknown error'), 'error');
-        }
-    } catch (error) {
-        showToast('Failed to run compliance check.', 'error');
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-shield-check text-base"></i><span class="hidden sm:inline">Compliance</span>';
-        }
-    }
-}
-
 function closeOriginalFilePreviewModal() {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
     const content = document.getElementById('original-file-preview-content');
-    const analysisContent = document.getElementById('original-file-analysis-content');
     if (content) {
         content.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
         content.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
     }
-    const analysisPanel = document.getElementById('original-file-preview-analysis');
-    if (analysisPanel) analysisPanel.classList.remove('expanded');
     setTimeout(() => {
         modal.classList.add('hidden');
         body.innerHTML = '';
-        if (analysisContent) analysisContent.innerHTML = '';
-        window.currentPreviewDocId = null;
         document.body.style.overflow = '';
     }, 300);
 }
@@ -2816,12 +2408,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-function toggleComplianceSheet() {
-    const sheet = document.getElementById('original-file-preview-analysis');
-    if (!sheet) return;
-    sheet.classList.toggle('expanded');
-}
-
 // Delegate click for original file preview buttons (works for dynamically generated content)
 document.addEventListener('click', function(e) {
     const btn = e.target.closest('.btn-original-preview');
@@ -2829,66 +2415,9 @@ document.addEventListener('click', function(e) {
     const docId = btn.getAttribute('data-preview-id');
     const fileName = btn.getAttribute('data-preview-name');
     const fileType = btn.getAttribute('data-preview-type');
-    const complianceStatus = btn.getAttribute('data-compliance') || 'pending';
-    const rejectionNotes = btn.getAttribute('data-rejection-notes') || '';
-    const canRun = btn.getAttribute('data-can-run') || '0';
     if (docId) {
-        openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType, complianceStatus, rejectionNotes, canRun);
+        openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType);
     }
 });
-
-// Swipe-to-close gesture for mobile modal drag handles
-function setupSwipeToClose() {
-    const handles = document.querySelectorAll('[data-close-fn]');
-    handles.forEach(function(handle) {
-        let startY = 0;
-        let startTime = 0;
-        handle.addEventListener('touchstart', function(e) {
-            startY = e.touches[0].clientY;
-            startTime = Date.now();
-        }, { passive: true });
-        handle.addEventListener('touchend', function(e) {
-            const endY = e.changedTouches[0].clientY;
-            const diffY = endY - startY;
-            const elapsed = Date.now() - startTime;
-            if (diffY > 60 && elapsed < 600) {
-                const fnName = handle.getAttribute('data-close-fn');
-                if (typeof window[fnName] === 'function') {
-                    window[fnName]();
-                }
-            }
-        }, { passive: true });
-    });
-}
-setupSwipeToClose();
-
-async function checkCompliance(docId, btn) {
-    if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i>';
-    }
-    try {
-        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ document_id: docId })
-        });
-        const data = await response.json();
-        if (data.success) {
-            const isCompliant = data.compliance_status === 'compliant';
-            showToast('Compliance status: ' + data.compliance_status, isCompliant ? 'success' : 'warning');
-            setTimeout(() => window.location.reload(), 1200);
-        } else {
-            showToast('Compliance check failed: ' + (data.error || 'Unknown error'), 'error');
-        }
-    } catch (error) {
-        showToast('Failed to run compliance check.', 'error');
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-shield-check"></i>';
-        }
-    }
-}
 </script>
 

@@ -8,8 +8,6 @@
  * No external API required — everything runs locally.
  */
 
-require_once dirname(dirname(dirname(__DIR__))) . '/modules/ai/services/GroqService.php';
-
 class OcrService {
     private $tesseractPath;
     private $ghostscriptPath;
@@ -17,12 +15,6 @@ class OcrService {
     private $timeout;
     private $tempDir;
     private $enabled;
-    private $groqService = null;
-    private $groqFallback = false;
-    private $groqEnhance = false;
-    private $groqMaxPages = 0;
-    private $groqModel = '';
-    private $groqPagesUsed = 0;
 
     public function __construct() {
         $tessConfig = defined('OCR_TESSERACT_PATH') ? OCR_TESSERACT_PATH : '';
@@ -32,28 +24,8 @@ class OcrService {
         $this->language = defined('OCR_LANGUAGE') ? OCR_LANGUAGE : 'eng';
         $this->timeout = defined('OCR_TIMEOUT') ? OCR_TIMEOUT : 30;
         $this->enabled = defined('OCR_ENABLED') ? OCR_ENABLED : true;
-        $this->groqFallback = defined('OCR_GROQ_FALLBACK') ? OCR_GROQ_FALLBACK : false;
-        $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : true;
-        $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 0;
-        $this->groqModel = defined('OCR_GROQ_MODEL') ? OCR_GROQ_MODEL : 'qwen/qwen3.6-27b';
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
         $this->ensureTempDir();
-    }
-
-    /**
-     * Lazy-load GroqService for AI vision OCR fallback
-     */
-    private function getGroqService() {
-        if ($this->groqService !== null) {
-            return $this->groqService;
-        }
-
-        if (!defined('GROQ_API_KEY') || GROQ_API_KEY === '') {
-            return null;
-        }
-
-        $this->groqService = new GroqService();
-        return $this->groqService;
     }
 
     /**
@@ -151,92 +123,33 @@ class OcrService {
     }
 
     /**
-     * Process image files with Tesseract OCR, falling back to Groq vision
+     * Process image files with Tesseract OCR
      */
     private function processImage($filePath) {
-        $text = '';
         $tesseract = $this->getTesseractPath();
-
-        if ($tesseract) {
-            $escapedTesseract = escapeshellarg($tesseract);
-            $escapedPath = escapeshellarg($filePath);
-            // Language is a controlled alphanumeric value (e.g. "eng", "fil"), no need to escape
-            // escapeshellarg on Windows can add newlines for short strings
-            $lang = $this->language;
-
-            if (PHP_OS_FAMILY === 'Windows') {
-                $command = "$escapedTesseract $escapedPath stdout -l $lang 2>nul";
-            } else {
-                $command = "$escapedTesseract $escapedPath stdout -l $lang 2>/dev/null";
-            }
-
-            $output = shell_exec($command);
-
-            if ($output !== null) {
-                $text = trim($output);
-            }
+        if (!$tesseract) {
+            throw new Exception('Tesseract binary not found');
         }
 
-        // Use Groq vision to either supplement Tesseract (enhance) or replace it (fallback)
-        $useGroq = false;
-        if ($this->groqPagesUsed < $this->groqMaxPages) {
-            if ($this->groqEnhance) {
-                $useGroq = true;
-            } elseif ($this->groqFallback && empty($text)) {
-                $useGroq = true;
-            }
+        $escapedTesseract = escapeshellarg($tesseract);
+        $escapedPath = escapeshellarg($filePath);
+        // Language is a controlled alphanumeric value (e.g. "eng", "fil"), no need to escape
+        // escapeshellarg on Windows can add newlines for short strings
+        $lang = $this->language;
+
+        if (PHP_OS_FAMILY === 'Windows') {
+            $command = "$escapedTesseract $escapedPath stdout -l $lang 2>nul";
+        } else {
+            $command = "$escapedTesseract $escapedPath stdout -l $lang 2>/dev/null";
         }
 
-        if ($useGroq) {
-            $groq = $this->getGroqService();
-            if ($groq) {
-                @set_time_limit(180);
-                $this->groqPagesUsed++;
-                $result = $groq->extractTextFromImage($filePath, $text, $this->groqModel, 2048);
-                if (is_array($result)) {
-                    if (empty($text)) {
-                        $text = $result['text'] ?? '';
-                    } else {
-                        $additional = $result['additional_text'] ?? '';
-                        if (!empty($additional)) {
-                            $text .= "\n\n[Additional text detected by AI OCR]\n" . trim($additional);
-                        }
-                    }
-                    $visual = $result['visual_elements'] ?? '';
-                    if (!empty($visual)) {
-                        $text .= "\n\n[Visual elements]\n" . trim($visual);
-                    }
-                } elseif ($groq->getLastError()) {
-                    throw new Exception('Groq vision OCR failed: ' . $groq->getLastError());
-                }
-            }
+        $output = shell_exec($command);
+
+        if ($output === null) {
+            throw new Exception('Tesseract command failed: ' . $command);
         }
 
-        if (empty($text) && !$tesseract) {
-            throw new Exception('Tesseract binary not found and Groq fallback not available');
-        }
-
-        return $text;
-    }
-
-    /**
-     * Decide whether extracted text contains enough real content to be useful.
-     */
-    private function isTextUsable($text) {
-        $text = trim((string) $text);
-        if (empty($text)) {
-            return false;
-        }
-
-        // Strip common OCR/PDF utility markers and page-break noise
-        $text = preg_replace('/\[[^\]]+\]|---[^-]+---|Page Break|Tesseract|Ghostscript|pdftotext|smalot|Created (with|by)|Title|Author|Subject|Keywords|Producer|Creator|ProducerID|ModDate|CreationDate|Scanned|OCR|PDF|Document/i', '', $text);
-
-        // Collapse whitespace and count alphanumeric words/characters
-        $text = preg_replace('/\s+/', '', $text);
-        $clean = preg_replace('/[^A-Za-z0-9]/', '', $text);
-        $wordCount = preg_match_all('/[A-Za-z0-9]+/', $text);
-
-        return strlen($clean) >= 150 && $wordCount >= 20;
+        return $output;
     }
 
     /**
@@ -246,11 +159,11 @@ class OcrService {
         // First, try to extract embedded text using smalot/pdfparser
         $digitalText = $this->extractDigitalPdfText($filePath);
 
-        if ($this->isTextUsable($digitalText)) {
+        if (!empty(trim($digitalText))) {
             return $digitalText;
         }
 
-        // Digital text is empty or only markers/noise — treat as a scanned PDF
+        // No embedded text — likely a scanned PDF, use OCR
         return $this->processScannedPdf($filePath);
     }
 
@@ -279,7 +192,7 @@ class OcrService {
             }
         }
 
-        // Fallback 1: try pdftotext command if available
+        // Fallback: try pdftotext command if available
         $pdftotext = $this->detectCommand('pdftotext');
         if ($pdftotext) {
             $escapedPath = escapeshellarg($filePath);
@@ -295,39 +208,6 @@ class OcrService {
             if (file_exists($tempOutput)) {
                 $text = file_get_contents($tempOutput);
                 unlink($tempOutput);
-                if (!empty(trim($text))) {
-                    return $text;
-                }
-            }
-        }
-
-        // Fallback 2: use Ghostscript txtwrite to extract digital text (no OCR needed)
-        return $this->extractPdfTextWithGhostscript($filePath);
-    }
-
-    /**
-     * Extract text from digital PDFs using Ghostscript txtwrite device
-     */
-    private function extractPdfTextWithGhostscript($filePath) {
-        $gs = $this->getGhostscriptPath();
-        if (!$gs) {
-            return '';
-        }
-
-        $escapedGs = escapeshellarg($gs);
-        $escapedPath = escapeshellarg($filePath);
-
-        if (PHP_OS_FAMILY === 'Windows') {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=txtwrite -sOutputFile=- -q $escapedPath 2>nul";
-        } else {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=txtwrite -sOutputFile=- -q $escapedPath 2>/dev/null";
-        }
-
-        $output = shell_exec($command);
-
-        if ($output !== null) {
-            $text = trim($output);
-            if (!empty($text)) {
                 return $text;
             }
         }
@@ -339,10 +219,6 @@ class OcrService {
      * Process scanned PDFs — convert to images then OCR each page
      */
     private function processScannedPdf($filePath) {
-        if (!$this->getTesseractPath() && !$this->getGroqService()) {
-            throw new Exception('Tesseract OCR binary not found and Groq fallback not available — scanned PDF text extraction is unavailable');
-        }
-
         $images = $this->convertPdfToImages($filePath);
 
         if (empty($images)) {
@@ -628,7 +504,7 @@ class OcrService {
      * Get Tesseract binary path
      */
     private function getTesseractPath() {
-        if (!empty($this->tesseractPath) && @file_exists($this->tesseractPath)) {
+        if (!empty($this->tesseractPath) && file_exists($this->tesseractPath)) {
             return $this->tesseractPath;
         }
         return $this->detectTesseract();
@@ -638,7 +514,7 @@ class OcrService {
      * Get Ghostscript binary path
      */
     private function getGhostscriptPath() {
-        if (!empty($this->ghostscriptPath) && @file_exists($this->ghostscriptPath)) {
+        if (!empty($this->ghostscriptPath) && file_exists($this->ghostscriptPath)) {
             return $this->ghostscriptPath;
         }
         return $this->detectGhostscript();
@@ -655,42 +531,24 @@ class OcrService {
                 'C:\Tesseract-OCR\tesseract.exe',
             ];
             foreach ($paths as $path) {
-                if (@file_exists($path)) {
+                if (file_exists($path)) {
                     return $path;
                 }
             }
         } else {
             // Check common user-space paths (for shared hosting without root)
-            $home = $this->getHomeDir();
             $homePaths = [
-                $home . '/bin/tesseract_wrapper.sh',
-                $home . '/bin/tesseract',
+                getenv('HOME') . '/bin/tesseract_wrapper.sh',
+                getenv('HOME') . '/bin/tesseract',
                 '/usr/local/bin/tesseract',
             ];
             foreach ($homePaths as $path) {
-                if (!empty($path) && @is_executable($path)) {
+                if (@file_exists($path) && @is_executable($path)) {
                     return $path;
                 }
             }
         }
         return $this->detectCommand('tesseract');
-    }
-
-    /**
-     * Determine the user's home directory
-     */
-    private function getHomeDir() {
-        $home = getenv('HOME');
-        if (!empty($home)) {
-            return $home;
-        }
-        if (function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
-            $info = posix_getpwuid(posix_getuid());
-            if (!empty($info['dir'])) {
-                return $info['dir'];
-            }
-        }
-        return '/tmp';
     }
 
     /**
@@ -718,7 +576,7 @@ class OcrService {
                 'C:\Program Files (x86)\gs\gs9.55.0\bin\gswin32c.exe',
             ];
             foreach ($paths as $path) {
-                if (@file_exists($path)) {
+                if (file_exists($path)) {
                     return $path;
                 }
             }
@@ -743,7 +601,7 @@ class OcrService {
             $result = shell_exec("where $name 2>nul");
             if ($result) {
                 $lines = explode("\n", trim($result));
-                if (!empty($lines[0]) && @file_exists(trim($lines[0]))) {
+                if (!empty($lines[0]) && file_exists(trim($lines[0]))) {
                     return trim($lines[0]);
                 }
             }
@@ -802,7 +660,7 @@ class OcrService {
      */
     private function cleanTempImages($imagePaths) {
         foreach ($imagePaths as $path) {
-            if (@file_exists($path)) {
+            if (file_exists($path)) {
                 @unlink($path);
             }
         }

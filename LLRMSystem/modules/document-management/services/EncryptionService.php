@@ -122,13 +122,30 @@ class EncryptionService {
         if (!file_exists($filePath)) {
             return false;
         }
-        
+
+        // Read first 4 bytes to check for common file magic bytes
+        $handle = fopen($filePath, 'rb');
+        if ($handle === false) {
+            return false;
+        }
+        $header = fread($handle, 4);
+        fclose($handle);
+
+        // ZIP archives (DOCX, XLSX, PPTX, etc.) start with PK (0x50 0x4B)
+        if ($header === 'PK' || substr($header, 0, 2) === 'PK') {
+            return false;
+        }
+        // PDF files start with %PDF
+        if (substr($header, 0, 4) === '%PDF') {
+            return false;
+        }
+
+        // For other files, try to decode as base64 - if successful, likely encrypted
         $content = file_get_contents($filePath);
         if ($content === false) {
             return false;
         }
-        
-        // Try to decode as base64 - if successful, likely encrypted
+
         $decoded = base64_decode($content);
         return ($decoded !== false && $decoded !== $content);
     }
