@@ -312,9 +312,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Dark/Light Mode Toggle
     const themeToggle = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+    const darkModeIcons = document.querySelectorAll('.dark-mode-icon');
+    const lightModeIcons = document.querySelectorAll('.light-mode-icon');
+    
+    function updateIcons(isDark) {
+        darkModeIcons.forEach(icon => {
+            if (isDark) icon.classList.add('hidden');
+            else icon.classList.remove('hidden');
+        });
+        lightModeIcons.forEach(icon => {
+            if (isDark) icon.classList.remove('hidden');
+            else icon.classList.add('hidden');
+        });
+    }
+
+    // Toggle theme on button click
     if (themeToggle) {
         themeToggle.addEventListener('click', function() {
-            ThemeManager.toggleTheme();
+            htmlElement.classList.toggle('dark');
+            const isDark = htmlElement.classList.contains('dark');
+            
+            if (isDark) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+            updateIcons(isDark);
         });
     }
 });

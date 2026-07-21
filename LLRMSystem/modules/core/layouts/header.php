@@ -45,8 +45,30 @@ initializeAuthenticatedSecurity();
     <link rel="icon" type="image/png" href="<?php echo BASE_URL; ?>/public/assets/images/logo.png">
     <link rel="apple-touch-icon" href="<?php echo BASE_URL; ?>/public/assets/images/logo.png">
     
-    <!-- Shared Theme Manager - must run before page renders -->
-    <script src="<?php echo asset('js/theme.js'); ?>"></script>
+    <!-- Prevent dark mode flicker - must run before page renders -->
+    <script>
+        // Check for dark mode preference immediately
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+            
+            // Set icon visibility after DOM loads to prevent flicker
+            document.addEventListener('DOMContentLoaded', function() {
+                const darkModeIcons = document.querySelectorAll('.dark-mode-icon');
+                const lightModeIcons = document.querySelectorAll('.light-mode-icon');
+                
+                if (theme === 'dark') {
+                    darkModeIcons.forEach(icon => icon.classList.add('hidden'));
+                    lightModeIcons.forEach(icon => icon.classList.remove('hidden'));
+                } else {
+                    darkModeIcons.forEach(icon => icon.classList.remove('hidden'));
+                    lightModeIcons.forEach(icon => icon.classList.add('hidden'));
+                }
+            });
+        })();
+    </script>
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo asset('css/custom.css'); ?>">

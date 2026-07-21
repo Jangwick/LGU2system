@@ -36,7 +36,7 @@ $pageTitle = "Home";
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<script src="<?php echo asset('js/theme.js'); ?>"></script>
+<script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -319,13 +319,11 @@ $pageTitle = "Home";
                     <a href="<?php echo REGISTER_URL; ?>" class="hidden lg:inline-flex btn-modern bg-red-600 hover:bg-red-700 text-white font-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm shadow-xl shadow-red-200/50 whitespace-nowrap">
                         Get Started
                     </a>
-                    <button type="button" onclick="ThemeManager.toggleTheme()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
-                        <i class="bi bi-moon-fill text-sm dark-mode-icon"></i>
-                        <i class="bi bi-sun-fill text-sm light-mode-icon hidden"></i>
+                    <button type="button" onclick="toggleDarkMode()" class="hidden lg:flex dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                        <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
                     </button>
-                    <button type="button" onclick="ThemeManager.toggleTheme()" class="lg:hidden dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
-                        <i class="bi bi-moon-fill text-sm dark-mode-icon"></i>
-                        <i class="bi bi-sun-fill text-sm light-mode-icon hidden"></i>
+                    <button type="button" onclick="toggleDarkMode()" class="lg:hidden dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                        <i id="darkModeIconMobile" class="bi bi-moon-fill text-sm"></i>
                     </button>
                     <button type="button" id="mobile-landing-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
                         <i class="bi bi-list text-2xl"></i>
@@ -1805,6 +1803,29 @@ $pageTitle = "Home";
                 el.addEventListener('scroll', checkScroll, { passive: true });
             });
             checkScroll();
+        })();
+    </script>
+
+    <!-- Dark Mode Toggle Script -->
+    <script>
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateDarkModeIcons(isDark);
+            document.querySelector('meta[name="theme-color"]').content = isDark ? '#0a0a0a' : '#dc2626';
+        }
+
+        function updateDarkModeIcons(isDark) {
+            const desktopIcon = document.getElementById('darkModeIcon');
+            const mobileIcon = document.getElementById('darkModeIconMobile');
+            if (desktopIcon) desktopIcon.className = isDark ? 'bi bi-sun-fill text-sm' : 'bi bi-moon-fill text-sm';
+            if (mobileIcon) mobileIcon.className = isDark ? 'bi bi-sun-fill text-sm' : 'bi bi-moon-fill text-sm';
+        }
+
+        // Initialize dark mode icons on load
+        (function() {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateDarkModeIcons(isDark);
         })();
     </script>
 </body>

@@ -18,9 +18,6 @@ checkAlreadyLoggedIn();
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    
-    <!-- Shared Theme Manager -->
-    <script src="<?php echo asset('js/theme.js'); ?>"></script>
 </head>
 <body class="bg-gradient-to-br from-red-50 via-white to-red-50 min-h-screen flex items-center justify-center p-3 md:p-4">
     <style>
