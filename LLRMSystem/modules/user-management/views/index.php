@@ -534,7 +534,7 @@ function initCustomDropdown(triggerId, dropdownId, valueId, inputId, optionClass
             dropdown.classList.add('hidden');
             
             // Trigger filter change
-            hiddenInput.closest('form').dispatchEvent(new Event('submit'));
+            hiddenInput.closest('form').submit();
         });
     });
     
