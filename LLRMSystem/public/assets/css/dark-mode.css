@@ -311,3 +311,37 @@
     box-shadow: none !important;
 }
 
+/* ----------------------------------------
+   Global White-Line Fixes
+   Fix elements with light backgrounds/borders
+   that do not have an explicit dark: variant.
+   ---------------------------------------- */
+
+/* Neutral backgrounds that lack a dark: background class */
+.dark .bg-white:not([class*="dark:bg-"]) {
+    background-color: #1f2937 !important; /* gray-800 */
+}
+
+.dark .bg-gray-50:not([class*="dark:bg-"]),
+.dark .bg-gray-100:not([class*="dark:bg-"]) {
+    background-color: #111827 !important; /* gray-900 */
+}
+
+/* Light borders that lack a dark: border class */
+.dark .border-white:not([class*="dark:border-"]),
+.dark .border-gray-100:not([class*="dark:border-"]),
+.dark .border-gray-200:not([class*="dark:border-"]),
+.dark .border-gray-300:not([class*="dark:border-"]) {
+    border-color: #374151 !important; /* gray-700 */
+}
+
+/* Dark text colors that lack a dark: text class */
+.dark .text-gray-900:not([class*="dark:text-"]) {
+    color: #f3f4f6 !important; /* gray-100 */
+}
+
+.dark .text-gray-700:not([class*="dark:text-"]),
+.dark .text-gray-800:not([class*="dark:text-"]) {
+    color: #d1d5db !important; /* gray-300 */
+}
+
