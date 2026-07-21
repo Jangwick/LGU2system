@@ -11,6 +11,9 @@
 $currentGuestPage = $currentGuestPage ?? '';
 ?>
 
+<!-- Shared Theme Manager -->
+<script src="<?php echo asset('js/theme.js'); ?>"></script>
+
 <!-- Guest Navigation -->
 <nav id="guest-nav" class="bg-white/80 dark:bg-[#1a1a2e]/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 dark:border-[#2a2a3e] transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -126,23 +129,8 @@ $currentGuestPage = $currentGuestPage ?? '';
 <script>
 // Guest dark mode toggle
 function toggleGuestDarkMode() {
-    const html = document.documentElement;
-    const isDark = html.classList.contains('dark');
-    
-    if (isDark) {
-        html.classList.remove('dark');
-        html.style.colorScheme = 'light';
-        localStorage.setItem('theme', 'light');
-    } else {
-        html.classList.add('dark');
-        html.style.colorScheme = 'dark';
-        localStorage.setItem('theme', 'dark');
-    }
+    ThemeManager.toggleTheme();
     updateGuestThemeButton();
-    
-    // Sync with main theme toggle if it exists
-    const mainToggle = document.getElementById('theme-toggle');
-    if (mainToggle) mainToggle.click();
 }
 
 function updateGuestThemeButton() {

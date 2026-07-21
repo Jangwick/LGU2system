@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Public Document Portal - Search & Preview
  */
@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../search/services/SearchService.php';
 require_once __DIR__ . '/../../search/services/EmbeddingService.php';
 
-// ── Security Response Headers ────────────────────────────────────────────────
+// â”€â”€ Security Response Headers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('X-XSS-Protection: 1; mode=block');
@@ -25,7 +25,7 @@ header(
     "base-uri 'self'; " .
     "form-action 'self';"
 );
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // Handle AJAX suggestions
 if (isset($_GET['action']) && $_GET['action'] === 'suggestions') {
@@ -107,7 +107,7 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');</script>
+<script src="<?php echo asset('js/theme.js'); ?>"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,8 +159,9 @@ function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
             </div>
             <!-- Mobile top-right actions -->
             <div class="flex sm:hidden items-center gap-2 absolute right-2 top-2">
-                <button type="button" onclick="toggleDarkMode()" class="dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
-                    <i id="darkModeIcon" class="bi bi-moon-fill text-sm"></i>
+                <button type="button" onclick="ThemeManager.toggleTheme()" class="dark-toggle w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
+                    <i class="bi bi-moon-fill text-sm dark-mode-icon"></i>
+                    <i class="bi bi-sun-fill text-sm light-mode-icon hidden"></i>
                 </button>
                 <button type="button" id="mobile-nav-toggle" class="flex items-center justify-center w-10 h-10 rounded-xl text-gray-700 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
                     <i class="bi bi-list text-2xl"></i>
@@ -417,8 +418,6 @@ const resultsList = document.getElementById('results-list');
 const searchMeta = document.getElementById('search-meta');
 let queryTimer, currentView = localStorage.getItem('publicSearchView') || 'list';
 
-function toggleDarkMode(){document.documentElement.classList.toggle('dark');const d=document.documentElement.classList.contains('dark');localStorage.setItem('theme',d?'dark':'light');const ic=document.getElementById('darkModeIcon');if(ic)ic.className=d?'bi bi-sun-fill text-sm':'bi bi-moon-fill text-sm';}
-(function(){const d=localStorage.getItem('theme')==='dark';const ic=document.getElementById('darkModeIcon');if(ic)ic.className=d?'bi bi-sun-fill text-sm':'bi bi-moon-fill text-sm';})();
 
 function toggleMobileFilters(){const a=document.getElementById('filters-sidebar'),c=document.getElementById('filter-chevron');if(a.classList.contains('hidden')){a.classList.remove('hidden');a.classList.add('block','animate-fade-in-up');c.style.transform='rotate(180deg)';}else{a.classList.add('hidden');a.classList.remove('block','animate-fade-in-up');c.style.transform='rotate(0deg)';}}
 
@@ -471,7 +470,7 @@ function formatDocumentText(rawText){
     for(let block of blocks){
         block=block.trim();if(!block)continue;
         const numberedMatch=block.match(/^(\d+)\.\s*(.+)/);
-        const bulletMatch=block.match(/^[•·\-\*]\s*(.+)/);
+        const bulletMatch=block.match(/^[â€¢Â·\-\*]\s*(.+)/);
         const romanNumeralMatch=block.match(/^([IVXLCDM]+)\.\s*(.+)/i);
         const isShortAllCaps=block.length<80&&block===block.toUpperCase()&&/[A-Z]/.test(block)&&!block.endsWith('.')&&!numberedMatch;
         const letteredMatch=block.match(/^([A-Z])\.\s*(.+)/);
@@ -609,7 +608,7 @@ async function previewDocument(id){
                                         ${keyPoints.map((p,i)=>`
                                             <li class="relative">
                                                 <span class="absolute -left-[27px] top-0 w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">${i+1}</span>
-                                                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed pt-0.5">${escapeHtml(p.replace(/^[•·\-\*]\s*/,''))}</p>
+                                                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed pt-0.5">${escapeHtml(p.replace(/^[â€¢Â·\-\*]\s*/,''))}</p>
                                             </li>
                                         `).join('')}
                                     </ol>
