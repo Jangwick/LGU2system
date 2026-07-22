@@ -1432,7 +1432,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
                 <span><i class="bi bi-shield-check text-red-600 dark:text-red-400 mr-2"></i>Compliance</span>
                 <i class="bi bi-chevron-down transition-transform duration-300 rotate-180" id="original-file-compliance-chevron"></i>
             </button>
-            <div id="original-file-compliance-mobile" class="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div id="original-file-compliance-mobile" class="lg:hidden max-h-0 opacity-0 overflow-hidden overflow-y-auto transition-all duration-300 ease-in-out">
                 <div id="original-file-compliance-mobile-badge" class="px-4 pt-3 text-[10px] sm:text-xs"></div>
                 <div id="original-file-compliance-mobile-content" class="p-4"></div>
             </div>
