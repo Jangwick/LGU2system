@@ -213,7 +213,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Activity by Action -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transform hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up animation-delay-800 group">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-200 group-hover:text-red-600">Activity by Action (30 Days)</h3>
-                <div class="relative" style="height: 280px;">
+                <div class="relative" style="height: 380px;">
                     <canvas id="activityChart"></canvas>
                 </div>
             </div>
