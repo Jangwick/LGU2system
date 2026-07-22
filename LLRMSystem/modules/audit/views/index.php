@@ -96,14 +96,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Filters -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 md:p-6 mb-6 animate-fade-in-up pb-12">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-                <div class="lg:col-span-2 relative z-50">
+                <div class="lg:col-span-2 relative z-[1000]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User</label>
                     <div class="relative custom-select-container">
                         <div id="user-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
                             <span id="user-select-value">All Users</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
                         </div>
-                        <div id="user-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                        <div id="user-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[9999] max-h-64 overflow-y-auto">
                             <div class="p-2 space-y-1">
                                 <div class="user-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Users</div>
                                 <?php foreach ($data['users'] as $user): ?>
@@ -116,14 +116,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <input type="hidden" name="user_id" id="user_id_input" value="<?php echo $data['filters']['user_id'] ?? ''; ?>">
                     </div>
                 </div>
-                <div class="relative z-50">
+                <div class="relative z-[1000]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Action</label>
                     <div class="relative custom-select-container">
                         <div id="action-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
                             <span id="action-select-value">All Actions</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
                         </div>
-                        <div id="action-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                        <div id="action-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[9999] max-h-64 overflow-y-auto">
                             <div class="p-2 space-y-1">
                                 <div class="action-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Actions</div>
                                 <?php foreach ($data['actions'] as $action): ?>
@@ -136,14 +136,14 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <input type="hidden" name="action" id="action_input" value="<?php echo $data['filters']['action'] ?? ''; ?>">
                     </div>
                 </div>
-                <div class="relative z-50">
+                <div class="relative z-[1000]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Table</label>
                     <div class="relative custom-select-container">
                         <div id="table-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
                             <span id="table-select-value">All Tables</span>
                             <i class="bi bi-chevron-down text-gray-400"></i>
                         </div>
-                        <div id="table-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[100] max-h-64 overflow-y-auto">
+                        <div id="table-select-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-[9999] max-h-64 overflow-y-auto">
                             <div class="p-2 space-y-1">
                                 <div class="table-option px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors" data-value="">All Tables</div>
                                 <?php foreach ($data['tables'] as $table): ?>
