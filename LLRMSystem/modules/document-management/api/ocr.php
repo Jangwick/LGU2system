@@ -22,7 +22,7 @@ try {
         exit;
     }
 
-    require_once __DIR__ . '/../../core/config/config.php';
+    require_once __DIR__ . '/../../core/config/database.php';
 
     $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
     $method = $_SERVER['REQUEST_METHOD'];

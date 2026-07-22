@@ -33,7 +33,7 @@ try {
     if (!$authenticated) {
         $apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
         if (!empty($apiKey)) {
-            require_once __DIR__ . '/../../core/config/config.php';
+            require_once __DIR__ . '/../../core/config/database.php';
             require_once __DIR__ . '/../../notifications/services/IntegrationAuth.php';
             $authService = new IntegrationAuth(getDatabase());
             if ($authService->validateApiKey($apiKey)) {
@@ -56,7 +56,7 @@ try {
         exit;
     }
 
-    require_once __DIR__ . '/../../core/config/config.php';
+    require_once __DIR__ . '/../../core/config/database.php';
     require_once __DIR__ . '/../models/Document.php';
     require_once __DIR__ . '/../services/DocumentService.php';
     require_once __DIR__ . '/../services/OcrService.php';
