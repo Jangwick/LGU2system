@@ -138,21 +138,27 @@ class OcrService {
         $lang = $this->language;
 
         if (PHP_OS_FAMILY === 'Windows') {
-            $command = "$escapedTesseract $escapedPath stdout -l $lang 2>nul";
+            $outputFile = $this->tempDir . '\\ocr_' . uniqid();
+            $command = "$escapedTesseract $escapedPath " . escapeshellarg($outputFile) . " -l $lang 2>nul";
         } else {
-            $command = "$escapedTesseract $escapedPath stdout -l $lang";
+            $outputFile = $this->tempDir . '/ocr_' . uniqid();
+            $command = "$escapedTesseract $escapedPath " . escapeshellarg($outputFile) . " -l $lang";
         }
 
         $outputLines = [];
         $returnCode = 0;
         exec($command . ' 2>&1', $outputLines, $returnCode);
         $output = implode("\n", $outputLines);
+        $outputTxt = $outputFile . '.txt';
 
         if ($returnCode !== 0) {
+            @unlink($outputTxt);
             throw new Exception('Tesseract command failed (exit ' . $returnCode . '): ' . ($output ?: $command));
         }
 
-        return $output;
+        $text = @file_get_contents($outputTxt);
+        @unlink($outputTxt);
+        return $text ?: '';
     }
 
     /**
