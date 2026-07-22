@@ -1040,6 +1040,13 @@ table tbody tr:hover {
     color: #e5e5e5 !important;
 }
 
+/* Active search-mode toggles */
+.dark .mode-btn.text-red-600 {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+}
+
 /* Dark Mode - Table action buttons must be transparent */
 .dark td button {
     background-color: transparent !important;
