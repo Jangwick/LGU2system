@@ -753,7 +753,7 @@ main::-webkit-scrollbar-thumb:active {
 }
 
 /* Dark Mode - Cards & Containers */
-.dark .bg-white:not(.hero-toggle-btn) {
+.dark .bg-white:not(.hero-toggle-btn):not(.mode-btn) {
     background-color: #2d2d2d !important;
 }
 
@@ -1209,7 +1209,7 @@ nav ul li a.bg-red-600 {
 }
 
 /* Dark Mode - Icons */
-.dark .text-red-600 {
+.dark .text-red-600:not(.mode-btn) {
     color: #f87171 !important;
 }
 
