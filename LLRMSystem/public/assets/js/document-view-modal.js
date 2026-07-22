@@ -595,6 +595,10 @@ async function runComplianceCheckInPreview(docId, badgeId, contentId) {
         if (data.success) {
             if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
             loadComplianceForPreview(docId, _badgeId, _contentId);
+            // Keep the main document preview modal in sync if it is open behind the iframe
+            if (document.getElementById('preview-compliance-badge') && document.getElementById('preview-compliance-content')) {
+                loadComplianceForPreview(docId);
+            }
         } else {
             if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Compliance check failed: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
         }
