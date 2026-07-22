@@ -141,13 +141,24 @@
         });
         bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['style'] });
 
-        // Also observe modal elements being shown (class changes on elements with 'modal' in id)
+        // Also observe any fixed inset-0 overlay/modal becoming visible (including account modals)
+        function isModalOpen() {
+            var modals = document.querySelectorAll('.fixed.inset-0');
+            for (var i = 0; i < modals.length; i++) {
+                var m = modals[i];
+                if (m.id === 'sidebar-overlay' || m.id === 'mobile-sidebar') continue;
+                if (!m.classList.contains('hidden')) return true;
+            }
+            return false;
+        }
+
         var modalObserver = new MutationObserver(function(mutations) {
             mutations.forEach(function(mut) {
                 if (mut.attributeName === 'class') {
                     var el = mut.target;
-                    var isHidden = el.classList.contains('hidden');
-                    if (!isHidden) {
+                    if (!el.classList.contains('fixed') || !el.classList.contains('inset-0')) return;
+                    if (el.id === 'sidebar-overlay' || el.id === 'mobile-sidebar') return;
+                    if (isModalOpen()) {
                         btn.classList.add('hidden');
                         btn.classList.remove('flex');
                     } else {
@@ -156,15 +167,18 @@
                 }
             });
         });
-        // Observe all elements with 'modal' in their id
-        document.querySelectorAll('[id*="modal"]').forEach(function(el) {
-            modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
-        });
+
+        function observeModals() {
+            document.querySelectorAll('.fixed.inset-0').forEach(function(el) {
+                if (el.id !== 'sidebar-overlay' && el.id !== 'mobile-sidebar') {
+                    modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+                }
+            });
+        }
+        observeModals();
         // Also catch modals added after initial render
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('[id*="modal"]').forEach(function(el) {
-                modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
-            });
+            observeModals();
         });
     })();
     </script>
