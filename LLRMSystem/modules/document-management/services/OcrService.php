@@ -255,13 +255,13 @@ class OcrService {
         $escapedPdf = escapeshellarg($pdfPath);
         $escapedPrefix = escapeshellarg($prefix);
 
-        // Ghostscript command: render at 300 DPI for good OCR accuracy
-        $dpi = 300;
+        // Ghostscript command: render at 150 DPI grayscale for good OCR speed and accuracy
+        $dpi = 150;
         $escapedGs = escapeshellarg($gs);
         if (PHP_OS_FAMILY === 'Windows') {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=png16m -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf 2>nul";
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf 2>nul";
         } else {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=png16m -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf";
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf";
         }
 
         $gsOutput = shell_exec($command . ' 2>&1');
