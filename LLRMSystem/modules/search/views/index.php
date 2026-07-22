@@ -268,11 +268,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <!-- Search Mode Toggle -->
                                     <div class="hidden md:flex items-center gap-1 bg-gray-100 dark:bg-gray-950 p-1 rounded-xl border border-gray-200 dark:border-gray-700 mr-2">
                                         <button type="button" onclick="setSearchMode('hybrid')" 
-                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'hybrid' ? 'text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700' : 'text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400' ?>">
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'hybrid' ? 'text-red-600 bg-white shadow-sm border border-gray-200 dark:bg-red-600 dark:text-white dark:border-red-500' : 'text-gray-400 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-red-400' ?>">
                                             Hybrid
                                         </button>
                                         <button type="button" onclick="setSearchMode('semantic')" 
-                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'semantic' ? 'text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700' : 'text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400' ?>">
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'semantic' ? 'text-red-600 bg-white shadow-sm border border-gray-200 dark:bg-red-600 dark:text-white dark:border-red-500' : 'text-gray-400 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-red-400' ?>">
                                             Semantic
                                         </button>
                                     </div>
@@ -940,11 +940,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update UI buttons
                 document.querySelectorAll('.mode-btn').forEach(btn => {
                     if (btn.textContent.trim().toLowerCase() === mode) {
-                        btn.classList.add('text-red-600', 'dark:text-red-400', 'bg-white', 'dark:bg-gray-800', 'shadow-sm', 'border', 'border-gray-200', 'dark:border-gray-700');
-                        btn.classList.remove('text-gray-400', 'dark:text-gray-600', 'hover:text-gray-600', 'dark:hover:text-gray-400');
+                        btn.classList.add('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200', 'dark:bg-red-600', 'dark:text-white', 'dark:border-red-500');
+                        btn.classList.remove('text-gray-400', 'hover:text-gray-600', 'dark:bg-gray-800', 'dark:text-gray-400', 'dark:hover:text-red-400');
                     } else {
-                        btn.classList.remove('text-red-600', 'dark:text-red-400', 'bg-white', 'dark:bg-gray-800', 'shadow-sm', 'border', 'border-gray-200', 'dark:border-gray-700');
-                        btn.classList.add('text-gray-400', 'dark:text-gray-600', 'hover:text-gray-600', 'dark:hover:text-gray-400');
+                        btn.classList.remove('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200', 'dark:bg-red-600', 'dark:text-white', 'dark:border-red-500');
+                        btn.classList.add('text-gray-400', 'hover:text-gray-600', 'dark:bg-gray-800', 'dark:text-gray-400', 'dark:hover:text-red-400');
                     }
                 });
                 
