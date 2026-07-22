@@ -1498,8 +1498,8 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     }
 
     if (typeof loadComplianceForPreview === 'function') {
-        loadComplianceForPreview(docId, 'original-file-compliance-badge', 'original-file-compliance-content');
-        loadComplianceForPreview(docId, 'original-file-compliance-mobile-badge', 'original-file-compliance-mobile-content');
+        loadComplianceForPreview(docId, 'original-file-compliance-badge', 'original-file-compliance-content', true);
+        loadComplianceForPreview(docId, 'original-file-compliance-mobile-badge', 'original-file-compliance-mobile-content', true);
     }
 
     modal.classList.remove('hidden');

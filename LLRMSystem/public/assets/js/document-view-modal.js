@@ -493,9 +493,11 @@ function getComplianceBadgeHTML(st) {
     return b[s] || '<span class="badge badge-warning">' + st + '</span>';
 }
 
-function loadComplianceForPreview(docId, badgeId, contentId) {
-    const badgeEl = document.getElementById(badgeId || 'preview-compliance-badge');
-    const contentEl = document.getElementById(contentId || 'preview-compliance-content');
+function loadComplianceForPreview(docId, badgeId, contentId, showRunButton) {
+    const _badgeId = badgeId || 'preview-compliance-badge';
+    const _contentId = contentId || 'preview-compliance-content';
+    const badgeEl = document.getElementById(_badgeId);
+    const contentEl = document.getElementById(_contentId);
     if (!badgeEl || !contentEl) return;
     contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading compliance analysis...</div>';
     fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
@@ -550,6 +552,11 @@ function loadComplianceForPreview(docId, badgeId, contentId) {
                 html += '</div>';
             } else {
                 html += '<p class="text-sm text-gray-500 dark:text-gray-400">No compliance analysis available yet.</p>';
+                if (showRunButton && currentUserRole !== 'viewer') {
+                    html += '<button type="button" onclick="runComplianceCheckInPreview(' + docId + ', \'' + _badgeId + '\', \'' + _contentId + '\')" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap-2">' +
+                        '<i class="bi bi-shield-check"></i> Run Compliance Check' +
+                    '</button>';
+                }
             }
             html += '</div>';
             const needsReview = (data.compliance_status === 'non_compliant' || data.compliance_status === 'needs_review') && data.results && data.results.length > 0;
@@ -572,9 +579,11 @@ function loadComplianceForPreview(docId, badgeId, contentId) {
     });
 }
 
-async function runComplianceCheckInPreview(docId) {
-    const contentEl = document.getElementById('preview-compliance-content');
-    const badgeEl = document.getElementById('preview-compliance-badge');
+async function runComplianceCheckInPreview(docId, badgeId, contentId) {
+    const _badgeId = badgeId || 'preview-compliance-badge';
+    const _contentId = contentId || 'preview-compliance-content';
+    const contentEl = document.getElementById(_contentId);
+    const badgeEl = document.getElementById(_badgeId);
     if (contentEl) contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Running compliance check...</div>';
     try {
         const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
@@ -585,7 +594,7 @@ async function runComplianceCheckInPreview(docId) {
         const data = await response.json();
         if (data.success) {
             if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
-            loadComplianceForPreview(docId);
+            loadComplianceForPreview(docId, _badgeId, _contentId);
         } else {
             if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Compliance check failed: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
         }
