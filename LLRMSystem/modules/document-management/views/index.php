@@ -317,17 +317,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Table Header Actions -->
             <div class="px-3 py-2.5 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
                 <div class="flex flex-wrap items-center justify-between gap-y-4">
-                    <!-- Left: Select All -->
-                    <div class="flex items-center">
-                        <label class="flex items-center cursor-pointer group">
-                            <div class="relative flex items-center justify-center">
-                                <input type="checkbox" id="select-all-top" class="peer h-6 w-6 cursor-pointer appearance-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 checked:bg-red-600 checked:border-red-600 transition-all focus:ring-0 focus:ring-offset-0" onchange="toggleSelectAll(this)">
-                                <i class="bi bi-check absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity text-xl"></i>
-                            </div>
-                            <span class="ml-3 text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-red-600 transition-colors">Select All</span>
-                        </label>
-                    </div>
-                    
                     <!-- Bottom: Document Count (Full width on mobile) -->
                     <div class="w-full flex items-center justify-center pt-2 sm:pt-0 sm:w-auto sm:absolute sm:left-1/2 sm:-translate-x-1/2">
                         <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
