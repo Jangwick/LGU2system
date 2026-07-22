@@ -268,11 +268,11 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <!-- Search Mode Toggle -->
                                     <div class="hidden md:flex items-center gap-1 bg-gray-100 dark:bg-gray-950 p-1 rounded-xl border border-gray-200 dark:border-gray-700 mr-2">
                                         <button type="button" onclick="setSearchMode('hybrid')" 
-                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'hybrid' ? 'text-red-600 bg-white shadow-sm border border-gray-200 dark:bg-red-600 dark:text-white dark:border-red-500' : 'text-gray-400 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-red-400' ?>">
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'hybrid' ? 'text-red-600 bg-white shadow-sm border border-gray-200 dark:bg-red-600 dark:text-white dark:border-red-600' : 'text-gray-400 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-red-400' ?>">
                                             Hybrid
                                         </button>
                                         <button type="button" onclick="setSearchMode('semantic')" 
-                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'semantic' ? 'text-red-600 bg-white shadow-sm border border-gray-200 dark:bg-red-600 dark:text-white dark:border-red-500' : 'text-gray-400 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-red-400' ?>">
+                                                class="mode-btn px-3 py-1.5 text-[10px] font-black uppercase transition-all duration-200 rounded-lg <?= $mode === 'semantic' ? 'text-red-600 bg-white shadow-sm border border-gray-200 dark:bg-red-600 dark:text-white dark:border-red-600' : 'text-gray-400 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-red-400' ?>">
                                             Semantic
                                         </button>
                                     </div>
@@ -312,7 +312,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <button type="button" onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 hidden md:inline-flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-white rounded-lg shadow-sm">
                                     <i class="bi bi-grid-fill leading-none pointer-events-none"></i>
                                 </button>
-                                <button type="button" onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-600 border border-red-200 dark:border-red-500 text-red-600 dark:text-white rounded-lg shadow-sm">
+                                <button type="button" onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-600 border border-red-200 dark:border-red-600 text-red-600 dark:text-white rounded-lg shadow-sm">
                                     <i class="bi bi-list-task leading-none pointer-events-none"></i>
                                 </button>
                             </div>
@@ -850,9 +850,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultsList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
-                    gridBtn.classList.add('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
+                    gridBtn.classList.add('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-600', 'text-red-600', 'dark:text-white');
                     gridBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
-                    listBtn.classList.remove('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
+                    listBtn.classList.remove('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-600', 'text-red-600', 'dark:text-white');
                     listBtn.classList.add('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
                     
                     resultsList.querySelectorAll('.result-card').forEach(card => {
@@ -887,9 +887,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultsList.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
-                    listBtn.classList.add('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
+                    listBtn.classList.add('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-600', 'text-red-600', 'dark:text-white');
                     listBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
-                    gridBtn.classList.remove('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
+                    gridBtn.classList.remove('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-600', 'text-red-600', 'dark:text-white');
                     gridBtn.classList.add('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
                     
                     resultsList.querySelectorAll('.result-card').forEach(card => {
@@ -940,10 +940,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update UI buttons
                 document.querySelectorAll('.mode-btn').forEach(btn => {
                     if (btn.textContent.trim().toLowerCase() === mode) {
-                        btn.classList.add('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200', 'dark:bg-red-600', 'dark:text-white', 'dark:border-red-500');
+                        btn.classList.add('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200', 'dark:bg-red-600', 'dark:text-white', 'dark:border-red-600');
                         btn.classList.remove('text-gray-400', 'hover:text-gray-600', 'dark:bg-gray-800', 'dark:text-gray-400', 'dark:hover:text-red-400');
                     } else {
-                        btn.classList.remove('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200', 'dark:bg-red-600', 'dark:text-white', 'dark:border-red-500');
+                        btn.classList.remove('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200', 'dark:bg-red-600', 'dark:text-white', 'dark:border-red-600');
                         btn.classList.add('text-gray-400', 'hover:text-gray-600', 'dark:bg-gray-800', 'dark:text-gray-400', 'dark:hover:text-red-400');
                     }
                 });
