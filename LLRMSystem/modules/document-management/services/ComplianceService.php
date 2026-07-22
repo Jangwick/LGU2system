@@ -129,6 +129,7 @@ class ComplianceService {
 
         $this->documentModel->update($documentId, [
             'status' => $newStatus,
+            'rejection_notes' => $comment,
             'status_changed_by' => $userId,
             'status_changed_at' => $timestamp,
             'approved_by' => null,
