@@ -98,7 +98,7 @@ function loadComplianceForViewModal(docId, role) {
     contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading compliance analysis...</div>';
     fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': App.getCsrfToken() },
         body: JSON.stringify({ document_id: docId })
     }).then(r => r.json()).then(data => {
         if (data.success) {
@@ -161,7 +161,7 @@ async function runComplianceCheckInViewModal(docId) {
     try {
         const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': App.getCsrfToken() },
             body: JSON.stringify({ document_id: docId })
         });
         const data = await response.json();
