@@ -427,7 +427,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo htmlspecialchars($doc['reference_number']); ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                                        <div class="flex flex-wrap items-center gap-1">
+                                        <div class="flex items-center gap-1">
                                             <?php echo getStatusBadge($doc['status']); ?>
                                             <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
                                             <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
@@ -445,7 +445,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
                                     <td class="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex justify-end gap-2 flex-wrap">
+                                        <div class="flex justify-end gap-2">
                                             <button type="button" onclick="viewDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                                 <i class="bi bi-eye mr-1"></i> View
                                             </button>
