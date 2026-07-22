@@ -309,10 +309,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 <?php endif; ?>
                             </div>
                             <div class="flex items-center gap-2 self-end sm:self-auto">
-                                <button type="button" onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 hidden md:inline-flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 rounded-lg shadow-sm">
+                                <button type="button" onclick="setView('grid')" id="view-grid" class="no-ripple w-8 h-8 md:w-9 md:h-9 hidden md:inline-flex items-center justify-center transition-all bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-white rounded-lg shadow-sm">
                                     <i class="bi bi-grid-fill leading-none pointer-events-none"></i>
                                 </button>
-                                <button type="button" onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-lg shadow-sm">
+                                <button type="button" onclick="setView('list')" id="view-list" class="no-ripple w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all bg-red-50 dark:bg-red-600 border border-red-200 dark:border-red-500 text-red-600 dark:text-white rounded-lg shadow-sm">
                                     <i class="bi bi-list-task leading-none pointer-events-none"></i>
                                 </button>
                             </div>
@@ -850,9 +850,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultsList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
-                    gridBtn.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    gridBtn.classList.add('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
                     gridBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
-                    listBtn.classList.remove('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    listBtn.classList.remove('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
                     listBtn.classList.add('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
                     
                     resultsList.querySelectorAll('.result-card').forEach(card => {
@@ -887,9 +887,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultsList.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
-                    listBtn.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    listBtn.classList.add('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
                     listBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
-                    gridBtn.classList.remove('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    gridBtn.classList.remove('bg-red-50', 'dark:bg-red-600', 'border-red-200', 'dark:border-red-500', 'text-red-600', 'dark:text-white');
                     gridBtn.classList.add('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
                     
                     resultsList.querySelectorAll('.result-card').forEach(card => {
