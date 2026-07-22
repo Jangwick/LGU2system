@@ -511,7 +511,7 @@ class OcrService {
      * Get Tesseract binary path
      */
     private function getTesseractPath() {
-        if (!empty($this->tesseractPath) && file_exists($this->tesseractPath)) {
+        if (!empty($this->tesseractPath) && @file_exists($this->tesseractPath)) {
             return $this->tesseractPath;
         }
         return $this->detectTesseract();
@@ -521,7 +521,7 @@ class OcrService {
      * Get Ghostscript binary path
      */
     private function getGhostscriptPath() {
-        if (!empty($this->ghostscriptPath) && file_exists($this->ghostscriptPath)) {
+        if (!empty($this->ghostscriptPath) && @file_exists($this->ghostscriptPath)) {
             return $this->ghostscriptPath;
         }
         return $this->detectGhostscript();
