@@ -749,7 +749,9 @@ const activityChart = new Chart(document.getElementById('activityChart'), {
                     font: {
                         size: 11
                     },
-                    color: getLabelColor()
+                    color: getLabelColor(),
+                    maxRotation: 0,
+                    minRotation: 0
                 },
                 grid: {
                     color: getGridColor()
