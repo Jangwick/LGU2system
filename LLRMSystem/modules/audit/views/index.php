@@ -94,7 +94,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Filters -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 md:p-6 mb-6 animate-fade-in-up pb-12">
+        <div class="relative z-[1001] bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 md:p-6 mb-6 animate-fade-in-up pb-12">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <div class="lg:col-span-2 relative z-[1000]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User</label>
