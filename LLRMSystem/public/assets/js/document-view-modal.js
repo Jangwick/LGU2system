@@ -513,15 +513,38 @@ function loadComplianceForPreview(docId) {
                 '</div>';
             }
             if (data.results && data.results.length > 0) {
-                html += '<div class="space-y-2">';
+                html += '<div class="space-y-3">';
                 data.results.forEach(r => {
                     const compliant = r.status === 'compliant';
-                    html += '<div class="p-3 rounded-lg border ' + (compliant ? 'border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-900/40' : 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40') + '">' +
-                        '<div class="flex items-start justify-between gap-2">' +
-                            '<p class="text-sm font-bold text-gray-800 dark:text-gray-200">' + escapeHtml(r.title || 'Unknown standard') + '</p>' +
-                            '<span class="text-[10px] font-bold uppercase ' + (compliant ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300') + '">' + (compliant ? 'Compliant' : 'Non-Compliant') + '</span>' +
+                    const ai = r.ai_analysis ? (function() { try { return JSON.parse(r.ai_analysis); } catch (e) { return null; } })() : null;
+                    html += '<div class="p-4 rounded-xl border ' + (compliant ? 'border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-900/40' : 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40') + '">' +
+                        '<div class="flex flex-wrap items-start justify-between gap-2 mb-2">' +
+                            '<div>' +
+                                '<p class="text-sm font-bold text-gray-800 dark:text-gray-200">' + escapeHtml(r.title || 'Unknown standard') + '</p>' +
+                                '<p class="text-[10px] text-gray-500 dark:text-gray-400">' + escapeHtml(r.code || '') + (r.is_mandatory ? ' · Mandatory' : '') + (r.weight ? ' · Weight ' + r.weight : '') + '</p>' +
+                            '</div>' +
+                            '<span class="text-[10px] font-bold uppercase px-2 py-1 rounded-md ' + (compliant ? 'bg-green-200 text-green-800 dark:bg-green-900/40 dark:text-green-300' : 'bg-red-200 text-red-800 dark:bg-red-900/40 dark:text-red-300') + '">' + (compliant ? 'Compliant' : 'Non-Compliant') + '</span>' +
                         '</div>' +
-                        (r.notes ? '<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">' + escapeHtml(r.notes) + '</p>' : '') +
+                        (r.summary ? '<p class="text-xs text-gray-600 dark:text-gray-400 mb-3">' + escapeHtml(r.summary) + '</p>' : '') +
+                        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3">' +
+                            '<div class="p-2 rounded-lg bg-white/60 dark:bg-gray-800/40">' +
+                                '<p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">Local Score</p>' +
+                                '<p class="font-black ' + (parseFloat(r.score) >= 70 ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300') + '">' + parseFloat(r.score || 0).toFixed(1) + '%</p>' +
+                            '</div>' +
+                            '<div class="p-2 rounded-lg bg-white/60 dark:bg-gray-800/40">' +
+                                '<p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">Decision Source</p>' +
+                                '<p class="font-black text-gray-700 dark:text-gray-300">' + (ai ? 'AI + Local' : 'Local Only') + '</p>' +
+                            '</div>' +
+                        '</div>' +
+                        (r.matched_keywords ? '<p class="text-xs text-gray-600 dark:text-gray-400 mb-2"><span class="font-bold">Matched:</span> ' + escapeHtml(r.matched_keywords) + '</p>' : '') +
+                        (r.explanation ? '<p class="text-xs text-gray-600 dark:text-gray-400 mb-2"><span class="font-bold">Local Analysis:</span> ' + escapeHtml(r.explanation) + '</p>' : '') +
+                        (ai ? '<div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700/50">' +
+                            '<p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase mb-2"><i class="bi bi-robot mr-1"></i>AI Analysis</p>' +
+                            (ai.confidence !== undefined ? '<p class="text-xs text-gray-700 dark:text-gray-300 mb-1"><span class="font-bold">Confidence:</span> ' + parseFloat(ai.confidence).toFixed(1) + '%</span></p>' : '') +
+                            (ai.status ? '<p class="text-xs text-gray-700 dark:text-gray-300 mb-1"><span class="font-bold">AI Verdict:</span> ' + escapeHtml(ai.status) + '</p>' : '') +
+                            (ai.reason ? '<p class="text-xs text-gray-600 dark:text-gray-400"><span class="font-bold">Reason:</span> ' + escapeHtml(ai.reason) + '</p>' : '') +
+                            (ai.evidence ? '<p class="text-xs text-gray-600 dark:text-gray-400 mt-1"><span class="font-bold">Evidence:</span> ' + escapeHtml(ai.evidence) + '</p>' : '') +
+                        '</div>' : '') +
                     '</div>';
                 });
                 html += '</div>';
