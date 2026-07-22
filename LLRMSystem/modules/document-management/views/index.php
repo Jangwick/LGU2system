@@ -1387,18 +1387,18 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
     <div id="original-file-preview-content" class="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[100dvh] sm:h-[92vh] overflow-hidden flex flex-col transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 opacity-0 sm:opacity-100 border border-gray-200 dark:border-gray-800">
         <div class="sm:hidden w-full flex justify-center pt-3 pb-1 bg-white dark:bg-gray-900 translate-y-[1px]"><div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div></div>
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
-            <div class="flex items-start sm:items-center gap-3 min-w-0">
-                <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex-shrink-0 mt-0.5 sm:mt-0">
+        <div class="flex flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
+            <div class="flex items-center gap-3 min-w-1 flex-1">
+                <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex-shrink-0">
                     <i class="bi bi-file-earmark-text text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
-                <div class="min-w-0 flex-1">
+                <div class="min-w-1 flex-1">
                     <h3 id="original-file-preview-title" class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate leading-tight">Document Preview</h3>
                     <p id="original-file-preview-type" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
                     <div id="original-file-preview-compliance" class="mt-1"></div>
                 </div>
             </div>
-            <div class="flex items-center justify-end sm:justify-start gap-2 flex-shrink-0">
+            <div class="flex items-center gap-2 flex-shrink-0">
                 <a id="original-file-preview-newtab" href="#" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <i class="bi bi-box-arrow-up-right"></i> New Tab
                 </a>
