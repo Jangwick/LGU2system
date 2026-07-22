@@ -17,3 +17,8 @@ storage/versions/*
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Runtime / cache directories
+.windsurf/
+storage/logs/
+tests/.phpunit.cache/
