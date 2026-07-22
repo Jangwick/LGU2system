@@ -1130,10 +1130,25 @@ function viewDocument(id) {
                                     </div>
                                 </section>
 
+                                <section id="preview-compliance-section" class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                                        <i class="bi bi-shield-check mr-2 text-emerald-500"></i>
+                                        Compliance
+                                    </h3>
+                                    <div id="preview-compliance-badge" class="mb-3"></div>
+                                    <div id="preview-compliance-content"></div>
+                                    ${currentUserRole !== 'viewer' ? `
+                                    <button type="button" onclick="runComplianceCheckInPreview(${doc.id})" id="preview-run-compliance-btn" class="mt-4 w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition">
+                                        <i class="bi bi-arrow-repeat mr-1"></i> Run Compliance Check
+                                    </button>
+                                    ` : ''}
+                                </section>
+
                             </div>
                         </div>
                     </div>
                 `;
+                loadComplianceForPreview(doc.id);
             } else {
                 content.innerHTML = `<div class="p-12 text-center text-red-600">${res.error}</div>`;
             }
@@ -1141,6 +1156,84 @@ function viewDocument(id) {
         .catch(e => {
             content.innerHTML = `<div class="p-12 text-center text-red-600">Failed to load document details</div>`;
         });
+}
+
+function getComplianceBadgeHTML(st) {
+    if (!st) return '';
+    const s = st.toLowerCase();
+    const b = {
+        'pending': '<span class="badge badge-warning"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>',
+        'compliant': '<span class="badge badge-success"><i class="bi bi-shield-check mr-1"></i>Compliant</span>',
+        'non_compliant': '<span class="badge badge-danger"><i class="bi bi-shield-exclamation mr-1"></i>Non-Compliant</span>'
+    };
+    return b[s] || '<span class="badge badge-warning">' + st + '</span>';
+}
+
+function loadComplianceForPreview(docId) {
+    const badgeEl = document.getElementById('preview-compliance-badge');
+    const contentEl = document.getElementById('preview-compliance-content');
+    if (!badgeEl || !contentEl) return;
+    contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading compliance analysis...</div>';
+    fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': App.getCsrfToken() },
+        body: JSON.stringify({ document_id: docId })
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            let html = '<div class="space-y-3">';
+            if (data.rejection_notes) {
+                html += '<div class="p-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40 text-red-800 dark:text-red-300 text-sm">' +
+                    '<p class="font-semibold mb-1"><i class="bi bi-exclamation-circle mr-1"></i>Rejection Notes</p>' +
+                    '<p>' + escapeHtml(data.rejection_notes) + '</p>' +
+                '</div>';
+            }
+            if (data.results && data.results.length > 0) {
+                html += '<div class="space-y-2">';
+                data.results.forEach(r => {
+                    const compliant = r.status === 'compliant';
+                    html += '<div class="p-3 rounded-lg border ' + (compliant ? 'border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-900/40' : 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40') + '">' +
+                        '<div class="flex items-start justify-between gap-2">' +
+                            '<p class="text-sm font-bold text-gray-800 dark:text-gray-200">' + escapeHtml(r.title || 'Unknown standard') + '</p>' +
+                            '<span class="text-[10px] font-bold uppercase ' + (compliant ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300') + '">' + (compliant ? 'Compliant' : 'Non-Compliant') + '</span>' +
+                        '</div>' +
+                        (r.notes ? '<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">' + escapeHtml(r.notes) + '</p>' : '') +
+                    '</div>';
+                });
+                html += '</div>';
+            } else {
+                html += '<p class="text-sm text-gray-500 dark:text-gray-400">No compliance analysis available yet.</p>';
+            }
+            html += '</div>';
+            contentEl.innerHTML = html;
+        } else {
+            contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
+        }
+    }).catch(() => {
+        contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis.</p>';
+    });
+}
+
+async function runComplianceCheckInPreview(docId) {
+    const contentEl = document.getElementById('preview-compliance-content');
+    const badgeEl = document.getElementById('preview-compliance-badge');
+    if (contentEl) contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Running compliance check...</div>';
+    try {
+        const response = await fetch(App.apiUrl('documents', 'check-compliance.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': App.getCsrfToken() },
+            body: JSON.stringify({ document_id: docId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            loadComplianceForPreview(docId);
+        } else {
+            if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Compliance check failed: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
+        }
+    } catch (e) {
+        if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Failed to run compliance check.</p>';
+    }
 }
 
 /**
