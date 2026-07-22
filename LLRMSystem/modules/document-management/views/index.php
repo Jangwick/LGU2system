@@ -1429,7 +1429,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
         <div class="lg:hidden flex flex-col border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
             <button type="button" id="original-file-compliance-toggle" onclick="toggleOriginalFileCompliance()" class="w-full px-4 py-3 flex items-center justify-between text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-900/50">
                 <span><i class="bi bi-shield-check text-red-600 dark:text-red-400 mr-2"></i>Compliance</span>
-                <i class="bi bi-chevron-down transition-transform duration-300" id="original-file-compliance-chevron"></i>
+                <i class="bi bi-chevron-down transition-transform duration-300 rotate-180" id="original-file-compliance-chevron"></i>
             </button>
             <div id="original-file-compliance-mobile" class="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
                 <div id="original-file-compliance-mobile-badge" class="px-4 pt-3"></div>
@@ -1457,7 +1457,7 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
         mobilePanel.classList.add('max-h-0', 'opacity-0');
         mobilePanel.classList.remove('max-h-[80vh]', 'opacity-100');
     }
-    if (chevron) chevron.classList.remove('rotate-180');
+    if (chevron) chevron.classList.add('rotate-180');
 
     const previewUrl = App.apiUrl('documents', `preview.php?id=${docId}`);
     const downloadUrl = App.apiUrl('documents', `download.php?id=${docId}`);
@@ -1520,11 +1520,11 @@ function toggleOriginalFileCompliance() {
     if (isOpen) {
         panel.classList.remove('max-h-[80vh]', 'opacity-100');
         panel.classList.add('max-h-0', 'opacity-0');
-        if (chevron) chevron.classList.remove('rotate-180');
+        if (chevron) chevron.classList.add('rotate-180');
     } else {
         panel.classList.remove('max-h-0', 'opacity-0');
         panel.classList.add('max-h-[80vh]', 'opacity-100');
-        if (chevron) chevron.classList.add('rotate-180');
+        if (chevron) chevron.classList.remove('rotate-180');
     }
 }
 
