@@ -1395,7 +1395,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
                 <div class="min-w-1 flex-1">
                     <h3 id="original-file-preview-title" class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate leading-tight">Document Preview</h3>
                     <p id="original-file-preview-type" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
-                    <div id="original-file-preview-compliance" class="mt-1"></div>
+                    <div id="original-file-preview-compliance" class="mt-1 text-[10px] sm:text-xs"></div>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
@@ -1422,7 +1422,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
                     <i class="bi bi-shield-check text-red-600 dark:text-red-400"></i>
                     <span class="text-sm font-black text-gray-800 dark:text-gray-200 uppercase tracking-widest">Compliance</span>
                 </div>
-                <div id="original-file-compliance-badge" class="px-4 pt-3"></div>
+                <div id="original-file-compliance-badge" class="px-4 pt-3 text-[10px] sm:text-xs"></div>
                 <div id="original-file-compliance-content" class="p-4 flex-1 min-h-0 overflow-y-auto"></div>
             </div>
         </div>
@@ -1433,7 +1433,7 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
                 <i class="bi bi-chevron-down transition-transform duration-300 rotate-180" id="original-file-compliance-chevron"></i>
             </button>
             <div id="original-file-compliance-mobile" class="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
-                <div id="original-file-compliance-mobile-badge" class="px-4 pt-3"></div>
+                <div id="original-file-compliance-mobile-badge" class="px-4 pt-3 text-[10px] sm:text-xs"></div>
                 <div id="original-file-compliance-mobile-content" class="p-4"></div>
             </div>
         </div>
