@@ -552,12 +552,13 @@ function loadComplianceForPreview(docId) {
                 html += '<p class="text-sm text-gray-500 dark:text-gray-400">No compliance analysis available yet.</p>';
             }
             html += '</div>';
-            if (data.compliance_status !== 'compliant' && currentUserRole !== 'viewer') {
-                html += '<div class="mt-6 p-4 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-900/40">' +
-                    '<p class="text-sm font-bold text-amber-800 dark:text-amber-200 mb-2"><i class="bi bi-pencil-square mr-1"></i>Revision Notes</p>' +
-                    '<p class="text-xs text-amber-700 dark:text-amber-300 mb-2">Describe what is wrong or needs correction for this document/ordinance.</p>' +
-                    '<textarea id="preview-revision-comment" rows="3" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-transparent mb-3" placeholder="Enter revision comment..."></textarea>' +
-                    '<button type="button" onclick="submitRejectionComment(' + docId + ')" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-lg transition">' +
+            const needsReview = (data.compliance_status === 'non_compliant' || data.compliance_status === 'needs_review') && data.results && data.results.length > 0;
+            if (needsReview && currentUserRole !== 'viewer') {
+                html += '<div class="mt-6 p-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-900/40">' +
+                    '<p class="text-sm font-bold text-red-800 dark:text-red-200 mb-2"><i class="bi bi-pencil-square mr-1"></i>Revision Notes</p>' +
+                    '<p class="text-xs text-red-700 dark:text-red-300 mb-2">Describe what is wrong or needs correction for this document/ordinance.</p>' +
+                    '<textarea id="preview-revision-comment" rows="3" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent mb-3" placeholder="Enter revision comment..."></textarea>' +
+                    '<button type="button" onclick="submitRejectionComment(' + docId + ')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition">' +
                         '<i class="bi bi-send mr-1"></i> Submit Revision Comment' +
                     '</button>' +
                 '</div>';
