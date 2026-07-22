@@ -140,13 +140,16 @@ class OcrService {
         if (PHP_OS_FAMILY === 'Windows') {
             $command = "$escapedTesseract $escapedPath stdout -l $lang 2>nul";
         } else {
-            $command = "$escapedTesseract $escapedPath stdout -l $lang 2>/dev/null";
+            $command = "$escapedTesseract $escapedPath stdout -l $lang";
         }
 
-        $output = shell_exec($command);
+        $outputLines = [];
+        $returnCode = 0;
+        exec($command . ' 2>&1', $outputLines, $returnCode);
+        $output = implode("\n", $outputLines);
 
-        if ($output === null) {
-            throw new Exception('Tesseract command failed: ' . $command);
+        if ($returnCode !== 0) {
+            throw new Exception('Tesseract command failed (exit ' . $returnCode . '): ' . ($output ?: $command));
         }
 
         return $output;
@@ -258,10 +261,10 @@ class OcrService {
         if (PHP_OS_FAMILY === 'Windows') {
             $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=png16m -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf 2>nul";
         } else {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=png16m -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf 2>/dev/null";
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=png16m -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf";
         }
 
-        shell_exec($command);
+        $gsOutput = shell_exec($command . ' 2>&1');
 
         // Collect generated images
         $images = [];
@@ -269,6 +272,10 @@ class OcrService {
         if ($files) {
             sort($files);
             $images = $files;
+        }
+
+        if (empty($images)) {
+            throw new Exception('Ghostscript failed to convert PDF to images: ' . ($gsOutput ?: 'no output'));
         }
 
         return $images;
