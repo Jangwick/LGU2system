@@ -1429,9 +1429,9 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
         <div class="lg:hidden flex flex-col border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
             <button type="button" id="original-file-compliance-toggle" onclick="toggleOriginalFileCompliance()" class="w-full px-4 py-3 flex items-center justify-between text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-900/50">
                 <span><i class="bi bi-shield-check text-red-600 dark:text-red-400 mr-2"></i>Compliance</span>
-                <i class="bi bi-chevron-down transition-transform" id="original-file-compliance-chevron"></i>
+                <i class="bi bi-chevron-down transition-transform duration-300" id="original-file-compliance-chevron"></i>
             </button>
-            <div id="original-file-compliance-mobile" class="hidden">
+            <div id="original-file-compliance-mobile" class="lg:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
                 <div id="original-file-compliance-mobile-badge" class="px-4 pt-3"></div>
                 <div id="original-file-compliance-mobile-content" class="p-4"></div>
             </div>
@@ -1453,8 +1453,11 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     // Reset compliance mobile toggle
     const mobilePanel = document.getElementById('original-file-compliance-mobile');
     const chevron = document.getElementById('original-file-compliance-chevron');
-    if (mobilePanel) mobilePanel.classList.add('hidden');
-    if (chevron) chevron.style.transform = 'rotate(0deg)';
+    if (mobilePanel) {
+        mobilePanel.classList.add('max-h-0', 'opacity-0');
+        mobilePanel.classList.remove('max-h-[80vh]', 'opacity-100');
+    }
+    if (chevron) chevron.classList.remove('rotate-180');
 
     const previewUrl = App.apiUrl('documents', `preview.php?id=${docId}`);
     const downloadUrl = App.apiUrl('documents', `download.php?id=${docId}`);
@@ -1513,8 +1516,16 @@ function toggleOriginalFileCompliance() {
     const panel = document.getElementById('original-file-compliance-mobile');
     const chevron = document.getElementById('original-file-compliance-chevron');
     if (!panel) return;
-    panel.classList.toggle('hidden');
-    if (chevron) chevron.style.transform = panel.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+    const isOpen = panel.classList.contains('max-h-[80vh]');
+    if (isOpen) {
+        panel.classList.remove('max-h-[80vh]', 'opacity-100');
+        panel.classList.add('max-h-0', 'opacity-0');
+        if (chevron) chevron.classList.remove('rotate-180');
+    } else {
+        panel.classList.remove('max-h-0', 'opacity-0');
+        panel.classList.add('max-h-[80vh]', 'opacity-100');
+        if (chevron) chevron.classList.add('rotate-180');
+    }
 }
 
 function closeOriginalFilePreviewModal() {
