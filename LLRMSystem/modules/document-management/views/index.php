@@ -465,13 +465,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/60 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] md:px-3 md:py-2 md:rounded-lg md:text-xs transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
+                                            <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>, <?php echo $canDelete ? 'true' : 'false'; ?>)" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/60 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] md:px-3 md:py-2 md:rounded-lg md:text-xs transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                                 <i class="bi bi-pencil mr-1"></i> Edit
-                                            </button>
-                                            <?php endif; ?>
-                                            <?php if ($canDelete): ?>
-                                            <button type="button" onclick="deleteDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/60 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] md:px-3 md:py-2 md:rounded-lg md:text-xs transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
-                                                <i class="bi bi-trash mr-1"></i> Delete
                                             </button>
                                             <?php endif; ?>
                                         </div>
@@ -547,13 +542,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </a>
                                     <?php endif; ?>
                                     <?php if ($canEdit): ?>
-                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>, <?php echo $canDelete ? 'true' : 'false'; ?>)">
                                         <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <?php endif; ?>
-                                    <?php if ($canDelete): ?>
-                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl transition-all active:scale-90" title="Delete" onclick="deleteDocument(<?php echo $doc['id']; ?>)">
-                                        <i class="bi bi-trash"></i>
                                     </button>
                                     <?php endif; ?>
                                 </div>
@@ -804,6 +794,9 @@ const currentUserRole = '<?php echo $userRole; ?>';
 
                 <!-- Sticky Footer within Scroll Area for Forms -->
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-800 mt-4">
+                    <button type="button" id="edit-modal-delete-btn" onclick="deleteDocumentFromEditModal()" class="hidden w-full sm:w-auto order-3 px-8 py-3 border border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
+                        Delete
+                    </button>
                     <button type="button" onclick="closeEditModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
                         Discard Changes
                     </button>
@@ -1201,7 +1194,7 @@ const typeSelect = document.getElementById('upload-document-type-input');
 const dateInput = document.getElementById('document-date-modal');
 const referenceInput = document.getElementById('upload-reference-number');
 
-async function editDocument(id) {
+async function editDocument(id, canDelete = false) {
     try {
         const response = await fetch(App.apiUrl('documents', `get_details.php?id=${id}`));
         const res = await response.json();
@@ -1219,6 +1212,9 @@ async function editDocument(id) {
             form.querySelector('[name="status"]').value = doc.status;
             form.querySelector('[name="description"]').value = doc.description || '';
             form.querySelector('[name="tags"]').value = doc.tags || '';
+            
+            const deleteBtn = document.getElementById('edit-modal-delete-btn');
+            if (deleteBtn) deleteBtn.classList.toggle('hidden', !canDelete);
             
             openEditModal();
         } else {
@@ -1252,6 +1248,12 @@ async function deleteDocument(id) {
     } catch (e) {
         alert('Failed to process delete request');
     }
+}
+
+function deleteDocumentFromEditModal() {
+    const form = document.getElementById('edit-form-modal');
+    const id = form ? form.querySelector('[name="document_id"]').value : null;
+    if (id) deleteDocument(id);
 }
 
 function openEditModal() {
