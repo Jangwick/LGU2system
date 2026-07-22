@@ -940,11 +940,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update UI buttons
                 document.querySelectorAll('.mode-btn').forEach(btn => {
                     if (btn.textContent.trim().toLowerCase() === mode) {
-                        btn.classList.add('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200');
-                        btn.classList.remove('text-gray-400', 'hover:text-gray-600');
+                        btn.classList.add('text-red-600', 'dark:text-red-400', 'bg-white', 'dark:bg-gray-800', 'shadow-sm', 'border', 'border-gray-200', 'dark:border-gray-700');
+                        btn.classList.remove('text-gray-400', 'dark:text-gray-600', 'hover:text-gray-600', 'dark:hover:text-gray-400');
                     } else {
-                        btn.classList.remove('text-red-600', 'bg-white', 'shadow-sm', 'border', 'border-gray-200');
-                        btn.classList.add('text-gray-400', 'hover:text-gray-600');
+                        btn.classList.remove('text-red-600', 'dark:text-red-400', 'bg-white', 'dark:bg-gray-800', 'shadow-sm', 'border', 'border-gray-200', 'dark:border-gray-700');
+                        btn.classList.add('text-gray-400', 'dark:text-gray-600', 'hover:text-gray-600', 'dark:hover:text-gray-400');
                     }
                 });
                 
