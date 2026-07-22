@@ -1035,7 +1035,7 @@ table tbody tr:hover {
 }
 
 /* Dark Mode - Buttons */
-.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600):not(td button):not(.hero-toggle-btn) {
+.dark button:not(.bg-red-600):not(.bg-green-600):not(.bg-red-600):not(.bg-yellow-600):not(td button):not(.hero-toggle-btn):not(.mode-btn) {
     background-color: #404040 !important;
     color: #e5e5e5 !important;
 }
