@@ -256,11 +256,12 @@ class GroqService {
     }
 
     private function systemPrompt() {
-        return 'You are a Philippine local-government legal compliance reviewer for Valenzuela City. ' .
-            'Analyze proposed ordinances against legal standards and return only a JSON object. ' .
+        return 'You are a specialized legal compliance reviewer for Valenzuela City ordinances and local regulations. ' .
+            'Focus exclusively on Valenzuela City legal standards, ordinances, and the provided reference text. ' .
+            'Compare the submitted document content against the Valenzuela-specific rule and the legal reference. ' .
+            'If the document does not align with the Valenzuela rule, mark it non_compliant and explain why. ' .
             'Be strict but fair. Mark a rule compliant only when the document clearly satisfies it. ' .
-            'Use the vector similarity score and the legal reference text as guidance. ' .
-            'Return only JSON, no commentary.';
+            'Return only a valid JSON object, no commentary.';
     }
 
     private function buildPrompt($documentText, array $rules) {
@@ -280,15 +281,18 @@ class GroqService {
             $rulesText .= "---\n";
         }
 
-        return "Analyze the proposed Valenzuela City ordinance below for compliance with each listed legal standard. " .
-            "Return only a JSON object where every key is a rule code and the value is an object with three fields: " .
-            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"analysis\": \"2-4 sentence legal reasoning\"}. " .
+        return "Analyze the submitted document below as a proposed Valenzuela City ordinance. " .
+            "For each listed legal standard, focus only on Valenzuela City ordinances and local regulations. " .
+            "Compare the document content against the Valenzuela-specific rule and the provided legal reference text. " .
+            "If the document does not align with the Valenzuela rule, mark it non_compliant and explain why. " .
+            "Return only a JSON object where every key is a rule code and the value is an object with these fields: " .
+            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"reason\": \"2-4 sentence legal reasoning\", \"evidence\": \"specific text or details from the document or reference that support the verdict\"}. " .
             "If a rule is not applicable to the document subject, mark it compliant with low confidence and explain why. " .
-            "The ordinance text below may contain [Visual elements] sections describing seals, signatures, stamps, or diagrams. " .
+            "The document text below may contain [Visual elements] sections describing seals, signatures, stamps, or diagrams. " .
             "Treat those descriptions as evidence of the document's formal validity and completeness. " .
-            "Consider the vector similarity score as a hint, but use the legal reference text and the ordinance content to decide.\n\n" .
-            "Ordinance Text:\n{$documentText}\n\n" .
-            "Legal Standards:\n{$rulesText}\n\n" .
+            "Consider the vector similarity score as a hint, but base your verdict on the Valenzuela rule and the document content.\n\n" .
+            "Document Text:\n{$documentText}\n\n" .
+            "Valenzuela City Legal Standards:\n{$rulesText}\n\n" .
             "JSON:";
     }
 
