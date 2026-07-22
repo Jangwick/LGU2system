@@ -192,8 +192,8 @@
         <div class="p-4 border-b border-red-700/50 sidebar-header">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3 sidebar-logo">
-                    <div class="bg-white rounded-full p-1.5 shadow-lg w-12 h-12 md:w-9 md:h-9 flex items-center justify-center overflow-hidden">
-                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-full h-full object-contain">
+                    <div class="bg-white rounded-full shadow-lg w-12 h-12 md:w-9 md:h-9 flex items-center justify-center overflow-hidden">
+                        <img src="<?php echo BASE_URL; ?>/public/assets/images/logo.png" alt="Valenzuela Logo" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h1 class="text-lg font-bold tracking-tight">LRMS</h1>
