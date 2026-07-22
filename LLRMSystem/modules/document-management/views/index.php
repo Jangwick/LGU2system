@@ -518,6 +518,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     <div class="flex flex-wrap items-center gap-1">
                                         <?php echo getStatusBadge($doc['status']); ?>
                                         <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
+                                        <?php echo getComplianceBadge($doc['compliance_status'] ?? 'pending'); ?>
                                     </div>
                                     <?php if (!empty($doc['status_changed_by_name'])): ?>
                                     <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" title="<?php echo !empty($doc['status_changed_at']) ? date('M d, Y H:i', strtotime($doc['status_changed_at'])) : ''; ?>">
@@ -525,7 +526,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="flex items-center gap-1.5">
+                                <div class="flex flex-wrap items-center justify-end gap-1.5 max-w-[50%]">
                                     <button type="button" class="w-9 h-9 flex items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl transition-all active:scale-90" title="View" onclick="viewDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-eye"></i>
                                     </button>
