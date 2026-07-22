@@ -278,6 +278,16 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
                         <input type="text" id="filter-tags" placeholder="e.g. budget, land" value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
                     </div>
+                    <!-- Compliance Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Compliance</label>
+                        <select id="filter-compliance" class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
+                            <option value="">All</option>
+                            <option value="compliant" <?php echo (($_GET['compliance_status'] ?? '') === 'compliant') ? 'selected' : ''; ?>>Compliant</option>
+                            <option value="non_compliant" <?php echo (($_GET['compliance_status'] ?? '') === 'non_compliant') ? 'selected' : ''; ?>>Non-Compliant</option>
+                            <option value="pending" <?php echo (($_GET['compliance_status'] ?? '') === 'pending') ? 'selected' : ''; ?>>Pending</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="mt-4 flex flex-col sm:flex-row justify-end gap-3">
