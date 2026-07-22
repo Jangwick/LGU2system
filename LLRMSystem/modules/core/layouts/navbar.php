@@ -63,7 +63,7 @@ if (isset($_SESSION['user_id'])) {
                     <span class="hidden md:inline"><?php echo e($pageTitle ?? 'Dashboard'); ?></span>
                 </h2>
                 <?php if (isset($breadcrumbs)): ?>
-                <nav class="hidden md:flex text-sm text-gray-600 mt-1" aria-label="Breadcrumb">
+                <nav class="hidden md:flex text-sm text-gray-600 mt-1 w-fit" aria-label="Breadcrumb">
                     <?php foreach ($breadcrumbs as $index => $crumb): ?>
                         <?php if ($index > 0): ?>
                             <i class="bi bi-chevron-right mx-2 text-xs"></i>
