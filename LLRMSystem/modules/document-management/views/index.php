@@ -328,20 +328,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         </label>
                     </div>
                     
-                    <!-- Right: Bulk Actions -->
-                    <div class="flex items-center gap-2">
-                        <?php if ($userRole !== 'viewer'): ?>
-                        <button class="w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl transition-all" title="Download Selected">
-                            <i class="bi bi-download text-lg"></i>
-                        </button>
-                        <?php endif; ?>
-                        <?php if (in_array($userRole, ['administrator', 'officer'])): ?>
-                        <button class="w-10 h-10 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl transition-all" title="Delete Selected">
-                            <i class="bi bi-trash text-lg"></i>
-                        </button>
-                        <?php endif; ?>
-                    </div>
-
                     <!-- Bottom: Document Count (Full width on mobile) -->
                     <div class="w-full flex items-center justify-center pt-2 sm:pt-0 sm:w-auto sm:absolute sm:left-1/2 sm:-translate-x-1/2">
                         <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
