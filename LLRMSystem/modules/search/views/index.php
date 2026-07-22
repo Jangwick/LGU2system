@@ -850,10 +850,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultsList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
-                    gridBtn.classList.add('bg-red-50', 'border-red-200', 'text-red-600');
-                    gridBtn.classList.remove('bg-white', 'border-gray-200', 'text-gray-400');
-                    listBtn.classList.remove('bg-red-50', 'border-red-200', 'text-red-600');
-                    listBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-400');
+                    gridBtn.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    gridBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
+                    listBtn.classList.remove('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    listBtn.classList.add('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
                     
                     resultsList.querySelectorAll('.result-card').forEach(card => {
                         card.classList.add('h-full');
@@ -887,10 +887,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultsList.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', 'gap-4', 'items-stretch');
                     
                     // Update buttons
-                    listBtn.classList.add('bg-red-50', 'border-red-200', 'text-red-600');
-                    listBtn.classList.remove('bg-white', 'border-gray-200', 'text-gray-400');
-                    gridBtn.classList.remove('bg-red-50', 'border-red-200', 'text-red-600');
-                    gridBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-400');
+                    listBtn.classList.add('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    listBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
+                    gridBtn.classList.remove('bg-red-50', 'dark:bg-red-900/30', 'border-red-200', 'dark:border-red-900/50', 'text-red-600', 'dark:text-red-400');
+                    gridBtn.classList.add('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
                     
                     resultsList.querySelectorAll('.result-card').forEach(card => {
                         card.classList.remove('h-full');
