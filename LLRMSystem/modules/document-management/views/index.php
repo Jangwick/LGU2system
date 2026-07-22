@@ -261,12 +261,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <button id="advanced-filters-btn" type="button" onclick="toggleAdvancedFilters()" class="inline-flex items-center px-4 py-2 bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-500 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20 transition-all duration-200 font-bold border border-red-100 dark:border-red-900/30 shadow-sm cursor-pointer active:scale-95">
                     <i class="bi bi-funnel mr-2"></i>
                     Advanced Filters
-                    <i class="bi bi-chevron-down ml-2 transition-transform duration-300" id="advanced-filters-chevron" style="transform: rotate(180deg);"></i>
+                    <i class="bi bi-chevron-down ml-2 transition-transform duration-300" id="advanced-filters-chevron" style="transform: rotate(0deg);"></i>
                 </button>
             </div>
 
             <!-- Advanced Filters Panel -->
-            <div id="advanced-filters-panel" class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+            <div id="advanced-filters-panel" class="hidden mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <!-- Date From -->
                     <div>
