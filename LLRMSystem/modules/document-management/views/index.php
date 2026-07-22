@@ -315,7 +315,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Documents Table -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up border border-transparent dark:border-gray-700">
             <!-- Table Header Actions -->
-            <div class="px-3 py-2.5 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
+            <div class="px-3 py-3.5 md:py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
                 <div class="flex flex-wrap items-center justify-between gap-y-4">
                     <!-- Bottom: Document Count (Full width on mobile) -->
                     <div class="w-full flex items-center justify-center pt-2 sm:pt-0 sm:w-auto sm:absolute sm:left-1/2 sm:-translate-x-1/2">
