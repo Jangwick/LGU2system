@@ -1413,7 +1413,28 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
             </div>
         </div>
         <!-- Body -->
-        <div id="original-file-preview-body" class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+        <div id="original-file-preview-body" class="flex-1 flex flex-col lg:flex-row overflow-hidden bg-gray-100 dark:bg-gray-950 min-h-0" style="-webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
+            <div id="original-file-preview-iframe" class="flex-1 min-h-0 overflow-auto bg-gray-100 dark:bg-gray-950"></div>
+            <!-- Desktop Compliance Sidebar -->
+            <div id="original-file-preview-sidebar" class="hidden lg:flex flex-col w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-y-auto">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2">
+                    <i class="bi bi-shield-check text-red-600 dark:text-red-400"></i>
+                    <span class="text-sm font-black text-gray-800 dark:text-gray-200 uppercase tracking-widest">Compliance</span>
+                </div>
+                <div id="original-file-compliance-badge" class="px-4 pt-3"></div>
+                <div id="original-file-compliance-content" class="p-4 flex-1 min-h-0 overflow-y-auto"></div>
+            </div>
+        </div>
+        <!-- Mobile Compliance Toggle + Panel -->
+        <div class="lg:hidden flex flex-col border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+            <button type="button" id="original-file-compliance-toggle" onclick="toggleOriginalFileCompliance()" class="w-full px-4 py-3 flex items-center justify-between text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-900/50">
+                <span><i class="bi bi-shield-check text-red-600 dark:text-red-400 mr-2"></i>Compliance</span>
+                <i class="bi bi-chevron-down transition-transform" id="original-file-compliance-chevron"></i>
+            </button>
+            <div id="original-file-compliance-mobile" class="hidden">
+                <div id="original-file-compliance-mobile-badge" class="px-4 pt-3"></div>
+                <div id="original-file-compliance-mobile-content" class="p-4"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -1422,11 +1443,18 @@ document.getElementById('edit-form-modal').addEventListener('submit', async (e) 
 function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatus) {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
+    const iframeContainer = document.getElementById('original-file-preview-iframe');
     const titleEl = document.getElementById('original-file-preview-title');
     const typeEl = document.getElementById('original-file-preview-type');
     const complianceEl = document.getElementById('original-file-preview-compliance');
     const newTabLink = document.getElementById('original-file-preview-newtab');
     const downloadLink = document.getElementById('original-file-preview-download');
+
+    // Reset compliance mobile toggle
+    const mobilePanel = document.getElementById('original-file-compliance-mobile');
+    const chevron = document.getElementById('original-file-compliance-chevron');
+    if (mobilePanel) mobilePanel.classList.add('hidden');
+    if (chevron) chevron.style.transform = 'rotate(0deg)';
 
     const previewUrl = App.apiUrl('documents', `preview.php?id=${docId}`);
     const downloadUrl = App.apiUrl('documents', `download.php?id=${docId}`);
@@ -1444,23 +1472,30 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     const isDocx = ft === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || ft === 'word' || ext === 'docx' || ext === 'doc';
     const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', '')) || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
 
-    if (isPdf || isDocx) {
-        body.innerHTML = `<iframe src="${previewUrl}" title="Document Preview" frameborder="0" scrolling="auto" allowfullscreen class="w-full h-full border-0 block" style="width: 100%; height: 100%; min-height: 400px;"></iframe>`;
-    } else if (isImage) {
-        body.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
-    } else {
-        const ext = (fileName || '').split('.').pop().toUpperCase();
-        body.innerHTML = `
-            <div class="flex flex-col items-center justify-center h-full p-12 text-center">
-                <div class="w-20 h-20 rounded-2xl bg-gray-200 dark:bg-gray-800 flex items-center justify-center mb-5">
-                    <i class="bi bi-file-earmark-x text-4xl text-gray-400 dark:text-gray-600"></i>
-                </div>
-                <h4 class="text-base font-bold text-gray-700 dark:text-gray-300 mb-2">Cannot preview ${ext} files in browser</h4>
-                <p class="text-sm text-gray-400 dark:text-gray-500 max-w-md mb-6">This file type cannot be displayed directly in the web browser. You can download it to view the full document.</p>
-                ${currentUserRole !== 'viewer' ? `<a href="${downloadUrl}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">
-                    <i class="bi bi-download text-base"></i> Download File
-                </a>` : '<p class="text-sm text-gray-400 dark:text-gray-500 max-w-md">Contact an administrator if you need a copy of this document.</p>'}
-            </div>`;
+    if (iframeContainer) {
+        if (isPdf || isDocx) {
+            iframeContainer.innerHTML = `<iframe src="${previewUrl}" title="Document Preview" frameborder="0" scrolling="auto" allowfullscreen class="w-full h-full border-0 block" style="min-height: 400px;"></iframe>`;
+        } else if (isImage) {
+            iframeContainer.innerHTML = `<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="${previewUrl}" alt="${escapeHtml(fileName)}" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>`;
+        } else {
+            const fileExt = (fileName || '').split('.').pop().toUpperCase();
+            iframeContainer.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full p-12 text-center">
+                    <div class="w-20 h-20 rounded-2xl bg-gray-200 dark:bg-gray-800 flex items-center justify-center mb-5">
+                        <i class="bi bi-file-earmark-x text-4xl text-gray-400 dark:text-gray-600"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-gray-700 dark:text-gray-300 mb-2">Cannot preview ${fileExt} files in browser</h4>
+                    <p class="text-sm text-gray-400 dark:text-gray-500 max-w-md mb-6">This file type cannot be displayed directly in the web browser. You can download it to view the full document.</p>
+                    ${currentUserRole !== 'viewer' ? `<a href="${downloadUrl}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">
+                        <i class="bi bi-download text-base"></i> Download File
+                    </a>` : '<p class="text-sm text-gray-400 dark:text-gray-500 max-w-md">Contact an administrator if you need a copy of this document.</p>'}
+                </div>`;
+        }
+    }
+
+    if (typeof loadComplianceForPreview === 'function') {
+        loadComplianceForPreview(docId, 'original-file-compliance-badge', 'original-file-compliance-content');
+        loadComplianceForPreview(docId, 'original-file-compliance-mobile-badge', 'original-file-compliance-mobile-content');
     }
 
     modal.classList.remove('hidden');
@@ -1474,9 +1509,18 @@ function openOriginalFilePreviewModal(docId, fileName, fileType, complianceStatu
     }, 10);
 }
 
+function toggleOriginalFileCompliance() {
+    const panel = document.getElementById('original-file-compliance-mobile');
+    const chevron = document.getElementById('original-file-compliance-chevron');
+    if (!panel) return;
+    panel.classList.toggle('hidden');
+    if (chevron) chevron.style.transform = panel.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
 function closeOriginalFilePreviewModal() {
     const modal = document.getElementById('original-file-preview-modal');
     const body = document.getElementById('original-file-preview-body');
+    const iframeContainer = document.getElementById('original-file-preview-iframe');
     const content = document.getElementById('original-file-preview-content');
     if (content) {
         content.classList.add('translate-y-full', 'sm:scale-95', 'opacity-0');
@@ -1484,7 +1528,7 @@ function closeOriginalFilePreviewModal() {
     }
     setTimeout(() => {
         modal.classList.add('hidden');
-        body.innerHTML = '';
+        if (iframeContainer) iframeContainer.innerHTML = '';
         document.body.style.overflow = '';
     }, 300);
 }

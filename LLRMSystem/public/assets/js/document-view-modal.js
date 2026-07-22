@@ -493,9 +493,9 @@ function getComplianceBadgeHTML(st) {
     return b[s] || '<span class="badge badge-warning">' + st + '</span>';
 }
 
-function loadComplianceForPreview(docId) {
-    const badgeEl = document.getElementById('preview-compliance-badge');
-    const contentEl = document.getElementById('preview-compliance-content');
+function loadComplianceForPreview(docId, badgeId, contentId) {
+    const badgeEl = document.getElementById(badgeId || 'preview-compliance-badge');
+    const contentEl = document.getElementById(contentId || 'preview-compliance-content');
     if (!badgeEl || !contentEl) return;
     contentEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading compliance analysis...</div>';
     fetch(App.apiUrl('documents', 'get-compliance-results.php'), {
