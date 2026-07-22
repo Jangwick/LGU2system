@@ -381,6 +381,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="min-w-0">
                     <h3 id="original-file-preview-title" class="header-title text-xs sm:text-sm font-black text-gray-800 dark:text-white uppercase tracking-widest truncate">Document Preview</h3>
                     <p id="original-file-preview-type" class="hidden sm:block text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider"></p>
+                    <div id="original-file-preview-compliance" class="mt-1"></div>
                 </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
@@ -602,76 +603,6 @@ document.addEventListener('DOMContentLoaded', function() {
         attributeFilter: ['class']
     });
 });
-
-// Mobile-friendly original-file preview (overrides document-view-modal.js default)
-function openOriginalFilePreviewModal(docId, fileName, fileType) {
-    const modal = document.getElementById('original-file-preview-modal');
-    const body = document.getElementById('original-file-preview-body');
-    const titleEl = document.getElementById('original-file-preview-title');
-    const typeEl = document.getElementById('original-file-preview-type');
-    const newTabLink = document.getElementById('original-file-preview-newtab');
-    const downloadLink = document.getElementById('original-file-preview-download');
-
-    const previewUrl = App.apiUrl('documents', 'preview.php?id=' + docId);
-    const downloadUrl = App.apiUrl('documents', 'download.php?id=' + docId);
-
-    titleEl.textContent = fileName || 'Document Preview';
-    typeEl.textContent = (fileType || '').replace('application/', '').replace('image/', 'img/');
-
-    newTabLink.href = previewUrl;
-    downloadLink.href = downloadUrl;
-
-    const ft = (fileType || '').toLowerCase();
-    const ext = ((fileName || '').split('.').pop() || '').toLowerCase();
-    const isPdf = ft === 'application/pdf' || ft === 'pdf' || ext === 'pdf';
-    const isDocx = ft === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || ft === 'word' || ext === 'docx' || ext === 'doc';
-    const isImage = ft.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ft.replace('image/', '')) || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
-
-    if (isPdf || isDocx) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'preview-iframe-wrapper relative w-full h-full';
-        const loader = document.createElement('div');
-        loader.className = 'iframe-loader';
-        loader.innerHTML = '<div class="inline-block w-8 h-8 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin"></div>';
-        const iframe = document.createElement('iframe');
-        iframe.src = previewUrl;
-        iframe.title = 'Document Preview';
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('scrolling', 'auto');
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.className = 'preview-iframe w-full h-full border-0 block';
-        iframe.onload = function() { loader.remove(); };
-        wrapper.appendChild(loader);
-        wrapper.appendChild(iframe);
-        body.innerHTML = '';
-        body.appendChild(wrapper);
-    } else if (isImage) {
-        body.innerHTML = '<div class="flex items-center justify-center h-full p-4 overflow-auto"><img src="' + previewUrl + '" alt="' + escapeHtml(fileName) + '" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"></div>';
-    } else {
-        const ext = (fileName || '').split('.').pop().toUpperCase();
-        body.innerHTML =
-            '<div class="flex flex-col items-center justify-center h-full p-12 text-center">' +
-                '<div class="w-20 h-20 rounded-2xl bg-gray-200 dark:bg-gray-800 flex items-center justify-center mb-5">' +
-                    '<i class="bi bi-file-earmark-x text-4xl text-gray-400 dark:text-gray-600"></i>' +
-                '</div>' +
-                '<h4 class="text-base font-bold text-gray-700 dark:text-gray-300 mb-2">Cannot preview ' + ext + ' files in browser</h4>' +
-                '<p class="text-sm text-gray-400 dark:text-gray-500 max-w-md mb-6">This file type cannot be displayed directly in the web browser. You can download it to view the full document.</p>' +
-                '<a href="' + downloadUrl + '" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-95">' +
-                    '<i class="bi bi-download text-base"></i> Download File' +
-                '</a>' +
-            '</div>';
-    }
-
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    const content = document.getElementById('original-file-preview-content');
-    setTimeout(function() {
-        if (content) {
-            content.classList.remove('translate-y-full', 'sm:scale-95', 'opacity-0');
-            content.classList.add('translate-y-0', 'sm:scale-100', 'opacity-100');
-        }
-    }, 10);
-}
 
 // Swipe-to-close gesture for mobile modal drag handles
 function setupSwipeToClose() {
