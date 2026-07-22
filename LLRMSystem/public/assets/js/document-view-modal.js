@@ -350,11 +350,11 @@ function viewDocument(id) {
                                                             <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Document Preview</h4>
                                                         </div>
                                                         <div class="flex items-center gap-3">
-                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" data-compliance="${escapeHtml((doc.compliance_status || 'pending'))}" class="btn-original-preview text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-w-[3.5rem] sm:min-w-0" title="Preview">
-                                                                <i class="bi bi-eye text-base sm:text-xs"></i><span>Preview</span>
+                                                            <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" data-compliance="${escapeHtml((doc.compliance_status || 'pending'))}" class="btn-original-preview text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-w-[3rem] sm:min-w-0" title="Preview">
+                                                                <i class="bi bi-eye text-sm sm:text-xs"></i><span>Preview</span>
                                                             </button>
-                                                            <button type="button" onclick="toggleDocPreview(this)" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-w-[3.5rem] sm:min-w-0" title="Expand">
-                                                                <i class="bi bi-chevron-down text-base sm:text-xs"></i><span>Expand</span>
+                                                            <button type="button" onclick="toggleDocPreview(this)" class="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-w-[3rem] sm:min-w-0" title="Expand">
+                                                                <i class="bi bi-chevron-down text-sm sm:text-xs"></i><span>Expand</span>
                                                             </button>
                                                         </div>
                                                     </div>
