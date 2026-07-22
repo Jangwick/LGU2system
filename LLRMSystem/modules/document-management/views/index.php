@@ -315,7 +315,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <!-- Documents Table -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up border border-transparent dark:border-gray-700">
             <!-- Table Header Actions -->
-            <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
+            <div class="px-3 py-2.5 md:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
                 <div class="flex flex-wrap items-center justify-between gap-y-4">
                     <!-- Left: Select All -->
                     <div class="flex items-center">
@@ -357,28 +357,28 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
-                            <th class="px-4 md:px-6 py-3 text-left w-12">
+                            <th class="px-3 py-2.5 text-left w-12">
                                 <!-- Redundant checkbox removed -->
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Type
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Reference
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Date
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Size
                             </th>
-                            <th class="px-4 md:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-3 py-2.5 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -406,27 +406,27 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php foreach ($data['documents'] as $doc): ?>
                                 <!-- Table Row -->
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors" data-document-id="<?php echo $doc['id']; ?>">
-                                    <td class="px-4 md:px-6 py-4 w-12 text-center">
+                                    <td class="px-3 py-3 w-12 text-center">
                                         <input type="checkbox" class="document-checkbox w-4 h-4 text-red-600 dark:text-red-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
                                     </td>
-                                    <td class="px-4 md:px-6 py-4">
+                                    <td class="px-3 py-3">
                                         <div class="flex items-center">
-                                            <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-2 mr-3 flex-shrink-0">
-                                                <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-xl"></i>
+                                            <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-1.5 mr-2 flex-shrink-0">
+                                                <i class="<?php echo getFileIcon($doc['file_type'], $doc['file_name']); ?> text-lg"></i>
                                             </div>
                                             <div class="min-w-0 flex-1">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
+                                                <p class="text-xs font-medium text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($doc['title']); ?></p>
+                                                <p class="text-[10px] text-gray-500 dark:text-gray-400 truncate"><?php echo htmlspecialchars($doc['file_name']); ?></p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                                        <span class="badge badge-primary"><?php echo e(ucfirst($doc['document_type'])); ?></span>
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <span class="badge badge-primary !text-[10px]"><?php echo e(ucfirst($doc['document_type'])); ?></span>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                    <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-600 dark:text-gray-400">
                                         <?php echo htmlspecialchars($doc['reference_number']); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-3 whitespace-nowrap">
                                         <div class="flex items-center gap-1">
                                             <?php echo getStatusBadge($doc['status']); ?>
                                             <?php echo getOcrBadge($doc['ocr_status'] ?? ''); ?>
@@ -438,22 +438,22 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </p>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                    <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-600 dark:text-gray-400">
                                         <?php echo date('M d, Y', strtotime($doc['document_date'])); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                    <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-600 dark:text-gray-400">
                                         <?php echo formatFileSize($doc['file_size']); ?>
                                     </td>
-                                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex justify-end gap-2">
-                                            <button type="button" onclick="viewDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/60 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/80 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
+                                    <td class="px-3 py-3 whitespace-nowrap text-right text-xs font-medium">
+                                        <div class="flex justify-end gap-1">
+                                            <button type="button" onclick="viewDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/60 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                                 <i class="bi bi-eye mr-1"></i> View
                                             </button>
                                             <?php 
                                             $userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
                                             if ($userRole !== 'viewer'): 
                                             ?>
-                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="no-ripple inline-flex items-center justify-center bg-green-50 text-green-600 dark:bg-green-900/60 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/80 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
+                                            <a href="<?php echo DOCUMENTS_URL; ?>/api/download.php?id=<?php echo $doc['id']; ?>" class="no-ripple inline-flex items-center justify-center bg-green-50 text-green-600 dark:bg-green-900/60 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                                 <i class="bi bi-download mr-1"></i> Download
                                             </a>
                                             <?php endif; ?>
@@ -465,12 +465,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/60 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/80 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
+                                            <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/60 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                                 <i class="bi bi-pencil mr-1"></i> Edit
                                             </button>
                                             <?php endif; ?>
                                             <?php if ($canDelete): ?>
-                                            <button type="button" onclick="deleteDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/60 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/80 px-3 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
+                                            <button type="button" onclick="deleteDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/60 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                                 <i class="bi bi-trash mr-1"></i> Delete
                                             </button>
                                             <?php endif; ?>
@@ -578,7 +578,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     $queryString = http_build_query($otherParams);
                     $querySeparator = $queryString ? '&' : '';
                 ?>
-                <div class="px-4 md:px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="px-3 py-3 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1">
                         Showing <span class="font-medium text-gray-900 dark:text-white"><?php echo (($data['pagination']['current_page'] - 1) * $data['pagination']['per_page']) + 1; ?></span> 
                         to <span class="font-medium text-gray-900 dark:text-white"><?php echo min($data['pagination']['current_page'] * $data['pagination']['per_page'], $data['pagination']['total']); ?></span> 
