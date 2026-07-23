@@ -15,6 +15,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+require_once __DIR__ . '/../../notifications/services/IntegrationAuth.php';
+
+$authService = new IntegrationAuth();
+$authResult = $authService->validateApiKey();
+
+if (!$authResult) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'error' => 'API key required. Provide X-API-Key header or Authorization: Bearer token.']);
+    exit;
+}
+
+if (!$authService->hasPermission($authResult, 'document_receive') && !$authService->hasPermission($authResult, 'send_file') && !$authService->hasPermission($authResult, 'all')) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'API key does not have document_receive or send_file permission.']);
+    exit;
+}
+
 // Handle both JSON and FormData (multipart)
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 

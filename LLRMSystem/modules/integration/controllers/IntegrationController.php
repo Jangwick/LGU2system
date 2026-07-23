@@ -43,6 +43,22 @@ class IntegrationController {
             return ['success' => false, 'error' => 'Missing required fields (module_type/type, title)'];
         }
 
+        // Idempotency: avoid duplicate records for the same external source
+        if (!empty($data['external_id']) && !empty($data['source_system'])) {
+            $checkStmt = $this->db->prepare("SELECT id, status FROM integrated_records WHERE external_id = :ext_id AND source_system = :source");
+            $checkStmt->execute([':ext_id' => $data['external_id'], ':source' => $data['source_system']]);
+            $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+            if ($existing) {
+                return [
+                    'success' => true,
+                    'id' => $existing['id'],
+                    'status' => $existing['status'],
+                    'message' => 'Record already exists',
+                    'already_exists' => true
+                ];
+            }
+        }
+
         // Include file info in payload if uploaded
         $payload = $data['payload'] ?? [];
         if ($fileData) {
