@@ -128,19 +128,19 @@ foreach ($records as $item) {
         continue;
     }
 
-    // Post to LRMS receive.php as pending
+    // Post to LRMS receive_document.php for direct import as pending
     $post = [
-        'module_type'   => $config['module_type'],
+        'title'         => $title,
+        'document_type' => $config['document_type'] ?? rtrim($config['module_type'], 's'),
         'source_system' => $config['source_system'],
         'external_id'   => $externalId,
-        'title'         => $title,
-        'summary'       => $item['summary'] ?? $item['description'] ?? '',
         'document_date' => $item['document_date'] ?? $item['date'] ?? date('Y-m-d'),
+        'description'   => $item['summary'] ?? $item['description'] ?? '',
         'tags'          => is_array($item['tags'] ?? null) ? implode(',', $item['tags']) : ($item['tags'] ?? ''),
     ];
 
     $mimeType = mime_content_type($tmpPath) ?: 'application/octet-stream';
-    $post['document_file'] = new CURLFile($tmpPath, $mimeType, basename($fileUrl));
+    $post['file'] = new CURLFile($tmpPath, $mimeType, basename($fileUrl));
 
     $ph = curl_init($config['lrms_receive_url']);
     curl_setopt_array($ph, [
@@ -161,16 +161,16 @@ foreach ($records as $item) {
     @unlink($tmpPath);
 
     if ($receiveError || $receiveHttp >= 400) {
-        echo "Failed to stage {$externalId}: HTTP {$receiveHttp} - {$receiveResponse} - {$receiveError}\n";
+        echo "Failed to import {$externalId}: HTTP {$receiveHttp} - {$receiveResponse} - {$receiveError}\n";
         $skipped++;
         continue;
     }
 
     $result = json_decode($receiveResponse, true);
     if (!empty($result['already_exists'])) {
-        echo "Already staged: {$externalId} (id {$result['id']})\n";
+        echo "Already imported: {$externalId} (doc id {$result['document_id']})\n";
     } else {
-        echo "Staged: {$externalId} (id {$result['id']})\n";
+        echo "Imported: {$externalId} (doc id {$result['document_id']}, ref {$result['reference_number']})\n";
     }
     $processed++;
 }
