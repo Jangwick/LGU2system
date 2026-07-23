@@ -11,6 +11,12 @@ Options -Indexes
     RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
     RewriteCond %{HTTPS} off
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    # Pass API auth headers to PHP (LiteSpeed/Apache may strip them otherwise)
+    RewriteCond %{HTTP:Authorization} ^(.*)$
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+    RewriteCond %{HTTP:X-API-Key} ^(.*)$
+    RewriteRule .* - [e=HTTP_X_API_KEY:%1]
 </IfModule>
 
 # -----------------------------------------------------------------------
