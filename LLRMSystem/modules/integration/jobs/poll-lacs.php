@@ -130,6 +130,7 @@ foreach ($records as $item) {
 
     // Post to LRMS receive_document.php for direct import as pending
     $post = [
+        'api_key'       => $lrmsApiKey,
         'title'         => $title,
         'document_type' => $config['document_type'] ?? rtrim($config['module_type'], 's'),
         'source_system' => $config['source_system'],

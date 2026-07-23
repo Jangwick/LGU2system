@@ -34,12 +34,19 @@ class IntegrationAuth {
             }
         }
 
-        // Fallback to $_SERVER (underscore, uppercase with HTTP_ prefix)
+        // Fallback to $_SERVER / getenv (underscore, uppercase with HTTP_ prefix)
         $serverKey = 'HTTP_' . strtoupper(str_replace('-', '_', $headerName));
-        if ($headerName === 'Authorization') {
-            return $_SERVER[$serverKey] ?? ($_SERVER['REDIRECT_' . $serverKey] ?? '');
+        $redirectKey = 'REDIRECT_' . $serverKey;
+
+        $value = $_SERVER[$serverKey] ?? '';
+        if (!$value) {
+            $value = $_SERVER[$redirectKey] ?? '';
         }
-        return $_SERVER[$serverKey] ?? '';
+        if (!$value) {
+            $value = getenv($serverKey) ?: (getenv($redirectKey) ?: '');
+        }
+
+        return $value;
     }
 
     public function validateApiKey($apiKey = null) {
@@ -54,6 +61,10 @@ class IntegrationAuth {
                 if (stripos($authHeader, 'Bearer ') === 0) {
                     $apiKey = trim(substr($authHeader, 7));
                 }
+            }
+            // Fallback: some hosts strip custom headers, allow key in query/body
+            if (empty($apiKey)) {
+                $apiKey = $_GET['api_key'] ?? ($_POST['api_key'] ?? '');
             }
             if (empty($apiKey)) {
                 return null;
