@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 require_once __DIR__ . '/../../notifications/models/Notification.php';
+require_once __DIR__ . '/../../document-management/services/ComplianceService.php';
+require_once __DIR__ . '/../../document-management/models/DocumentVersion.php';
 
 class IntegrationController {
     private $db;
@@ -226,6 +228,22 @@ class IntegrationController {
         $this->db->beginTransaction();
 
         try {
+            // Detect existing ORTS document for revision receiving
+            $sourceSystem = $data['source_system'] ?? '';
+            $externalId = $data['external_id'] ?? null;
+            $existingDoc = null;
+            if ($sourceSystem === 'orts' && !empty($externalId)) {
+                $existingStmt = $this->db->prepare("
+                    SELECT ld.id, ld.file_path, ld.file_name, ld.file_size, ld.file_type, ld.is_encrypted, ld.reference_number
+                    FROM legislative_documents ld
+                    INNER JOIN integrated_records ir ON ir.id = ld.source_id
+                    WHERE ir.source_system = :source AND ir.external_id = :ext_id
+                    ORDER BY ld.id DESC LIMIT 1
+                ");
+                $existingStmt->execute([':source' => $sourceSystem, ':ext_id' => $externalId]);
+                $existingDoc = $existingStmt->fetch(PDO::FETCH_ASSOC);
+            }
+
             // 1. Save file to storage
             require_once __DIR__ . '/../../document-management/services/FileStorageService.php';
             $storage = new FileStorageService();
@@ -302,17 +320,22 @@ class IntegrationController {
             }
             $encryptedFileKey = $keyEncryptionResult['encrypted_key'];
 
-            // 4. Generate reference number
+            // 4. Generate reference number and prepare integrated_records
             $docType = $data['document_type'];
-            $refPrefix = strtoupper(substr($docType, 0, 3));
-            $refNum = $refPrefix . '-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+            $refNum = $existingDoc['reference_number'] ?? null;
 
-            // Ensure uniqueness
-            $checkStmt = $this->db->prepare("SELECT id FROM legislative_documents WHERE reference_number = ?");
-            $checkStmt->execute([$refNum]);
-            while ($checkStmt->fetch()) {
+            // Generate reference only for new documents
+            if (empty($refNum)) {
+                $refPrefix = strtoupper(substr($docType, 0, 3));
                 $refNum = $refPrefix . '-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+
+                // Ensure uniqueness
+                $checkStmt = $this->db->prepare("SELECT id FROM legislative_documents WHERE reference_number = ?");
                 $checkStmt->execute([$refNum]);
+                while ($checkStmt->fetch()) {
+                    $refNum = $refPrefix . '-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+                    $checkStmt->execute([$refNum]);
+                }
             }
 
             // 5. Create integrated_records entry
@@ -323,9 +346,11 @@ class IntegrationController {
                 'api_key_id' => $data['api_key_id'] ?? null,
             ];
 
+            $integrationStatus = $existingDoc ? 'synced-revision' : 'synced';
+
             $stmt = $this->db->prepare("
                 INSERT INTO integrated_records (module_type, external_id, title, summary, data_payload, source_system, status)
-                VALUES (:type, :ext_id, :title, :summary, :payload, :source, 'synced')
+                VALUES (:type, :ext_id, :title, :summary, :payload, :source, :status)
             ");
 
             $stmt->execute([
@@ -334,60 +359,130 @@ class IntegrationController {
                 ':title' => $data['title'],
                 ':summary' => $data['description'],
                 ':payload' => json_encode($payload),
-                ':source' => $data['source_system'] ?? 'External ERP'
+                ':source' => $data['source_system'] ?? 'External ERP',
+                ':status' => $integrationStatus
             ]);
 
             $integrationId = $this->db->lastInsertId();
 
-            // 6. Create legislative_documents entry
+            // 6. Create or update legislative_documents entry
             $timestamp = date('Y-m-d H:i:s');
-            $stmt = $this->db->prepare("
-                INSERT INTO legislative_documents (
-                    reference_number, title, document_type, document_date,
-                    status, description, tags, source_module, source_id,
-                    uploaded_by, created_at, file_path, file_name, file_size, file_type,
-                    is_encrypted, encryption_key,
-                    extracted_text, ocr_status, ocr_processed_at,
-                    key_points, key_points_generated_at
-                ) VALUES (
-                    :ref, :title, :type, :doc_date,
-                    'pending', :desc, :tags, 'integration', :source_id,
-                    :user_id, NOW(), :file_path, :file_name, :file_size, :file_type,
-                    1, :enc_key,
-                    :extracted_text, :ocr_status, :ocr_processed_at,
-                    :key_points, :key_points_generated_at
-                )
-            ");
 
-            $stmt->execute([
-                ':ref' => $refNum,
-                ':title' => $data['title'],
-                ':type' => $docType,
-                ':doc_date' => $data['document_date'],
-                ':desc' => $data['description'],
-                ':tags' => $data['tags'],
-                ':source_id' => $integrationId,
-                ':user_id' => $_SESSION['user_id'] ?? 1,
-                ':file_path' => $storedFilePath,
-                ':file_name' => $fileData['name'],
-                ':file_size' => $fileData['size'],
-                ':file_type' => $fileData['type'],
-                ':enc_key' => $encryptedFileKey,
-                ':extracted_text' => $extractedText,
-                ':ocr_status' => $ocrStatus,
-                ':ocr_processed_at' => $ocrStatus === 'completed' ? $timestamp : null,
-                ':key_points' => $keyPoints,
-                ':key_points_generated_at' => $keyPoints ? $timestamp : null
-            ]);
+            if ($existingDoc) {
+                // Archive the current file as a version
+                $versionModel = new DocumentVersion($this->db);
+                $nextVersion = $versionModel->getLatestVersionNumber($existingDoc['id']) + 1;
+                $versionModel->create([
+                    'document_id' => $existingDoc['id'],
+                    'version_number' => $nextVersion,
+                    'file_path' => $existingDoc['file_path'],
+                    'file_name' => $existingDoc['file_name'],
+                    'file_size' => $existingDoc['file_size'],
+                    'change_description' => 'ORTS revision received',
+                    'created_by' => 1
+                ]);
 
-            $documentId = $this->db->lastInsertId();
+                // Update existing document with new file and content
+                $updateStmt = $this->db->prepare("
+                    UPDATE legislative_documents
+                    SET title = :title,
+                        document_type = :type,
+                        document_date = :doc_date,
+                        status = 'pending',
+                        description = :desc,
+                        tags = :tags,
+                        file_path = :file_path,
+                        file_name = :file_name,
+                        file_size = :file_size,
+                        file_type = :file_type,
+                        is_encrypted = 1,
+                        encryption_key = :enc_key,
+                        extracted_text = :extracted_text,
+                        ocr_status = :ocr_status,
+                        ocr_processed_at = :ocr_processed_at,
+                        key_points = :key_points,
+                        key_points_generated_at = :key_points_generated_at
+                    WHERE id = :id
+                ");
 
-            // 7. Link integrated_records to legislative_documents via external_id
-            $this->db->prepare("UPDATE integrated_records SET external_id = :doc_id WHERE id = :int_id")
-                ->execute([':doc_id' => $documentId, ':int_id' => $integrationId]);
+                $updateStmt->execute([
+                    ':title' => $data['title'],
+                    ':type' => $docType,
+                    ':doc_date' => $data['document_date'],
+                    ':desc' => $data['description'],
+                    ':tags' => $data['tags'],
+                    ':file_path' => $storedFilePath,
+                    ':file_name' => $fileData['name'],
+                    ':file_size' => $fileData['size'],
+                    ':file_type' => $fileData['type'],
+                    ':enc_key' => $encryptedFileKey,
+                    ':extracted_text' => $extractedText,
+                    ':ocr_status' => $ocrStatus,
+                    ':ocr_processed_at' => $ocrStatus === 'completed' ? $timestamp : null,
+                    ':key_points' => $keyPoints,
+                    ':key_points_generated_at' => $keyPoints ? $timestamp : null,
+                    ':id' => $existingDoc['id']
+                ]);
+
+                $documentId = $existingDoc['id'];
+            } else {
+                $stmt = $this->db->prepare("
+                    INSERT INTO legislative_documents (
+                        reference_number, title, document_type, document_date,
+                        status, description, tags, source_module, source_id,
+                        uploaded_by, created_at, file_path, file_name, file_size, file_type,
+                        is_encrypted, encryption_key,
+                        extracted_text, ocr_status, ocr_processed_at,
+                        key_points, key_points_generated_at
+                    ) VALUES (
+                        :ref, :title, :type, :doc_date,
+                        'pending', :desc, :tags, 'integration', :source_id,
+                        :user_id, NOW(), :file_path, :file_name, :file_size, :file_type,
+                        1, :enc_key,
+                        :extracted_text, :ocr_status, :ocr_processed_at,
+                        :key_points, :key_points_generated_at
+                    )
+                ");
+
+                $stmt->execute([
+                    ':ref' => $refNum,
+                    ':title' => $data['title'],
+                    ':type' => $docType,
+                    ':doc_date' => $data['document_date'],
+                    ':desc' => $data['description'],
+                    ':tags' => $data['tags'],
+                    ':source_id' => $integrationId,
+                    ':user_id' => $_SESSION['user_id'] ?? 1,
+                    ':file_path' => $storedFilePath,
+                    ':file_name' => $fileData['name'],
+                    ':file_size' => $fileData['size'],
+                    ':file_type' => $fileData['type'],
+                    ':enc_key' => $encryptedFileKey,
+                    ':extracted_text' => $extractedText,
+                    ':ocr_status' => $ocrStatus,
+                    ':ocr_processed_at' => $ocrStatus === 'completed' ? $timestamp : null,
+                    ':key_points' => $keyPoints,
+                    ':key_points_generated_at' => $keyPoints ? $timestamp : null
+                ]);
+
+                $documentId = $this->db->lastInsertId();
+            }
 
             // Commit transaction
             $this->db->commit();
+
+            // Run compliance check for ORTS documents
+            $complianceStatus = null;
+            if ($sourceSystem === 'orts') {
+                try {
+                    $complianceService = new ComplianceService($this->db);
+                    $complianceResult = $complianceService->checkDocument($documentId, 1);
+                    $complianceStatus = $complianceResult['compliance_status'] ?? null;
+                } catch (Exception $e) {
+                    error_log("ORTS compliance check failed for document {$documentId}: " . $e->getMessage());
+                    $complianceStatus = 'error';
+                }
+            }
 
             // Log activity
             $this->logger->logActivity('INTEGRATION_DOCUMENT_RECEIVED', 'legislative_documents', $documentId,
@@ -409,6 +504,8 @@ class IntegrationController {
                 'document_id' => $documentId,
                 'reference_number' => $refNum,
                 'ocr_status' => $ocrStatus,
+                'revision' => !empty($existingDoc),
+                'compliance_status' => $complianceStatus,
                 'message' => 'Document received and saved successfully.'
             ];
 
