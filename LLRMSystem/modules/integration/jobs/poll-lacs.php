@@ -9,6 +9,7 @@ if (php_sapi_name() !== 'cli') {
 }
 
 require_once __DIR__ . '/../../core/config/config.php';
+require_once __DIR__ . '/../../core/config/database.php';
 
 $config = require __DIR__ . '/../config/lacs.php';
 
