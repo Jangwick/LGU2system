@@ -16,6 +16,26 @@ class IntegrationAuth {
     /**
      * Validate API key and return module info
      */
+    /**
+     * Retrieve the Authorization header from multiple possible sources
+     */
+    private function getAuthorizationHeader() {
+        $headers = [];
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+        } elseif (function_exists('apache_request_headers')) {
+            $headers = apache_request_headers();
+        }
+
+        foreach ($headers as $name => $value) {
+            if (strtolower($name) === 'authorization') {
+                return $value;
+            }
+        }
+
+        return $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
+    }
+
     public function validateApiKey($apiKey = null) {
         try {
             // Extract from X-API-Key header
@@ -24,7 +44,7 @@ class IntegrationAuth {
             }
             // Extract from Authorization: Bearer header
             if (empty($apiKey)) {
-                $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
+                $authHeader = $this->getAuthorizationHeader();
                 if (stripos($authHeader, 'Bearer ') === 0) {
                     $apiKey = trim(substr($authHeader, 7));
                 }
