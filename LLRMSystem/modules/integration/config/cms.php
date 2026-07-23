@@ -11,6 +11,6 @@ return [
     'bearer_token'     => 'cms_live_9c1e5a7b3f8042d6b8e2a4c7f1d90638',
     'list_endpoint'    => 'documents.php', // adjust when actual list endpoint is known
     'query_param'      => 'since',
-    'lrms_receive_url' => 'https://llrm.spvalenzuela.com/LLRMSystem/modules/integration/api/receive_document.php',
+    'lrms_receive_url' => 'https://llrm.spvalenzuela.com/modules/integration/api/receive_document.php',
     'lrms_module_name' => 'cms',
 ];
