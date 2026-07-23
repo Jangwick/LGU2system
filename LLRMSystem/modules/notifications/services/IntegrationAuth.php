@@ -17,9 +17,10 @@ class IntegrationAuth {
      * Validate API key and return module info
      */
     /**
-     * Retrieve the Authorization header from multiple possible sources
+     * Retrieve a request header from multiple possible sources
      */
-    private function getAuthorizationHeader() {
+    private function getHeader($headerName) {
+        $headerKey = strtolower($headerName);
         $headers = [];
         if (function_exists('getallheaders')) {
             $headers = getallheaders();
@@ -28,23 +29,28 @@ class IntegrationAuth {
         }
 
         foreach ($headers as $name => $value) {
-            if (strtolower($name) === 'authorization') {
+            if (strtolower($name) === $headerKey) {
                 return $value;
             }
         }
 
-        return $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
+        // Fallback to $_SERVER (underscore, uppercase with HTTP_ prefix)
+        $serverKey = 'HTTP_' . strtoupper(str_replace('-', '_', $headerName));
+        if ($headerName === 'Authorization') {
+            return $_SERVER[$serverKey] ?? ($_SERVER['REDIRECT_' . $serverKey] ?? '');
+        }
+        return $_SERVER[$serverKey] ?? '';
     }
 
     public function validateApiKey($apiKey = null) {
         try {
             // Extract from X-API-Key header
             if (empty($apiKey)) {
-                $apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
+                $apiKey = $this->getHeader('X-API-Key') ?: ($_SERVER['HTTP_X_API_KEY'] ?? '');
             }
             // Extract from Authorization: Bearer header
             if (empty($apiKey)) {
-                $authHeader = $this->getAuthorizationHeader();
+                $authHeader = $this->getHeader('Authorization');
                 if (stripos($authHeader, 'Bearer ') === 0) {
                     $apiKey = trim(substr($authHeader, 7));
                 }
