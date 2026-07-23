@@ -35,30 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Validate API key
-$apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-if (empty($apiKey)) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'API key required. Provide X-API-Key header.']);
-    exit;
-}
-
 $authService = new IntegrationAuth($GLOBALS['db'] ?? getDatabase());
-$authResult = $authService->validateApiKey($apiKey);
+$authResult = $authService->validateApiKey();
 
 if (!$authResult) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Invalid or inactive API key.']);
+    echo json_encode(['success' => false, 'error' => 'API key required. Provide X-API-Key header or Authorization: Bearer token.']);
     exit;
 }
 
-// Check permissions for document receive
-$permissions = $authResult['permissions'] ?? [];
-if (is_array($permissions) && !empty($permissions)) {
-    if (!in_array('document_receive', $permissions) && !in_array('all', $permissions)) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'API key does not have document_receive permission.']);
-        exit;
-    }
+// Check permissions for document receive (accept dedicated document_receive or existing send_file permission)
+if (!$authService->hasPermission($authResult, 'document_receive') && !$authService->hasPermission($authResult, 'send_file') && !$authService->hasPermission($authResult, 'all')) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'API key does not have document_receive or send_file permission.']);
+    exit;
 }
 
 // Validate required fields

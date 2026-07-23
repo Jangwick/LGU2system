@@ -16,8 +16,23 @@ class IntegrationAuth {
     /**
      * Validate API key and return module info
      */
-    public function validateApiKey($apiKey) {
+    public function validateApiKey($apiKey = null) {
         try {
+            // Extract from X-API-Key header
+            if (empty($apiKey)) {
+                $apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
+            }
+            // Extract from Authorization: Bearer header
+            if (empty($apiKey)) {
+                $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
+                if (stripos($authHeader, 'Bearer ') === 0) {
+                    $apiKey = trim(substr($authHeader, 7));
+                }
+            }
+            if (empty($apiKey)) {
+                return null;
+            }
+
             $sql = "SELECT * FROM integration_api_keys 
                     WHERE api_key = :api_key AND is_active = 1";
             
