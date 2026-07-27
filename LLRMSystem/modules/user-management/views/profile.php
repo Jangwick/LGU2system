@@ -51,7 +51,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <!-- Avatar -->
                     <div class="relative animate-bounce-in">
-                        <?php if (!empty($user['profile_picture'])): ?>
+                        <?php if (!empty($user['profile_picture']) && file_exists(BASE_PATH . '/storage/profiles/' . $user['profile_picture'])): ?>
                             <img id="profile-avatar" src="<?php echo BASE_URL; ?>/storage/profiles/<?php echo htmlspecialchars($user['profile_picture']); ?>" 
                                  alt="Profile Picture" 
                                  class="w-32 h-32 bg-white rounded-full object-cover shadow-lg border-4 border-white">

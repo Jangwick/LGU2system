@@ -41,7 +41,7 @@ if ($file['size'] > $maxSize) {
 }
 
 // Create upload directory if it doesn't exist
-$uploadDir = __DIR__ . '/../../../storage/profiles/';
+$uploadDir = BASE_PATH . '/storage/profiles/';
 if (!file_exists($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
@@ -68,8 +68,9 @@ try {
     $oldPicture = $stmt->fetchColumn();
     
     // Delete old profile picture if exists
-    if ($oldPicture && file_exists(__DIR__ . '/../../../storage/profiles/' . $oldPicture)) {
-        unlink(__DIR__ . '/../../../storage/profiles/' . $oldPicture);
+    $oldPicturePath = BASE_PATH . '/storage/profiles/' . $oldPicture;
+    if ($oldPicture && file_exists($oldPicturePath)) {
+        unlink($oldPicturePath);
     }
     
     // Update user record

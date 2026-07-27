@@ -126,7 +126,7 @@ if (isset($_SESSION['user_id'])) {
                 <!-- User Profile Dropdown -->
                 <div class="relative">
                     <button id="profile-btn" class="no-ripple inline-flex items-center space-x-1 md:space-x-3 p-1 md:p-2 hover:bg-gray-100 rounded-lg transition-colors shrink-0 min-w-[120px] h-12 transform-none hover:transform-none active:transform-none">
-                        <?php if (!empty($navProfilePicture)): ?>
+                        <?php if (!empty($navProfilePicture) && file_exists(BASE_PATH . '/storage/profiles/' . $navProfilePicture)): ?>
                             <img src="<?php echo BASE_URL; ?>/storage/profiles/<?php echo htmlspecialchars($navProfilePicture); ?>" 
                                  alt="Profile" 
                                  class="w-6 h-6 md:w-9 md:h-9 rounded-full object-cover border border-red-600">
