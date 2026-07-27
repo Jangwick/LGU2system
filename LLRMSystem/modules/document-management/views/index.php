@@ -85,7 +85,7 @@ function getComplianceBadge($complianceStatus) {
     $badges = [
         'pending' => '<span class="badge badge-warning text-[10px]" title="Compliance Pending"><i class="bi bi-hourglass-split mr-0.5"></i>Compliance</span>',
         'compliant' => '<span class="badge badge-success text-[10px]" title="Compliant"><i class="bi bi-shield-check mr-0.5"></i>Compliance</span>',
-        'non_compliant' => '<span class="badge badge-danger text-[10px]" title="Non-Compliant"><i class="bi bi-shield-exclamation mr-0.5"></i>Compliance</span>',
+        'non_compliant' => '<span class="badge badge-danger text-[10px]" title="Non-Compliant"><i class="bi bi-shield-exclamation mr-0.5"></i>Non-Compliant</span>',
     ];
     return $badges[$status] ?? '<span class="badge badge-info text-[10px]"><i class="bi bi-shield mr-0.5"></i>' . ucfirst($status) . '</span>';
 }
@@ -316,15 +316,48 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up border border-transparent dark:border-gray-700">
             <!-- Table Header Actions -->
             <div class="px-3 py-3.5 md:py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
-                <div class="flex flex-wrap items-center justify-between gap-y-4">
-                    <!-- Bottom: Document Count (Full width on mobile) -->
-                    <div class="w-full flex items-center justify-center pt-2 sm:pt-0 sm:w-auto sm:absolute sm:left-1/2 sm:-translate-x-1/2">
+                <div class="flex flex-col md:flex-row items-center gap-4">
+                    <!-- Source System Tabs -->
+                    <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1">
+                        <?php
+                        $sourceSystems = $data['source_systems'] ?? [];
+                        $sourceLabels  = $data['source_labels'] ?? [];
+                        $sourceCounts  = $data['source_counts'] ?? [];
+                        $currentSource = $_GET['source_system'] ?? '';
+                        $baseParams = $_GET;
+                        unset($baseParams['source_system'], $baseParams['page']);
+                        $tabs = ['all' => 'All'] + $sourceLabels;
+                        foreach ($tabs as $sourceKey => $label):
+                            $sourceValue = $sourceKey === 'all' ? '' : $sourceKey;
+                            $linkParams = $baseParams;
+                            if ($sourceValue !== '') $linkParams['source_system'] = $sourceValue;
+                            $url = '?' . http_build_query($linkParams);
+                            $isActive = (string)$currentSource === (string)$sourceValue;
+                            $count = $sourceKey === 'all'
+                                ? ($sourceCounts['all'] ?? ($data['pagination']['total'] ?? count($data['documents'] ?? [])))
+                                : ($sourceCounts[$sourceKey] ?? 0);
+                            $activeClass = $isActive
+                                ? 'bg-red-600 text-white border-red-600'
+                                : 'bg-gray-100 dark:bg-gray-900/80 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700';
+                            $badgeClass = $isActive
+                                ? 'bg-white text-red-600'
+                                : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+                        ?>
+                        <a href="<?php echo $url; ?>" data-source="<?php echo htmlspecialchars($sourceValue); ?>" class="source-tab inline-flex items-center px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors whitespace-nowrap <?php echo $activeClass; ?>">
+                            <?php echo htmlspecialchars($label); ?>
+                            <span class="ml-2 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] rounded-full <?php echo $badgeClass; ?>"><?php echo (int)$count; ?></span>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                    <!-- Document Count -->
+                    <div class="flex items-center justify-center md:ml-auto">
                         <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
-                            <span id="total-docs" class="text-gray-900 dark:text-white mr-1"><?php echo count($data['documents'] ?? []); ?></span> documents found
+                            <span id="total-docs" class="text-gray-900 dark:text-white mr-1"><?php echo $data['pagination']['total'] ?? count($data['documents'] ?? []); ?></span> documents found
                         </div>
                     </div>
                 </div>
             </div>
+            <div id="documents-body">
             
             <!-- Table -->
             <!-- Desktop Table View -->
@@ -583,6 +616,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
             <?php endif; ?>
+            </div>
         </div>
     </main>
 
@@ -639,6 +673,51 @@ include_once __DIR__ . '/../../core/layouts/header.php';
 <script src="<?php echo asset('js/documents.js'); ?>?v=<?php echo time(); ?>"></script>
 <script>
 const currentUserRole = '<?php echo $userRole; ?>';
+
+function filterBySource(source) {
+    const params = new URLSearchParams(window.location.search);
+    if (source) params.set('source_system', source);
+    else params.delete('source_system');
+    params.delete('page');
+    const url = '?' + params.toString();
+
+    fetch(url)
+        .then(r => r.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newBody = doc.getElementById('documents-body');
+            const currentBody = document.getElementById('documents-body');
+            if (newBody && currentBody) currentBody.innerHTML = newBody.innerHTML;
+
+            document.querySelectorAll('.source-tab').forEach(tab => {
+                const isActive = tab.getAttribute('data-source') === source;
+                const tabInactive = ['bg-gray-100','dark:bg-gray-900/80','text-gray-700','dark:text-gray-300','border-gray-200','dark:border-gray-700','hover:bg-gray-200','dark:hover:bg-gray-700'];
+                const tabActive = ['bg-red-600','text-white','border-red-600'];
+                tab.classList.remove(...tabInactive, ...tabActive);
+                tab.classList.add(...(isActive ? tabActive : tabInactive));
+                const badge = tab.querySelector('span');
+                if (badge) {
+                    const badgeInactive = ['bg-gray-200','dark:bg-gray-700','text-gray-600','dark:text-gray-400'];
+                    const badgeActive = ['bg-white','text-red-600'];
+                    badge.classList.remove(...badgeInactive, ...badgeActive);
+                    badge.classList.add(...(isActive ? badgeActive : badgeInactive));
+                }
+            });
+
+            history.pushState({}, '', url);
+        })
+        .catch(err => console.error('Tab filter failed', err));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.source-tab').forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            filterBySource(this.getAttribute('data-source'));
+        });
+    });
+});
 </script>
 <script src="<?php echo asset('js/document-view-modal.js'); ?>?v=<?php echo time(); ?>"></script>
 

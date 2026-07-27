@@ -103,6 +103,12 @@ class Document {
             }
         }
         
+        // Source system filter (data comes from integrated_records)
+        if (!empty($filters['source_system'])) {
+            $sql .= " AND d.source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system)";
+            $params[':source_system'] = $filters['source_system'];
+        }
+
         // Sorting
         $orderBy = $filters['sort_by'] ?? 'created_at';
         $orderDir = $filters['sort_dir'] ?? 'DESC';
@@ -408,6 +414,11 @@ class Document {
             } elseif ($filters['file_size'] === 'large') {
                 $sql .= " AND file_size > 10485760";
             }
+        }
+
+        if (!empty($filters['source_system'])) {
+            $sql .= " AND source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system)";
+            $params[':source_system'] = $filters['source_system'];
         }
         
         $stmt = $this->db->prepare($sql);

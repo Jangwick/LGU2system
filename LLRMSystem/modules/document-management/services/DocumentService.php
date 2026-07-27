@@ -48,6 +48,26 @@ class DocumentService {
     /**
      * Get single document
      */
+    /**
+     * Get document counts for each source system plus an overall total.
+     *
+     * @param array $sourceSystems List of source system identifiers (e.g. ['orts','cms'])
+     * @param array $filters       Base filters to apply (source_system ignored)
+     * @return array Counts keyed by system and 'all'
+     */
+    public function getSourceCounts(array $sourceSystems, array $filters = []) {
+        // Ignore any active source-system filter so every tab shows its own total
+        unset($filters['source_system']);
+
+        $counts = ['all' => $this->documentModel->getCount($filters)];
+        foreach ($sourceSystems as $sys) {
+            $systemFilters = $filters;
+            $systemFilters['source_system'] = $sys;
+            $counts[$sys] = $this->documentModel->getCount($systemFilters);
+        }
+        return $counts;
+    }
+
     public function getDocument($id) {
         $document = $this->documentModel->getById($id);
         

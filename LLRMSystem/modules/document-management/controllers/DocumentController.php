@@ -41,10 +41,31 @@ class DocumentController {
                 'reference' => Sanitizer::plainText($_GET['reference'] ?? ''),
                 'sort_by' => Sanitizer::enum($_GET['sort_by'] ?? 'created_at', ['created_at', 'title', 'document_date', 'file_size', 'reference_number'], 'created_at'),
                 'sort_dir' => Sanitizer::enum($_GET['sort_dir'] ?? 'DESC', ['ASC', 'DESC'], 'DESC'),
+                'source_system' => Sanitizer::plainText($_GET['source_system'] ?? ''),
                 'user_role' => strtolower(trim($_SESSION['user_role'] ?? 'viewer'))
             ];
             
             $result = $this->documentService->getDocuments($page, $perPage, $filters);
+            
+            // Build source-system tab list from integration config files
+            $integrationConfigPath = __DIR__ . '/../../integration/config';
+            $sourceSystems = [];
+            $sourceLabels = [];
+            foreach (['cms', 'lacs', 'orts', 'pcms', 'phms'] as $configName) {
+                $configFile = $integrationConfigPath . '/' . $configName . '.php';
+                if (file_exists($configFile)) {
+                    $config = require $configFile;
+                    if (!empty($config['source_system'])) {
+                        $sys = $config['source_system'];
+                        $sourceSystems[] = $sys;
+                        $sourceLabels[$sys] = strtoupper($sys);
+                    }
+                }
+            }
+            
+            $result['source_systems'] = $sourceSystems;
+            $result['source_labels'] = $sourceLabels;
+            $result['source_counts'] = $this->documentService->getSourceCounts($sourceSystems, $filters);
             
             return $result;
             

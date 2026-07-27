@@ -101,10 +101,18 @@ class ComplianceService {
             $explanation = 'The document aligns with all applicable ordinance/regulation standards.';
         }
 
+        $newStatus = ($overall === 'compliant') ? 'approved' : 'rejected';
+        $oldStatus = $document['status'] ?? 'draft';
+
         $this->documentModel->update($documentId, [
             'compliance_status' => $overall,
-            'compliance_checked_at' => $checkedAt
+            'compliance_checked_at' => $checkedAt,
+            'status' => $newStatus,
+            'status_changed_at' => $checkedAt,
+            'status_changed_by' => $userId
         ]);
+
+        $this->documentModel->addStatusHistory($documentId, $oldStatus, $newStatus, $userId, $explanation);
 
         return [
             'success' => true,
