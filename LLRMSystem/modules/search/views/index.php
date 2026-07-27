@@ -431,7 +431,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
     </div>
 </div>
                                 </div>
-                                                                                                <div class="hidden md:block">
+                                                                                                <div class="hidden md:block h-full">
                                 <div class="result-card-desktop-list">
 <div class="group bg-white hover:bg-white border border-gray-200 hover:border-red-200 rounded-2xl p-5 md:p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 animate-fade-in-up <?= $delayClass ?>">
                                     <div class="flex flex-col md:flex-row gap-6">
@@ -496,7 +496,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </div>
                                 </div>
                                 </div>
-                                <div class="result-card-desktop-grid">
+                                <div class="result-card-desktop-grid h-full">
                                     <div class="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all active:scale-[0.98] animate-fade-in-up <?= $delayClass ?> h-full flex flex-col">
                                         <!-- Top: Type, Date & Status -->
                                         <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-start justify-between gap-3">
@@ -523,7 +523,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </div>
                                         <!-- Middle: Icon, Title, Ref, Description -->
                                         <div class="p-4 flex flex-col items-center gap-3 flex-1">
-                                            <div class="min-w-0 w-full">
+                                            <div class="min-w-0 w-full h-[126px] flex-shrink-0 overflow-hidden">
                                                 <h4 class="text-base font-black text-gray-900 dark:text-gray-100 mb-1 leading-tight line-clamp-2">
                                                     <?= htmlspecialchars($doc['title']) ?>
                                                 </h4>
@@ -540,13 +540,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                         </div>
                                         <!-- Bottom: Metadata & Actions -->
                                         <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700/50 flex flex-col gap-3">
-                                            <div class="flex items-center justify-between gap-2 text-[10px] text-gray-500 dark:text-gray-400">
-                                                <span class="truncate"><i class="bi bi-person-circle mr-1 text-gray-300"></i><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
-                                                <div class="flex items-center gap-1.5">
+                                            <div class="flex items-start justify-between gap-2 min-h-[44px] text-[10px] text-gray-500 dark:text-gray-400">
+                                                <span class="flex-shrink-0 max-w-[38%] truncate pt-1"><i class="bi bi-person-circle mr-1 text-gray-300"></i><?= htmlspecialchars($doc['uploaded_by_name'] ?? 'System Admin') ?></span>
+                                                <div class="min-w-0 flex-1 flex flex-wrap items-center justify-end gap-1">
                                                     <?php
                                                     $tags = explode(',', $doc['tags'] ?? '');
                                                     foreach(array_slice($tags, 0, 3) as $tag): if(empty($tag)) continue; ?>
-                                                    <span class="px-2 py-0.5 rounded-lg bg-gray-50 dark:bg-gray-900 text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 dark:border-gray-700 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer">#<?= trim($tag) ?></span>
+                                                    <span class="max-w-full px-1.5 py-0.5 rounded-lg bg-gray-50 dark:bg-gray-900 text-[8px] font-black uppercase tracking-normal text-gray-400 border border-gray-100 dark:border-gray-700 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer break-words">#<?= trim($tag) ?></span>
                                                     <?php endforeach; ?>
                                                 </div>
                                             </div>

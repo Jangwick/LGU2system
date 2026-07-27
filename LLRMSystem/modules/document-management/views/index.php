@@ -318,7 +318,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <div class="px-3 py-3.5 md:py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
                 <div class="flex flex-col md:flex-row items-center gap-4">
                     <!-- Source System Tabs -->
-                    <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1">
+                    <div class="grid grid-cols-3 gap-2 w-full md:flex md:items-center md:w-auto pb-1">
                         <?php
                         $sourceSystems = $data['source_systems'] ?? [];
                         $sourceLabels  = $data['source_labels'] ?? [];
@@ -343,9 +343,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                 ? 'bg-white text-red-600'
                                 : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
                         ?>
-                        <a href="<?php echo $url; ?>" data-source="<?php echo htmlspecialchars($sourceValue); ?>" class="source-tab inline-flex items-center px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors whitespace-nowrap <?php echo $activeClass; ?>">
+                        <a href="<?php echo $url; ?>" data-source="<?php echo htmlspecialchars($sourceValue); ?>" class="source-tab min-w-0 w-full md:w-auto inline-flex items-center justify-center px-2 md:px-3 py-2 md:py-1.5 rounded-lg border text-[11px] md:text-xs font-bold transition-colors whitespace-nowrap <?php echo $activeClass; ?>">
                             <?php echo htmlspecialchars($label); ?>
-                            <span class="ml-2 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] rounded-full <?php echo $badgeClass; ?>"><?php echo (int)$count; ?></span>
+                            <span class="ml-1.5 md:ml-2 inline-flex flex-shrink-0 items-center justify-center px-1.5 py-0.5 text-[9px] md:text-[10px] rounded-full <?php echo $badgeClass; ?>"><?php echo (int)$count; ?></span>
                         </a>
                         <?php endforeach; ?>
                     </div>
