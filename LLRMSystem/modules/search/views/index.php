@@ -1199,17 +1199,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                         ` : ''}
                                         ${extractedText ? `
                                             <div>
-                                                <div class="flex items-center justify-between mb-3">
-                                                    <div class="flex items-center">
-                                                        <i class="bi bi-file-earmark-richtext text-slate-600 dark:text-slate-400 mr-2"></i>
-                                                        <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Document Preview</h4>
+                                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                                                    <div class="flex items-center min-w-0">
+                                                        <i class="bi bi-file-earmark-richtext text-slate-600 dark:text-slate-400 mr-2 flex-shrink-0"></i>
+                                                        <h4 class="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider truncate">Document Preview</h4>
                                                     </div>
-                                                    <div class="flex items-center gap-3">
-                                                        <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" class="btn-original-preview text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1">
-                                                            <i class="bi bi-eye"></i><span>Preview</span>
+                                                    <div class="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
+                                                        <button type="button" data-preview-id="${doc.id}" data-preview-name="${escapeHtml(doc.file_name || '')}" data-preview-type="${escapeHtml(doc.file_type || '')}" class="btn-original-preview no-ripple min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center justify-center gap-1 whitespace-nowrap">
+                                                            <i class="bi bi-eye flex-shrink-0"></i><span>Preview</span>
                                                         </button>
-                                                        <button type="button" onclick="toggleDocPreview(this)" class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1">
-                                                            <i class="bi bi-chevron-down"></i><span>Expand</span>
+                                                        <button type="button" onclick="toggleDocPreview(this)" class="no-ripple min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center justify-center gap-1 whitespace-nowrap">
+                                                            <i class="bi bi-chevron-down flex-shrink-0"></i><span>Expand</span>
                                                         </button>
                                                     </div>
                                                 </div>
