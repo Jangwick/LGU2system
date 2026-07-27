@@ -473,14 +473,17 @@ class IntegrationController {
 
             // Run compliance check for ORTS documents
             $complianceStatus = null;
+            $complianceMessage = null;
             if ($sourceSystem === 'orts') {
                 try {
                     $complianceService = new ComplianceService($this->db);
                     $complianceResult = $complianceService->checkDocument($documentId, 1);
                     $complianceStatus = $complianceResult['compliance_status'] ?? null;
+                    $complianceMessage = $complianceResult['explanation'] ?? null;
                 } catch (Exception $e) {
                     error_log("ORTS compliance check failed for document {$documentId}: " . $e->getMessage());
                     $complianceStatus = 'error';
+                    $complianceMessage = $e->getMessage();
                 }
             }
 
@@ -506,6 +509,7 @@ class IntegrationController {
                 'ocr_status' => $ocrStatus,
                 'revision' => !empty($existingDoc),
                 'compliance_status' => $complianceStatus,
+                'compliance_message' => $complianceMessage,
                 'message' => 'Document received and saved successfully.'
             ];
 
