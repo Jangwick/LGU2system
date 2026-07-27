@@ -260,7 +260,7 @@ class ComplianceService {
 
         $error = $this->embeddingService->getLastError();
         if ($error) {
-            throw new Exception('Embedding API failed: ' . $error);
+            error_log('Embedding API failed for document ' . $documentId . ': ' . $error);
         }
         return null;
     }
@@ -320,7 +320,7 @@ class ComplianceService {
 
         $error = $this->embeddingService->getLastError();
         if ($error) {
-            throw new Exception('Embedding API failed: ' . $error);
+            error_log('Embedding API failed for rule ' . ($rule['code'] ?? $rule['id']) . ': ' . $error);
         }
         return null;
     }
