@@ -102,7 +102,8 @@
     const suggestions = document.getElementById('chatbot-suggestions');
     const openIcon = document.getElementById('chatbot-open-icon');
     const closeIcon = document.getElementById('chatbot-close-icon');
-    
+    const chatbotContainer = document.getElementById('chatbot-container');
+
     let chatHistory = [];
     let isOpen = false;
 
@@ -281,6 +282,24 @@
     window.sendSuggestion = function(text) {
         sendMessage(text);
     };
+
+    function updateChatbotVisibility() {
+        if (!chatbotContainer) return;
+        const modals = document.querySelectorAll('div.fixed.inset-0');
+        let anyOpen = false;
+        modals.forEach(modal => {
+            const style = window.getComputedStyle(modal);
+            if (style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0') anyOpen = true;
+        });
+        if (anyOpen) chatbotContainer.classList.add('hidden');
+        else chatbotContainer.classList.remove('hidden');
+    }
+
+    document.querySelectorAll('div.fixed.inset-0').forEach(modal => {
+        const chatbotObserver = new MutationObserver(updateChatbotVisibility);
+        chatbotObserver.observe(modal, { attributes: true, attributeFilter: ['class'] });
+    });
+    updateChatbotVisibility();
 
     chatForm.addEventListener('submit', (e) => {
         e.preventDefault();
