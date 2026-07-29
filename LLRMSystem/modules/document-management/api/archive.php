@@ -341,19 +341,59 @@ function apiDownloadDocument($authService, $authResult, $documentModel, $documen
     }
 
     try {
-        $fileData = $documentService->downloadDocument($id);
+        $document = $documentModel->getById($id);
+        if (!$document) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'Document not found']);
+            return;
+        }
+
+        // Resolve file path
+        $basePath = defined('BASE_PATH') ? BASE_PATH : dirname(dirname(dirname(__DIR__)));
+        $filePath = $basePath . '/' . $document['file_path'];
+
+        if (!file_exists($filePath)) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'File not found on disk']);
+            return;
+        }
+
+        // Decrypt if encrypted
+        if ($document['is_encrypted'] ?? false) {
+            $encryptionService = new EncryptionService();
+            $fileKey = null;
+
+            if (!empty($document['encryption_key'])) {
+                $keyResult = $encryptionService->decryptFileKey($document['encryption_key']);
+                if ($keyResult['success']) {
+                    $fileKey = $keyResult['file_key'];
+                }
+            }
+
+            $decryptionResult = $encryptionService->decryptFile($filePath, $fileKey);
+            if (!$decryptionResult['success']) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => 'File decryption failed: ' . $decryptionResult['error']]);
+                return;
+            }
+
+            // Write decrypted content to temp file
+            $tempPath = sys_get_temp_dir() . '/' . basename($filePath);
+            file_put_contents($tempPath, $decryptionResult['content']);
+            $filePath = $tempPath;
+        }
 
         // Stream the file
-        header('Content-Type: ' . $fileData['type']);
-        header('Content-Disposition: attachment; filename="' . $fileData['name'] . '"');
-        header('Content-Length: ' . filesize($fileData['path']));
+        header('Content-Type: ' . $document['file_type']);
+        header('Content-Disposition: attachment; filename="' . $document['file_name'] . '"');
+        header('Content-Length: ' . filesize($filePath));
         header('Cache-Control: no-cache');
 
         ob_clean();
-        readfile($fileData['path']);
+        readfile($filePath);
         exit;
     } catch (Exception $e) {
-        http_response_code(404);
+        http_response_code(500);
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }

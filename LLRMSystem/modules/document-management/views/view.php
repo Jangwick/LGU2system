@@ -179,7 +179,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-2 sm:gap-3">
-                    <?php if ($isConfidential || $isEncrypted): ?>
+                    <?php if ($isConfidential): ?>
                     <button type="button" onclick="promptPasswordForAccess('view')" 
                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-500 transition text-center text-sm sm:text-base shadow-md">
                         <i class="bi bi-shield-lock mr-1 sm:mr-2"></i><span class="hidden xs:inline">Unlock to View</span><span class="xs:hidden">Unlock</span>
@@ -218,7 +218,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-4 md:space-y-6">
                 <!-- Document Details -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up <?= $isEncrypted ? 'blur-sm opacity-75' : '' ?>" <?= $isEncrypted ? 'title="This document is encrypted"' : '' ?>>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in-up">
                     <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">Document Information</h2>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">

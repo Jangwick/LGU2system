@@ -128,21 +128,12 @@ class DocumentService {
             // Run OCR BEFORE encryption (file is still plaintext at this point)
             $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
 
-            // Generate a unique file key for this document
-            $fileKey = $this->encryptionService->generateFileKey();
-            
-            // Encrypt the file with the unique file key
-            $encryptionResult = $this->encryptionService->encryptFile($fileData['path'], $fileKey);
+            // Encrypt the file with the master key directly (generalized key)
+            $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
             if (!$encryptionResult['success']) {
                 throw new Exception("File encryption failed: " . $encryptionResult['error']);
             }
-            
-            // Encrypt the file key with the master key for storage
-            $keyEncryptionResult = $this->encryptionService->encryptFileKey($fileKey);
-            if (!$keyEncryptionResult['success']) {
-                throw new Exception("File key encryption failed: " . $keyEncryptionResult['error']);
-            }
-            $encryptedFileKey = $keyEncryptionResult['encrypted_key'];
+            $encryptedFileKey = null;
 
             $userId = $_SESSION['user_id'] ?? null;
             $status = $data['status'] ?? 'draft';

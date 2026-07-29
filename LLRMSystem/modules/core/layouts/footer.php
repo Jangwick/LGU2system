@@ -709,10 +709,10 @@
                 }
 
                 // Redirect logic
-                if (link) {
+                if (n.source_module === 'document-management' && n.source_id) {
+                    window.location.href = '<?php echo BASE_URL; ?>/modules/document-management/views/index.php?view_doc=' + n.source_id;
+                } else if (link) {
                     window.location.href = '<?php echo BASE_URL; ?>/' + link;
-                } else if (n.source_module === 'document-management') {
-                    window.location.href = '<?php echo BASE_URL; ?>/modules/document-management/views/index.php';
                 } else {
                     window.location.href = '<?php echo BASE_URL; ?>/modules/document-management/views/index.php';
                 }

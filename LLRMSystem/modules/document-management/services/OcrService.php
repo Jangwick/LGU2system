@@ -15,6 +15,7 @@ class OcrService {
     private $timeout;
     private $tempDir;
     private $enabled;
+    private $groqService;
 
     public function __construct() {
         $tessConfig = defined('OCR_TESSERACT_PATH') ? OCR_TESSERACT_PATH : '';
@@ -26,6 +27,77 @@ class OcrService {
         $this->enabled = defined('OCR_ENABLED') ? OCR_ENABLED : true;
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
         $this->ensureTempDir();
+
+        // Initialize GroqService for AI vision fallback
+        $this->groqService = null;
+        if (defined('OCR_GROQ_FALLBACK') && OCR_GROQ_FALLBACK && defined('GROQ_API_KEY') && !empty(GROQ_API_KEY)) {
+            try {
+                require_once __DIR__ . '/../../ai/services/GroqService.php';
+                $this->groqService = new GroqService();
+            } catch (Exception $e) {
+                error_log('OcrService: GroqService init failed: ' . $e->getMessage());
+            }
+        }
+
+        // Ensure Tesseract can find its libraries and language data on shared hosting
+        $this->setupTesseractEnvironment();
+    }
+
+    /**
+     * Set environment variables required for Tesseract to run in user-space installs
+     */
+    private function setupTesseractEnvironment() {
+        if (PHP_OS_FAMILY === 'Windows') {
+            return;
+        }
+
+        $home = getenv('HOME') ?: '/home/llrm.spvalenzuela.com';
+        $libPaths = [];
+        $tessdataPaths = [];
+
+        // Only check paths within open_basedir allowed directories
+        $allowedRoots = [$home, '/tmp'];
+        $candidates = [
+            $home . '/tesseract',
+            $home . '/Tesseract-OCR',
+        ];
+
+        foreach ($candidates as $base) {
+            if (@is_dir($base . '/usr/lib/x86_64-linux-gnu')) {
+                $libPaths[] = $base . '/usr/lib/x86_64-linux-gnu';
+            }
+            if (@is_dir($base . '/lib/x86_64-linux-gnu')) {
+                $libPaths[] = $base . '/lib/x86_64-linux-gnu';
+            }
+            if (@is_dir($base . '/lib')) {
+                $libPaths[] = $base . '/lib';
+            }
+            if (@is_dir($base . '/usr/share/tesseract-ocr/4.00/tessdata')) {
+                $tessdataPaths[] = $base . '/usr/share/tesseract-ocr/4.00/tessdata';
+            }
+            if (@is_dir($base . '/share/tessdata')) {
+                $tessdataPaths[] = $base . '/share/tessdata';
+            }
+            if (@is_dir($base . '/usr/share/tessdata')) {
+                $tessdataPaths[] = $base . '/usr/share/tessdata';
+            }
+        }
+
+        // Also check $home/share/tessdata (common user-space location)
+        if (@is_dir($home . '/share/tessdata')) {
+            $tessdataPaths[] = $home . '/share/tessdata';
+        }
+
+        $ldLibrary = getenv('LD_LIBRARY_PATH') ?: '';
+        $ldParts = array_filter(array_unique(array_merge($libPaths, explode(':', $ldLibrary))));
+        if (!empty($ldParts)) {
+            putenv('LD_LIBRARY_PATH=' . implode(':', $ldParts));
+        }
+
+        $tessdata = getenv('TESSDATA_PREFIX') ?: '';
+        if (empty($tessdata) && !empty($tessdataPaths)) {
+            putenv('TESSDATA_PREFIX=' . $tessdataPaths[0]);
+        }
     }
 
     /**
@@ -133,9 +205,8 @@ class OcrService {
 
         $escapedTesseract = escapeshellarg($tesseract);
         $escapedPath = escapeshellarg($filePath);
-        // Language is a controlled alphanumeric value (e.g. "eng", "fil"), no need to escape
-        // escapeshellarg on Windows can add newlines for short strings
         $lang = $this->language;
+        $timeout = $this->timeout;
 
         if (PHP_OS_FAMILY === 'Windows') {
             $outputFile = $this->tempDir . '\\ocr_' . uniqid();
@@ -147,7 +218,16 @@ class OcrService {
 
         $outputLines = [];
         $returnCode = 0;
-        exec($command . ' 2>&1', $outputLines, $returnCode);
+        if (PHP_OS_FAMILY !== 'Windows' && $timeout > 0) {
+            $wrappedCommand = "timeout $timeout $command 2>&1";
+            exec($wrappedCommand, $outputLines, $returnCode);
+            if ($returnCode == 124) {
+                @unlink($outputFile . '.txt');
+                throw new Exception("Tesseract timed out after {$timeout}s");
+            }
+        } else {
+            exec($command . ' 2>&1', $outputLines, $returnCode);
+        }
         $output = implode("\n", $outputLines);
         $outputTxt = $outputFile . '.txt';
 
@@ -168,12 +248,28 @@ class OcrService {
         // First, try to extract embedded text using smalot/pdfparser
         $digitalText = $this->extractDigitalPdfText($filePath);
 
-        if (!empty(trim($digitalText))) {
+        // Only accept digital text if it's substantial enough
+        // Scanned PDFs sometimes have minimal embedded text (headers, watermarks)
+        // that isn't the actual document content
+        $trimmedText = trim($digitalText);
+        $wordCount = str_word_count($trimmedText);
+        if (!empty($trimmedText) && strlen($trimmedText) >= 500 && $wordCount >= 100) {
             return $digitalText;
         }
 
-        // No embedded text — likely a scanned PDF, use OCR
-        return $this->processScannedPdf($filePath);
+        // Insufficient digital text — use OCR (Tesseract + Groq fallback)
+        try {
+            $ocrText = $this->processScannedPdf($filePath);
+            // If OCR produced more text than digital extraction, use OCR result
+            if (strlen(trim($ocrText)) > strlen($trimmedText)) {
+                return $ocrText;
+            }
+        } catch (Exception $e) {
+            error_log('OcrService: OCR fallback failed in processPdf: ' . $e->getMessage());
+        }
+
+        // Return whatever digital text we have (even if minimal)
+        return $digitalText;
     }
 
     /**
@@ -226,6 +322,7 @@ class OcrService {
 
     /**
      * Process scanned PDFs — convert to images then OCR each page
+     * Falls back to Groq AI vision when Tesseract fails or returns empty text
      */
     private function processScannedPdf($filePath) {
         $images = $this->convertPdfToImages($filePath);
@@ -236,11 +333,41 @@ class OcrService {
 
         $fullText = '[OCR]' . "\n";
         foreach ($images as $imagePath) {
+            $pageText = '';
+            $usedGroq = false;
+
+            // Try Tesseract first
             try {
                 $pageText = $this->processImage($imagePath);
-                $fullText .= $pageText . "\n\n--- Page Break ---\n\n";
             } catch (Exception $e) {
-                $fullText .= "[Page OCR failed: " . $e->getMessage() . "]\n\n";
+                error_log('OcrService: Tesseract failed on ' . basename($imagePath) . ': ' . $e->getMessage());
+            }
+
+            // If Tesseract returned empty text, try Groq AI vision
+            if (empty(trim($pageText)) && $this->groqService) {
+                $groqResult = $this->groqService->extractTextFromImage($imagePath);
+                if ($groqResult && !empty($groqResult['text'])) {
+                    $pageText = $groqResult['text'];
+                    if (!empty($groqResult['visual_elements'])) {
+                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                    }
+                    $usedGroq = true;
+                    error_log('OcrService: Groq vision used for ' . basename($imagePath));
+                } elseif ($groqResult && !empty($groqResult['additional_text'])) {
+                    $pageText = $groqResult['additional_text'];
+                    if (!empty($groqResult['visual_elements'])) {
+                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                    }
+                    $usedGroq = true;
+                    error_log('OcrService: Groq vision used for ' . basename($imagePath));
+                }
+            }
+
+            if (empty(trim($pageText))) {
+                $fullText .= "[Page OCR failed: no text extracted]\n\n";
+            } else {
+                $methodTag = $usedGroq ? '[OCR+AI] ' : '[OCR] ';
+                $fullText .= $methodTag . $pageText . "\n\n--- Page Break ---\n\n";
             }
         }
 
@@ -261,13 +388,14 @@ class OcrService {
         $escapedPdf = escapeshellarg($pdfPath);
         $escapedPrefix = escapeshellarg($prefix);
 
-        // Ghostscript command: render at 150 DPI grayscale for good OCR speed and accuracy
-        $dpi = 150;
+        // Ghostscript command: render at 100 DPI grayscale for faster OCR on shared hosting
+        $dpi = 100;
         $escapedGs = escapeshellarg($gs);
+        $outputPattern = escapeshellarg($prefix . '_%d.png');
         if (PHP_OS_FAMILY === 'Windows') {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf 2>nul";
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile=$outputPattern $escapedPdf 2>nul";
         } else {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile={$escapedPrefix}_%d.png $escapedPdf";
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile=$outputPattern $escapedPdf";
         }
 
         $gsOutput = shell_exec($command . ' 2>&1');
@@ -550,9 +678,12 @@ class OcrService {
             }
         } else {
             // Check common user-space paths (for shared hosting without root)
+            $home = getenv('HOME') ?: '/home/llrm.spvalenzuela.com';
             $homePaths = [
-                getenv('HOME') . '/bin/tesseract_wrapper.sh',
-                getenv('HOME') . '/bin/tesseract',
+                $home . '/bin/tesseract',
+                $home . '/bin/tesseract_wrapper.sh',
+                '/home/llrm.spvalenzuela.com/bin/tesseract',
+                '/home/llrm.spvalenzuela.com/bin/tesseract_wrapper.sh',
                 '/usr/local/bin/tesseract',
             ];
             foreach ($homePaths as $path) {

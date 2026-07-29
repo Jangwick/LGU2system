@@ -717,6 +717,13 @@ document.addEventListener('DOMContentLoaded', function() {
             filterBySource(this.getAttribute('data-source'));
         });
     });
+
+    // Auto-open document view modal when navigated from notification
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewDocId = urlParams.get('view_doc');
+    if (viewDocId && typeof viewDocument === 'function') {
+        viewDocument(parseInt(viewDocId));
+    }
 });
 </script>
 <script src="<?php echo asset('js/document-view-modal.js'); ?>?v=<?php echo time(); ?>"></script>

@@ -303,22 +303,21 @@ class IntegrationController {
                 $ocrStatus = 'skipped';
             }
 
-            // 3. Encrypt the file
-            require_once __DIR__ . '/../../document-management/services/EncryptionService.php';
-            $encryptionService = new EncryptionService();
+            // 3. Encrypt the file (skip for LAS/archive source — stored as plaintext)
+            $isEncrypted = 0;
+            $encryptedFileKey = null;
 
-            $fileKey = $encryptionService->generateFileKey();
-            $encryptionResult = $encryptionService->encryptFile($destPath, $fileKey);
+            if (($data['source_system'] ?? '') !== 'las') {
+                require_once __DIR__ . '/../../document-management/services/EncryptionService.php';
+                $encryptionService = new EncryptionService();
 
-            if (!$encryptionResult['success']) {
-                throw new Exception("File encryption failed: " . $encryptionResult['error']);
+                $encryptionResult = $encryptionService->encryptFile($destPath);
+
+                if (!$encryptionResult['success']) {
+                    throw new Exception("File encryption failed: " . $encryptionResult['error']);
+                }
+                $isEncrypted = 1;
             }
-
-            $keyEncryptionResult = $encryptionService->encryptFileKey($fileKey);
-            if (!$keyEncryptionResult['success']) {
-                throw new Exception("File key encryption failed: " . $keyEncryptionResult['error']);
-            }
-            $encryptedFileKey = $keyEncryptionResult['encrypted_key'];
 
             // 4. Generate reference number and prepare integrated_records
             $docType = $data['document_type'];
@@ -395,7 +394,7 @@ class IntegrationController {
                         file_name = :file_name,
                         file_size = :file_size,
                         file_type = :file_type,
-                        is_encrypted = 1,
+                        is_encrypted = :is_encrypted,
                         encryption_key = :enc_key,
                         extracted_text = :extracted_text,
                         ocr_status = :ocr_status,
@@ -415,6 +414,7 @@ class IntegrationController {
                     ':file_name' => $fileData['name'],
                     ':file_size' => $fileData['size'],
                     ':file_type' => $fileData['type'],
+                    ':is_encrypted' => $isEncrypted,
                     ':enc_key' => $encryptedFileKey,
                     ':extracted_text' => $extractedText,
                     ':ocr_status' => $ocrStatus,
@@ -438,7 +438,7 @@ class IntegrationController {
                         :ref, :title, :type, :doc_date,
                         'pending', :desc, :tags, 'integration', :source_id,
                         :user_id, NOW(), :file_path, :file_name, :file_size, :file_type,
-                        1, :enc_key,
+                        :is_encrypted, :enc_key,
                         :extracted_text, :ocr_status, :ocr_processed_at,
                         :key_points, :key_points_generated_at
                     )
@@ -457,6 +457,7 @@ class IntegrationController {
                     ':file_name' => $fileData['name'],
                     ':file_size' => $fileData['size'],
                     ':file_type' => $fileData['type'],
+                    ':is_encrypted' => $isEncrypted,
                     ':enc_key' => $encryptedFileKey,
                     ':extracted_text' => $extractedText,
                     ':ocr_status' => $ocrStatus,
