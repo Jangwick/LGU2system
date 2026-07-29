@@ -66,6 +66,10 @@ class Document {
         if (!empty($filters['status'])) {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
+        } elseif (!empty($filters['source_system']) && $filters['source_system'] === 'las') {
+            // LAS tab: show all documents including archived
+        } else {
+            $sql .= " AND d.status != 'archived'";
         }
         
         if (!empty($filters['compliance_status'])) {
@@ -105,7 +109,12 @@ class Document {
         
         // Source system filter (data comes from integrated_records)
         if (!empty($filters['source_system'])) {
-            $sql .= " AND d.source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system)";
+            if ($filters['source_system'] === 'las') {
+                // LAS tab: show documents from LAS source OR archived documents sent to LAS
+                $sql .= " AND (d.source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system) OR d.status = 'archived')";
+            } else {
+                $sql .= " AND d.source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system)";
+            }
             $params[':source_system'] = $filters['source_system'];
         }
 
@@ -379,6 +388,10 @@ class Document {
         if (!empty($filters['status'])) {
             $sql .= " AND status = :status";
             $params[':status'] = $filters['status'];
+        } elseif (!empty($filters['source_system']) && $filters['source_system'] === 'las') {
+            // LAS tab: show all documents including archived
+        } else {
+            $sql .= " AND status != 'archived'";
         }
 
         if (!empty($filters['compliance_status'])) {
@@ -417,7 +430,11 @@ class Document {
         }
 
         if (!empty($filters['source_system'])) {
-            $sql .= " AND source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system)";
+            if ($filters['source_system'] === 'las') {
+                $sql .= " AND (source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system) OR status = 'archived')";
+            } else {
+                $sql .= " AND source_id IN (SELECT id FROM integrated_records WHERE source_system = :source_system)";
+            }
             $params[':source_system'] = $filters['source_system'];
         }
         

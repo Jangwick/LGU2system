@@ -17,6 +17,72 @@ class GroqService {
         return $this->lastError;
     }
 
+    /**
+     * POST JSON to Groq API — uses curl if available, falls back to file_get_contents
+     * Returns ['response' => string, 'httpCode' => int] or null on failure
+     */
+    private function httpPost($url, $payload) {
+        $jsonBody = json_encode($payload);
+        $headers = [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->apiKey
+        ];
+
+        if (function_exists('curl_init')) {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonBody);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+
+            $response = curl_exec($ch);
+            $err = curl_error($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($err) {
+                $this->lastError = 'Curl: ' . $err;
+                error_log('GroqService Curl Error: ' . $err);
+                return null;
+            }
+            return ['response' => $response, 'httpCode' => $httpCode];
+        }
+
+        // Fallback: file_get_contents with stream context
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => implode("\r\n", $headers),
+                'content' => $jsonBody,
+                'timeout' => 120,
+                'ignore_errors' => true
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
+        $response = @file_get_contents($url, false, $context);
+        if ($response === false) {
+            $this->lastError = 'HTTP request failed (no curl, file_get_contents failed)';
+            error_log('GroqService: file_get_contents failed');
+            return null;
+        }
+        $httpCode = 200;
+        if (isset($http_response_header) && is_array($http_response_header)) {
+            foreach ($http_response_header as $header) {
+                if (preg_match('/HTTP\/\d+\.\d+\s+(\d+)/', $header, $m)) {
+                    $httpCode = (int)$m[1];
+                }
+            }
+        }
+        return ['response' => $response, 'httpCode' => $httpCode];
+    }
+
     public function getLastHttpCode() {
         return $this->lastHttpCode;
     }
@@ -54,31 +120,12 @@ class GroqService {
             'top_p' => 0.9
         ];
 
-        $ch = curl_init($apiUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->apiKey
-        ]);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($err) {
-            $this->lastError = 'Curl: ' . $err;
-            $this->lastHttpCode = $httpCode;
-            error_log('GroqService Curl Error: ' . $err);
+        $httpResult = $this->httpPost($apiUrl, $payload);
+        if ($httpResult === null) {
             return null;
         }
-
+        $response = $httpResult['response'];
+        $httpCode = $httpResult['httpCode'];
         $this->lastHttpCode = $httpCode;
 
         if ($httpCode < 200 || $httpCode >= 300) {
@@ -196,31 +243,12 @@ class GroqService {
             'top_p' => 0.9
         ];
 
-        $ch = curl_init($apiUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->apiKey
-        ]);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($err) {
-            $this->lastError = 'Curl: ' . $err;
-            $this->lastHttpCode = $httpCode;
-            error_log('GroqService Curl Error: ' . $err);
+        $httpResult = $this->httpPost($apiUrl, $payload);
+        if ($httpResult === null) {
             return null;
         }
-
+        $response = $httpResult['response'];
+        $httpCode = $httpResult['httpCode'];
         $this->lastHttpCode = $httpCode;
 
         if ($httpCode < 200 || $httpCode >= 300) {
@@ -243,9 +271,10 @@ class GroqService {
 
         if (!is_array($decoded)) {
             // Non-JSON response: treat the whole reply as text
+            $cleaned = $this->cleanAIResponse($content);
             return $hasExisting
-                ? ['text' => '', 'additional_text' => trim($content), 'visual_elements' => '']
-                : ['text' => trim($content), 'additional_text' => '', 'visual_elements' => ''];
+                ? ['text' => '', 'additional_text' => trim($cleaned), 'visual_elements' => '']
+                : ['text' => trim($cleaned), 'additional_text' => '', 'visual_elements' => ''];
         }
 
         return [
@@ -297,7 +326,7 @@ class GroqService {
     }
 
     private function extractJson($content) {
-        $content = trim($content);
+        $content = $this->cleanAIResponse($content);
         if (strpos($content, '```json') === 0) {
             $content = substr($content, 7);
         } elseif (strpos($content, '```') === 0) {
@@ -307,6 +336,29 @@ class GroqService {
         if (substr($content, -3) === '```') {
             $content = substr($content, 0, -3);
         }
+        return trim($content);
+    }
+
+    /**
+     * Strip AI reasoning tokens, think tags, and markdown artifacts from response
+     */
+    private function cleanAIResponse($content) {
+        $content = trim($content);
+
+        // Remove <think>...</think> blocks (including unclosed ones)
+        $content = preg_replace('/<think>.*?<\/think>/is', '', $content);
+        $content = preg_replace('/<think>.*$/is', '', $content);
+
+        // Remove <reasoning>...</reasoning> blocks
+        $content = preg_replace('/<reasoning>.*?<\/reasoning>/is', '', $content);
+        $content = preg_replace('/<reasoning>.*$/is', '', $content);
+
+        // Remove lines that look like AI reasoning steps (e.g. "1. Analyze the image:", "**1. Transcribe:")
+        $content = preg_replace('/^\s*\d+\.\s*\*{0,2}(Analyze|Transcribe|Extract|Identify|Describe|Note|Check|Look|Read|Scan|Review|Parse|Process|Step)\b.*$/im', '', $content);
+
+        // Remove markdown bold header artifacts like **Header:**, **Body Text:**, etc.
+        $content = preg_replace('/^\s*\*{0,2}(Header|Excerpt Note|Ordinance Title|Author Credits|Body Text|Top section|Visual elements?|Additional text)\*{0,2}:?\s*$/im', '', $content);
+
         return trim($content);
     }
 }

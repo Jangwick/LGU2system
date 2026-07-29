@@ -255,7 +255,7 @@ class SearchService {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
         } else {
-            $sql .= " AND d.status NOT IN ('pending', 'draft', 'rejected')";
+            $sql .= " AND d.status NOT IN ('pending', 'draft', 'rejected', 'archived')";
         }
         
         if (!empty($filters['date_from'])) {
@@ -455,7 +455,7 @@ class SearchService {
             $sql .= " AND d.status = :status";
             $params[':status'] = $filters['status'];
         } else {
-            $sql .= " AND d.status NOT IN ('pending', 'draft', 'rejected')";
+            $sql .= " AND d.status NOT IN ('pending', 'draft', 'rejected', 'archived')";
         }
         
         if (!empty($filters['date_from'])) {

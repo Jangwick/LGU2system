@@ -232,8 +232,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     'draft' => 'Draft',
                                     'pending' => 'Pending Review',
                                     'approved' => 'Approved',
-                                    'rejected' => 'Rejected',
-                                    'archived' => 'Archived'
+                                    'rejected' => 'Rejected'
                                 ];
                                 $selectedStatus = $_GET['status'] ?? '';
                                 foreach ($statuses as $value => $label): ?>

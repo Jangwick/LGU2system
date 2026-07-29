@@ -271,6 +271,14 @@ class DocumentService {
             $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_UPDATE, $document['title'], [
                 'changes' => array_intersect_key($data, $oldValues)
             ], $oldValues);
+
+            // When status is set to archived, send document to LAS
+            if ($oldStatus !== 'archived' && $newStatus === 'archived') {
+                $lasResult = $this->sendToLAS($id);
+                if (!$lasResult['success']) {
+                    error_log('DocumentService: Failed to send document #' . $id . ' to LAS: ' . ($lasResult['error'] ?? 'unknown'));
+                }
+            }
         }
 
         return [
@@ -678,5 +686,139 @@ class DocumentService {
             'extracted_text_length' => strlen($ocrResult['text']),
             'error' => $ocrResult['error'] ?? null
         ];
+    }
+
+    /**
+     * Send document to LAS (Legislative Archive System)
+     * Called when a document's status is changed to 'archived'
+     */
+    private function sendToLAS($documentId) {
+        $document = $this->documentModel->getById($documentId);
+        if (!$document) {
+            return ['success' => false, 'error' => 'Document not found'];
+        }
+
+        $lasConfigPath = __DIR__ . '/../../integration/config/las.php';
+        if (!file_exists($lasConfigPath)) {
+            return ['success' => false, 'error' => 'LAS config not found'];
+        }
+        $lasConfig = require $lasConfigPath;
+
+        $filePath = $this->resolveFilePath($document['file_path']);
+        $tempFile = null;
+
+        // Decrypt file if necessary
+        if ($document['is_encrypted'] ?? false) {
+            if (!empty($document['encryption_key'])) {
+                $keyDecryptionResult = $this->encryptionService->decryptFileKey($document['encryption_key']);
+                if (!$keyDecryptionResult['success']) {
+                    return ['success' => false, 'error' => 'File key decryption failed for LAS transfer'];
+                }
+                $fileKey = $keyDecryptionResult['file_key'];
+            } else {
+                $fileKey = null;
+            }
+
+            $decryptionResult = $this->encryptionService->decryptFile($filePath, $fileKey);
+            if (!$decryptionResult['success']) {
+                return ['success' => false, 'error' => 'File decryption failed for LAS transfer'];
+            }
+
+            $tempFile = sys_get_temp_dir() . '/las_' . $documentId . '_' . uniqid();
+            file_put_contents($tempFile, $decryptionResult['content']);
+            $filePath = $tempFile;
+        }
+
+        if (!file_exists($filePath)) {
+            return ['success' => false, 'error' => 'File not found for LAS transfer'];
+        }
+
+        // Build the API URL — LAS API at las.spvalenzuela.com
+        $apiUrl = rtrim($lasConfig['base_url'], '/') . '/' . ltrim($lasConfig['create_endpoint'], '/');
+
+        // Prepare POST fields
+        $postFields = [
+            'title' => $document['title'],
+            'document_type' => $document['document_type'] ?? 'archive',
+            'document_date' => $document['document_date'] ?? date('Y-m-d'),
+            'status' => 'archived',
+            'description' => $document['description'] ?? '',
+            'tags' => $document['tags'] ?? '',
+            'reference_number' => $document['reference_number'] ?? '',
+        ];
+
+        // Add file — use CURLFile if available, otherwise build multipart manually
+        $fileName = basename($document['file_name'] ?? 'document');
+        $mimeType = $document['file_type'] ?? 'application/octet-stream';
+        $fileContents = file_get_contents($filePath);
+
+        // Build multipart form data manually (works without curl extension)
+        $boundary = '----LLRM' . md5(uniqid());
+        $body = '';
+        foreach ($postFields as $key => $value) {
+            $body .= "--{$boundary}\r\n";
+            $body .= "Content-Disposition: form-data; name=\"{$key}\"\r\n\r\n";
+            $body .= $value . "\r\n";
+        }
+        $body .= "--{$boundary}\r\n";
+        $body .= "Content-Disposition: form-data; name=\"file\"; filename=\"{$fileName}\"\r\n";
+        $body .= "Content-Type: {$mimeType}\r\n\r\n";
+        $body .= $fileContents . "\r\n";
+        $body .= "--{$boundary}--\r\n";
+
+        $headers = [
+            'Content-Type: multipart/form-data; boundary=' . $boundary,
+            'X-API-Key: ' . $lasConfig['bearer_token'],
+        ];
+
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => implode("\r\n", $headers),
+                'content' => $body,
+                'timeout' => 120,
+                'ignore_errors' => true
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
+
+        $response = @file_get_contents($apiUrl, false, $context);
+        $httpCode = 200;
+        if (isset($http_response_header) && is_array($http_response_header)) {
+            foreach ($http_response_header as $header) {
+                if (preg_match('/HTTP\/\d+\.\d+\s+(\d+)/', $header, $m)) {
+                    $httpCode = (int)$m[1];
+                }
+            }
+        }
+
+        // Clean up temp file
+        if ($tempFile && file_exists($tempFile)) {
+            @unlink($tempFile);
+        }
+
+        if ($response === false) {
+            error_log('DocumentService: LAS transfer failed - file_get_contents returned false');
+            return ['success' => false, 'error' => 'HTTP request failed'];
+        }
+
+        if ($httpCode < 200 || $httpCode >= 300) {
+            $errorDetail = substr($response, 0, 500);
+            error_log('DocumentService: LAS transfer HTTP ' . $httpCode . ': ' . $errorDetail);
+            return ['success' => false, 'error' => 'HTTP ' . $httpCode . ': ' . $errorDetail];
+        }
+
+        $result = json_decode($response, true);
+        $lasDocumentId = $result['document']['id'] ?? null;
+
+        $this->logger->logDocumentActivity($documentId, 'DOCUMENT_ARCHIVED_TO_LAS', $document['title'], [
+            'las_document_id' => $lasDocumentId,
+            'http_code' => $httpCode,
+        ]);
+
+        return ['success' => true, 'las_document_id' => $lasDocumentId];
     }
 }

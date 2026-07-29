@@ -130,7 +130,7 @@ class OcrService {
                 // PDF — try digital extraction first, fall back to OCR
                 case $extension === 'pdf' || $mimeType === 'application/pdf':
                     $text = $this->processPdf($filePath);
-                    $method = strpos($text, '[OCR]') === 0 ? 'tesseract' : 'pdfparser';
+                    $method = (strpos($text, '[Page OCR failed') !== false || strpos($text, '--- Page Break ---') !== false) ? 'tesseract' : 'pdfparser';
                     break;
 
                 // Word documents
@@ -331,10 +331,9 @@ class OcrService {
             throw new Exception('Failed to convert PDF to images (Ghostscript may not be installed)');
         }
 
-        $fullText = '[OCR]' . "\n";
+        $fullText = '';
         foreach ($images as $imagePath) {
             $pageText = '';
-            $usedGroq = false;
 
             // Try Tesseract first
             try {
@@ -345,29 +344,32 @@ class OcrService {
 
             // If Tesseract returned empty text, try Groq AI vision
             if (empty(trim($pageText)) && $this->groqService) {
-                $groqResult = $this->groqService->extractTextFromImage($imagePath);
-                if ($groqResult && !empty($groqResult['text'])) {
-                    $pageText = $groqResult['text'];
-                    if (!empty($groqResult['visual_elements'])) {
-                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                try {
+                    $groqResult = $this->groqService->extractTextFromImage($imagePath);
+                    if ($groqResult && !empty($groqResult['text'])) {
+                        $pageText = $groqResult['text'];
+                        if (!empty($groqResult['visual_elements'])) {
+                            $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                        }
+                        error_log('OcrService: Groq vision used for ' . basename($imagePath));
+                    } elseif ($groqResult && !empty($groqResult['additional_text'])) {
+                        $pageText = $groqResult['additional_text'];
+                        if (!empty($groqResult['visual_elements'])) {
+                            $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                        }
+                        error_log('OcrService: Groq vision used for ' . basename($imagePath));
                     }
-                    $usedGroq = true;
-                    error_log('OcrService: Groq vision used for ' . basename($imagePath));
-                } elseif ($groqResult && !empty($groqResult['additional_text'])) {
-                    $pageText = $groqResult['additional_text'];
-                    if (!empty($groqResult['visual_elements'])) {
-                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
-                    }
-                    $usedGroq = true;
-                    error_log('OcrService: Groq vision used for ' . basename($imagePath));
+                } catch (Error $e) {
+                    error_log('OcrService: Groq fallback error: ' . $e->getMessage());
+                } catch (Exception $e) {
+                    error_log('OcrService: Groq fallback exception: ' . $e->getMessage());
                 }
             }
 
             if (empty(trim($pageText))) {
                 $fullText .= "[Page OCR failed: no text extracted]\n\n";
             } else {
-                $methodTag = $usedGroq ? '[OCR+AI] ' : '[OCR] ';
-                $fullText .= $methodTag . $pageText . "\n\n--- Page Break ---\n\n";
+                $fullText .= $pageText . "\n\n--- Page Break ---\n\n";
             }
         }
 
