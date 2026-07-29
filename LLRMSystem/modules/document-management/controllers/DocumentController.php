@@ -51,7 +51,7 @@ class DocumentController {
             $integrationConfigPath = __DIR__ . '/../../integration/config';
             $sourceSystems = [];
             $sourceLabels = [];
-            foreach (['cms', 'lacs', 'orts', 'pcms', 'phms'] as $configName) {
+            foreach (['cms', 'lacs', 'orts', 'pcms', 'phms', 'las'] as $configName) {
                 $configFile = $integrationConfigPath . '/' . $configName . '.php';
                 if (file_exists($configFile)) {
                     $config = require $configFile;
