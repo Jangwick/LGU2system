@@ -45,7 +45,8 @@ class DeduplicationService {
      * Returns the matching existing document row or null.
      */
     public function findDuplicate($filePath, $mimeType = null, $title = '') {
-        // 1. Exact hash match
+        // 1. Exact hash match (still kept for final result, but does not short-circuit)
+        $hashMatch = null;
         $hash = $this->hashFile($filePath);
         if ($hash) {
             $stmt = $this->db->prepare("
@@ -57,42 +58,47 @@ class DeduplicationService {
                 LIMIT 1
             ");
             $stmt->execute([$hash]);
-            $match = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($match) {
-                return ['type' => 'hash', 'document' => $match];
-            }
+            $hashMatch = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
         }
 
-        // 2. Semantic embedding match (all pages, Tesseract only, no Groq)
+        // 2. Always run a quick Tesseract-only OCR pre-scan for the embedding check (no Groq)
         $quick = $this->ocrService->extractText($filePath, $mimeType, ['enhance' => false]);
-        if (($quick['status'] ?? '') !== 'completed' || empty(trim($quick['text'] ?? ''))) {
-            return null;
-        }
-        $quickText = trim($quick['text']);
-        $embedding = $this->embeddingService->generateDocumentEmbedding($quickText, $title);
-        if (empty($embedding)) {
-            return null;
-        }
+        $quickText = (($quick['status'] ?? '') === 'completed') ? trim($quick['text'] ?? '') : '';
 
-        $stmt = $this->db->query("
-            SELECT e.document_id, e.embedding, d.extracted_text, d.key_points, d.ocr_status
-            FROM document_ocr_embeddings e
-            INNER JOIN legislative_documents d ON e.document_id = d.id
-            WHERE d.ocr_status = 'completed' AND d.extracted_text IS NOT NULL AND d.extracted_text != ''
-        ");
-        $best = null;
-        $bestScore = 0;
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $stored = json_decode($row['embedding'] ?? '', true);
-            if (empty($stored) || !is_array($stored)) continue;
-            $score = SearchService::cosineSimilarity($embedding, $stored);
-            if ($score >= $this->threshold && $score > $bestScore) {
-                $best = $row;
-                $bestScore = $score;
+        $embeddingMatch = null;
+        $embedding = null;
+        if (!empty($quickText)) {
+            $embedding = $this->embeddingService->generateDocumentEmbedding($quickText, $title);
+            if (!empty($embedding)) {
+                $stmt = $this->db->query("
+                    SELECT e.document_id, e.embedding, d.extracted_text, d.key_points, d.ocr_status
+                    FROM document_ocr_embeddings e
+                    INNER JOIN legislative_documents d ON e.document_id = d.id
+                    WHERE d.ocr_status = 'completed' AND d.extracted_text IS NOT NULL AND d.extracted_text != ''
+                ");
+                $best = null;
+                $bestScore = 0;
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $stored = json_decode($row['embedding'] ?? '', true);
+                    if (empty($stored) || !is_array($stored)) continue;
+                    $score = SearchService::cosineSimilarity($embedding, $stored);
+                    if ($score >= $this->threshold && $score > $bestScore) {
+                        $best = $row;
+                        $bestScore = $score;
+                    }
+                }
+                if ($best) {
+                    $embeddingMatch = $best;
+                }
             }
         }
-        if ($best) {
-            return ['type' => 'embedding', 'document' => $best, 'embedding' => $embedding];
+
+        // Exact hash match is the strongest signal; otherwise fall back to semantic match
+        if ($hashMatch) {
+            return ['type' => 'hash', 'document' => $hashMatch, 'embedding' => $embedding];
+        }
+        if ($embeddingMatch) {
+            return ['type' => 'embedding', 'document' => $embeddingMatch, 'embedding' => $embedding];
         }
         return null;
     }
