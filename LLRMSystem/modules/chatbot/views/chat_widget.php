@@ -289,6 +289,7 @@
 
     function updateChatbotVisibility() {
         if (!chatbotContainer) return;
+        const chatbotZ = parseInt(window.getComputedStyle(chatbotContainer).zIndex, 10) || 0;
         const modals = document.querySelectorAll('div.fixed.inset-0');
         let anyOpen = false;
         modals.forEach(modal => {
@@ -296,6 +297,8 @@
             const style = window.getComputedStyle(modal);
             if (style.display === 'none' || style.visibility === 'hidden') return;
             if (parseFloat(style.opacity) < 0.01) return;
+            const modalZ = parseInt(style.zIndex, 10) || 0;
+            if (modalZ <= chatbotZ) return;
             anyOpen = true;
         });
         if (anyOpen) chatbotContainer.classList.add('hidden');
