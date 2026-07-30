@@ -585,7 +585,7 @@ class DocumentService {
      * Returns extracted text, OCR status, and key points
      */
     private function runOcrOnFile($filePath, $mimeType, $fileSize) {
-        $asyncThreshold = defined('OCR_ASYNC_THRESHOLD') ? OCR_ASYNC_THRESHOLD : 5242880; // 5MB
+        $asyncThreshold = defined('OCR_ASYNC_THRESHOLD') ? OCR_ASYNC_THRESHOLD : 1048576; // 1MB
         $result = [
             'text' => null,
             'status' => 'pending',
