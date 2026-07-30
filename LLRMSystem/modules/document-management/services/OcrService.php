@@ -30,9 +30,9 @@ class OcrService {
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
         $this->ensureTempDir();
 
-        // Initialize GroqService for AI vision fallback (default enabled)
+        // Initialize GroqService for AI vision fallback (default disabled)
         $this->groqService = null;
-        $groqFallbackEnabled = !defined('OCR_GROQ_FALLBACK') || OCR_GROQ_FALLBACK;
+        $groqFallbackEnabled = defined('OCR_GROQ_FALLBACK') && OCR_GROQ_FALLBACK;
         if ($groqFallbackEnabled && defined('GROQ_API_KEY') && !empty(GROQ_API_KEY)) {
             try {
                 require_once __DIR__ . '/../../ai/services/GroqService.php';
@@ -42,7 +42,7 @@ class OcrService {
             }
         }
 
-        $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : false;
+        $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? (bool)OCR_GROQ_ENHANCE : false;  
         $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 1;
 
         // Ensure Tesseract can find its libraries and language data on shared hosting
@@ -260,15 +260,32 @@ class OcrService {
 
         if ($useGroqEnhance || $useGroqFallback) {
             try {
-                // Ask Groq to extract all text from the image; use Tesseract only as a fallback
-                $groqResult = $this->groqService->extractTextFromImage($filePath);
-                if (is_array($groqResult) && !empty(trim($groqResult['text'] ?? ''))) {
-                    $pageText = trim($groqResult['text']);
-                    if (!empty($groqResult['visual_elements'])) {
-                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                // Pass Tesseract text so Groq only returns what Tesseract missed
+                $groqResult = $this->groqService->extractTextFromImage($filePath, $tesseractText);
+                if (is_array($groqResult)) {
+                    $additionalText = trim($groqResult['additional_text'] ?? '');
+                    $groqText = trim($groqResult['text'] ?? '');
+                    $visualElements = trim($groqResult['visual_elements'] ?? '');
+
+                    if (empty($trimmedTesseract)) {
+                        // Groq fallback: no Tesseract output, use Groq's full extraction
+                        $pageText = $groqText;
+                    } else {
+                        // Groq enhancement: start with Tesseract and append only what it missed
+                        $pageText = $tesseractText;
+                        if (!empty($additionalText)) {
+                            $pageText .= "\n\n[Additional text from vision enhancement]\n" . $additionalText;
+                        }
                     }
-                    error_log('OcrService: Groq vision used for ' . basename($filePath));
-                    return $pageText;
+
+                    if (!empty($visualElements)) {
+                        $pageText .= "\n\n[Visual elements: " . $visualElements . ']';
+                    }
+
+                    if (!empty($pageText)) {
+                        error_log('OcrService: Groq vision used for ' . basename($filePath));
+                        return $pageText;
+                    }
                 }
             } catch (Throwable $e) {
                 error_log('OcrService: Groq vision exception: ' . $e->getMessage());
@@ -413,8 +430,8 @@ class OcrService {
         $escapedPdf = escapeshellarg($pdfPath);
         $escapedPrefix = escapeshellarg($prefix);
 
-        // Ghostscript command: render at 100 DPI grayscale for faster OCR on shared hosting
-        $dpi = 100;
+        // Ghostscript command: render at configured DPI (default 100) grayscale for faster OCR on shared hosting
+        $dpi = defined('OCR_GS_DPI') ? (int)OCR_GS_DPI : 100;
         $escapedGs = escapeshellarg($gs);
         $outputPattern = escapeshellarg($prefix . '_%d.png');
         if (PHP_OS_FAMILY === 'Windows') {
