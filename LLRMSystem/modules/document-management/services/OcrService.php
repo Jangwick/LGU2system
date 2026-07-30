@@ -102,7 +102,13 @@ class OcrService {
 
         $tessdata = getenv('TESSDATA_PREFIX') ?: '';
         if (empty($tessdata) && !empty($tessdataPaths)) {
-            putenv('TESSDATA_PREFIX=' . $tessdataPaths[0]);
+            // Only use a tessdata path that actually contains the traineddata files
+            foreach ($tessdataPaths as $path) {
+                if (file_exists($path . '/eng.traineddata')) {
+                    putenv('TESSDATA_PREFIX=' . $path);
+                    break;
+                }
+            }
         }
     }
 
