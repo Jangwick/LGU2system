@@ -257,13 +257,8 @@ class GroqService {
             $this->lastHttpCode = $httpCode;
 
             if ($httpCode == 429) {
-                $waitSeconds = 30;
-                if (preg_match('/try again in ([\d.]+)s/i', $response, $matches)) {
-                    $waitSeconds = (float) $matches[1];
-                }
                 if ($attempt < $maxRetries) {
-                    error_log('GroqService: Rate limited, waiting ' . ceil($waitSeconds) . 's before retry ' . ($attempt + 1) . '/' . $maxRetries);
-                    sleep(ceil($waitSeconds));
+                    error_log('GroqService: Rate limited, retrying immediately ' . ($attempt + 1) . '/' . $maxRetries);
                     continue;
                 }
             }
