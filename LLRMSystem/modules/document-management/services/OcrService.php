@@ -195,50 +195,81 @@ class OcrService {
     }
 
     /**
-     * Process image files with Tesseract OCR
+     * Process image files with Tesseract OCR, falling back to Groq vision on failure
      */
     private function processImage($filePath) {
+        $tesseractText = '';
+        $tesseractError = null;
+
+        // Try Tesseract first
         $tesseract = $this->getTesseractPath();
-        if (!$tesseract) {
-            throw new Exception('Tesseract binary not found');
-        }
+        if ($tesseract) {
+            $escapedTesseract = escapeshellarg($tesseract);
+            $escapedPath = escapeshellarg($filePath);
+            $lang = $this->language;
+            $timeout = $this->timeout;
 
-        $escapedTesseract = escapeshellarg($tesseract);
-        $escapedPath = escapeshellarg($filePath);
-        $lang = $this->language;
-        $timeout = $this->timeout;
+            if (PHP_OS_FAMILY === 'Windows') {
+                $outputFile = $this->tempDir . '\\ocr_' . uniqid();
+                $command = "$escapedTesseract $escapedPath " . escapeshellarg($outputFile) . " -l $lang 2>nul";
+            } else {
+                $outputFile = $this->tempDir . '/ocr_' . uniqid();
+                $command = "$escapedTesseract $escapedPath " . escapeshellarg($outputFile) . " -l $lang";
+            }
 
-        if (PHP_OS_FAMILY === 'Windows') {
-            $outputFile = $this->tempDir . '\\ocr_' . uniqid();
-            $command = "$escapedTesseract $escapedPath " . escapeshellarg($outputFile) . " -l $lang 2>nul";
-        } else {
-            $outputFile = $this->tempDir . '/ocr_' . uniqid();
-            $command = "$escapedTesseract $escapedPath " . escapeshellarg($outputFile) . " -l $lang";
-        }
+            $outputLines = [];
+            $returnCode = 0;
+            if (PHP_OS_FAMILY !== 'Windows' && $timeout > 0) {
+                $wrappedCommand = "timeout $timeout $command 2>&1";
+                exec($wrappedCommand, $outputLines, $returnCode);
+                if ($returnCode == 124) {
+                    @unlink($outputFile . '.txt');
+                    $tesseractError = "Tesseract timed out after {$timeout}s";
+                }
+            } else {
+                exec($command . ' 2>&1', $outputLines, $returnCode);
+            }
+            $output = implode("\n", $outputLines);
+            $outputTxt = $outputFile . '.txt';
 
-        $outputLines = [];
-        $returnCode = 0;
-        if (PHP_OS_FAMILY !== 'Windows' && $timeout > 0) {
-            $wrappedCommand = "timeout $timeout $command 2>&1";
-            exec($wrappedCommand, $outputLines, $returnCode);
-            if ($returnCode == 124) {
-                @unlink($outputFile . '.txt');
-                throw new Exception("Tesseract timed out after {$timeout}s");
+            if ($returnCode !== 0 && $tesseractError === null) {
+                @unlink($outputTxt);
+                $tesseractError = 'Tesseract command failed (exit ' . $returnCode . '): ' . ($output ?: $command);
+            }
+
+            if ($returnCode === 0) {
+                $tesseractText = @file_get_contents($outputTxt) ?: '';
+                @unlink($outputTxt);
             }
         } else {
-            exec($command . ' 2>&1', $outputLines, $returnCode);
-        }
-        $output = implode("\n", $outputLines);
-        $outputTxt = $outputFile . '.txt';
-
-        if ($returnCode !== 0) {
-            @unlink($outputTxt);
-            throw new Exception('Tesseract command failed (exit ' . $returnCode . '): ' . ($output ?: $command));
+            $tesseractError = 'Tesseract binary not found';
         }
 
-        $text = @file_get_contents($outputTxt);
-        @unlink($outputTxt);
-        return $text ?: '';
+        if (!empty(trim($tesseractText))) {
+            return $tesseractText;
+        }
+
+        // Tesseract produced no text or failed — use Groq vision as the support fallback
+        if ($this->groqService) {
+            try {
+                $groqResult = $this->groqService->extractTextFromImage($filePath, $tesseractText);
+                if (is_array($groqResult) && (!empty(trim($groqResult['text'] ?? '')) || !empty(trim($groqResult['additional_text'] ?? '')))) {
+                    $pageText = !empty($groqResult['text']) ? $groqResult['text'] : $tesseractText . "\n\n" . $groqResult['additional_text'];
+                    if (!empty($groqResult['visual_elements'])) {
+                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                    }
+                    error_log('OcrService: Groq vision used for ' . basename($filePath));
+                    return $pageText;
+                }
+            } catch (Throwable $e) {
+                error_log('OcrService: Groq fallback exception: ' . $e->getMessage());
+            }
+        }
+
+        if ($tesseractError) {
+            throw new Exception($tesseractError);
+        }
+        throw new Exception('No text could be extracted from image');
     }
 
     /**
@@ -335,35 +366,11 @@ class OcrService {
         foreach ($images as $imagePath) {
             $pageText = '';
 
-            // Try Tesseract first
+            // processImage now tries Tesseract and falls back to Groq vision
             try {
                 $pageText = $this->processImage($imagePath);
             } catch (Exception $e) {
-                error_log('OcrService: Tesseract failed on ' . basename($imagePath) . ': ' . $e->getMessage());
-            }
-
-            // If Tesseract returned empty text, try Groq AI vision
-            if (empty(trim($pageText)) && $this->groqService) {
-                try {
-                    $groqResult = $this->groqService->extractTextFromImage($imagePath);
-                    if ($groqResult && !empty($groqResult['text'])) {
-                        $pageText = $groqResult['text'];
-                        if (!empty($groqResult['visual_elements'])) {
-                            $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
-                        }
-                        error_log('OcrService: Groq vision used for ' . basename($imagePath));
-                    } elseif ($groqResult && !empty($groqResult['additional_text'])) {
-                        $pageText = $groqResult['additional_text'];
-                        if (!empty($groqResult['visual_elements'])) {
-                            $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
-                        }
-                        error_log('OcrService: Groq vision used for ' . basename($imagePath));
-                    }
-                } catch (Error $e) {
-                    error_log('OcrService: Groq fallback error: ' . $e->getMessage());
-                } catch (Exception $e) {
-                    error_log('OcrService: Groq fallback exception: ' . $e->getMessage());
-                }
+                error_log('OcrService: OCR failed on ' . basename($imagePath) . ': ' . $e->getMessage());
             }
 
             if (empty(trim($pageText))) {
