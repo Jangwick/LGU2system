@@ -16,6 +16,8 @@ class OcrService {
     private $tempDir;
     private $enabled;
     private $groqService;
+    private $groqEnhance;
+    private $groqMaxPages;
 
     public function __construct() {
         $tessConfig = defined('OCR_TESSERACT_PATH') ? OCR_TESSERACT_PATH : '';
@@ -38,6 +40,9 @@ class OcrService {
                 error_log('OcrService: GroqService init failed: ' . $e->getMessage());
             }
         }
+
+        $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : true;
+        $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 1;
 
         // Ensure Tesseract can find its libraries and language data on shared hosting
         $this->setupTesseractEnvironment();
@@ -195,9 +200,9 @@ class OcrService {
     }
 
     /**
-     * Process image files with Tesseract OCR, falling back to Groq vision on failure
+     * Process image files with Tesseract OCR, enhancing/falling back to Groq vision
      */
-    private function processImage($filePath) {
+    private function processImage($filePath, $enhance = true) {
         $tesseractText = '';
         $tesseractError = null;
 
@@ -245,25 +250,44 @@ class OcrService {
             $tesseractError = 'Tesseract binary not found';
         }
 
-        if (!empty(trim($tesseractText))) {
-            return $tesseractText;
-        }
+        $trimmedTesseract = trim($tesseractText);
 
-        // Tesseract produced no text or failed — use Groq vision as the support fallback
-        if ($this->groqService) {
+        // Decide whether to call Groq: explicit enhancement, or fallback because Tesseract produced nothing
+        $useGroqEnhance = $this->groqService && $enhance && $this->groqEnhance;
+        $useGroqFallback = $this->groqService && empty($trimmedTesseract);
+
+        if ($useGroqEnhance || $useGroqFallback) {
             try {
                 $groqResult = $this->groqService->extractTextFromImage($filePath, $tesseractText);
-                if (is_array($groqResult) && (!empty(trim($groqResult['text'] ?? '')) || !empty(trim($groqResult['additional_text'] ?? '')))) {
-                    $pageText = !empty($groqResult['text']) ? $groqResult['text'] : $tesseractText . "\n\n" . $groqResult['additional_text'];
-                    if (!empty($groqResult['visual_elements'])) {
-                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
+                if (is_array($groqResult)) {
+                    $additional = trim($groqResult['additional_text'] ?? '');
+                    $groqText = trim($groqResult['text'] ?? '');
+                    $visual = trim($groqResult['visual_elements'] ?? '');
+
+                    if (!empty($additional) || !empty($groqText)) {
+                        if (!empty($trimmedTesseract) && !empty($additional)) {
+                            // Tesseract had partial text; append what Groq found
+                            $pageText = $tesseractText . "\n\n" . $additional;
+                        } else {
+                            // Fallback to Groq's full extraction
+                            $pageText = !empty($groqText) ? $groqText : $tesseractText . "\n\n" . $additional;
+                        }
+
+                        if (!empty($visual)) {
+                            $pageText .= "\n\n[Visual elements: " . $visual . ']';
+                        }
+
+                        error_log('OcrService: Groq vision used for ' . basename($filePath));
+                        return $pageText;
                     }
-                    error_log('OcrService: Groq vision used for ' . basename($filePath));
-                    return $pageText;
                 }
             } catch (Throwable $e) {
-                error_log('OcrService: Groq fallback exception: ' . $e->getMessage());
+                error_log('OcrService: Groq vision exception: ' . $e->getMessage());
             }
+        }
+
+        if (!empty($trimmedTesseract)) {
+            return $tesseractText;
         }
 
         if ($tesseractError) {
@@ -363,12 +387,14 @@ class OcrService {
         }
 
         $fullText = '';
-        foreach ($images as $imagePath) {
+        foreach ($images as $index => $imagePath) {
             $pageText = '';
 
-            // processImage now tries Tesseract and falls back to Groq vision
+            // Allow Groq enhancement only for the first N pages (0 = all pages)
+            $enhance = ($this->groqMaxPages <= 0) || ($index < $this->groqMaxPages);
+
             try {
-                $pageText = $this->processImage($imagePath);
+                $pageText = $this->processImage($imagePath, $enhance);
             } catch (Exception $e) {
                 error_log('OcrService: OCR failed on ' . basename($imagePath) . ': ' . $e->getMessage());
             }
