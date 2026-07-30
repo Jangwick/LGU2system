@@ -243,13 +243,33 @@ class GroqService {
             'top_p' => 0.9
         ];
 
-        $httpResult = $this->httpPost($apiUrl, $payload);
-        if ($httpResult === null) {
-            return null;
+        $maxRetries = 3;
+        $response = '';
+        $httpCode = 0;
+
+        for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
+            $httpResult = $this->httpPost($apiUrl, $payload);
+            if ($httpResult === null) {
+                return null;
+            }
+            $response = $httpResult['response'];
+            $httpCode = $httpResult['httpCode'];
+            $this->lastHttpCode = $httpCode;
+
+            if ($httpCode == 429) {
+                $waitSeconds = 30;
+                if (preg_match('/try again in ([\d.]+)s/i', $response, $matches)) {
+                    $waitSeconds = (float) $matches[1];
+                }
+                if ($attempt < $maxRetries) {
+                    error_log('GroqService: Rate limited, waiting ' . ceil($waitSeconds) . 's before retry ' . ($attempt + 1) . '/' . $maxRetries);
+                    sleep(ceil($waitSeconds));
+                    continue;
+                }
+            }
+
+            break;
         }
-        $response = $httpResult['response'];
-        $httpCode = $httpResult['httpCode'];
-        $this->lastHttpCode = $httpCode;
 
         if ($httpCode < 200 || $httpCode >= 300) {
             $this->lastError = 'HTTP ' . $httpCode . ': ' . $response;
