@@ -42,7 +42,7 @@ class OcrService {
             }
         }
 
-        $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : true;
+        $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? OCR_GROQ_ENHANCE : false;
         $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 1;
 
         // Ensure Tesseract can find its libraries and language data on shared hosting
@@ -204,7 +204,7 @@ class OcrService {
     /**
      * Process image files with Tesseract OCR, enhancing/falling back to Groq vision
      */
-    private function processImage($filePath, $enhance = true) {
+    private function processImage($filePath, $enhance = true, $allowFallback = true) {
         $tesseractText = '';
         $tesseractError = null;
 
@@ -256,7 +256,7 @@ class OcrService {
 
         // Decide whether to call Groq: explicit enhancement, or fallback because Tesseract produced nothing
         $useGroqEnhance = $this->groqService && $enhance && $this->groqEnhance;
-        $useGroqFallback = $this->groqService && empty($trimmedTesseract);
+        $useGroqFallback = $this->groqService && $allowFallback && empty($trimmedTesseract);
 
         if ($useGroqEnhance || $useGroqFallback) {
             try {
@@ -379,12 +379,12 @@ class OcrService {
         foreach ($images as $index => $imagePath) {
             $pageText = '';
 
-            // Allow Groq enhancement only for the first N pages (0 = all pages)
-            // If a specific $enhance value is passed, use it for every page instead
+            // Allow Groq vision only for the first N pages (0 = all pages)
             $pageEnhance = ($enhance === null) ? (($this->groqMaxPages <= 0) || ($index < $this->groqMaxPages)) : $enhance;
+            $pageAllowFallback = ($this->groqMaxPages <= 0) || ($index < $this->groqMaxPages);
 
             try {
-                $pageText = $this->processImage($imagePath, $pageEnhance);
+                $pageText = $this->processImage($imagePath, $pageEnhance, $pageAllowFallback);
             } catch (Exception $e) {
                 error_log('OcrService: OCR failed on ' . basename($imagePath) . ': ' . $e->getMessage());
             }
