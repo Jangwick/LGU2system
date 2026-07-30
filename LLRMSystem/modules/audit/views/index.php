@@ -94,9 +94,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
         </div>
 
         <!-- Filters -->
-        <div class="relative z-[1001] bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 md:p-6 mb-6 animate-fade-in-up pb-12">
+        <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6 animate-fade-in-up">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-                <div class="lg:col-span-2 relative z-[1000]">
+                <div class="lg:col-span-2 relative">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User</label>
                     <div class="relative custom-select-container">
                         <div id="user-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
@@ -116,7 +116,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <input type="hidden" name="user_id" id="user_id_input" value="<?php echo $data['filters']['user_id'] ?? ''; ?>">
                     </div>
                 </div>
-                <div class="relative z-[1000]">
+                <div class="relative">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Action</label>
                     <div class="relative custom-select-container">
                         <div id="action-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
@@ -136,7 +136,7 @@ require_once __DIR__ . '/../../core/layouts/header.php';
                         <input type="hidden" name="action" id="action_input" value="<?php echo $data['filters']['action'] ?? ''; ?>">
                     </div>
                 </div>
-                <div class="relative z-[1000]">
+                <div class="relative">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Table</label>
                     <div class="relative custom-select-container">
                         <div id="table-select-trigger" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer flex items-center justify-between" style="min-height: 48px;">
