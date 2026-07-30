@@ -128,18 +128,8 @@ class DocumentService {
             // Upload file
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
 
-            // Check for duplicate before running any OCR/Groq
-            $duplicate = $this->deduplicationService->findDuplicate($fileData['path'], $fileData['type'], $data['title'] ?? '');
-            if ($duplicate && ($duplicate['document']['ocr_status'] ?? '') === 'completed' && !empty($duplicate['document']['extracted_text'])) {
-                $ocrResult = [
-                    'text' => $duplicate['document']['extracted_text'],
-                    'status' => 'completed',
-                    'key_points' => $duplicate['document']['key_points']
-                ];
-            } else {
-                // Run OCR BEFORE encryption (file is still plaintext at this point)
-                $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
-            }
+            // Run OCR BEFORE encryption (file is still plaintext at this point)
+            $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
 
             // Encrypt the file with the master key directly (generalized key)
             $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
