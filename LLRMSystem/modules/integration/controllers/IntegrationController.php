@@ -294,7 +294,7 @@ class IntegrationController {
                         $ocrStatus = 'completed';
                     } else {
                         try {
-                            $ocrResult = $ocrService->extractText($absoluteFilePath, $fileData['type']);
+                            $ocrResult = $ocrService->extractText($absoluteFilePath, $fileData['type'], ['enhance' => false]);
                             $extractedText = $ocrResult['text'];
                             $ocrStatus = $ocrResult['status'];
 

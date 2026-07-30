@@ -622,7 +622,7 @@ class DocumentService {
 
         // Small files: run OCR synchronously
         try {
-            $ocrResult = $this->ocrService->extractText($filePath, $mimeType);
+            $ocrResult = $this->ocrService->extractText($filePath, $mimeType, ['enhance' => false]);
             $result['text'] = $ocrResult['text'];
             $result['status'] = $ocrResult['status'];
 
