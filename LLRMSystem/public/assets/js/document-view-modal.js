@@ -62,6 +62,7 @@ function formatDocumentText(rawText) {
     // Split into blocks separated by blank lines
     const blocks = text.split(/\n{2,}/);
     let html = '';
+    const rawInput = rawText.trim();
     let inList = false;
     let listType = '';
     let listItems = [];
@@ -150,6 +151,11 @@ function formatDocumentText(rawText) {
         }
     }
     closeList();
+
+    // If formatting produced nothing (e.g. only stripped OCR markers), fall back to raw text
+    if (!html.trim()) {
+        return `<p class="text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeHtml(rawInput)}</p>`;
+    }
 
     return html;
 }
