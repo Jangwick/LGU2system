@@ -483,14 +483,14 @@ function viewDocument(id) {
 }
 
 function getComplianceBadgeHTML(st) {
-    if (!st) return '';
-    const s = st.toLowerCase();
+    const s = (st ? st.toString().toLowerCase().trim() : '');
+    if (!s) return '<span class="badge badge-warning compliance-badge text-[10px]" title="Compliance Pending"><i class="bi bi-hourglass-split mr-0.5"></i>Compliance</span>';
     const b = {
-        'pending': '<span class="badge badge-warning"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>',
-        'compliant': '<span class="badge badge-success"><i class="bi bi-shield-check mr-1"></i>Compliant</span>',
-        'non_compliant': '<span class="badge badge-danger"><i class="bi bi-shield-exclamation mr-1"></i>Non-Compliant</span>'
+        'pending': '<span class="badge badge-warning compliance-badge text-[10px]" title="Compliance Pending"><i class="bi bi-hourglass-split mr-0.5"></i>Compliance</span>',
+        'compliant': '<span class="badge badge-success compliance-badge text-[10px]" title="Compliant"><i class="bi bi-shield-check mr-0.5"></i>Compliance</span>',
+        'non_compliant': '<span class="badge badge-danger compliance-badge text-[10px]" title="Non-Compliant"><i class="bi bi-shield-exclamation mr-0.5"></i>Non-Compliant</span>'
     };
-    return b[s] || '<span class="badge badge-warning">' + st + '</span>';
+    return b[s] || '<span class="badge badge-info compliance-badge text-[10px]"><i class="bi bi-shield mr-0.5"></i>' + s + '</span>';
 }
 
 function loadComplianceForPreview(docId, badgeId, contentId, showRunButton) {
@@ -593,12 +593,16 @@ async function runComplianceCheckInPreview(docId, badgeId, contentId) {
         });
         const data = await response.json();
         if (data.success) {
-            if (badgeEl) badgeEl.innerHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            const badgeHTML = getComplianceBadgeHTML(data.compliance_status || 'pending');
+            if (badgeEl) badgeEl.innerHTML = badgeHTML;
             loadComplianceForPreview(docId, _badgeId, _contentId);
             // Keep the main document preview modal in sync if it is open behind the iframe
             if (document.getElementById('preview-compliance-badge') && document.getElementById('preview-compliance-content')) {
                 loadComplianceForPreview(docId);
             }
+            // Update the same document's badge in the document list without a full reload
+            const listBadge = document.querySelector('tr[data-document-id="' + docId + '"] .compliance-badge');
+            if (listBadge) listBadge.outerHTML = badgeHTML;
         } else {
             if (contentEl) contentEl.innerHTML = '<p class="text-sm text-red-600">Compliance check failed: ' + escapeHtml(data.error || 'Unknown error') + '</p>';
         }

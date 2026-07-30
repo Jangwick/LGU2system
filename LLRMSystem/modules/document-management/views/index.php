@@ -81,13 +81,16 @@ function getOcrBadge($ocrStatus) {
 }
 
 function getComplianceBadge($complianceStatus) {
-    $status = $complianceStatus ?? 'pending';
+    $status = strtolower(trim($complianceStatus ?? ''));
+    if (empty($status)) {
+        $status = 'pending';
+    }
     $badges = [
-        'pending' => '<span class="badge badge-warning text-[10px]" title="Compliance Pending"><i class="bi bi-hourglass-split mr-0.5"></i>Compliance</span>',
-        'compliant' => '<span class="badge badge-success text-[10px]" title="Compliant"><i class="bi bi-shield-check mr-0.5"></i>Compliance</span>',
-        'non_compliant' => '<span class="badge badge-danger text-[10px]" title="Non-Compliant"><i class="bi bi-shield-exclamation mr-0.5"></i>Non-Compliant</span>',
+        'pending' => '<span class="badge badge-warning compliance-badge text-[10px]" title="Compliance Pending"><i class="bi bi-hourglass-split mr-0.5"></i>Compliance</span>',
+        'compliant' => '<span class="badge badge-success compliance-badge text-[10px]" title="Compliant"><i class="bi bi-shield-check mr-0.5"></i>Compliance</span>',
+        'non_compliant' => '<span class="badge badge-danger compliance-badge text-[10px]" title="Non-Compliant"><i class="bi bi-shield-exclamation mr-0.5"></i>Non-Compliant</span>',
     ];
-    return $badges[$status] ?? '<span class="badge badge-info text-[10px]"><i class="bi bi-shield mr-0.5"></i>' . ucfirst($status) . '</span>';
+    return $badges[$status] ?? '<span class="badge badge-info compliance-badge text-[10px]"><i class="bi bi-shield mr-0.5"></i>' . ucfirst($status) . '</span>';
 }
 
 function formatFileSize($bytes) {

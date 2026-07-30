@@ -103,14 +103,17 @@ function getLinkTypeLabel($type) {
 }
 
 function getComplianceBadge($status) {
-    $status = $status ?? 'pending';
+    $status = strtolower(trim($status ?? ''));
+    if (empty($status)) {
+        $status = 'pending';
+    }
     $labels = [
         'pending' => ['class' => 'badge-warning', 'icon' => 'bi-hourglass-split', 'label' => 'Pending'],
         'compliant' => ['class' => 'badge-success', 'icon' => 'bi-shield-check', 'label' => 'Compliant'],
         'non_compliant' => ['class' => 'badge-danger', 'icon' => 'bi-shield-exclamation', 'label' => 'Non-Compliant']
     ];
     $cfg = $labels[$status] ?? $labels['pending'];
-    return '<span class="badge ' . $cfg['class'] . '"><i class="bi ' . $cfg['icon'] . ' mr-1"></i>' . $cfg['label'] . '</span>';
+    return '<span class="badge ' . $cfg['class'] . ' compliance-badge"><i class="bi ' . $cfg['icon'] . ' mr-1"></i>' . $cfg['label'] . '</span>';
 }
 
 include_once __DIR__ . '/../../core/layouts/header.php';
