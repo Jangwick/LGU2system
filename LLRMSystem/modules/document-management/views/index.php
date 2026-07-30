@@ -352,10 +352,13 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <?php endforeach; ?>
                     </div>
                     <!-- Document Count -->
-                    <div class="flex items-center justify-center md:ml-auto">
+                    <div class="flex items-center justify-center md:ml-auto gap-2">
                         <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
                             <span id="total-docs" class="text-gray-900 dark:text-white mr-1"><?php echo $data['pagination']['total'] ?? count($data['documents'] ?? []); ?></span> documents found
                         </div>
+                        <button type="button" id="bulk-delete-btn" class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[11px] font-bold uppercase tracking-wider shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed" title="Delete Selected" disabled>
+                            <i class="bi bi-trash mr-1.5"></i> Delete Selected
+                        </button>
                     </div>
                 </div>
             </div>
@@ -368,7 +371,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
                             <th class="px-3 py-2.5 text-left w-12">
-                                <!-- Redundant checkbox removed -->
+                                <input type="checkbox" id="select-all-top" class="w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded focus:ring-red-500 cursor-pointer" onchange="toggleSelectAll(this)">
                             </th>
                             <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
