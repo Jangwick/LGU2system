@@ -402,7 +402,7 @@ if (!defined('OCR_LANGUAGE')) {
     define('OCR_LANGUAGE', 'eng');
 }
 if (!defined('OCR_TIMEOUT')) {
-    define('OCR_TIMEOUT', 30);
+    define('OCR_TIMEOUT', 120);
 }
 if (!defined('OCR_ASYNC_THRESHOLD')) {
     define('OCR_ASYNC_THRESHOLD', 5242880); // 5MB — files larger than this run async
