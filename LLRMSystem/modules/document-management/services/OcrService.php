@@ -258,28 +258,15 @@ class OcrService {
 
         if ($useGroqEnhance || $useGroqFallback) {
             try {
-                $groqResult = $this->groqService->extractTextFromImage($filePath, $tesseractText);
-                if (is_array($groqResult)) {
-                    $additional = trim($groqResult['additional_text'] ?? '');
-                    $groqText = trim($groqResult['text'] ?? '');
-                    $visual = trim($groqResult['visual_elements'] ?? '');
-
-                    if (!empty($additional) || !empty($groqText)) {
-                        if (!empty($trimmedTesseract) && !empty($additional)) {
-                            // Tesseract had partial text; append what Groq found
-                            $pageText = $tesseractText . "\n\n" . $additional;
-                        } else {
-                            // Fallback to Groq's full extraction
-                            $pageText = !empty($groqText) ? $groqText : $tesseractText . "\n\n" . $additional;
-                        }
-
-                        if (!empty($visual)) {
-                            $pageText .= "\n\n[Visual elements: " . $visual . ']';
-                        }
-
-                        error_log('OcrService: Groq vision used for ' . basename($filePath));
-                        return $pageText;
+                // Ask Groq to extract all text from the image; use Tesseract only as a fallback
+                $groqResult = $this->groqService->extractTextFromImage($filePath);
+                if (is_array($groqResult) && !empty(trim($groqResult['text'] ?? ''))) {
+                    $pageText = trim($groqResult['text']);
+                    if (!empty($groqResult['visual_elements'])) {
+                        $pageText .= "\n\n[Visual elements: " . $groqResult['visual_elements'] . ']';
                     }
+                    error_log('OcrService: Groq vision used for ' . basename($filePath));
+                    return $pageText;
                 }
             } catch (Throwable $e) {
                 error_log('OcrService: Groq vision exception: ' . $e->getMessage());
