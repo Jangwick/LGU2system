@@ -164,6 +164,10 @@
             isOpen = false; // set to false so toggleChat makes it true
             toggleChat();
         }
+
+        // Re-evaluate visibility after the DOM is fully loaded to avoid
+        // being incorrectly hidden by invisible fixed overlays on mobile refresh.
+        updateChatbotVisibility();
     });
 
     toggleBtn.addEventListener('click', toggleChat);
@@ -288,8 +292,11 @@
         const modals = document.querySelectorAll('div.fixed.inset-0');
         let anyOpen = false;
         modals.forEach(modal => {
+            if (modal === chatbotContainer) return;
             const style = window.getComputedStyle(modal);
-            if (style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0') anyOpen = true;
+            if (style.display === 'none' || style.visibility === 'hidden') return;
+            if (parseFloat(style.opacity) < 0.01) return;
+            anyOpen = true;
         });
         if (anyOpen) chatbotContainer.classList.add('hidden');
         else chatbotContainer.classList.remove('hidden');
