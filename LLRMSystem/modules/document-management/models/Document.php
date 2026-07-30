@@ -508,15 +508,13 @@ class Document {
         $stmt = $this->db->prepare("
             SELECT reference_number 
             FROM legislative_documents 
-            WHERE document_type = :type 
-            AND YEAR(document_date) = :year
-            AND deleted_at IS NULL
+            WHERE deleted_at IS NULL
             AND reference_number LIKE :pattern
             ORDER BY reference_number DESC 
             LIMIT 1
         ");
         $pattern = "{$prefix}-{$year}-%";
-        $stmt->execute([':type' => $type, ':year' => $year, ':pattern' => $pattern]);
+        $stmt->execute([':pattern' => $pattern]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($result) {
