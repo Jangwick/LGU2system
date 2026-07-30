@@ -30,9 +30,10 @@ class OcrService {
         $this->tempDir = dirname(dirname(dirname(__DIR__))) . '/storage/temp/ocr';
         $this->ensureTempDir();
 
-        // Initialize GroqService for AI vision fallback
+        // Initialize GroqService for AI vision fallback (default enabled)
         $this->groqService = null;
-        if (defined('OCR_GROQ_FALLBACK') && OCR_GROQ_FALLBACK && defined('GROQ_API_KEY') && !empty(GROQ_API_KEY)) {
+        $groqFallbackEnabled = !defined('OCR_GROQ_FALLBACK') || OCR_GROQ_FALLBACK;
+        if ($groqFallbackEnabled && defined('GROQ_API_KEY') && !empty(GROQ_API_KEY)) {
             try {
                 require_once __DIR__ . '/../../ai/services/GroqService.php';
                 $this->groqService = new GroqService();
@@ -255,7 +256,7 @@ class OcrService {
 
         // Decide whether to call Groq: explicit enhancement, or fallback because Tesseract produced nothing
         $useGroqEnhance = $this->groqService && $enhance && $this->groqEnhance;
-        $useGroqFallback = $this->groqService && $enhance && empty($trimmedTesseract);
+        $useGroqFallback = $this->groqService && empty($trimmedTesseract);
 
         if ($useGroqEnhance || $useGroqFallback) {
             try {
