@@ -108,7 +108,7 @@ class OcrService {
     /**
      * Main entry point — extract text from any supported file
      */
-    public function extractText($filePath, $mimeType = null) {
+    public function extractText($filePath, $mimeType = null, $options = []) {
         if (!$this->enabled) {
             return ['text' => '', 'status' => 'skipped', 'error' => 'OCR disabled in config'];
         }
@@ -119,6 +119,7 @@ class OcrService {
 
         $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
         $mimeType = $mimeType ?: mime_content_type($filePath);
+        $enhance = $options['enhance'] ?? $this->groqEnhance;
 
         try {
             $text = '';
@@ -128,13 +129,13 @@ class OcrService {
                 // Images — direct Tesseract OCR
                 case in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'tif', 'webp']):
                 case strpos($mimeType, 'image/') === 0:
-                    $text = $this->processImage($filePath);
+                    $text = $this->processImage($filePath, $enhance);
                     $method = 'tesseract';
                     break;
 
                 // PDF — try digital extraction first, fall back to OCR
                 case $extension === 'pdf' || $mimeType === 'application/pdf':
-                    $text = $this->processPdf($filePath);
+                    $text = $this->processPdf($filePath, $enhance);
                     $method = (strpos($text, '[Page OCR failed') !== false || strpos($text, '--- Page Break ---') !== false) ? 'tesseract' : 'pdfparser';
                     break;
 
@@ -254,7 +255,7 @@ class OcrService {
 
         // Decide whether to call Groq: explicit enhancement, or fallback because Tesseract produced nothing
         $useGroqEnhance = $this->groqService && $enhance && $this->groqEnhance;
-        $useGroqFallback = $this->groqService && empty($trimmedTesseract);
+        $useGroqFallback = $this->groqService && $enhance && empty($trimmedTesseract);
 
         if ($useGroqEnhance || $useGroqFallback) {
             try {
@@ -286,7 +287,7 @@ class OcrService {
     /**
      * Process PDF files — try digital extraction first, fall back to OCR
      */
-    private function processPdf($filePath) {
+    private function processPdf($filePath, $enhance = null) {
         // First, try to extract embedded text using smalot/pdfparser
         $digitalText = $this->extractDigitalPdfText($filePath);
 
@@ -301,7 +302,7 @@ class OcrService {
 
         // Insufficient digital text — use OCR (Tesseract + Groq fallback)
         try {
-            $ocrText = $this->processScannedPdf($filePath);
+            $ocrText = $this->processScannedPdf($filePath, $enhance);
             // If OCR produced more text than digital extraction, use OCR result
             if (strlen(trim($ocrText)) > strlen($trimmedText)) {
                 return $ocrText;
@@ -366,7 +367,7 @@ class OcrService {
      * Process scanned PDFs — convert to images then OCR each page
      * Falls back to Groq AI vision when Tesseract fails or returns empty text
      */
-    private function processScannedPdf($filePath) {
+    private function processScannedPdf($filePath, $enhance = null) {
         $images = $this->convertPdfToImages($filePath);
 
         if (empty($images)) {
@@ -378,10 +379,11 @@ class OcrService {
             $pageText = '';
 
             // Allow Groq enhancement only for the first N pages (0 = all pages)
-            $enhance = ($this->groqMaxPages <= 0) || ($index < $this->groqMaxPages);
+            // If a specific $enhance value is passed, use it for every page instead
+            $pageEnhance = ($enhance === null) ? (($this->groqMaxPages <= 0) || ($index < $this->groqMaxPages)) : $enhance;
 
             try {
-                $pageText = $this->processImage($imagePath, $enhance);
+                $pageText = $this->processImage($imagePath, $pageEnhance);
             } catch (Exception $e) {
                 error_log('OcrService: OCR failed on ' . basename($imagePath) . ': ' . $e->getMessage());
             }

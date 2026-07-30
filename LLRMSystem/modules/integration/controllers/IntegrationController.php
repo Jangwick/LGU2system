@@ -3,6 +3,9 @@ require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 require_once __DIR__ . '/../../notifications/models/Notification.php';
 require_once __DIR__ . '/../../document-management/services/ComplianceService.php';
+require_once __DIR__ . '/../../document-management/services/OcrService.php';
+require_once __DIR__ . '/../../document-management/services/SummarizationService.php';
+require_once __DIR__ . '/../../document-management/services/DeduplicationService.php';
 require_once __DIR__ . '/../../document-management/models/DocumentVersion.php';
 
 class IntegrationController {
@@ -224,6 +227,11 @@ class IntegrationController {
             return ['success' => false, 'error' => 'No file provided'];
         }
 
+        // Pre-instantiate services and tables before the DB transaction begins
+        $ocrService = new OcrService();
+        $summarizationService = new SummarizationService();
+        $dedupService = new DeduplicationService($this->db, $ocrService);
+
         // Start transaction
         $this->db->beginTransaction();
 
@@ -270,12 +278,6 @@ class IntegrationController {
             $absoluteFilePath = dirname(dirname(dirname(__DIR__))) . '/' . $storedFilePath;
 
             // 2. Run OCR on the file (before encryption, while file is plaintext)
-            require_once __DIR__ . '/../../document-management/services/OcrService.php';
-            require_once __DIR__ . '/../../document-management/services/SummarizationService.php';
-
-            $ocrService = new OcrService();
-            $summarizationService = new SummarizationService();
-
             $ocrStatus = 'pending';
             $extractedText = null;
             $keyPoints = null;
@@ -284,18 +286,25 @@ class IntegrationController {
 
             if (defined('OCR_ENABLED') && OCR_ENABLED && $ocrService->isOcrCapable($fileData['type'], $fileData['name'])) {
                 if ($fileData['size'] < $asyncThreshold) {
-                    // Small file: run OCR synchronously
-                    try {
-                        $ocrResult = $ocrService->extractText($absoluteFilePath, $fileData['type']);
-                        $extractedText = $ocrResult['text'];
-                        $ocrStatus = $ocrResult['status'];
+                    // Small file: run OCR synchronously, but check duplicates first
+                    $duplicate = $dedupService->findDuplicate($absoluteFilePath, $fileData['type'], $data['title'] ?? '');
+                    if ($duplicate && ($duplicate['document']['ocr_status'] ?? '') === 'completed' && !empty($duplicate['document']['extracted_text'])) {
+                        $extractedText = $duplicate['document']['extracted_text'];
+                        $keyPoints = $duplicate['document']['key_points'];
+                        $ocrStatus = 'completed';
+                    } else {
+                        try {
+                            $ocrResult = $ocrService->extractText($absoluteFilePath, $fileData['type']);
+                            $extractedText = $ocrResult['text'];
+                            $ocrStatus = $ocrResult['status'];
 
-                        if ($ocrResult['status'] === 'completed' && !empty($ocrResult['text'])) {
-                            $keyPoints = $summarizationService->generateKeyPointsString($ocrResult['text'], 7);
+                            if ($ocrResult['status'] === 'completed' && !empty($ocrResult['text'])) {
+                                $keyPoints = $summarizationService->generateKeyPointsString($ocrResult['text'], 7);
+                            }
+                        } catch (Exception $e) {
+                            error_log("OCR failed during integration receive: " . $e->getMessage());
+                            $ocrStatus = 'failed';
                         }
-                    } catch (Exception $e) {
-                        error_log("OCR failed during integration receive: " . $e->getMessage());
-                        $ocrStatus = 'failed';
                     }
                 }
                 // Large files: ocr_status stays 'pending' for async worker
@@ -468,6 +477,9 @@ class IntegrationController {
 
                 $documentId = $this->db->lastInsertId();
             }
+
+            // Persist hash and OCR-text embedding for future duplicate detection
+            $dedupService->store($documentId, $absoluteFilePath, $extractedText, $data['title'] ?? '');
 
             // Commit transaction
             $this->db->commit();

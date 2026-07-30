@@ -3,6 +3,7 @@
 require_once __DIR__ . '/EncryptionService.php';
 require_once __DIR__ . '/OcrService.php';
 require_once __DIR__ . '/SummarizationService.php';
+require_once __DIR__ . '/DeduplicationService.php';
 
 class DocumentService {
     private $documentModel;
@@ -11,16 +12,18 @@ class DocumentService {
     private $encryptionService;
     private $ocrService;
     private $summarizationService;
+    private $deduplicationService;
     private $db;
     
     public function __construct($documentModel, $fileStorageService, $logger) {
         $this->documentModel = $documentModel;
         $this->fileStorageService = $fileStorageService;
         $this->logger = $logger;
+        $this->db = getDatabase();
         $this->encryptionService = new EncryptionService();
         $this->ocrService = new OcrService();
         $this->summarizationService = new SummarizationService();
-        $this->db = getDatabase();
+        $this->deduplicationService = new DeduplicationService($this->db, $this->ocrService);
     }
     
     /**
@@ -125,8 +128,18 @@ class DocumentService {
             // Upload file
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
 
-            // Run OCR BEFORE encryption (file is still plaintext at this point)
-            $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
+            // Check for duplicate before running any OCR/Groq
+            $duplicate = $this->deduplicationService->findDuplicate($fileData['path'], $fileData['type'], $data['title'] ?? '');
+            if ($duplicate && ($duplicate['document']['ocr_status'] ?? '') === 'completed' && !empty($duplicate['document']['extracted_text'])) {
+                $ocrResult = [
+                    'text' => $duplicate['document']['extracted_text'],
+                    'status' => 'completed',
+                    'key_points' => $duplicate['document']['key_points']
+                ];
+            } else {
+                // Run OCR BEFORE encryption (file is still plaintext at this point)
+                $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
+            }
 
             // Encrypt the file with the master key directly (generalized key)
             $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
@@ -170,6 +183,9 @@ class DocumentService {
 
             // Create document record
             $documentId = $this->documentModel->create($documentData);
+
+            // Store hash and embedding for future duplicate detection
+            $this->deduplicationService->store($documentId, $fileData['path'], $ocrResult['text'] ?? '', $data['title'] ?? '');
 
             // Record initial status history
             $this->documentModel->addStatusHistory($documentId, null, $status, $userId, 'Document created');
