@@ -325,6 +325,32 @@ if (!defined('DB_PASS')) {
     define('DB_PASS', getenv('DB_PASS') ?: '');
 }
 
+// Redis / Cache Configuration
+if (!defined('CACHE_ENABLED')) {
+    define('CACHE_ENABLED', filter_var(getenv('CACHE_ENABLED') ?: true, FILTER_VALIDATE_BOOLEAN));
+}
+if (!defined('REDIS_ENABLED')) {
+    define('REDIS_ENABLED', filter_var(getenv('REDIS_ENABLED') ?: true, FILTER_VALIDATE_BOOLEAN));
+}
+if (!defined('REDIS_HOST')) {
+    define('REDIS_HOST', getenv('REDIS_HOST') ?: '127.0.0.1');
+}
+if (!defined('REDIS_PORT')) {
+    define('REDIS_PORT', (int) (getenv('REDIS_PORT') ?: 6379));
+}
+if (!defined('REDIS_DB')) {
+    define('REDIS_DB', (int) (getenv('REDIS_DB') ?: 0));
+}
+if (!defined('REDIS_PASSWORD')) {
+    define('REDIS_PASSWORD', getenv('REDIS_PASSWORD') ?: '');
+}
+if (!defined('REDIS_TIMEOUT')) {
+    define('REDIS_TIMEOUT', (float) (getenv('REDIS_TIMEOUT') ?: 0.1));
+}
+if (!defined('FILE_CACHE_PATH')) {
+    define('FILE_CACHE_PATH', STORAGE_PATH . DIRECTORY_SEPARATOR . 'cache');
+}
+
 // AI Configuration
 if (!defined('GEMINI_API_KEY')) {
     define('GEMINI_API_KEY', ''); // Fallback to empty if not defined in local config
@@ -386,6 +412,7 @@ date_default_timezone_set('Asia/Manila');
 // Load input sanitization utilities (available to all endpoints that include config)
 require_once __DIR__ . '/../utils/Sanitizer.php';
 require_once __DIR__ . '/../utils/Request.php';
+require_once __DIR__ . '/../utils/CacheService.php';
 
 // OCR Configuration (can be overridden in config.local.php)
 if (!defined('OCR_ENABLED')) {
