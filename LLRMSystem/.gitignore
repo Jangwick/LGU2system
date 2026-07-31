@@ -22,3 +22,4 @@ Thumbs.db
 .windsurf/
 storage/logs/
 tests/.phpunit.cache/
+tests/coverage-html/

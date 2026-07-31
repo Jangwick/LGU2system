@@ -23,6 +23,10 @@
     "scripts": {
         "test": "phpunit --configuration tests/phpunit.xml",
         "test:unit": "phpunit --configuration tests/phpunit.xml --testsuite Unit",
-        "test:integration": "phpunit --configuration tests/phpunit.xml --testsuite Integration"
+        "test:integration": "phpunit --configuration tests/phpunit.xml --testsuite Integration",
+        "test:functional": "phpunit --configuration tests/phpunit.xml --testsuite Functional",
+        "test:database": "phpunit --configuration tests/phpunit.xml --testsuite Database",
+        "test:a11y": "phpunit --configuration tests/phpunit.xml --testsuite Accessibility",
+        "test:coverage": "phpunit --configuration tests/phpunit.xml --coverage-html tests/coverage-html"
     }
 }
