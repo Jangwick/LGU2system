@@ -42,7 +42,7 @@ try {
     $query = Sanitizer::plainText($_GET['q'] ?? '');
     $mode = Sanitizer::enum($_GET['mode'] ?? 'hybrid', ['hybrid', 'semantic', 'keyword'], 'hybrid');
     $page = max(1, Sanitizer::int($_GET['page'] ?? 1, 1));
-    $perPage = 10;
+    $perPage = min(max(Sanitizer::int($_GET['per_page'] ?? 10, 10), 1), ApiPaginator::MAX_PER_PAGE);
 
     // Handle type filter: can be a single value or an array from type[] checkboxes
     $typeFilter = $_GET['type'] ?? '';
@@ -116,17 +116,15 @@ try {
     }
     unset($doc);
 
-    echo json_encode([
-        'success' => true,
-        'results' => $results,
-        'total' => $total,
-        'facets' => $facets,
-        'page' => $page,
-        'per_page' => $perPage,
-        'total_pages' => ceil($total / max($perPage, 1)),
-        'query' => $query,
-        'mode' => $mode
-    ]);
+    $envelope = ApiPaginator::envelope($results, $page, $perPage, $total);
+    // Keep legacy fields for existing consumers
+    $envelope['results'] = $envelope['data'];
+    $envelope['total'] = $total;
+    $envelope['facets'] = $facets;
+    $envelope['query'] = $query;
+    $envelope['mode'] = $mode;
+    unset($envelope['data']);
+    echo json_encode($envelope);
 
 } catch (Exception $e) {
     http_response_code(500);

@@ -429,6 +429,7 @@ require_once __DIR__ . '/../utils/Sanitizer.php';
 require_once __DIR__ . '/../utils/Request.php';
 require_once __DIR__ . '/../utils/CacheService.php';
 require_once __DIR__ . '/../utils/LogQueue.php';
+require_once __DIR__ . '/../utils/ApiPaginator.php';
 require_once __DIR__ . '/../middleware/CompressionMiddleware.php';
 require_once __DIR__ . '/../middleware/ApiCacheMiddleware.php';
 
