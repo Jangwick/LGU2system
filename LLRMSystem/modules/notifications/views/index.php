@@ -87,13 +87,21 @@ include_once __DIR__ . '/../../core/layouts/header.php';
             </div>
         </div>
     </main>
-</div>
 
 <script>
-    const apiBase = '<?php echo BASE_URL; ?>/modules/notifications/api/notifications.php';
+    const apiBase = '<?php echo NOTIFICATIONS_URL; ?>/api/notifications.php';
+
+    function postJson(url, body = {}) {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify(body)
+        });
+    }
 
     document.getElementById('mark-all-read')?.addEventListener('click', () => {
-        fetch(`${apiBase}?action=read_all`, { method: 'POST' })
+        postJson(`${apiBase}?action=read_all`)
             .then(() => location.reload());
     });
 
@@ -101,10 +109,8 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const id = btn.dataset.id;
-            fetch(`${apiBase}?action=read`, {
-                method: 'POST',
-                body: JSON.stringify({ notification_id: id })
-            }).then(() => location.reload());
+            postJson(`${apiBase}?action=read`, { notification_id: id })
+                .then(() => location.reload());
         });
     });
 
@@ -112,8 +118,10 @@ include_once __DIR__ . '/../../core/layouts/header.php';
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const id = btn.dataset.id;
-            fetch(`${apiBase}?action=delete&id=${id}`, { method: 'DELETE' })
-                .then(() => location.reload());
+            fetch(`${apiBase}?action=delete&id=${id}`, {
+                method: 'DELETE',
+                credentials: 'same-origin'
+            }).then(() => location.reload());
         });
     });
 </script>
