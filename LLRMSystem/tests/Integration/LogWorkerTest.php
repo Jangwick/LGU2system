@@ -39,7 +39,7 @@ class LogWorkerTest extends TestCase
 
         $output = [];
         $return = 0;
-        exec('php ' . BASE_PATH . '/modules/core/jobs/process-logs.php', $output, $return);
+        exec(PHP_BINARY . ' ' . BASE_PATH . '/modules/core/jobs/process-logs.php', $output, $return);
 
         $this->assertSame(0, $return);
         $this->assertStringContainsString('activity log', implode(' ', $output));

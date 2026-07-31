@@ -20,7 +20,7 @@ class DocumentFunctionalTest extends TestCase
 
         $mockService = $this->getMockBuilder('DocumentService')
             ->disableOriginalConstructor()
-            ->onlyMethods(['createDocument', 'updateDocument', 'deleteDocument', 'getDocuments'])
+            ->onlyMethods(['createDocument', 'updateDocument', 'deleteDocument', 'getDocuments', 'getSourceCounts'])
             ->getMock();
 
         $reflection = new ReflectionClass('DocumentController');
@@ -92,6 +92,7 @@ class DocumentFunctionalTest extends TestCase
         $reflection = new ReflectionClass($this->controller);
         $service = $reflection->getProperty('documentService')->getValue($this->controller);
         $service->method('getDocuments')->willReturn($expected);
+        $service->method('getSourceCounts')->willReturn([]);
 
         $result = $this->controller->index();
 

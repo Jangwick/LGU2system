@@ -11,6 +11,7 @@
  */
 
 require __DIR__ . '/../../core/config/config.php';
+require __DIR__ . '/../../core/config/database.php';
 
 function drainAndInsert(string $queue, callable $inserter): int {
     $drained = 0;

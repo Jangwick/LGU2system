@@ -222,21 +222,26 @@ class ComplianceService {
      * (with a legacy keyword fallback if embedding generation fails).
      */
     private function scoreRule($docVector, $complianceText, $rule, $document) {
+        $keyword = $this->keywordScoreFallback($rule, $document);
+
         if ($docVector) {
             $ruleVector = $this->getRuleVector($rule);
             if ($ruleVector) {
                 $similarity = SearchService::cosineSimilarity($docVector, $ruleVector);
                 $score = min(100, max(0, round($similarity * 100)));
-                $explanation = 'Semantic similarity to rule example: ' . $score . '%';
-                return [
-                    'score' => $score,
-                    'matched' => 'Similarity: ' . $score . '%',
-                    'explanation' => $explanation
-                ];
+
+                if ($score >= $keyword['score']) {
+                    $explanation = 'Semantic similarity to rule example: ' . $score . '%';
+                    return [
+                        'score' => $score,
+                        'matched' => 'Similarity: ' . $score . '%',
+                        'explanation' => $explanation
+                    ];
+                }
             }
         }
 
-        return $this->keywordScoreFallback($rule, $document);
+        return $keyword;
     }
 
     /**
