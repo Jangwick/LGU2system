@@ -324,6 +324,12 @@ if (!defined('DB_USER')) {
 if (!defined('DB_PASS')) {
     define('DB_PASS', getenv('DB_PASS') ?: '');
 }
+if (!defined('DB_PERSISTENT')) {
+    define('DB_PERSISTENT', filter_var(getenv('DB_PERSISTENT') ?: true, FILTER_VALIDATE_BOOLEAN));
+}
+if (!defined('DB_TIMEOUT')) {
+    define('DB_TIMEOUT', (int) (getenv('DB_TIMEOUT') ?: 5));
+}
 
 // Redis / Cache Configuration
 if (!defined('CACHE_ENABLED')) {
