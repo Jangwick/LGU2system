@@ -356,6 +356,12 @@ if (!defined('REDIS_TIMEOUT')) {
 if (!defined('FILE_CACHE_PATH')) {
     define('FILE_CACHE_PATH', STORAGE_PATH . DIRECTORY_SEPARATOR . 'cache');
 }
+if (!defined('API_CACHE_ENABLED')) {
+    define('API_CACHE_ENABLED', filter_var(getenv('API_CACHE_ENABLED') ?: true, FILTER_VALIDATE_BOOLEAN));
+}
+if (!defined('API_CACHE_TTL')) {
+    define('API_CACHE_TTL', (int) (getenv('API_CACHE_TTL') ?: 60));
+}
 
 // AI Configuration
 if (!defined('GEMINI_API_KEY')) {
@@ -419,6 +425,10 @@ date_default_timezone_set('Asia/Manila');
 require_once __DIR__ . '/../utils/Sanitizer.php';
 require_once __DIR__ . '/../utils/Request.php';
 require_once __DIR__ . '/../utils/CacheService.php';
+require_once __DIR__ . '/../middleware/ApiCacheMiddleware.php';
+
+// Start automatic API response caching for GET /api/ requests
+ApiCacheMiddleware::start();
 
 // OCR Configuration (can be overridden in config.local.php)
 if (!defined('OCR_ENABLED')) {
