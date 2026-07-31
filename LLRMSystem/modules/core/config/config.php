@@ -362,6 +362,9 @@ if (!defined('API_CACHE_ENABLED')) {
 if (!defined('API_CACHE_TTL')) {
     define('API_CACHE_TTL', (int) (getenv('API_CACHE_TTL') ?: 60));
 }
+if (!defined('LOG_QUEUE_ENABLED')) {
+    define('LOG_QUEUE_ENABLED', filter_var(getenv('LOG_QUEUE_ENABLED') ?: true, FILTER_VALIDATE_BOOLEAN));
+}
 
 // AI Configuration
 if (!defined('GEMINI_API_KEY')) {
@@ -425,6 +428,7 @@ date_default_timezone_set('Asia/Manila');
 require_once __DIR__ . '/../utils/Sanitizer.php';
 require_once __DIR__ . '/../utils/Request.php';
 require_once __DIR__ . '/../utils/CacheService.php';
+require_once __DIR__ . '/../utils/LogQueue.php';
 require_once __DIR__ . '/../middleware/ApiCacheMiddleware.php';
 
 // Start automatic API response caching for GET /api/ requests

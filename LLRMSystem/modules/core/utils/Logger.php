@@ -60,6 +60,20 @@ class Logger {
             // Get table name from action
             $tableName = $this->getTableNameFromAction($action);
             
+            $payload = [
+                'user_id' => $userId,
+                'action' => $action,
+                'table_name' => $tableName,
+                'record_id' => $documentId,
+                'description' => $fullDescription,
+                'ip_address' => $this->getClientIP(),
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? ''
+            ];
+            
+            if (LogQueue::enabled()) {
+                return LogQueue::push('activity_logs', $payload);
+            }
+            
             $stmt = $this->db->prepare("
                 INSERT INTO activity_logs (
                     user_id, action, table_name, record_id, description,
@@ -92,6 +106,20 @@ class Logger {
      */
     public function logUserActivity($userId, $action, $description = '', $additionalData = []) {
         try {
+            $payload = [
+                'user_id' => $userId,
+                'action' => $action,
+                'table_name' => 'users',
+                'record_id' => null,
+                'description' => $description,
+                'ip_address' => $this->getClientIP(),
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? ''
+            ];
+            
+            if (LogQueue::enabled()) {
+                return LogQueue::push('activity_logs', $payload);
+            }
+            
             $stmt = $this->db->prepare("
                 INSERT INTO activity_logs (
                     user_id, action, table_name, description,
@@ -135,6 +163,20 @@ class Logger {
                 }
             }
             
+            $payload = [
+                'user_id' => $userId,
+                'action' => $action,
+                'table_name' => $tableName,
+                'record_id' => $recordId,
+                'description' => $fullDescription,
+                'ip_address' => $this->getClientIP(),
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? ''
+            ];
+            
+            if (LogQueue::enabled()) {
+                return LogQueue::push('activity_logs', $payload);
+            }
+            
             $stmt = $this->db->prepare("
                 INSERT INTO activity_logs (
                     user_id, action, table_name, record_id, description,
@@ -172,6 +214,20 @@ class Logger {
             // Add additional data to description if present
             if (!empty($additionalData)) {
                 $description .= " | Details: " . json_encode($additionalData);
+            }
+            
+            $payload = [
+                'user_id' => $userId,
+                'action' => $action,
+                'table_name' => 'sessions',
+                'record_id' => null,
+                'description' => $description,
+                'ip_address' => $this->getClientIP(),
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? ''
+            ];
+            
+            if (LogQueue::enabled()) {
+                return LogQueue::push('activity_logs', $payload);
             }
             
             $stmt = $this->db->prepare("
@@ -225,19 +281,29 @@ class Logger {
      */
     public function logAccess($documentId, $userId, $accessType = 'view') {
         try {
-            $stmt = $this->db->prepare("
-                INSERT INTO document_access_logs (
-                    document_id, user_id, access_type, accessed_at
-                ) VALUES (
-                    :document_id, :user_id, :access_type, NOW()
-                )
-            ");
+            $payload = [
+                'document_id' => $documentId,
+                'user_id' => $userId,
+                'access_type' => $accessType
+            ];
             
-            $stmt->execute([
-                ':document_id' => $documentId,
-                ':user_id' => $userId,
-                ':access_type' => $accessType
-            ]);
+            if (LogQueue::enabled()) {
+                LogQueue::push('document_access_logs', $payload);
+            } else {
+                $stmt = $this->db->prepare("
+                    INSERT INTO document_access_logs (
+                        document_id, user_id, access_type, accessed_at
+                    ) VALUES (
+                        :document_id, :user_id, :access_type, NOW()
+                    )
+                ");
+                
+                $stmt->execute([
+                    ':document_id' => $documentId,
+                    ':user_id' => $userId,
+                    ':access_type' => $accessType
+                ]);
+            }
             
             // Also log to activity_logs for comprehensive tracking
             $this->log(strtoupper('DOCUMENT_' . $accessType), $documentId, "Document accessed: $accessType");
