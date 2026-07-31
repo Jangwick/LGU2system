@@ -190,9 +190,9 @@ function viewDocument(id) {
                     <div class="p-4 md:p-8">
                         <!-- Top Header Area -->
                         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8 pb-6 border-b border-gray-100 dark:border-gray-800">
-                            <div>
-                                <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
-                                    <h2 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-tight">${doc.title}</h2>
+                            <div class="min-w-0">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-3 min-w-0">
+                                    <h2 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-tight break-words min-w-0">${doc.title}</h2>
                                     <div class="flex">${statusBadge}</div>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-y-3 text-xs md:text-sm text-gray-500 dark:text-gray-400">
@@ -212,7 +212,7 @@ function viewDocument(id) {
                                     </span>
                                 </div>
                             </div>
-                            <div class="flex flex-row md:flex-row items-center gap-3">
+                            <div class="flex flex-row items-center gap-3 shrink-0">
                                 ${currentUserRole !== 'viewer' ? `
                                 <a href="${App.apiUrl('documents', `download.php?id=${doc.id}`)}" class="flex-1 sm:flex-none justify-center bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[11px] flex items-center shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95">
                                     <i class="bi bi-download mr-2 text-base"></i> Download
