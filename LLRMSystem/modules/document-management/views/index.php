@@ -356,9 +356,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
                             <span id="total-docs" class="text-gray-900 dark:text-white mr-1"><?php echo $data['pagination']['total'] ?? count($data['documents'] ?? []); ?></span> documents found
                         </div>
-                        <button type="button" id="bulk-delete-btn" class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[11px] font-bold uppercase tracking-wider shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed" title="Delete Selected" disabled>
-                            <i class="bi bi-trash mr-1.5"></i> Delete Selected
-                        </button>
                     </div>
                 </div>
             </div>
