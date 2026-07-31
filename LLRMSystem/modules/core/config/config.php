@@ -429,7 +429,11 @@ require_once __DIR__ . '/../utils/Sanitizer.php';
 require_once __DIR__ . '/../utils/Request.php';
 require_once __DIR__ . '/../utils/CacheService.php';
 require_once __DIR__ . '/../utils/LogQueue.php';
+require_once __DIR__ . '/../middleware/CompressionMiddleware.php';
 require_once __DIR__ . '/../middleware/ApiCacheMiddleware.php';
+
+// Start output compression before caching so cached payloads can be gzipped
+CompressionMiddleware::start();
 
 // Start automatic API response caching for GET /api/ requests
 ApiCacheMiddleware::start();
