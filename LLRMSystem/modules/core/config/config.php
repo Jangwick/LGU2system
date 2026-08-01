@@ -380,7 +380,10 @@ if (!defined('GROQ_API_KEY')) {
     define('GROQ_API_KEY', ''); // Set in config.local.php
 }
 if (!defined('GROQ_MODEL')) {
-    define('GROQ_MODEL', 'llama-3.3-70b-versatile');
+    define('GROQ_MODEL', 'groq/compound');
+}
+if (!defined('GROQ_FALLBACK_MODELS')) {
+    define('GROQ_FALLBACK_MODELS', 'groq/compound-mini');
 }
 
 // Encryption Configuration
@@ -453,11 +456,14 @@ if (!defined('OCR_GHOSTSCRIPT_PATH')) {
 if (!defined('OCR_LANGUAGE')) {
     define('OCR_LANGUAGE', 'eng');
 }
-if (!defined('OCR_TIMEOUT')) {
-    define('OCR_TIMEOUT', 60);
-}
 if (!defined('OCR_ASYNC_THRESHOLD')) {
     define('OCR_ASYNC_THRESHOLD', 5242880); // 5MB — files larger than this run async
+}
+if (!defined('OCR_TIMEOUT')) {
+    define('OCR_TIMEOUT', 120); // seconds per Tesseract page
+}
+if (!defined('OCR_GS_DPI')) {
+    define('OCR_GS_DPI', 150); // Ghostscript render DPI for scanned PDFs
 }
 
 // OCR AI vision fallback (uses Groq API when Tesseract cannot read a page/image)
@@ -468,7 +474,7 @@ if (!defined('OCR_GROQ_ENHANCE')) {
     define('OCR_GROQ_ENHANCE', true);
 }
 if (!defined('OCR_GROQ_MODEL')) {
-    define('OCR_GROQ_MODEL', 'qwen/qwen3.6-27b');
+    define('OCR_GROQ_MODEL', 'groq/compound');
 }
 if (!defined('OCR_GROQ_MAX_PAGES')) {
     define('OCR_GROQ_MAX_PAGES', 0); // 0 = no page limit

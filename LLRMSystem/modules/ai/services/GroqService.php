@@ -5,12 +5,83 @@
 class GroqService {
     private $apiKey;
     private $model;
+    private $fallbackModels;
     public $lastError = null;
     public $lastHttpCode = null;
 
     public function __construct() {
         $this->apiKey = defined('GROQ_API_KEY') ? GROQ_API_KEY : '';
         $this->model = (defined('GROQ_MODEL') && GROQ_MODEL) ? GROQ_MODEL : 'llama-3.3-70b-versatile';
+        $this->fallbackModels = $this->loadFallbackModels();
+    }
+
+    /**
+     * Build the ordered list of models to try on rate-limit or failure.
+     */
+    private function loadFallbackModels() {
+        $models = [];
+        if (defined('GROQ_FALLBACK_MODELS') && GROQ_FALLBACK_MODELS) {
+            $parts = array_map('trim', explode(',', GROQ_FALLBACK_MODELS));
+            $models = array_values(array_filter($parts));
+        }
+        return $models;
+    }
+
+    /**
+     * Extract a retry wait time (seconds) from a Groq 429 error body.
+     */
+    private function parseRetryAfter($response) {
+        if (preg_match('/try again in ([\d.]+)s/i', $response, $m)) {
+            return (int) ceil((float) $m[1]);
+        }
+        if (preg_match('/retry[_-]after[\s:]*(\d+)/i', $response, $m)) {
+            return (int) $m[1];
+        }
+        return 0;
+    }
+
+    /**
+     * POST to the Groq chat endpoint, rotating through fallback models and
+     * honoring the retry-after hint on 429 rate-limit responses.
+     * Returns [response, httpCode] or null if all models fail.
+     */
+    private function callWithFallback($apiUrl, $payload, $isVision = false) {
+        $maxAttemptsPerModel = 3;
+        $primaryModel = $payload['model'] ?? $this->model;
+        $models = array_values(array_unique(array_merge([$primaryModel], $this->fallbackModels)));
+        foreach ($models as $model) {
+            for ($attempt = 0; $attempt < $maxAttemptsPerModel; $attempt++) {
+                $attemptPayload = $payload;
+                $attemptPayload['model'] = $model;
+
+                $httpResult = $this->httpPost($apiUrl, $attemptPayload);
+                if ($httpResult === null) {
+                    continue;
+                }
+
+                $httpCode = $httpResult['httpCode'];
+                $this->lastHttpCode = $httpCode;
+
+                if ($httpCode >= 200 && $httpCode < 300) {
+                    return $httpResult;
+                }
+
+                if ($httpCode == 429) {
+                    $wait = $this->parseRetryAfter($httpResult['response']);
+                    sleep($wait > 0 ? $wait : 1);
+                    continue;
+                }
+
+                if ($httpCode >= 400 && $httpCode < 500) {
+                    error_log('GroqService: model ' . $model . ' returned HTTP ' . $httpCode . ', trying next model');
+                    break; // non-retryable for this model (e.g., vision not supported)
+                }
+
+                // 5xx / other transient: retry same model
+            }
+        }
+
+        return null;
     }
 
     public function getLastError() {
@@ -120,8 +191,9 @@ class GroqService {
             'top_p' => 0.9
         ];
 
-        $httpResult = $this->httpPost($apiUrl, $payload);
+        $httpResult = $this->callWithFallback($apiUrl, $payload);
         if ($httpResult === null) {
+            $this->lastError = 'All Groq models failed for compliance analysis';
             return null;
         }
         $response = $httpResult['response'];
@@ -243,28 +315,15 @@ class GroqService {
             'top_p' => 0.9
         ];
 
-        $maxRetries = 3;
-        $response = '';
-        $httpCode = 0;
-
-        for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
-            $httpResult = $this->httpPost($apiUrl, $payload);
-            if ($httpResult === null) {
-                return null;
-            }
-            $response = $httpResult['response'];
-            $httpCode = $httpResult['httpCode'];
-            $this->lastHttpCode = $httpCode;
-
-            if ($httpCode == 429) {
-                if ($attempt < $maxRetries) {
-                    error_log('GroqService: Rate limited, retrying immediately ' . ($attempt + 1) . '/' . $maxRetries);
-                    continue;
-                }
-            }
-
-            break;
+        $httpResult = $this->callWithFallback($apiUrl, $payload, true);
+        if ($httpResult === null) {
+            $this->lastError = 'All Groq models failed for image text extraction';
+            return null;
         }
+
+        $response = $httpResult['response'];
+        $httpCode = $httpResult['httpCode'];
+        $this->lastHttpCode = $httpCode;
 
         if ($httpCode < 200 || $httpCode >= 300) {
             $this->lastError = 'HTTP ' . $httpCode . ': ' . $response;
