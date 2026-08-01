@@ -68,7 +68,11 @@ class GroqService {
 
                 if ($httpCode == 429) {
                     $wait = $this->parseRetryAfter($httpResult['response']);
-                    sleep($wait > 0 ? $wait : 1);
+                    if ($wait <= 0) {
+                        $wait = min(30, 5 * ($attempt + 1)); // 5, 10, 15 ... up to 30s
+                    }
+                    error_log('GroqService: model ' . $model . ' rate limited, waiting ' . $wait . 's');
+                    sleep($wait);
                     continue;
                 }
 
