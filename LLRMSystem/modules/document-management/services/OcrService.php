@@ -18,6 +18,7 @@ class OcrService {
     private $groqService;
     private $groqEnhance;
     private $groqMaxPages;
+    private $maxPdfPages;
 
     public function __construct() {
         $tessConfig = defined('OCR_TESSERACT_PATH') ? OCR_TESSERACT_PATH : '';
@@ -44,6 +45,7 @@ class OcrService {
 
         $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? (bool)OCR_GROQ_ENHANCE : false;  
         $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 1;
+        $this->maxPdfPages = defined('OCR_MAX_PDF_PAGES') ? OCR_MAX_PDF_PAGES : 0;
 
         // Ensure Tesseract can find its libraries and language data on shared hosting
         $this->setupTesseractEnvironment();
@@ -399,7 +401,11 @@ class OcrService {
         }
 
         $fullText = '';
+        $pageCount = 0;
         foreach ($images as $index => $imagePath) {
+            if ($this->maxPdfPages > 0 && $pageCount >= $this->maxPdfPages) {
+                break;
+            }
             $pageText = '';
 
             // Allow Groq vision only for the first N pages (0 = all pages)
@@ -417,6 +423,7 @@ class OcrService {
             } else {
                 $fullText .= $pageText . "\n\n--- Page Break ---\n\n";
             }
+            $pageCount++;
         }
 
         $this->cleanTempImages($images);
@@ -440,10 +447,11 @@ class OcrService {
         $dpi = defined('OCR_GS_DPI') ? (int)OCR_GS_DPI : 100;
         $escapedGs = escapeshellarg($gs);
         $outputPattern = escapeshellarg($prefix . '_%d.png');
+        $lastPageOption = ($this->maxPdfPages > 0) ? (' -dLastPage=' . (int)$this->maxPdfPages) : '';
         if (PHP_OS_FAMILY === 'Windows') {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile=$outputPattern $escapedPdf 2>nul";
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi$lastPageOption -sOutputFile=$outputPattern $escapedPdf 2>nul";
         } else {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -sOutputFile=$outputPattern $escapedPdf";
+            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi$lastPageOption -sOutputFile=$outputPattern $escapedPdf";
         }
 
         $gsOutput = shell_exec($command . ' 2>&1');

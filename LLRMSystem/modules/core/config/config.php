@@ -479,6 +479,9 @@ if (!defined('OCR_GROQ_MODEL')) {
 if (!defined('OCR_GROQ_MAX_PAGES')) {
     define('OCR_GROQ_MAX_PAGES', 0); // 0 = no page limit; use Groq on any page Tesseract cannot read
 }
+if (!defined('OCR_MAX_PDF_PAGES')) {
+    define('OCR_MAX_PDF_PAGES', 1); // only OCR the first N pages of scanned PDFs (0 = all)
+}
 if (!defined('OCR_GROQ_PROMPT')) {
     define('OCR_GROQ_PROMPT', 'Extract all readable text and any visible signatures from this image. Return only plain text, with no descriptions of images or other visual content.');
 }
