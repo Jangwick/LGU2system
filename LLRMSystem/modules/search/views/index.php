@@ -1,4 +1,7 @@
 <?php
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 session_start();
 require_once __DIR__ . '/../../core/config/config.php';
 
@@ -1223,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
                                                 <i class="bi bi-file-earmark-x text-3xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
                                                 <p class="text-sm text-gray-400 dark:text-gray-500 font-medium mb-4">${ocrStatus === 'pending' ? 'Document content extraction is scheduled. Click the button below to start OCR.' : ocrStatus === 'failed' ? 'Content extraction was unsuccessful. The file may be corrupted or in an unsupported format.' : 'No readable text content was found in this document.'}</p>
-                                                ${ocrStatus === 'pending' && <?= $userRole !== 'viewer' ? 'true' : 'false' ?> ? `
+                                                ${ocrStatus === 'pending' ? `
                                                     <button type="button" onclick="runOcr(${doc.id})" class="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center mx-auto">
                                                         <i class="bi bi-play-circle mr-2"></i> Run OCR
                                                     </button>
