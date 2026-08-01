@@ -305,7 +305,7 @@ function viewDocument(id) {
                                     const wordCount = extractedText ? extractedText.trim().split(/\s+/).length : 0;
 
                                     return `
-                                    <section class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                                    <section id="document-ocr-section" class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
                                         <!-- Header Bar -->
                                         <div class="px-5 md:px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
                                             <div class="flex items-center">
@@ -590,11 +590,33 @@ function loadComplianceForPreview(docId, badgeId, contentId, showRunButton) {
     });
 }
 
+function setOcrProcessingState() {
+    const section = document.getElementById('document-ocr-section');
+    if (!section) return;
+    section.innerHTML = `
+        <!-- Header Bar -->
+        <div class="px-5 md:px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-gray-800/80 dark:to-gray-800/50">
+            <div class="flex items-center">
+                <span class="w-1 h-5 bg-indigo-600 rounded-full mr-3"></span>
+                <h3 class="text-sm font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest">Document Analysis</h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-200 dark:border-blue-800/50">
+                    <i class="bi bi-arrow-repeat animate-spin"></i>Extracting...
+                </span>
+            </div>
+        </div>
+        <div class="p-5 md:p-6 space-y-6">
+            <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                <i class="bi bi-arrow-repeat text-3xl text-blue-500 animate-spin mb-3 block"></i>
+                <p class="text-sm text-gray-500 dark:text-gray-400">OCR processing in progress. This may take a few moments...</p>
+            </div>
+        </div>
+    `;
+}
+
 async function runOcr(docId) {
-    const statusEl = document.getElementById('preview-ocr-status');
-    if (statusEl) {
-        statusEl.innerHTML = '<div class="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 py-4"><i class="bi bi-arrow-repeat animate-spin"></i>Running OCR...</div>';
-    }
+    setOcrProcessingState();
     try {
         const response = await fetch(App.apiUrl('documents', `ocr.php?id=${docId}`), {
             method: 'POST',
@@ -606,9 +628,11 @@ async function runOcr(docId) {
             viewDocument(docId);
         } else {
             showToast(data.error || 'OCR failed', 'error');
+            viewDocument(docId);
         }
     } catch (e) {
         showToast('Failed to run OCR.', 'error');
+        viewDocument(docId);
     }
 }
 
