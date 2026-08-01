@@ -463,7 +463,7 @@ if (!defined('OCR_TIMEOUT')) {
     define('OCR_TIMEOUT', 120); // seconds per Tesseract page
 }
 if (!defined('OCR_GS_DPI')) {
-    define('OCR_GS_DPI', 150); // Ghostscript render DPI for scanned PDFs
+    define('OCR_GS_DPI', 100); // Ghostscript render DPI for scanned PDFs (lower is faster)
 }
 
 // OCR AI vision fallback (uses Groq API when Tesseract cannot read a page/image)
@@ -471,13 +471,13 @@ if (!defined('OCR_GROQ_FALLBACK')) {
     define('OCR_GROQ_FALLBACK', true);
 }
 if (!defined('OCR_GROQ_ENHANCE')) {
-    define('OCR_GROQ_ENHANCE', true);
+    define('OCR_GROQ_ENHANCE', false); // off by default to avoid slow Groq calls per page
 }
 if (!defined('OCR_GROQ_MODEL')) {
     define('OCR_GROQ_MODEL', 'qwen/qwen3.6-27b'); // only allowed vision model
 }
 if (!defined('OCR_GROQ_MAX_PAGES')) {
-    define('OCR_GROQ_MAX_PAGES', 0); // 0 = no page limit
+    define('OCR_GROQ_MAX_PAGES', 1); // only use Groq vision on the first page
 }
 if (!defined('OCR_GROQ_PROMPT')) {
     define('OCR_GROQ_PROMPT', 'Extract all readable text from this image. Also briefly describe any images, seals, signatures, stamps, diagrams, or other visible content. Return only plain text.');
