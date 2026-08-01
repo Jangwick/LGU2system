@@ -373,7 +373,12 @@ function viewDocument(id) {
                                             ` : !keyPoints.length ? `
                                                 <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
                                                     <i class="bi bi-file-earmark-x text-3xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
-                                                    <p class="text-sm text-gray-400 dark:text-gray-500 font-medium">${ocrStatus === 'pending' ? 'Document content extraction is scheduled and will be available once processing is complete.' : ocrStatus === 'failed' ? 'Content extraction was unsuccessful. The file may be corrupted or in an unsupported format.' : 'No readable text content was found in this document.'}</p>
+                                                    <p class="text-sm text-gray-400 dark:text-gray-500 font-medium mb-4">${ocrStatus === 'pending' ? 'Document content extraction is scheduled. Click the button below to start OCR.' : ocrStatus === 'failed' ? 'Content extraction was unsuccessful. The file may be corrupted or in an unsupported format.' : 'No readable text content was found in this document.'}</p>
+                                                    ${ocrStatus === 'pending' && currentUserRole !== 'viewer' ? `
+                                                        <button type="button" onclick="runOcr(${doc.id})" class="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center mx-auto">
+                                                            <i class="bi bi-play-circle mr-2"></i> Run OCR
+                                                        </button>
+                                                    ` : ''}
                                                 </div>
                                             ` : ''}
                                         </div>
@@ -583,6 +588,28 @@ function loadComplianceForPreview(docId, badgeId, contentId, showRunButton) {
     }).catch(() => {
         contentEl.innerHTML = '<p class="text-sm text-red-600">Could not load compliance analysis.</p>';
     });
+}
+
+async function runOcr(docId) {
+    const statusEl = document.getElementById('preview-ocr-status');
+    if (statusEl) {
+        statusEl.innerHTML = '<div class="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 py-4"><i class="bi bi-arrow-repeat animate-spin"></i>Running OCR...</div>';
+    }
+    try {
+        const response = await fetch(App.apiUrl('documents', `ocr.php?id=${docId}`), {
+            method: 'POST',
+            headers: { 'X-CSRF-Token': App.getCsrfToken() }
+        });
+        const data = await response.json();
+        if (data.success) {
+            showToast(`OCR completed. ${data.extracted_text_length || 0} characters extracted.`, 'success');
+            viewDocument(docId);
+        } else {
+            showToast(data.error || 'OCR failed', 'error');
+        }
+    } catch (e) {
+        showToast('Failed to run OCR.', 'error');
+    }
 }
 
 async function runComplianceCheckInPreview(docId, badgeId, contentId) {
