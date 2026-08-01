@@ -460,10 +460,10 @@ if (!defined('OCR_ASYNC_THRESHOLD')) {
     define('OCR_ASYNC_THRESHOLD', 5242880); // 5MB — files larger than this run async
 }
 if (!defined('OCR_TIMEOUT')) {
-    define('OCR_TIMEOUT', 60); // seconds per Tesseract page
+    define('OCR_TIMEOUT', 120); // seconds per Tesseract page
 }
 if (!defined('OCR_GS_DPI')) {
-    define('OCR_GS_DPI', 72); // Ghostscript render DPI for scanned PDFs (lower is faster)
+    define('OCR_GS_DPI', 150); // Ghostscript render DPI for scanned PDFs
 }
 
 // OCR AI vision fallback (uses Groq API when Tesseract cannot read a page/image)
