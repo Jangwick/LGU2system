@@ -463,7 +463,7 @@ if (!defined('OCR_TIMEOUT')) {
     define('OCR_TIMEOUT', 120); // seconds per Tesseract page
 }
 if (!defined('OCR_GS_DPI')) {
-    define('OCR_GS_DPI', 150); // Ghostscript render DPI for scanned PDFs
+    define('OCR_GS_DPI', 100); // Ghostscript render DPI for scanned PDFs
 }
 
 // OCR AI vision fallback (uses Groq API when Tesseract cannot read a page/image)
@@ -471,7 +471,7 @@ if (!defined('OCR_GROQ_FALLBACK')) {
     define('OCR_GROQ_FALLBACK', true); // enabled so image/signature pages can be read
 }
 if (!defined('OCR_GROQ_ENHANCE')) {
-    define('OCR_GROQ_ENHANCE', false); // off by default to avoid slow Groq calls per page
+    define('OCR_GROQ_ENHANCE', false); // only call Groq when Tesseract cannot read the page
 }
 if (!defined('OCR_GROQ_MODEL')) {
     define('OCR_GROQ_MODEL', 'qwen/qwen3.6-27b'); // only allowed vision model
