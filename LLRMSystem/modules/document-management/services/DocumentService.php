@@ -4,6 +4,7 @@ require_once __DIR__ . '/EncryptionService.php';
 require_once __DIR__ . '/OcrService.php';
 require_once __DIR__ . '/SummarizationService.php';
 require_once __DIR__ . '/DeduplicationService.php';
+require_once __DIR__ . '/../../search/services/EmbeddingService.php';
 
 class DocumentService {
     private $documentModel;
@@ -13,6 +14,7 @@ class DocumentService {
     private $ocrService;
     private $summarizationService;
     private $deduplicationService;
+    private $embeddingService;
     private $db;
     
     public function __construct($documentModel, $fileStorageService, $logger) {
@@ -24,6 +26,7 @@ class DocumentService {
         $this->ocrService = new OcrService();
         $this->summarizationService = new SummarizationService();
         $this->deduplicationService = new DeduplicationService($this->db, $this->ocrService);
+        $this->embeddingService = new EmbeddingService();
     }
     
     /**
@@ -176,6 +179,13 @@ class DocumentService {
 
             // Store hash and embedding for future duplicate detection
             $this->deduplicationService->store($documentId, $fileData['path'], $ocrResult['text'] ?? '', $data['title'] ?? '');
+
+            // Generate semantic search embedding
+            try {
+                $this->embeddingService->embedDocument($this->db, $documentId);
+            } catch (Exception $e) {
+                error_log("DocumentService: embedding generation failed for $documentId: " . $e->getMessage());
+            }
 
             // Record initial status history
             $this->documentModel->addStatusHistory($documentId, null, $status, $userId, 'Document created');
