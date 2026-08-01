@@ -380,10 +380,10 @@ if (!defined('GROQ_API_KEY')) {
     define('GROQ_API_KEY', ''); // Set in config.local.php
 }
 if (!defined('GROQ_MODEL')) {
-    define('GROQ_MODEL', 'groq/compound');
+    define('GROQ_MODEL', 'groq/compound'); // text/compliance primary
 }
 if (!defined('GROQ_FALLBACK_MODELS')) {
-    define('GROQ_FALLBACK_MODELS', 'groq/compound-mini');
+    define('GROQ_FALLBACK_MODELS', 'groq/compound-mini,qwen/qwen3.6-27b');
 }
 
 // Encryption Configuration
@@ -474,7 +474,7 @@ if (!defined('OCR_GROQ_ENHANCE')) {
     define('OCR_GROQ_ENHANCE', true);
 }
 if (!defined('OCR_GROQ_MODEL')) {
-    define('OCR_GROQ_MODEL', 'groq/compound');
+    define('OCR_GROQ_MODEL', 'qwen/qwen3.6-27b'); // only allowed vision model
 }
 if (!defined('OCR_GROQ_MAX_PAGES')) {
     define('OCR_GROQ_MAX_PAGES', 0); // 0 = no page limit
