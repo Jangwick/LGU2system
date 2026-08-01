@@ -31,6 +31,14 @@ try {
     $controller = new DocumentController();
     $result = $controller->store();
 
+    // Start the OCR worker in the background if the upload succeeded
+    if (!empty($result['success'])) {
+        $workerPath = __DIR__ . '/ocr_worker.php';
+        $binary = defined('PHP_BINARY') ? PHP_BINARY : 'php8.2';
+        $command = 'nohup ' . escapeshellarg($binary) . ' ' . escapeshellarg($workerPath) . ' > /dev/null 2>&1 &';
+        @shell_exec($command);
+    }
+
     ob_clean();
 
     if (!isset($result['success'])) {
