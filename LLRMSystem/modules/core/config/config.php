@@ -457,18 +457,18 @@ if (!defined('OCR_LANGUAGE')) {
     define('OCR_LANGUAGE', 'eng');
 }
 if (!defined('OCR_ASYNC_THRESHOLD')) {
-    define('OCR_ASYNC_THRESHOLD', 1048576); // 1MB — files larger than this run async
+    define('OCR_ASYNC_THRESHOLD', 5242880); // 5MB — files larger than this run async
 }
 if (!defined('OCR_TIMEOUT')) {
-    define('OCR_TIMEOUT', 120); // seconds per Tesseract page
+    define('OCR_TIMEOUT', 60); // seconds per Tesseract page
 }
 if (!defined('OCR_GS_DPI')) {
-    define('OCR_GS_DPI', 100); // Ghostscript render DPI for scanned PDFs (lower is faster)
+    define('OCR_GS_DPI', 72); // Ghostscript render DPI for scanned PDFs (lower is faster)
 }
 
 // OCR AI vision fallback (uses Groq API when Tesseract cannot read a page/image)
 if (!defined('OCR_GROQ_FALLBACK')) {
-    define('OCR_GROQ_FALLBACK', true);
+    define('OCR_GROQ_FALLBACK', false); // disabled for speed; Tesseract only
 }
 if (!defined('OCR_GROQ_ENHANCE')) {
     define('OCR_GROQ_ENHANCE', false); // off by default to avoid slow Groq calls per page
