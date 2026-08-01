@@ -457,7 +457,7 @@ if (!defined('OCR_LANGUAGE')) {
     define('OCR_LANGUAGE', 'eng');
 }
 if (!defined('OCR_ASYNC_THRESHOLD')) {
-    define('OCR_ASYNC_THRESHOLD', 5242880); // 5MB — files larger than this run async
+    define('OCR_ASYNC_THRESHOLD', 1048576); // 1MB — files larger than this run async
 }
 if (!defined('OCR_TIMEOUT')) {
     define('OCR_TIMEOUT', 120); // seconds per Tesseract page
@@ -468,7 +468,7 @@ if (!defined('OCR_GS_DPI')) {
 
 // OCR AI vision fallback (uses Groq API when Tesseract cannot read a page/image)
 if (!defined('OCR_GROQ_FALLBACK')) {
-    define('OCR_GROQ_FALLBACK', false); // disabled for speed; Tesseract only
+    define('OCR_GROQ_FALLBACK', true); // enabled so image/signature pages can be read
 }
 if (!defined('OCR_GROQ_ENHANCE')) {
     define('OCR_GROQ_ENHANCE', false); // off by default to avoid slow Groq calls per page
@@ -477,7 +477,7 @@ if (!defined('OCR_GROQ_MODEL')) {
     define('OCR_GROQ_MODEL', 'qwen/qwen3.6-27b'); // only allowed vision model
 }
 if (!defined('OCR_GROQ_MAX_PAGES')) {
-    define('OCR_GROQ_MAX_PAGES', 1); // only use Groq vision on the first page
+    define('OCR_GROQ_MAX_PAGES', 0); // 0 = no page limit; use Groq on any page Tesseract cannot read
 }
 if (!defined('OCR_GROQ_PROMPT')) {
     define('OCR_GROQ_PROMPT', 'Extract all readable text and any visible signatures from this image. Return only plain text, with no descriptions of images or other visual content.');
