@@ -383,7 +383,7 @@ if (!defined('GROQ_MODEL')) {
     define('GROQ_MODEL', 'groq/compound'); // text/compliance primary
 }
 if (!defined('GROQ_FALLBACK_MODELS')) {
-    define('GROQ_FALLBACK_MODELS', 'groq/compound-mini,qwen/qwen3.6-27b');
+    define('GROQ_FALLBACK_MODELS', 'qwen/qwen3.6-27b');
 }
 
 // Encryption Configuration
