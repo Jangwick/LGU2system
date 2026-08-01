@@ -585,6 +585,7 @@ class DocumentService {
      * Returns extracted text, OCR status, and key points
      */
     private function runOcrOnFile($filePath, $mimeType, $fileSize) {
+        $asyncThreshold = defined('OCR_ASYNC_THRESHOLD') ? OCR_ASYNC_THRESHOLD : 1048576; // 1MB
         $result = [
             'text' => null,
             'status' => 'pending',
@@ -603,8 +604,27 @@ class DocumentService {
             return $result;
         }
 
-        // OCR is run manually via the "Run OCR" button or worker
-        $result['status'] = 'pending';
+        // Large files: mark as pending for async processing
+        if ($fileSize >= $asyncThreshold) {
+            $result['status'] = 'pending';
+            return $result;
+        }
+
+        // Small files: run OCR synchronously
+        try {
+            $ocrResult = $this->ocrService->extractText($filePath, $mimeType, ['enhance' => false]);
+            $result['text'] = $ocrResult['text'];
+            $result['status'] = $ocrResult['status'];
+
+            // Generate key points if OCR succeeded
+            if ($ocrResult['status'] === 'completed' && !empty($ocrResult['text'])) {
+                $result['key_points'] = $this->summarizationService->generateKeyPointsString($ocrResult['text'], 7);
+            }
+        } catch (Exception $e) {
+            error_log("OCR failed for $filePath: " . $e->getMessage());
+            $result['status'] = 'failed';
+        }
+
         return $result;
     }
     
