@@ -14,7 +14,6 @@
 ob_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
-set_time_limit(0);
 
 try {
     header('Content-Type: application/json');
@@ -69,40 +68,30 @@ try {
     $logger = new Logger($db);
     $documentService = new DocumentService($documentModel, null, $logger);
 
-    // Process all pending documents in a loop
-    $processed = 0;
-    $results = [];
+    // Get next pending document
+    $pending = $documentModel->getPendingOcr(1);
 
-    while (true) {
-        $pending = $documentModel->getPendingOcr(1);
-        if (empty($pending)) {
-            break;
-        }
-
-        $doc = $pending[0];
-        $documentId = $doc['id'];
-
-        // Process the document
-        $result = $documentService->runOcrOnDocument($documentId);
-        $results[] = [
-            'document_id' => $documentId,
-            'success' => $result['success'],
-            'ocr_status' => $result['ocr_status'] ?? null,
-            'extracted_text_length' => $result['extracted_text_length'] ?? 0,
-            'error' => $result['error'] ?? null
-        ];
-
-        if ($result['success']) {
-            $processed++;
-        }
+    if (empty($pending)) {
+        ob_clean();
+        echo json_encode(['success' => true, 'message' => 'No pending OCR documents', 'processed' => 0]);
+        exit;
     }
+
+    $doc = $pending[0];
+    $documentId = $doc['id'];
+
+    // Process the document
+    $result = $documentService->runOcrOnDocument($documentId);
 
     ob_clean();
     echo json_encode([
-        'success' => true,
-        'processed' => $processed,
-        'results' => $results,
-        'message' => $processed > 0 ? "$processed OCR documents processed" : 'No pending OCR documents'
+        'success' => $result['success'],
+        'processed' => 1,
+        'document_id' => $documentId,
+        'ocr_status' => $result['ocr_status'] ?? null,
+        'extracted_text_length' => $result['extracted_text_length'] ?? 0,
+        'error' => $result['error'] ?? null,
+        'message' => $result['success'] ? 'OCR processing completed' : 'OCR processing failed'
     ]);
 
 } catch (Exception $e) {
