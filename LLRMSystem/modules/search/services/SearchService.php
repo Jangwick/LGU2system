@@ -314,7 +314,7 @@ class SearchService {
             'by_month' => []
         ];
         
-        $whereClause = "WHERE deleted_at IS NULL AND status != 'rejected'";
+        $whereClause = "WHERE deleted_at IS NULL AND status NOT IN ('pending', 'draft', 'rejected', 'archived')";
         $params = [];
         
         if (!empty($query)) {
