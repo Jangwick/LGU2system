@@ -19,6 +19,7 @@ class OcrService {
     private $groqEnhance;
     private $groqMaxPages;
     private $maxPdfPages;
+    private $lastGroqRequestTime = 0;
 
     public function __construct() {
         $tessConfig = defined('OCR_TESSERACT_PATH') ? OCR_TESSERACT_PATH : '';
@@ -268,6 +269,10 @@ class OcrService {
 
         if ($useGroqEnhance || $useGroqFallback) {
             try {
+                // Enforce a minimum gap between Groq vision requests to avoid rate limits
+                $this->throttleGroqRequest();
+                $this->lastGroqRequestTime = microtime(true);
+
                 // Pass Tesseract text so Groq only returns what Tesseract missed
                 $groqResult = $this->groqService->extractTextFromImage($filePath, $tesseractText);
                 if (is_array($groqResult)) {
@@ -313,6 +318,21 @@ class OcrService {
     /**
      * Process PDF files — try digital extraction first, fall back to OCR
      */
+    private function throttleGroqRequest() {
+        if ($this->lastGroqRequestTime <= 0) {
+            return;
+        }
+        $gapMs = defined('OCR_GROQ_DELAY_MS') ? (int)OCR_GROQ_DELAY_MS : 1000;
+        if ($gapMs <= 0) {
+            return;
+        }
+        $elapsedUs = (microtime(true) - $this->lastGroqRequestTime) * 1000000;
+        $gapUs = $gapMs * 1000;
+        if ($elapsedUs < $gapUs) {
+            usleep((int)($gapUs - $elapsedUs));
+        }
+    }
+
     private function processPdf($filePath, $enhance = null) {
         // First, try to extract embedded text using smalot/pdfparser
         $digitalText = $this->extractDigitalPdfText($filePath);

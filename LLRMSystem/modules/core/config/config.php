@@ -485,3 +485,6 @@ if (!defined('OCR_MAX_PDF_PAGES')) {
 if (!defined('OCR_GROQ_PROMPT')) {
     define('OCR_GROQ_PROMPT', 'Extract all readable text and any visible signatures from this image. Return only plain text, with no descriptions of images or other visual content.');
 }
+if (!defined('OCR_GROQ_DELAY_MS')) {
+    define('OCR_GROQ_DELAY_MS', 1000); // minimum milliseconds between Groq vision requests
+}
