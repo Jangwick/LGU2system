@@ -130,4 +130,117 @@ class DocumentServiceTest extends TestCase
         $original = 'C:/xampp/htdocs/storage/uploads/file.pdf';
         $this->assertSame($original, $method->invoke($service, $original));
     }
+
+    public function test_get_document_returns_document_and_logs_access(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $model = new class {
+            public function getById($id): array
+            {
+                return ['id' => $id, 'title' => 'Doc ' . $id];
+            }
+        };
+
+        $logger = new class {
+            public $logs = [];
+            public function logAccess($id, $userId): void
+            {
+                $this->logs[] = ['id' => $id, 'userId' => $userId];
+            }
+        };
+
+        $reflection = new ReflectionClass($service);
+        $documentModel = $reflection->getProperty('documentModel');
+        $documentModel->setAccessible(true);
+        $documentModel->setValue($service, $model);
+
+        $loggerProp = $reflection->getProperty('logger');
+        $loggerProp->setAccessible(true);
+        $loggerProp->setValue($service, $logger);
+
+        $_SESSION['user_id'] = 42;
+
+        $document = $service->getDocument(7);
+
+        $this->assertSame(7, $document['id']);
+        $this->assertSame('Doc 7', $document['title']);
+        $this->assertSame(7, $logger->logs[0]['id']);
+        $this->assertSame(42, $logger->logs[0]['userId']);
+    }
+
+    public function test_get_document_throws_when_not_found(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $model = new class {
+            public function getById($id): ?array
+            {
+                return null;
+            }
+        };
+
+        $reflection = new ReflectionClass($service);
+        $documentModel = $reflection->getProperty('documentModel');
+        $documentModel->setAccessible(true);
+        $documentModel->setValue($service, $model);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Document not found');
+
+        $service->getDocument(99);
+    }
+
+    public function test_delete_document_removes_file_and_record(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $model = new class {
+            public $calls = [];
+
+            public function getById($id): array
+            {
+                return ['id' => $id, 'title' => 'Test Document', 'file_path' => 'uploads/test.pdf', 'uploaded_by' => 5];
+            }
+
+            public function delete($id): bool
+            {
+                $this->calls[] = ['delete', $id];
+                return true;
+            }
+        };
+
+        $fileStorage = new class {
+            public $calls = [];
+            public function deleteFile($path): bool
+            {
+                $this->calls[] = ['deleteFile', $path];
+                return true;
+            }
+        };
+
+        $logger = new class {
+            public $calls = [];
+            public function logDocumentActivity($action, $module, $recordId, $description, $metadata = null): void
+            {
+                $this->calls[] = ['logDocumentActivity', $action, $module, $recordId];
+            }
+        };
+
+        $reflection = new ReflectionClass($service);
+
+        foreach (['documentModel' => $model, 'fileStorageService' => $fileStorage, 'logger' => $logger] as $name => $value) {
+            $prop = $reflection->getProperty($name);
+            $prop->setAccessible(true);
+            $prop->setValue($service, $value);
+        }
+
+        $_SESSION['user_id'] = 5;
+
+        $result = $service->deleteDocument(3);
+
+        $this->assertTrue($result['success']);
+        $this->assertSame('uploads/test.pdf', $fileStorage->calls[0][1]);
+        $this->assertSame(['delete', 3], $model->calls[0]);
+    }
 }

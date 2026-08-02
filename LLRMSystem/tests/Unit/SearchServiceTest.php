@@ -74,4 +74,68 @@ class SearchServiceTest extends TestCase
         $this->assertSame('ordinance', $params[':type0']);
         $this->assertSame('resolution', $params[':type1']);
     }
+
+    public function test_get_count_returns_total(): void
+    {
+        $stmt = new class {
+            public function bindValue($key, $value, $type = null): void {}
+            public function execute(): void {}
+            public function fetch($mode) {
+                return ['total' => 37];
+            }
+        };
+
+        $db = new class($stmt) {
+            private $stmt;
+            public function __construct($stmt) { $this->stmt = $stmt; }
+            public function prepare($sql) {
+                $this->lastSql = $sql;
+                return $this->stmt;
+            }
+            public $lastSql;
+        };
+
+        $service = new SearchService($db);
+        $total = $service->getCount('budget', ['type' => 'ordinance']);
+
+        $this->assertSame(37, $total);
+        $this->assertStringContainsString('COUNT(*)', $db->lastSql);
+    }
+
+    public function test_get_facets_returns_counts_by_type_status_and_year(): void
+    {
+        $rows = [
+            ['document_type' => 'ordinance', 'count' => 37],
+            ['document_type' => 'resolution', 'count' => 12]
+        ];
+
+        $stmt = new class($rows) {
+            private $rows;
+            private $index = 0;
+            public function __construct($rows) { $this->rows = $rows; }
+            public function execute(): void {}
+            public function fetchAll($mode) {
+                $result = $this->rows;
+                $this->rows = [];
+                return $result;
+            }
+        };
+
+        $db = new class($stmt) {
+            private $stmt;
+            public function __construct($stmt) { $this->stmt = $stmt; }
+            public function prepare($sql) {
+                return $this->stmt;
+            }
+        };
+
+        $service = new SearchService($db);
+        $facets = $service->getFacets();
+
+        $this->assertArrayHasKey('by_type', $facets);
+        $this->assertArrayHasKey('by_status', $facets);
+        $this->assertArrayHasKey('by_year', $facets);
+        $this->assertSame('ordinance', $facets['by_type'][0]['document_type']);
+        $this->assertSame(37, (int) $facets['by_type'][0]['count']);
+    }
 }
