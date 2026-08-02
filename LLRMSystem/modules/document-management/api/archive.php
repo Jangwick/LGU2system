@@ -662,8 +662,12 @@ function apiCreateDocument($config, $authService, $authResult, $documentModel, $
     ];
 
     try {
-        // External API clients time out on long synchronous OCR; queue for worker
-        $result = $documentService->createDocument($data, $fileData, false);
+        // For small external files, run OCR synchronously so extracted text is
+        // available immediately. Larger files are queued to the worker to avoid
+        // the 30s cURL timeout.
+        $syncThreshold = defined('OCR_ARCHIVE_SYNC_THRESHOLD') ? OCR_ARCHIVE_SYNC_THRESHOLD : 3145728; // 3MB
+        $runOcr = ($fileData['size'] <= $syncThreshold);
+        $result = $documentService->createDocument($data, $fileData, $runOcr);
 
         // Log API access
         $logger->logActivity(
@@ -674,10 +678,13 @@ function apiCreateDocument($config, $authService, $authResult, $documentModel, $
         );
 
         if ($result['success'] ?? false) {
-            $workerPath = __DIR__ . '/ocr_worker.php';
-            $binary = defined('PHP_BINARY') ? PHP_BINARY : 'php8.2';
-            $command = 'nohup ' . escapeshellarg($binary) . ' ' . escapeshellarg($workerPath) . ' > /dev/null 2>&1 &';
-            @shell_exec($command);
+            // If OCR was not done synchronously, queue the worker
+            if (!$runOcr) {
+                $workerPath = __DIR__ . '/ocr_worker.php';
+                $binary = defined('PHP_BINARY') ? PHP_BINARY : 'php8.2';
+                $command = 'nohup ' . escapeshellarg($binary) . ' ' . escapeshellarg($workerPath) . ' > /dev/null 2>&1 &';
+                @shell_exec($command);
+            }
 
             http_response_code(201);
             echo json_encode($result);

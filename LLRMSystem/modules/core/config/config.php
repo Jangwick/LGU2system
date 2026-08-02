@@ -459,6 +459,9 @@ if (!defined('OCR_LANGUAGE')) {
 if (!defined('OCR_ASYNC_THRESHOLD')) {
     define('OCR_ASYNC_THRESHOLD', 52428800); // 50MB — files larger than this run async
 }
+if (!defined('OCR_ARCHIVE_SYNC_THRESHOLD')) {
+    define('OCR_ARCHIVE_SYNC_THRESHOLD', 3145728); // 3MB — files at or below this run OCR synchronously in the archive API
+}
 if (!defined('OCR_TIMEOUT')) {
     define('OCR_TIMEOUT', 120); // seconds per Tesseract page
 }
