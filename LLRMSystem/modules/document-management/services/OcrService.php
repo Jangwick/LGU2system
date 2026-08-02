@@ -513,7 +513,8 @@ class OcrService {
     }
 
     /**
-     * Convert PDF pages to PNG images using Ghostscript
+     * Convert PDF pages to PNG images using Ghostscript, one page at a time
+     * so a single corrupted page doesn't stop the whole document.
      */
     private function convertPdfToImages($pdfPath) {
         $gs = $this->getGhostscriptPath();
@@ -522,35 +523,67 @@ class OcrService {
         }
 
         $prefix = $this->tempDir . '/pdf_page_' . uniqid();
-        $escapedPdf = escapeshellarg($pdfPath);
-        $escapedPrefix = escapeshellarg($prefix);
-
-        // Ghostscript command: render at configured DPI (default 100) grayscale for faster OCR on shared hosting
-        $dpi = defined('OCR_GS_DPI') ? (int)OCR_GS_DPI : 100;
         $escapedGs = escapeshellarg($gs);
-        $outputPattern = escapeshellarg($prefix . '_%d.png');
-        $lastPageOption = ($this->maxPdfPages > 0) ? (' -dLastPage=' . (int)$this->maxPdfPages) : '';
-        if (PHP_OS_FAMILY === 'Windows') {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi$lastPageOption -sOutputFile=$outputPattern $escapedPdf 2>nul";
-        } else {
-            $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi$lastPageOption -sOutputFile=$outputPattern $escapedPdf";
-        }
+        $escapedPdf = escapeshellarg($pdfPath);
+        $dpi = defined('OCR_GS_DPI') ? (int)OCR_GS_DPI : 100;
 
-        $gsOutput = shell_exec($command . ' 2>&1');
+        // Try to get page count from Ghostscript
+        $pageCount = $this->getPdfPageCount($gs, $pdfPath);
+        $maxPages = ($this->maxPdfPages > 0) ? $this->maxPdfPages : 100;
+        $end = ($pageCount !== null) ? min($pageCount, $maxPages) : $maxPages;
 
-        // Collect generated images
         $images = [];
-        $files = glob($prefix . '_*.png');
-        if ($files) {
-            sort($files);
-            $images = $files;
+        $consecutiveEmpty = 0;
+
+        for ($page = 1; $page <= $end; $page++) {
+            $outputFile = $prefix . '_' . $page . '.png';
+            $escapedOutput = escapeshellarg($outputFile);
+            $firstPage = (int)$page;
+            $lastPageOption = ($this->maxPdfPages > 0) ? (' -dLastPage=' . (int)$page) : '';
+
+            if (PHP_OS_FAMILY === 'Windows') {
+                $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -dFirstPage=$firstPage$lastPageOption -sOutputFile=$escapedOutput $escapedPdf 2>nul";
+            } else {
+                $command = "$escapedGs -dNOPAUSE -dBATCH -sDEVICE=pnggray -r$dpi -dFirstPage=$firstPage$lastPageOption -sOutputFile=$escapedOutput $escapedPdf";
+            }
+
+            // Wrap with timeout if possible to avoid hanging on bad pages
+            if (PHP_OS_FAMILY !== 'Windows' && $this->timeout > 0) {
+                $command = "timeout {$this->timeout} $command 2>/dev/null";
+            }
+
+            @shell_exec($command);
+
+            if (file_exists($outputFile)) {
+                $images[] = $outputFile;
+                $consecutiveEmpty = 0;
+            } else {
+                $consecutiveEmpty++;
+                // If we know the page count, keep trying. Otherwise stop after 3 missing pages.
+                if ($pageCount === null && $consecutiveEmpty >= 3) {
+                    break;
+                }
+            }
         }
 
         if (empty($images)) {
-            throw new Exception('Ghostscript failed to convert PDF to images: ' . ($gsOutput ?: 'no output'));
+            throw new Exception('Ghostscript could not convert any PDF page to images');
         }
 
         return $images;
+    }
+
+    /**
+     * Get the number of pages in a PDF using Ghostscript
+     */
+    private function getPdfPageCount($gs, $pdfPath) {
+        $escapedGs = escapeshellarg($gs);
+        $escapedPdf = escapeshellarg($pdfPath);
+        $command = "$escapedGs -q -dNODISPLAY -dBATCH -c " . escapeshellarg("($pdfPath) (r) file runpdfbegin pdfpagecount = quit");
+
+        $output = @shell_exec($command . ' 2>/dev/null');
+        $count = is_string($output) ? (int)trim($output) : 0;
+        return ($count > 0) ? $count : null;
     }
 
     /**
