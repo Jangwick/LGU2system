@@ -112,4 +112,107 @@ class DocumentControllerTest extends TestCase
         $this->assertTrue($result['error']);
         $this->assertSame('Database connection failed', $result['message']);
     }
+
+    public function test_delete_calls_service_delete(): void
+    {
+        $controller = $this->createControllerWithoutConstructor();
+
+        $service = new class {
+            public $calls = [];
+            public function deleteDocument($id): array
+            {
+                $this->calls[] = ['deleteDocument', $id];
+                return ['success' => true, 'message' => 'Document deleted'];
+            }
+        };
+
+        $reflection = new ReflectionClass($controller);
+        $documentService = $reflection->getProperty('documentService');
+        $documentService->setAccessible(true);
+        $documentService->setValue($controller, $service);
+
+        $result = $controller->delete(1);
+
+        $this->assertTrue($result['success']);
+        $this->assertSame('Document deleted', $result['message']);
+        $this->assertSame(['deleteDocument', 1], $service->calls[0]);
+    }
+
+    public function test_store_creates_document(): void
+    {
+        $controller = $this->createControllerWithoutConstructor();
+
+        $service = new class {
+            public $calls = [];
+            public function createDocument($data, $file, $runOcr = true): array
+            {
+                $this->calls[] = ['createDocument', $data['reference_number'], $file['name'] ?? ''];
+                return ['success' => true, 'document_id' => 42];
+            }
+        };
+
+        $reflection = new ReflectionClass($controller);
+        $documentService = $reflection->getProperty('documentService');
+        $documentService->setAccessible(true);
+        $documentService->setValue($controller, $service);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = [
+            'reference_number' => '2025-01',
+            'title' => 'Budget',
+            'document_type' => 'ordinance',
+            'document_date' => '2025-01-01',
+            'description' => 'Budget doc',
+            'tags' => 'budget,finance',
+            'status' => 'draft',
+        ];
+        $tmpFile = tempnam(sys_get_temp_dir(), 'doc');
+        file_put_contents($tmpFile, 'dummy');
+        $_FILES['document'] = ['tmp_name' => $tmpFile, 'name' => 'budget.pdf', 'type' => 'application/pdf', 'size' => 5, 'error' => UPLOAD_ERR_OK];
+
+        $result = $controller->store();
+
+        $this->assertTrue($result['success']);
+        $this->assertSame(42, $result['document_id']);
+        $this->assertSame('createDocument', $service->calls[0][0]);
+    }
+
+    public function test_store_rejects_non_post_request(): void
+    {
+        $controller = $this->createControllerWithoutConstructor();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        $result = $controller->store();
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('Invalid request method', $result['error']);
+    }
+
+    public function test_update_updates_document(): void
+    {
+        $controller = $this->createControllerWithoutConstructor();
+
+        $service = new class {
+            public $calls = [];
+            public function updateDocument($id, $data): array
+            {
+                $this->calls[] = ['updateDocument', $id, $data['title']];
+                return ['success' => true, 'message' => 'Updated'];
+            }
+        };
+
+        $reflection = new ReflectionClass($controller);
+        $documentService = $reflection->getProperty('documentService');
+        $documentService->setAccessible(true);
+        $documentService->setValue($controller, $service);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = ['title' => 'Updated Budget', 'status' => 'approved'];
+
+        $result = $controller->update(1);
+
+        $this->assertTrue($result['success']);
+        $this->assertSame('Updated', $result['message']);
+        $this->assertSame('Updated Budget', $service->calls[0][2]);
+    }
 }
