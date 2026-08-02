@@ -292,4 +292,28 @@ class OcrServiceTest extends TestCase
         $zip->close();
         return $path;
     }
+
+    public function testExtractTextReturnsSkippedWhenOcrDisabled()
+    {
+        $reflection = new ReflectionClass($this->ocr);
+        $enabled = $reflection->getProperty('enabled');
+        $enabled->setAccessible(true);
+        $enabled->setValue($this->ocr, false);
+
+        $result = $this->ocr->extractText('/some/path.pdf');
+
+        $this->assertSame('skipped', $result['status']);
+        $this->assertStringContainsString('OCR disabled', $result['error']);
+    }
+
+    public function testExtractTextReturnsSkippedForUnsupportedType()
+    {
+        $path = $this->tempDir . '/document.txt';
+        file_put_contents($path, 'plain text');
+
+        $result = $this->ocr->extractText($path);
+
+        $this->assertSame('skipped', $result['status']);
+        $this->assertStringContainsString('Unsupported file type', $result['error']);
+    }
 }
