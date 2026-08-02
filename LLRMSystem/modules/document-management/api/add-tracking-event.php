@@ -2,6 +2,8 @@
 /**
  * Add an external document tracking event
  */
+session_start();
+
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../../core/middleware/CsrfMiddleware.php';

@@ -6,6 +6,8 @@ require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
 require_once __DIR__ . '/../services/DocumentTrackingService.php';
 
+session_start();
+
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
