@@ -97,7 +97,7 @@ class GeminiOcrService {
             $this->throttle();
             $this->lastRequestTime = microtime(true);
 
-            $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key=" . urlencode($this->apiKey);
+            $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
 
             $payload = [
                 'contents' => [
@@ -126,7 +126,8 @@ class GeminiOcrService {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json'
+                'Content-Type: application/json',
+                'X-goog-api-key: ' . $this->apiKey
             ]);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
