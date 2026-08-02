@@ -227,4 +227,36 @@ class SearchServiceTest extends TestCase
         $this->assertCount(2, $results);
         $this->assertStringContainsString('document_type = :type', $db->lastSql);
     }
+
+    public function test_hybrid_search_merges_keyword_and_semantic_results(): void
+    {
+        $service = new class(null, new class {
+            public function generateEmbedding($text) { return [1, 0]; }
+        }) extends SearchService {
+            public function search($query, $filters = []): array
+            {
+                return [
+                    ['id' => 1, 'title' => 'Keyword Result', 'relevance_score' => 0.9]
+                ];
+            }
+
+            public function semanticSearch($query, $filters = []): array
+            {
+                return [
+                    ['id' => 2, 'title' => 'Semantic Result', 'relevance_score' => 0.85]
+                ];
+            }
+        };
+
+        $results = $service->hybridSearch('budget', []);
+
+        $this->assertCount(2, $results);
+    }
+
+    public function test_semantic_search_returns_empty_without_embedding_service(): void
+    {
+        $service = new SearchService(null);
+
+        $this->assertSame([], $service->semanticSearch('budget', []));
+    }
 }
