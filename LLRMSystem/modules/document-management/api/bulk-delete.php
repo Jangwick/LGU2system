@@ -19,6 +19,15 @@ require_once __DIR__ . '/../services/DocumentService.php';
 require_once __DIR__ . '/../services/FileStorageService.php';
 require_once __DIR__ . '/../../core/utils/Logger.php';
 
+$userRole = strtolower(trim($_SESSION['user_role'] ?? 'viewer'));
+
+// Viewers cannot delete any documents
+if ($userRole === 'viewer') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Access denied. Viewers cannot delete documents.']);
+    exit;
+}
+
 try {
     // Get request data
     $input = json_decode(file_get_contents('php://input'), true);
@@ -49,6 +58,15 @@ try {
     // Delete each document
     foreach ($documentIds as $id) {
         try {
+            // Staff can only delete their own documents
+            if ($userRole === 'staff') {
+                $document = $documentModel->getById($id);
+                if (!$document || $document['uploaded_by'] != $_SESSION['user_id']) {
+                    $errors[] = "Document ID {$id}: Access denied. You can only delete your own documents.";
+                    continue;
+                }
+            }
+            
             $result = $documentService->deleteDocument($id);
             if ($result['success']) {
                 $deleted++;

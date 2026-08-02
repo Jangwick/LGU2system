@@ -356,6 +356,12 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
                             <span id="total-docs" class="text-gray-900 dark:text-white mr-1"><?php echo $data['pagination']['total'] ?? count($data['documents'] ?? []); ?></span> documents found
                         </div>
+                        <?php if (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer', 'staff'])): ?>
+                        <button type="button" id="bulk-delete-btn" onclick="bulkDeleteDocuments()" class="hidden px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5">
+                            <i class="bi bi-trash"></i>
+                            <span id="selected-delete-count">0</span> Selected
+                        </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1631,5 +1637,64 @@ document.addEventListener('click', function(e) {
         openOriginalFilePreviewModal(parseInt(docId, 10), fileName, fileType, compliance);
     }
 });
+
+function toggleSelectAll(source) {
+    const checkboxes = document.querySelectorAll('.document-checkbox');
+    checkboxes.forEach(cb => {
+        // Only toggle visible checkboxes if the table rows are visible
+        cb.checked = source.checked;
+    });
+    updateSelectedCount();
+}
+
+document.querySelectorAll('.document-checkbox').forEach(cb => {
+    cb.addEventListener('change', updateSelectedCount);
+});
+
+function updateSelectedCount() {
+    const checked = document.querySelectorAll('.document-checkbox:checked');
+    const count = checked.length;
+    const bulkBtn = document.getElementById('bulk-delete-btn');
+    const countSpan = document.getElementById('selected-delete-count');
+    if (countSpan) countSpan.textContent = count;
+    if (bulkBtn) bulkBtn.classList.toggle('hidden', count === 0);
+
+    const selectAllTop = document.getElementById('select-all-top');
+    const allCheckboxes = document.querySelectorAll('.document-checkbox');
+    if (selectAllTop && allCheckboxes.length > 0) {
+        const allChecked = count === allCheckboxes.length;
+        selectAllTop.checked = allChecked;
+        selectAllTop.indeterminate = count > 0 && !allChecked;
+    }
+}
+
+async function bulkDeleteDocuments() {
+    const checked = document.querySelectorAll('.document-checkbox:checked');
+    if (checked.length === 0) return;
+
+    const ids = Array.from(checked).map(cb => parseInt(cb.value, 10));
+    if (!confirm(`Are you sure you want to delete ${ids.length} selected document(s)? This will move them to trash.`)) return;
+
+    try {
+        const response = await fetch(App.apiUrl('documents', 'bulk-delete.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                document_ids: ids,
+                csrf_token: App.getCsrfToken()
+            })
+        });
+
+        const res = await response.json();
+        if (res.success) {
+            alert(`Deleted ${res.deleted} document(s). ${res.errors.length ? res.errors.length + ' error(s).' : ''}`);
+            location.reload();
+        } else {
+            alert(res.error || 'Failed to delete documents');
+        }
+    } catch (e) {
+        alert('Failed to process bulk delete');
+    }
+}
 </script>
 
