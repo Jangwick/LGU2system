@@ -377,8 +377,9 @@ class Document {
             return ['all' => $this->getCount($filters)];
         }
 
-        $sql = "SELECT source_system, COUNT(*) as total
+        $sql = "SELECT ir.source_system, COUNT(*) as total
                 FROM legislative_documents d
+                INNER JOIN integrated_records ir ON d.source_id = ir.id
                 WHERE d.deleted_at IS NULL";
         $params = [];
 
@@ -440,7 +441,7 @@ class Document {
             }
         }
 
-        $sql .= " AND d.source_id IN (SELECT id FROM integrated_records WHERE source_system IN (";
+        $sql .= " AND ir.source_system IN (";
         $placeholders = [];
         $i = 0;
         foreach ($sourceSystems as $sys) {
@@ -449,9 +450,9 @@ class Document {
             $params[$key] = $sys;
             $i++;
         }
-        $sql .= implode(',', $placeholders) . "))";
+        $sql .= implode(',', $placeholders) . ")";
 
-        $sql .= " GROUP BY d.source_system";
+        $sql .= " GROUP BY ir.source_system";
 
         $stmt = $this->db->prepare($sql);
         foreach ($params as $key => $value) {
