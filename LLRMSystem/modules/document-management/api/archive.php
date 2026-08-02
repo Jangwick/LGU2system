@@ -662,7 +662,8 @@ function apiCreateDocument($config, $authService, $authResult, $documentModel, $
     ];
 
     try {
-        $result = $documentService->createDocument($data, $fileData);
+        // External API clients time out on long synchronous OCR; queue for worker
+        $result = $documentService->createDocument($data, $fileData, false);
 
         // Log API access
         $logger->logActivity(
@@ -673,6 +674,11 @@ function apiCreateDocument($config, $authService, $authResult, $documentModel, $
         );
 
         if ($result['success'] ?? false) {
+            $workerPath = __DIR__ . '/ocr_worker.php';
+            $binary = defined('PHP_BINARY') ? PHP_BINARY : 'php8.2';
+            $command = 'nohup ' . escapeshellarg($binary) . ' ' . escapeshellarg($workerPath) . ' > /dev/null 2>&1 &';
+            @shell_exec($command);
+
             http_response_code(201);
             echo json_encode($result);
         } else {

@@ -90,7 +90,7 @@ class DocumentService {
     /**
      * Create document with file upload
      */
-    public function createDocument($data, $file) {
+    public function createDocument($data, $file, $runOcr = true) {
         try {
             // Validate file
             $this->validateFile($file);
@@ -132,7 +132,10 @@ class DocumentService {
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
 
             // Run OCR (small files: synchronous; large files: marked pending for worker)
-            $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
+            $ocrResult = ['text' => '', 'status' => 'pending', 'key_points' => null];
+            if ($runOcr) {
+                $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
+            }
 
             // Encrypt the file with the master key directly (generalized key)
             $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
