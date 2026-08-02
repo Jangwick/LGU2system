@@ -113,4 +113,48 @@ class SanitizerTest extends TestCase
         $this->assertSame('&lt;script&gt;', Sanitizer::forHtml('<script>'));
         $this->assertSame('&#039;test&#039;', Sanitizer::forHtml("'test'"));
     }
+
+    public function testApplyRuleDispatchesCorrectly()
+    {
+        $this->assertSame('hello', Sanitizer::applyRule('  hello  ', 'string'));
+        $this->assertSame('hello', Sanitizer::applyRule('  hello  ', 'plain'));
+        $this->assertSame('<p>Hello</p>', Sanitizer::applyRule('<p>Hello</p>', 'rich'));
+        $this->assertSame('test@example.com', Sanitizer::applyRule('<test@example.com>', 'email'));
+        $this->assertSame(42, Sanitizer::applyRule('42', 'int'));
+        $this->assertSame(3.14, Sanitizer::applyRule('3.14', 'float'));
+        $this->assertTrue(Sanitizer::applyRule('yes', 'bool'));
+        $this->assertSame('file.txt', Sanitizer::applyRule('../../../file.txt', 'filename'));
+        $this->assertSame('2026-07-15', Sanitizer::applyRule('July 15, 2026', 'date'));
+        $this->assertSame('raw value', Sanitizer::applyRule('raw value', 'raw'));
+        $this->assertSame('fallback', Sanitizer::applyRule('fallback', 'unknown'));
+    }
+
+    public function testFilenameMaxLength()
+    {
+        $long = str_repeat('a', 300) . '.pdf';
+        $sanitized = Sanitizer::filename($long, 255);
+        $this->assertLessThanOrEqual(255, mb_strlen($sanitized));
+        $this->assertStringEndsWith('.pdf', $sanitized);
+    }
+
+    public function testDateReturnsDefault()
+    {
+        $this->assertSame('2026-01-01', Sanitizer::date('not-a-date', '2026-01-01'));
+        $this->assertSame('2026-01-01', Sanitizer::date('', '2026-01-01'));
+    }
+
+    public function testBoolHandlesIntegersAndNull()
+    {
+        $this->assertTrue(Sanitizer::bool(1));
+        $this->assertFalse(Sanitizer::bool(0));
+        $this->assertFalse(Sanitizer::bool(null));
+        $this->assertTrue(Sanitizer::bool('TRUE'));
+    }
+
+    public function testArrayWithRawRule()
+    {
+        $input = ['keep' => '<b>bold</b>'];
+        $output = Sanitizer::array($input, 'raw');
+        $this->assertSame('<b>bold</b>', $output['keep']);
+    }
 }
