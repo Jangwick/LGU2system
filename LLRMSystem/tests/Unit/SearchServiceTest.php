@@ -138,4 +138,60 @@ class SearchServiceTest extends TestCase
         $this->assertSame('ordinance', $facets['by_type'][0]['document_type']);
         $this->assertSame(37, (int) $facets['by_type'][0]['count']);
     }
+
+    public function test_export_to_csv_returns_csv_string(): void
+    {
+        $service = new class(null) extends SearchService {
+            public function search($query, $filters = []): array
+            {
+                return [
+                    [
+                        'reference_number' => '2025-01',
+                        'title' => 'Budget Ordinance',
+                        'document_type' => 'ordinance',
+                        'status' => 'approved',
+                        'document_date' => '2025-01-15',
+                        'file_name' => 'budget.pdf',
+                        'file_size' => 12345,
+                        'uploaded_by_name' => 'Admin',
+                        'created_at' => '2025-01-15 10:00:00'
+                    ]
+                ];
+            }
+        };
+
+        $csv = $service->exportToCSV('budget', []);
+
+        $this->assertStringContainsString('Reference Number', $csv);
+        $this->assertStringContainsString('Budget Ordinance', $csv);
+        $this->assertStringContainsString('ordinance', $csv);
+    }
+
+    public function test_get_suggestions_returns_distinct_documents(): void
+    {
+        $rows = [
+            ['title' => 'Budget Ordinance', 'reference_number' => '2025-01', 'document_type' => 'ordinance'],
+            ['title' => 'Resolution 2025', 'reference_number' => '2025-02', 'document_type' => 'resolution'],
+        ];
+
+        $stmt = new class($rows) {
+            private $rows;
+            public function __construct($rows) { $this->rows = $rows; }
+            public function bindValue($key, $value, $type = null): void {}
+            public function execute(): void {}
+            public function fetchAll($mode) { return $this->rows; }
+        };
+
+        $db = new class($stmt) {
+            private $stmt;
+            public function __construct($stmt) { $this->stmt = $stmt; }
+            public function prepare($sql) { return $this->stmt; }
+        };
+
+        $service = new SearchService($db);
+        $suggestions = $service->getSuggestions('budget', 5);
+
+        $this->assertCount(2, $suggestions);
+        $this->assertSame('Budget Ordinance', $suggestions[0]['title']);
+    }
 }
