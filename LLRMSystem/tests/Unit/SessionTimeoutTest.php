@@ -57,4 +57,17 @@ class SessionTimeoutTest extends TestCase
 
         $this->assertSame(0, $middleware->getRemainingTime());
     }
+
+    public function testGetRemainingTimeReturnsZeroWhenExpired()
+    {
+        $middleware = new SessionTimeoutMiddleware();
+        $_SESSION['user_id'] = 1;
+        $_SESSION['last_activity'] = time() - 500;
+
+        if (!defined('SESSION_TIMEOUT_MINUTES')) {
+            define('SESSION_TIMEOUT_MINUTES', 5);
+        }
+
+        $this->assertSame(0, $middleware->getRemainingTime());
+    }
 }
