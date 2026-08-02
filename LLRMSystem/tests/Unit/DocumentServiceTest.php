@@ -19,13 +19,15 @@ class DocumentServiceTest extends TestCase
         $model = new class {
             public $calls = [];
 
-            public function getCount($filters): int
+            public function getSourceCounts($sourceSystems, $filters): array
             {
                 $this->calls[] = $filters;
-                if (!isset($filters['source_system'])) {
-                    return 100;
+                $all = 100;
+                $counts = [];
+                foreach ($sourceSystems as $sys) {
+                    $counts[$sys] = $sys === 'orts' ? 40 : 25;
                 }
-                return $filters['source_system'] === 'orts' ? 40 : 25;
+                return ['all' => $all] + $counts;
             }
         };
 
@@ -47,7 +49,7 @@ class DocumentServiceTest extends TestCase
         $reflection = new ReflectionClass($service);
 
         $model = new class {
-            public function getAll($filters): array
+            public function getAll($filters, $includeText = false): array
             {
                 return [
                     ['id' => 1, 'title' => 'Doc 1'],

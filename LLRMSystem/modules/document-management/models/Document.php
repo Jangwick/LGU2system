@@ -31,7 +31,7 @@ class Document {
     /**
      * Get all documents with filters
      */
-    public function getAll($filters = [], $includeText = true) {
+    public function getAll($filters = [], $includeText = false) {
         // Avoid selecting large text columns (extracted_text, key_points) for list views
         $columns = $includeText
             ? "d.*"
@@ -369,6 +369,113 @@ class Document {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    /**
+     * Get source-system counts in a single query
+     */
+    public function getSourceCounts($sourceSystems, $filters = []) {
+        if (empty($sourceSystems)) {
+            return ['all' => $this->getCount($filters)];
+        }
+
+        $sql = "SELECT source_system, COUNT(*) as total
+                FROM legislative_documents d
+                WHERE d.deleted_at IS NULL";
+        $params = [];
+
+        // Role-based filtering
+        if (!empty($filters['user_role']) && $filters['user_role'] === 'viewer') {
+            $sql .= " AND d.status = 'approved'";
+        }
+
+        if (!empty($filters['status'])) {
+            $sql .= " AND d.status = :status";
+            $params[':status'] = $filters['status'];
+        }
+
+        if (!empty($filters['search'])) {
+            $sql .= " AND (d.title LIKE :search1 OR d.reference_number LIKE :search2 OR d.description LIKE :search3)";
+            $searchValue = '%' . $filters['search'] . '%';
+            $params[':search1'] = $searchValue;
+            $params[':search2'] = $searchValue;
+            $params[':search3'] = $searchValue;
+        }
+
+        if (!empty($filters['type'])) {
+            $sql .= " AND d.document_type = :type";
+            $params[':type'] = $filters['type'];
+        }
+
+        if (!empty($filters['compliance_status'])) {
+            $sql .= " AND d.compliance_status = :compliance_status";
+            $params[':compliance_status'] = $filters['compliance_status'];
+        }
+
+        if (!empty($filters['date_from'])) {
+            $sql .= " AND d.document_date >= :date_from";
+            $params[':date_from'] = $filters['date_from'];
+        }
+
+        if (!empty($filters['date_to'])) {
+            $sql .= " AND d.document_date <= :date_to";
+            $params[':date_to'] = $filters['date_to'];
+        }
+
+        if (!empty($filters['tags'])) {
+            $sql .= " AND d.tags LIKE :tags";
+            $params[':tags'] = '%' . $filters['tags'] . '%';
+        }
+
+        if (!empty($filters['reference'])) {
+            $sql .= " AND d.reference_number LIKE :reference";
+            $params[':reference'] = '%' . $filters['reference'] . '%';
+        }
+
+        if (!empty($filters['file_size'])) {
+            if ($filters['file_size'] === 'small') {
+                $sql .= " AND d.file_size < 1048576";
+            } elseif ($filters['file_size'] === 'medium') {
+                $sql .= " AND d.file_size BETWEEN 1048576 AND 10485760";
+            } elseif ($filters['file_size'] === 'large') {
+                $sql .= " AND d.file_size > 10485760";
+            }
+        }
+
+        $sql .= " AND d.source_id IN (SELECT id FROM integrated_records WHERE source_system IN (";
+        $placeholders = [];
+        $i = 0;
+        foreach ($sourceSystems as $sys) {
+            $key = ':sys' . $i;
+            $placeholders[] = $key;
+            $params[$key] = $sys;
+            $i++;
+        }
+        $sql .= implode(',', $placeholders) . "))";
+
+        $sql .= " GROUP BY d.source_system";
+
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $counts = ['all' => $this->getCount($filters)];
+        foreach ($rows as $row) {
+            $counts[$row['source_system']] = (int)$row['total'];
+        }
+
+        // Ensure every requested system has a count, defaulting to 0
+        foreach ($sourceSystems as $sys) {
+            if (!isset($counts[$sys])) {
+                $counts[$sys] = 0;
+            }
+        }
+
+        return $counts;
+    }
+
     /**
      * Get total count with filters
      */

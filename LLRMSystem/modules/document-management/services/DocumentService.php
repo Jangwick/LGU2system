@@ -65,13 +65,7 @@ class DocumentService {
         // Ignore any active source-system filter so every tab shows its own total
         unset($filters['source_system']);
 
-        $counts = ['all' => $this->documentModel->getCount($filters)];
-        foreach ($sourceSystems as $sys) {
-            $systemFilters = $filters;
-            $systemFilters['source_system'] = $sys;
-            $counts[$sys] = $this->documentModel->getCount($systemFilters);
-        }
-        return $counts;
+        return $this->documentModel->getSourceCounts($sourceSystems, $filters);
     }
 
     public function getDocument($id) {
