@@ -497,7 +497,7 @@ if (!defined('OCR_GEMINI_MODEL')) {
     define('OCR_GEMINI_MODEL', 'gemini-3.5-flash-lite-001'); // primary generative vision model for text extraction
 }
 if (!defined('OCR_GEMINI_FALLBACK_MODELS')) {
-    define('OCR_GEMINI_FALLBACK_MODELS', 'gemini-3.1-flash-lite-001'); // comma-separated fallback models if primary is rate-limited
+    define('OCR_GEMINI_FALLBACK_MODELS', 'gemini-3.1-flash-lite-001,gemini-3.5-flash-001'); // comma-separated fallback models if primary is rate-limited
 }
 if (!defined('OCR_GEMINI_PROMPT')) {
     define('OCR_GEMINI_PROMPT', 'Extract all readable text and any visible signatures from this document. Return only plain text, with no descriptions of images or other visual content.');
