@@ -11,6 +11,7 @@
 class GeminiOcrService {
     private $apiKey;
     private $model;
+    private $fallbackModels;
     private $prompt;
     private $lastError = null;
     private $lastHttpCode = null;
@@ -19,6 +20,9 @@ class GeminiOcrService {
     public function __construct() {
         $this->apiKey = defined('GEMINI_API_KEY') ? GEMINI_API_KEY : '';
         $this->model = defined('OCR_GEMINI_MODEL') ? OCR_GEMINI_MODEL : 'gemini-2.0-flash-001';
+        $this->fallbackModels = defined('OCR_GEMINI_FALLBACK_MODELS')
+            ? array_filter(array_map('trim', explode(',', OCR_GEMINI_FALLBACK_MODELS)))
+            : [];
         $this->prompt = defined('OCR_GEMINI_PROMPT') ? OCR_GEMINI_PROMPT
             : 'Extract all readable text and any visible signatures from this document. Return only plain text, with no descriptions of images or other visual content.';
     }
@@ -89,15 +93,15 @@ class GeminiOcrService {
             return null;
         }
 
-        $maxAttempts = 3;
+        $models = array_merge([$this->model], $this->fallbackModels);
         $lastResponse = null;
         $lastHttpCode = null;
 
-        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+        foreach ($models as $modelName) {
             $this->throttle();
             $this->lastRequestTime = microtime(true);
 
-            $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
+            $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$modelName}:generateContent";
 
             $payload = [
                 'contents' => [
@@ -144,36 +148,31 @@ class GeminiOcrService {
             $lastResponse = $response;
 
             if ($err) {
-                $this->lastError = 'Curl: ' . $err;
-                error_log('GeminiOcrService Curl Error: ' . $err);
-                return null;
+                error_log('GeminiOcrService Curl Error on ' . $modelName . ': ' . $err);
+                continue;
             }
 
             if ($httpCode >= 200 && $httpCode < 300) {
                 $result = json_decode($response, true);
                 $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
 
-                if (empty($text)) {
-                    $this->lastError = 'No text returned. Response: ' . json_encode($result);
-                    error_log('GeminiOcrService Error: ' . json_encode($result));
-                    return null;
+                if (!empty($text)) {
+                    return trim($text);
                 }
 
-                return trim($text);
-            }
-
-            // Retry on 429 with backoff
-            if ($httpCode == 429 && $attempt < $maxAttempts) {
-                $gapMs = defined('OCR_GEMINI_DELAY_MS') ? (int)OCR_GEMINI_DELAY_MS : 1000;
-                $wait = $gapMs * $attempt;
-                error_log("GeminiOcrService: HTTP 429, waiting {$wait}ms before retry (attempt $attempt/$maxAttempts)");
-                usleep($wait * 1000);
+                error_log('GeminiOcrService ' . $modelName . ' no text returned.');
                 continue;
             }
 
-            $this->lastError = 'HTTP ' . $httpCode . ': ' . $response;
-            error_log('GeminiOcrService HTTP Error: ' . $httpCode . ' ' . $response);
-            return null;
+            error_log('GeminiOcrService HTTP Error on ' . $modelName . ': ' . $httpCode . ' ' . $response);
+
+            // 429 or 503 usually means quota/unavailable for this model; try next fallback
+            if (in_array($httpCode, [429, 503], true)) {
+                continue;
+            }
+
+            // Other HTTP error; stop trying
+            break;
         }
 
         $this->lastError = 'HTTP ' . $lastHttpCode . ': ' . $lastResponse;
