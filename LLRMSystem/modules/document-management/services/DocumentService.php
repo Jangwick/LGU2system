@@ -131,6 +131,9 @@ class DocumentService {
             // Upload file
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
 
+            // Run OCR (small files: synchronous; large files: marked pending for worker)
+            $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
+
             // Encrypt the file with the master key directly (generalized key)
             $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
             if (!$encryptionResult['success']) {
@@ -164,18 +167,18 @@ class DocumentService {
                 'status_changed_at' => $timestamp,
                 'approved_by' => $status === 'approved' ? $userId : null,
                 'approved_at' => $status === 'approved' ? $timestamp : null,
-                'extracted_text' => '',
-                'ocr_status' => 'pending',
-                'ocr_processed_at' => null,
-                'key_points' => null,
-                'key_points_generated_at' => null
+                'extracted_text' => $ocrResult['text'] ?? '',
+                'ocr_status' => $ocrResult['status'] ?? 'pending',
+                'ocr_processed_at' => (!empty($ocrResult['status']) && $ocrResult['status'] !== 'pending') ? $timestamp : null,
+                'key_points' => $ocrResult['key_points'] ?? null,
+                'key_points_generated_at' => (!empty($ocrResult['key_points']) && $ocrResult['status'] === 'completed') ? $timestamp : null
             ];
 
             // Create document record
             $documentId = $this->documentModel->create($documentData);
 
             // Store hash for future duplicate detection (OCR/embedding handled by worker)
-            $this->deduplicationService->store($documentId, $fileData['path'], '', $data['title'] ?? '');
+            $this->deduplicationService->store($documentId, $fileData['path'], $ocrResult['text'] ?? '', $data['title'] ?? '');
 
             // Record initial status history
             $this->documentModel->addStatusHistory($documentId, null, $status, $userId, 'Document created');
@@ -208,7 +211,9 @@ class DocumentService {
                 'success' => true,
                 'document_id' => $documentId,
                 'reference_number' => $data['reference_number'],
-                'ocr_status' => $ocrResult['status'],
+                'ocr_status' => $ocrResult['status'] ?? 'pending',
+                'extracted_text' => $ocrResult['text'] ?? '',
+                'key_points' => $ocrResult['key_points'] ?? null,
                 'message' => 'Document uploaded successfully'
             ];
             
