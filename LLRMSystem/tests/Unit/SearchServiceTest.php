@@ -194,4 +194,37 @@ class SearchServiceTest extends TestCase
         $this->assertCount(2, $suggestions);
         $this->assertSame('Budget Ordinance', $suggestions[0]['title']);
     }
+
+    public function test_search_returns_keyword_results(): void
+    {
+        $rows = [
+            ['id' => 1, 'title' => 'Budget Ordinance', 'document_type' => 'ordinance', 'status' => 'approved'],
+            ['id' => 2, 'title' => 'Budget Resolution', 'document_type' => 'resolution', 'status' => 'approved'],
+        ];
+
+        $stmt = new class($rows) {
+            private $rows;
+            private $params = [];
+            public function __construct($rows) { $this->rows = $rows; }
+            public function bindValue($key, $value, $type = null): void { $this->params[$key] = $value; }
+            public function execute(): void {}
+            public function fetchAll($mode) { return $this->rows; }
+        };
+
+        $db = new class($stmt) {
+            private $stmt;
+            public $lastSql = '';
+            public function __construct($stmt) { $this->stmt = $stmt; }
+            public function prepare($sql) {
+                $this->lastSql = $sql;
+                return $this->stmt;
+            }
+        };
+
+        $service = new SearchService($db);
+        $results = $service->search('budget', ['type' => 'ordinance', 'limit' => 5, 'offset' => 0]);
+
+        $this->assertCount(2, $results);
+        $this->assertStringContainsString('document_type = :type', $db->lastSql);
+    }
 }
