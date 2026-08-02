@@ -27,9 +27,11 @@ initializeAuthenticatedSecurity();
     <meta name="keywords" content="LRMS, Valenzuela, Legislative Records, Document Management">
     <?php echo CsrfMiddleware::metaTag(); ?>
 
-    <!-- Preconnect to CDN for faster third-party resource loading -->
+    <!-- Preconnect to CDNs for faster third-party resource loading -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -39,8 +41,8 @@ initializeAuthenticatedSecurity();
         @custom-variant dark (&:where(.dark, .dark *));
     </style>
 
-    <!-- Chart.js (vendored locally to avoid CDN/adblocker blocks) -->
-    <script src="<?php echo BASE_URL; ?>/public/assets/js/chart.umd.js" defer></script>
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js" defer></script>
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">

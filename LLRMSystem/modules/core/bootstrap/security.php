@@ -65,12 +65,12 @@ function sendSecurityHeaders() {
     header(
         "Content-Security-Policy: " .
         "default-src 'self'; " .
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com; " .
-        "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com; " .
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; " .
-        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://static.cloudflareinsights.com; " .
+        "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://static.cloudflareinsights.com; " .
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; " .
+        "font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com; " .
         "img-src 'self' data: blob: https://lacs.spvalenzuela.com; " .
-        "connect-src 'self'; " .
+        "connect-src 'self' https://cdnjs.cloudflare.com; " .
         "frame-ancestors 'self'; " .
         "base-uri 'self'; " .
         "form-action 'self';"
