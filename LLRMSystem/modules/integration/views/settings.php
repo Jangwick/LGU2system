@@ -9,10 +9,13 @@ session_start();
 
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
-require_once __DIR__ . '/../../core/utils/auth.php';
+require_once __DIR__ . '/../../core/middleware/auth.php';
 require_once __DIR__ . '/../services/IntegrationWebhookService.php';
 
-if (!isLoggedIn() || !isAdmin()) {
+$userRole = $_SESSION['user_role'] ?? '';
+$adminRoles = ['admin', 'super_admin', 'superadmin', 'administrator'];
+
+if (!checkAuth() || !in_array(strtolower(trim($userRole)), $adminRoles, true)) {
     header('HTTP/1.1 403 Forbidden');
     echo 'Admin access required.';
     exit;
