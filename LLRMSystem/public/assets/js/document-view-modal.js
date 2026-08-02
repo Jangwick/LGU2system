@@ -474,11 +474,27 @@ function viewDocument(id) {
                                     </div>
                                 </section>
 
+                                ${currentUserRole === 'admin' ? `
+                                <section id="document-tracking-section" class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                                        <i class="bi bi-signpost-split mr-2 text-red-500"></i>
+                                        Document Tracking
+                                    </h3>
+                                    <div id="document-tracking-content" class="space-y-4">
+                                        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                            <i class="bi bi-arrow-repeat animate-spin"></i>
+                                            Loading tracking history...
+                                        </div>
+                                    </div>
+                                </section>
+                                ` : ''}
+
                             </div>
                         </div>
                     </div>
                 `;
                 loadComplianceForPreview(doc.id);
+                loadDocumentTracking(doc.id);
             } else {
                 content.innerHTML = `<div class="p-12 text-center text-red-600">${res.error}</div>`;
             }
@@ -1100,6 +1116,103 @@ function closeUploadModal() {
         document.getElementById('file-preview-modal').classList.add('hidden');
         document.getElementById('drop-zone-modal').classList.remove('hidden');
     }, 300);
+}
+
+function loadDocumentTracking(docId) {
+    const container = document.getElementById('document-tracking-content');
+    if (!container) return;
+
+    container.innerHTML = '<div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"><i class="bi bi-arrow-repeat animate-spin"></i>Loading tracking history...</div>';
+
+    fetch(App.apiUrl('documents', `get-tracking.php?id=${docId}`))
+        .then(r => r.json())
+        .then(res => {
+            if (!res.success) {
+                container.innerHTML = `<p class="text-sm text-red-600">${escapeHtml(res.error || 'Failed to load tracking')}</p>`;
+                return;
+            }
+
+            if (!res.events || res.events.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-500 dark:text-gray-400 italic">No tracking events available.</p>`;
+                return;
+            }
+
+            let html = '<div class="relative pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-6">';
+            res.events.forEach((evt, idx) => {
+                const isExternal = evt.source === 'external';
+                const dotColor = isExternal ? 'bg-red-600' : 'bg-gray-400';
+                const sourceLabel = isExternal ? escapeHtml(evt.source_system) : 'LLRM System';
+                const recorded = evt.recorded_by_name ? ` by ${escapeHtml(evt.recorded_by_name)}` : '';
+                const desc = evt.description ? `<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">${escapeHtml(evt.description)}</p>` : '';
+                const ref = evt.external_reference ? `<span class="text-[10px] text-gray-400">Ref: ${escapeHtml(evt.external_reference)}</span>` : '';
+
+                html += `
+                    <div class="relative">
+                        <span class="absolute -left-[21px] top-1 w-3 h-3 rounded-full ${dotColor} border-2 border-white dark:border-gray-800"></span>
+                        <div class="text-xs text-gray-400 dark:text-gray-500 mb-0.5">${escapeHtml(evt.occurred_at)}</div>
+                        <div class="text-sm font-bold text-gray-800 dark:text-gray-200">${escapeHtml(evt.event_action)}</div>
+                        <div class="text-xs font-semibold text-red-600 dark:text-red-400">${sourceLabel}</div>
+                        ${desc}
+                        <div class="mt-1 flex flex-col gap-0.5">
+                            ${ref}
+                            <span class="text-[10px] text-gray-400">Recorded${recorded}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            if (res.can_add) {
+                html += `
+                    <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
+                        <button type="button" onclick="document.getElementById('tracking-add-form').classList.toggle('hidden')" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap-2">
+                            <i class="bi bi-plus-lg"></i> Add External Event
+                        </button>
+                        <form id="tracking-add-form" class="hidden mt-4 space-y-3" onsubmit="event.preventDefault(); submitTrackingEvent(${docId}, this);">
+                            <input type="text" name="source_system" placeholder="Source system" required class="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                            <input type="text" name="external_reference" placeholder="External reference (optional)" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                            <input type="text" name="event_action" placeholder="Action / event" required class="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                            <textarea name="description" placeholder="Description" rows="2" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"></textarea>
+                            <input type="datetime-local" name="occurred_at" required class="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                            <button type="submit" class="w-full px-4 py-2 bg-gray-900 dark:bg-black hover:bg-black text-white text-xs font-bold rounded-lg transition">Save Event</button>
+                        </form>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        })
+        .catch(e => {
+            container.innerHTML = '<p class="text-sm text-red-600">Failed to load tracking history</p>';
+        });
+}
+
+function submitTrackingEvent(docId, form) {
+    const data = {
+        document_id: docId,
+        source_system: form.source_system.value.trim(),
+        external_reference: form.external_reference.value.trim() || null,
+        event_action: form.event_action.value.trim(),
+        description: form.description.value.trim() || null,
+        occurred_at: form.occurred_at.value
+    };
+
+    fetch(App.apiUrl('documents', 'add-tracking-event.php'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': App.getCsrfToken() },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) {
+            loadDocumentTracking(docId);
+        } else {
+            alert(res.error || 'Failed to add tracking event');
+        }
+    })
+    .catch(e => {
+        alert('Failed to add tracking event');
+    });
 }
 
 // Close modal on escape key
