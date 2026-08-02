@@ -488,3 +488,28 @@ if (!defined('OCR_GROQ_PROMPT')) {
 if (!defined('OCR_GROQ_DELAY_MS')) {
     define('OCR_GROQ_DELAY_MS', 1000); // minimum milliseconds between Groq vision requests
 }
+
+// Gemini OCR (uses Gemini 2 generative vision model as primary OCR, Tesseract/Groq as fallback)
+if (!defined('OCR_GEMINI_ENABLED')) {
+    define('OCR_GEMINI_ENABLED', true); // enable Gemini as the first OCR pass
+}
+if (!defined('OCR_GEMINI_MODEL')) {
+    define('OCR_GEMINI_MODEL', 'gemini-2.0-flash-001'); // generative vision model for text extraction
+}
+if (!defined('OCR_GEMINI_PROMPT')) {
+    define('OCR_GEMINI_PROMPT', 'Extract all readable text and any visible signatures from this document. Return only plain text, with no descriptions of images or other visual content.');
+}
+if (!defined('OCR_GEMINI_FALLBACK')) {
+    define('OCR_GEMINI_FALLBACK', true); // fall back to Tesseract/Groq if Gemini returns nothing
+}
+if (!defined('OCR_GEMINI_ENHANCE')) {
+    define('OCR_GEMINI_ENHANCE', false); // run Tesseract/Groq enhancement on top of Gemini
+}
+if (!defined('OCR_GEMINI_DELAY_MS')) {
+    define('OCR_GEMINI_DELAY_MS', 1000); // minimum milliseconds between Gemini OCR requests
+}
+
+// Multimodal embeddings: send the document image/PDF to gemini-embedding-2
+if (!defined('GEMINI_EMBEDDING_USE_FILE')) {
+    define('GEMINI_EMBEDDING_USE_FILE', false); // true = embed from file; false = embed from metadata text
+}

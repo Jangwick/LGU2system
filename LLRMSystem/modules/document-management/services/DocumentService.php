@@ -683,7 +683,7 @@ class DocumentService {
 
         // Generate semantic search embedding
         try {
-            $this->embeddingService->embedDocument($this->db, $documentId);
+            $this->embeddingService->embedDocument($this->db, $documentId, $filePath);
         } catch (Exception $e) {
             error_log("DocumentService: embedding generation failed for $documentId: " . $e->getMessage());
         }

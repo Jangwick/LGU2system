@@ -27,11 +27,12 @@ class EmbeddingService {
     }
 
     /**
-     * Generate embedding vector for a given text
+     * Generate embedding vector for a given text and/or file
      * @param string $text
+     * @param string|null $filePath Optional image or PDF to include as inline data
      * @return array|null Vector values
      */
-    public function generateEmbedding($text) {
+    public function generateEmbedding($text, $filePath = null) {
         $this->lastError = null;
         $this->lastHttpCode = null;
 
@@ -43,6 +44,39 @@ class EmbeddingService {
 
         $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:embedContent";
 
+        $parts = [
+            ['text' => $text]
+        ];
+
+        if (!empty($filePath) && file_exists($filePath) && defined('GEMINI_EMBEDDING_USE_FILE') && GEMINI_EMBEDDING_USE_FILE) {
+            $mime = @mime_content_type($filePath);
+            if (empty($mime)) {
+                $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                $mimeMap = [
+                    'png'  => 'image/png',
+                    'jpg'  => 'image/jpeg',
+                    'jpeg' => 'image/jpeg',
+                    'gif'  => 'image/gif',
+                    'bmp'  => 'image/bmp',
+                    'tiff' => 'image/tiff',
+                    'tif'  => 'image/tiff',
+                    'webp' => 'image/webp',
+                    'pdf'  => 'application/pdf',
+                ];
+                $mime = $mimeMap[$ext] ?? 'application/octet-stream';
+            }
+
+            $base64 = base64_encode(file_get_contents($filePath));
+            if (!empty($base64)) {
+                $parts[] = [
+                    'inline_data' => [
+                        'mime_type' => $mime,
+                        'data' => $base64
+                    ]
+                ];
+            }
+        }
+
         $ch = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -50,9 +84,7 @@ class EmbeddingService {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'model' => 'models/' . $this->model,
             'content' => [
-                'parts' => [
-                    ['text' => $text]
-                ]
+                'parts' => $parts
             ],
             'output_dimensionality' => $dimensionality
         ]));
@@ -132,9 +164,9 @@ class EmbeddingService {
 
     /**
      * Embed a document by ID
-     * Combines metadata and generates vector
+     * Combines metadata and generates vector, optionally using the document file
      */
-    public function embedDocument($db, $documentId) {
+    public function embedDocument($db, $documentId, $filePath = null) {
         // Fetch document
         $stmt = $db->prepare("SELECT title, description, tags FROM legislative_documents WHERE id = :id");
         $stmt->execute([':id' => $documentId]);
@@ -147,8 +179,8 @@ class EmbeddingService {
         $content .= "Description: " . $doc['description'] . "\n";
         $content .= "Tags: " . $doc['tags'];
 
-        $embedding = $this->generateEmbedding($content);
-        
+        $embedding = $this->generateEmbedding($content, $filePath);
+
         if ($embedding) {
             return $this->storeInDB($db, $documentId, $embedding);
         }

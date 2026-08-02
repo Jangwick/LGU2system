@@ -20,6 +20,10 @@ class OcrService {
     private $groqMaxPages;
     private $maxPdfPages;
     private $lastGroqRequestTime = 0;
+    private $geminiService;
+    private $geminiEnabled;
+    private $geminiFallback;
+    private $geminiEnhance;
 
     public function __construct() {
         $tessConfig = defined('OCR_TESSERACT_PATH') ? OCR_TESSERACT_PATH : '';
@@ -47,6 +51,20 @@ class OcrService {
         $this->groqEnhance = defined('OCR_GROQ_ENHANCE') ? (bool)OCR_GROQ_ENHANCE : false;  
         $this->groqMaxPages = defined('OCR_GROQ_MAX_PAGES') ? OCR_GROQ_MAX_PAGES : 1;
         $this->maxPdfPages = defined('OCR_MAX_PDF_PAGES') ? OCR_MAX_PDF_PAGES : 0;
+
+        // Initialize Gemini OCR if enabled
+        $this->geminiService = null;
+        $this->geminiEnabled = defined('OCR_GEMINI_ENABLED') && OCR_GEMINI_ENABLED;
+        $this->geminiFallback = defined('OCR_GEMINI_FALLBACK') ? (bool)OCR_GEMINI_FALLBACK : true;
+        $this->geminiEnhance = defined('OCR_GEMINI_ENHANCE') ? (bool)OCR_GEMINI_ENHANCE : false;
+        if ($this->geminiEnabled && defined('GEMINI_API_KEY') && !empty(GEMINI_API_KEY)) {
+            try {
+                require_once __DIR__ . '/../../ai/services/GeminiOcrService.php';
+                $this->geminiService = new GeminiOcrService();
+            } catch (Exception $e) {
+                error_log('OcrService: GeminiOcrService init failed: ' . $e->getMessage());
+            }
+        }
 
         // Ensure Tesseract can find its libraries and language data on shared hosting
         $this->setupTesseractEnvironment();
@@ -217,7 +235,51 @@ class OcrService {
         $tesseractText = '';
         $tesseractError = null;
 
-        // Try Tesseract first
+        // Try Gemini 2 vision first if enabled
+        $geminiText = '';
+        if ($this->geminiService && $this->geminiEnabled) {
+            try {
+                $geminiText = $this->geminiService->extractText($filePath);
+            } catch (Throwable $e) {
+                error_log('OcrService: Gemini OCR exception: ' . $e->getMessage());
+            }
+        }
+
+        $trimmedGemini = trim($geminiText);
+
+        if (!empty($trimmedGemini)) {
+            // Optional enhancement with Groq on top of Gemini result
+            if ($this->geminiEnhance && $this->groqService) {
+                try {
+                    $this->throttleGroqRequest();
+                    $this->lastGroqRequestTime = microtime(true);
+                    $groqResult = $this->groqService->extractTextFromImage($filePath, $geminiText);
+                    if (is_array($groqResult)) {
+                        $additionalText = trim($groqResult['additional_text'] ?? '');
+                        $visualElements = trim($groqResult['visual_elements'] ?? '');
+
+                        if (!empty($additionalText)) {
+                            $geminiText .= "\n\n[Additional text from vision enhancement]\n" . $additionalText;
+                        }
+
+                        if (!empty($visualElements)) {
+                            $geminiText .= "\n\n[Visual elements: " . $visualElements . ']';
+                        }
+                    }
+                } catch (Throwable $e) {
+                    error_log('OcrService: Groq enhancement after Gemini exception: ' . $e->getMessage());
+                }
+            }
+
+            error_log('OcrService: Gemini OCR used for ' . basename($filePath));
+            return $geminiText;
+        }
+
+        if ($this->geminiEnabled && !$this->geminiFallback) {
+            throw new Exception('Gemini OCR returned no text and fallback is disabled');
+        }
+
+        // Try Tesseract
         $tesseract = $this->getTesseractPath();
         if ($tesseract) {
             $escapedTesseract = escapeshellarg($tesseract);
