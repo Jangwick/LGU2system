@@ -404,4 +404,27 @@ class DocumentServiceTest extends TestCase
         $this->assertFalse($result['success']);
         $this->assertSame('non_compliant', $result['compliance_status']);
     }
+
+    public function test_create_document_throws_on_invalid_file_type(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'doc');
+        file_put_contents($tmpFile, 'plain text content');
+
+        $this->expectException(Exception::class);
+
+        $service->createDocument(
+            ['title' => 'Test', 'document_type' => 'ordinance'],
+            [
+                'tmp_name' => $tmpFile,
+                'name' => 'test.txt',
+                'type' => 'text/plain',
+                'size' => 100,
+                'error' => UPLOAD_ERR_OK
+            ]
+        );
+
+        @unlink($tmpFile);
+    }
 }
