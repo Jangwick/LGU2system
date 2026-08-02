@@ -215,4 +215,45 @@ class DocumentControllerTest extends TestCase
         $this->assertSame('Updated', $result['message']);
         $this->assertSame('Updated Budget', $service->calls[0][2]);
     }
+
+    public function test_bulk_delete_deletes_selected_documents(): void
+    {
+        $controller = $this->createControllerWithoutConstructor();
+
+        $service = new class {
+            public $calls = [];
+            public function deleteDocument($id): array
+            {
+                $this->calls[] = ['deleteDocument', $id];
+                return ['success' => true];
+            }
+        };
+
+        $reflection = new ReflectionClass($controller);
+        $documentService = $reflection->getProperty('documentService');
+        $documentService->setAccessible(true);
+        $documentService->setValue($controller, $service);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = ['document_ids' => ['1', '2', 'abc', '3']];
+
+        $result = $controller->bulkDelete();
+
+        $this->assertTrue($result['success']);
+        $this->assertSame(3, $result['deleted']);
+        $this->assertCount(3, $service->calls);
+    }
+
+    public function test_bulk_delete_rejects_empty_selection(): void
+    {
+        $controller = $this->createControllerWithoutConstructor();
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = ['document_ids' => []];
+
+        $result = $controller->bulkDelete();
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('No documents selected', $result['error']);
+    }
 }
