@@ -166,12 +166,12 @@ class GeminiOcrService {
 
             error_log('GeminiOcrService HTTP Error on ' . $modelName . ': ' . $httpCode . ' ' . $response);
 
-            // 429 or 503 usually means quota/unavailable for this model; try next fallback
-            if (in_array($httpCode, [429, 503], true)) {
+            // Try next fallback on quota/unavailable/unknown model/transient errors
+            if (in_array($httpCode, [404, 429, 500, 502, 503], true)) {
                 continue;
             }
 
-            // Other HTTP error; stop trying
+            // Fatal client/auth errors; stop trying
             break;
         }
 
