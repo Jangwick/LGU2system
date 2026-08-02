@@ -494,10 +494,10 @@ if (!defined('OCR_GEMINI_ENABLED')) {
     define('OCR_GEMINI_ENABLED', false); // enable Gemini as the first OCR pass (requires quota)
 }
 if (!defined('OCR_GEMINI_MODEL')) {
-    define('OCR_GEMINI_MODEL', 'gemini-2.0-flash-001'); // primary generative vision model for text extraction
+    define('OCR_GEMINI_MODEL', 'gemini-3.5-flash-lite'); // primary generative vision model for text extraction
 }
 if (!defined('OCR_GEMINI_FALLBACK_MODELS')) {
-    define('OCR_GEMINI_FALLBACK_MODELS', 'gemini-flash-latest'); // comma-separated fallback models if primary is rate-limited
+    define('OCR_GEMINI_FALLBACK_MODELS', 'gemini-3.5-flash-001,gemini-flash-latest'); // comma-separated fallback models if primary is rate-limited
 }
 if (!defined('OCR_GEMINI_PROMPT')) {
     define('OCR_GEMINI_PROMPT', 'Extract all readable text and any visible signatures from this document. Return only plain text, with no descriptions of images or other visual content.');
