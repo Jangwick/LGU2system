@@ -229,7 +229,7 @@ if (uploadForm) {
             if (response.success) {
                 toast.show('Document uploaded successfully!', 'success');
                 setTimeout(() => {
-                    window.location.href = '/modules/document-management/views/index.php';
+                    window.location.href = '/modules/document-management/views/view.php?id=' + encodeURIComponent(response.document_id);
                 }, 1500);
             } else {
                 toast.show(response.message || 'Upload failed', 'error');
