@@ -521,7 +521,12 @@ function getGridColor() {
     return isDarkMode() ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('load', function() {
+
+if (typeof Chart === 'undefined') {
+    console.error('Chart.js is not loaded');
+    return;
+}
 
 // Documents by Type Chart
 const docTypeChart = new Chart(document.getElementById('documentsByTypeChart'), {
