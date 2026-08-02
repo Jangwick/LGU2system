@@ -72,9 +72,14 @@
                 <span class="sidebar-text">User Management</span>
             </a>
 
-            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'audit' ? 'active' : ''; ?>">
+            <a href="<?php echo AUDIT_URL; ?>/views/index.php" class="nav-item <?php echo ($currentPage ?? '') === 'audit' ? 'active' : ''; ?>" data-tooltip="Audit Logs">
                 <i class="bi bi-shield-check"></i>
                 <span class="sidebar-text">Audit Logs</span>
+            </a>
+
+            <a href="<?php echo INTEGRATION_URL; ?>/views/settings.php" class="nav-item <?php echo ($currentPage ?? '') === 'integration-settings' ? 'active' : ''; ?>" data-tooltip="Integration Settings">
+                <i class="bi bi-plug"></i>
+                <span class="sidebar-text">Integration Settings</span>
             </a>
             <?php endif; ?>
 
