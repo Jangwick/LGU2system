@@ -243,4 +243,165 @@ class DocumentServiceTest extends TestCase
         $this->assertSame('uploads/test.pdf', $fileStorage->calls[0][1]);
         $this->assertSame(['delete', 3], $model->calls[0]);
     }
+
+    public function test_update_document_tracks_status_change(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $model = new class {
+            public $calls = [];
+
+            public function getById($id): array
+            {
+                return [
+                    'id' => $id,
+                    'title' => 'Doc',
+                    'status' => 'pending',
+                    'compliance_status' => 'compliant'
+                ];
+            }
+
+            public function update($id, $data): bool
+            {
+                $this->calls[] = ['update', $id, $data];
+                return true;
+            }
+
+            public function addStatusHistory($id, $old, $new, $userId, $notes): void
+            {
+                $this->calls[] = ['addStatusHistory', $id, $old, $new, $userId];
+            }
+        };
+
+        $logger = new class {
+            public $calls = [];
+            public function logDocumentActivity($action, $module, $recordId, $description, $metadata = null, $old = null): void
+            {
+                $this->calls[] = ['log', $action, $recordId];
+            }
+        };
+
+        $reflection = new ReflectionClass($service);
+        foreach (['documentModel' => $model, 'logger' => $logger] as $name => $value) {
+            $prop = $reflection->getProperty($name);
+            $prop->setAccessible(true);
+            $prop->setValue($service, $value);
+        }
+
+        $_SESSION['user_id'] = 7;
+
+        $result = $service->updateDocument(1, ['status' => 'approved', 'title' => 'Updated Title']);
+
+        $this->assertTrue($result['success']);
+        $this->assertSame('approved', $model->calls[0][2]['status']);
+        $this->assertSame(7, $model->calls[0][2]['approved_by']);
+        $this->assertSame(['addStatusHistory', 1, 'pending', 'approved', 7], $model->calls[1]);
+    }
+
+    public function test_update_document_rejects_non_compliant_approval(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $model = new class {
+            public function getById($id): array
+            {
+                return [
+                    'id' => $id,
+                    'title' => 'Doc',
+                    'status' => 'pending',
+                    'compliance_status' => 'pending'
+                ];
+            }
+        };
+
+        $reflection = new ReflectionClass($service);
+        $prop = $reflection->getProperty('documentModel');
+        $prop->setAccessible(true);
+        $prop->setValue($service, $model);
+
+        $result = $service->updateDocument(2, ['status' => 'approved']);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('compliance', $result['error']);
+    }
+
+    public function test_approve_document_succeeds_when_compliant(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $model = new class {
+            public $calls = [];
+
+            public function getById($id): array
+            {
+                return [
+                    'id' => $id,
+                    'title' => 'Doc',
+                    'status' => 'pending',
+                    'compliance_status' => 'compliant'
+                ];
+            }
+
+            public function update($id, $data): bool
+            {
+                $this->calls[] = ['update', $id, $data];
+                return true;
+            }
+
+            public function addStatusHistory($id, $old, $new, $userId, $notes): void
+            {
+                $this->calls[] = ['history', $id, $old, $new];
+            }
+        };
+
+        $logger = new class {
+            public $calls = [];
+            public function logDocumentActivity($action, $module, $recordId, $description, $metadata = null, $old = null): void
+            {
+                $this->calls[] = ['log', $action, $recordId];
+            }
+        };
+
+        $reflection = new ReflectionClass($service);
+        foreach (['documentModel' => $model, 'logger' => $logger] as $name => $value) {
+            $prop = $reflection->getProperty($name);
+            $prop->setAccessible(true);
+            $prop->setValue($service, $value);
+        }
+
+        $_SESSION['user_id'] = 9;
+
+        $result = $service->approveDocument(5);
+
+        $this->assertTrue($result['success']);
+        $this->assertSame('Document approved successfully', $result['message']);
+        $this->assertSame('approved', $model->calls[0][2]['status']);
+    }
+
+    public function test_approve_document_fails_when_not_compliant(): void
+    {
+        $service = $this->createServiceWithoutConstructor();
+
+        $model = new class {
+            public function getById($id): array
+            {
+                return [
+                    'id' => $id,
+                    'title' => 'Doc',
+                    'status' => 'pending',
+                    'compliance_status' => 'non_compliant'
+                ];
+            }
+        };
+
+        $reflection = new ReflectionClass($service);
+        $prop = $reflection->getProperty('documentModel');
+        $prop->setAccessible(true);
+        $prop->setValue($service, $model);
+
+        $result = $service->approveDocument(6);
+
+        $this->assertFalse($result['success']);
+        $this->assertSame('non_compliant', $result['compliance_status']);
+    }
 }
