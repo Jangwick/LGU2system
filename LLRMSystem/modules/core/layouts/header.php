@@ -39,8 +39,8 @@ initializeAuthenticatedSecurity();
         @custom-variant dark (&:where(.dark, .dark *));
     </style>
 
-    <!-- Chart.js (only used on chart pages, load after HTML parse) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <!-- Chart.js (vendored locally to avoid CDN/adblocker blocks) -->
+    <script src="<?php echo BASE_URL; ?>/public/assets/js/chart.umd.js" defer></script>
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
