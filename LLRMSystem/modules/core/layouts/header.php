@@ -26,18 +26,22 @@ initializeAuthenticatedSecurity();
     <meta name="description" content="Legislative Records Management System - City Government of Valenzuela, Metropolitan Manila">
     <meta name="keywords" content="LRMS, Valenzuela, Legislative Records, Document Management">
     <?php echo CsrfMiddleware::metaTag(); ?>
-    
+
+    <!-- Preconnect to CDN for faster third-party resource loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    
+
     <!-- Tailwind v4: Use .dark class instead of prefers-color-scheme -->
     <style type="text/tailwindcss">
         @custom-variant dark (&:where(.dark, .dark *));
     </style>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
+    <!-- Chart.js (only used on chart pages, load after HTML parse) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
