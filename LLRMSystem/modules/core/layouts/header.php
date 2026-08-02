@@ -40,7 +40,7 @@ initializeAuthenticatedSecurity();
     </style>
 
     <!-- Chart.js (vendored locally to avoid CDN/adblocker blocks) -->
-    <script src="<?php echo BASE_URL; ?>/public/assets/js/chart.umd.js"></script>
+    <script src="<?php echo BASE_URL; ?>/public/assets/js/chart.umd.js" defer></script>
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
