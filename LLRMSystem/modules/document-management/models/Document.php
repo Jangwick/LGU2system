@@ -31,8 +31,18 @@ class Document {
     /**
      * Get all documents with filters
      */
-    public function getAll($filters = []) {
-        $sql = "SELECT d.*, u.name as uploaded_by_name,
+    public function getAll($filters = [], $includeText = true) {
+        // Avoid selecting large text columns (extracted_text, key_points) for list views
+        $columns = $includeText
+            ? "d.*"
+            : "d.id, d.reference_number, d.title, d.document_type, d.document_date,
+               d.status, d.compliance_status, d.ocr_status, d.file_path, d.file_name,
+               d.file_size, d.file_type, d.tags, d.description, d.source_module,
+               d.source_id, d.is_encrypted, d.created_at, d.updated_at,
+               d.ocr_processed_at, d.key_points_generated_at, d.uploaded_by,
+               d.status_changed_by, d.approved_by, d.deleted_at";
+
+        $sql = "SELECT {$columns}, u.name as uploaded_by_name,
                         scu.name as status_changed_by_name,
                         au.name as approved_by_name
                 FROM legislative_documents d

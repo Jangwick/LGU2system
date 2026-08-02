@@ -37,7 +37,7 @@ class DocumentService {
         $filters['limit'] = $perPage;
         $filters['offset'] = $offset;
         
-        $documents = $this->documentModel->getAll($filters);
+        $documents = $this->documentModel->getAll($filters, false);
         $total = $this->documentModel->getCount($filters);
         
         return [
