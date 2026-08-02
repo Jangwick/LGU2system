@@ -1638,18 +1638,32 @@ document.addEventListener('click', function(e) {
     }
 });
 
+function getSelectedIds() {
+    return Array.from(document.querySelectorAll('.document-checkbox:checked')).map(cb => parseInt(cb.value, 10));
+}
+
 function toggleSelectAll(source) {
-    const checkboxes = document.querySelectorAll('.document-checkbox');
-    checkboxes.forEach(cb => {
-        // Only toggle visible checkboxes if the table rows are visible
+    document.querySelectorAll('.document-checkbox').forEach(cb => {
         cb.checked = source.checked;
     });
     updateSelectedCount();
 }
 
-document.querySelectorAll('.document-checkbox').forEach(cb => {
-    cb.addEventListener('change', updateSelectedCount);
-});
+// Use delegation so checkboxes still work after the table is reloaded
+function initBulkDeleteDelegation() {
+    document.body.addEventListener('change', function(e) {
+        if (e.target && e.target.classList.contains('document-checkbox')) {
+            updateSelectedCount();
+        }
+    });
+
+    const selectAllTop = document.getElementById('select-all-top');
+    if (selectAllTop) {
+        selectAllTop.addEventListener('change', function(e) {
+            toggleSelectAll(e.target);
+        });
+    }
+}
 
 function updateSelectedCount() {
     const checked = document.querySelectorAll('.document-checkbox:checked');
@@ -1657,7 +1671,17 @@ function updateSelectedCount() {
     const bulkBtn = document.getElementById('bulk-delete-btn');
     const countSpan = document.getElementById('selected-delete-count');
     if (countSpan) countSpan.textContent = count;
-    if (bulkBtn) bulkBtn.classList.toggle('hidden', count === 0);
+    if (bulkBtn) {
+        bulkBtn.classList.toggle('hidden', count === 0);
+        bulkBtn.disabled = count === 0;
+        if (count === 0) {
+            bulkBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            bulkBtn.classList.remove('hover:bg-red-700');
+        } else {
+            bulkBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            bulkBtn.classList.add('hover:bg-red-700');
+        }
+    }
 
     const selectAllTop = document.getElementById('select-all-top');
     const allCheckboxes = document.querySelectorAll('.document-checkbox');
@@ -1666,6 +1690,17 @@ function updateSelectedCount() {
         selectAllTop.checked = allChecked;
         selectAllTop.indeterminate = count > 0 && !allChecked;
     }
+}
+
+// Initialize once the DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        initBulkDeleteDelegation();
+        updateSelectedCount();
+    });
+} else {
+    initBulkDeleteDelegation();
+    updateSelectedCount();
 }
 
 async function bulkDeleteDocuments() {
