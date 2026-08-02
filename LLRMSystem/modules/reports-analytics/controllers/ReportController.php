@@ -120,7 +120,7 @@ class ReportController {
                 u.department,
                 COUNT(ld.id) as approved_count
             FROM users u
-            INNER JOIN legislative_documents ld ON u.id = ld.approved_by
+            INNER JOIN legislative_documents ld ON u.id = COALESCE(ld.approved_by, ld.status_changed_by)
             WHERE ld.status = 'approved' AND ld.deleted_at IS NULL
             GROUP BY u.id
             ORDER BY approved_count DESC
