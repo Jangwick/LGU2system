@@ -521,6 +521,8 @@ function getGridColor() {
     return isDarkMode() ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+
 // Documents by Type Chart
 const docTypeChart = new Chart(document.getElementById('documentsByTypeChart'), {
     type: 'doughnut',
@@ -839,6 +841,8 @@ const observer = new MutationObserver(function(mutations) {
 observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['class']
+});
+
 });
 
 function showExportModal() {
