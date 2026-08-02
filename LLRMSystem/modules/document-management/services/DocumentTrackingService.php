@@ -77,7 +77,7 @@ class DocumentTrackingService
                 'internal' AS source
             FROM activity_logs al
             LEFT JOIN users u ON al.user_id = u.id
-            WHERE al.entity_type = 'documents' AND al.entity_id = :document_id
+            WHERE al.table_name = 'documents' AND al.record_id = :document_id
             ORDER BY al.created_at ASC
         ");
         $stmt->execute([':document_id' => $documentId]);
