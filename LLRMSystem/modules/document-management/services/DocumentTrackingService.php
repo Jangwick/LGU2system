@@ -77,7 +77,7 @@ class DocumentTrackingService
                 'internal' AS source
             FROM activity_logs al
             LEFT JOIN users u ON al.user_id = u.id
-            WHERE al.table_name = 'documents' AND al.record_id = :document_id
+            WHERE al.table_name IN ('documents', 'legislative_documents') AND al.record_id = :document_id
             ORDER BY al.created_at ASC
         ");
         $stmt->execute([':document_id' => $documentId]);
@@ -129,9 +129,9 @@ class DocumentTrackingService
     /**
      * Record an automatic "received by LLRM" event when a document is created.
      */
-    public function recordDocumentReceipt($documentId, $sourceModule, $referenceNumber, $userId)
+    public function recordDocumentReceipt($documentId, $sourceSystem, $externalReference, $userId)
     {
-        $source = ucwords(str_replace(['_', '-'], ' ', $sourceModule ?: 'manual'));
+        $source = $sourceSystem ?: 'manual';
 
         $stmt = $this->db->prepare("
             INSERT INTO document_tracking (
@@ -147,7 +147,7 @@ class DocumentTrackingService
         $stmt->execute([
             ':document_id' => $documentId,
             ':source_system' => $source,
-            ':external_reference' => $referenceNumber ?: null,
+            ':external_reference' => $externalReference ?: null,
             ':recorded_by' => $userId,
         ]);
 

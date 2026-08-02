@@ -187,7 +187,7 @@ class DocumentService {
                 $trackingService->recordDocumentReceipt(
                     $documentId,
                     $documentData['source_module'],
-                    $documentData['reference_number'],
+                    $documentData['source_id'],
                     $userId
                 );
             } catch (Exception $e) {

@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../document-management/services/ComplianceService.ph
 require_once __DIR__ . '/../../document-management/services/OcrService.php';
 require_once __DIR__ . '/../../document-management/services/SummarizationService.php';
 require_once __DIR__ . '/../../document-management/services/DeduplicationService.php';
+require_once __DIR__ . '/../../document-management/services/DocumentTrackingService.php';
 require_once __DIR__ . '/../../document-management/models/DocumentVersion.php';
 
 class IntegrationController {
@@ -396,6 +397,7 @@ class IntegrationController {
                     SET title = :title,
                         document_type = :type,
                         document_date = :doc_date,
+                        source_module = :source_module,
                         status = 'pending',
                         description = :desc,
                         tags = :tags,
@@ -417,6 +419,7 @@ class IntegrationController {
                     ':title' => $data['title'],
                     ':type' => $docType,
                     ':doc_date' => $data['document_date'],
+                    ':source_module' => $data['source_system'] ?? 'integration',
                     ':desc' => $data['description'],
                     ':tags' => $data['tags'],
                     ':file_path' => $storedFilePath,
@@ -445,7 +448,7 @@ class IntegrationController {
                         key_points, key_points_generated_at
                     ) VALUES (
                         :ref, :title, :type, :doc_date,
-                        'pending', :desc, :tags, 'integration', :source_id,
+                        'pending', :desc, :tags, :source_module, :source_id,
                         :user_id, NOW(), :file_path, :file_name, :file_size, :file_type,
                         :is_encrypted, :enc_key,
                         :extracted_text, :ocr_status, :ocr_processed_at,
@@ -460,6 +463,7 @@ class IntegrationController {
                     ':doc_date' => $data['document_date'],
                     ':desc' => $data['description'],
                     ':tags' => $data['tags'],
+                    ':source_module' => $data['source_system'] ?? 'integration',
                     ':source_id' => $integrationId,
                     ':user_id' => $_SESSION['user_id'] ?? 1,
                     ':file_path' => $storedFilePath,
@@ -483,6 +487,19 @@ class IntegrationController {
 
             // Commit transaction
             $this->db->commit();
+
+            // Record tracking receipt
+            try {
+                $trackingService = new DocumentTrackingService($this->db);
+                $trackingService->recordDocumentReceipt(
+                    $documentId,
+                    $data['source_system'] ?? 'integration',
+                    $data['external_id'] ?? null,
+                    $_SESSION['user_id'] ?? 1
+                );
+            } catch (Exception $e) {
+                error_log("Failed to record integration tracking receipt: " . $e->getMessage());
+            }
 
             // Run compliance check for ORTS documents
             $complianceStatus = null;
