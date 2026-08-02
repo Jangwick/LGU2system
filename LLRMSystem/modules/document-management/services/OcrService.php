@@ -245,7 +245,7 @@ class OcrService {
             }
         }
 
-        $trimmedGemini = trim($geminiText);
+        $trimmedGemini = trim($geminiText ?? '');
 
         if (!empty($trimmedGemini)) {
             // Optional enhancement with Groq on top of Gemini result

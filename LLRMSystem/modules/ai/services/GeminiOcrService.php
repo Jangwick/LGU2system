@@ -89,73 +89,94 @@ class GeminiOcrService {
             return null;
         }
 
-        $this->throttle();
-        $this->lastRequestTime = microtime(true);
+        $maxAttempts = 3;
+        $lastResponse = null;
+        $lastHttpCode = null;
 
-        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key=" . urlencode($this->apiKey);
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            $this->throttle();
+            $this->lastRequestTime = microtime(true);
 
-        $payload = [
-            'contents' => [
-                [
-                    'role' => 'user',
-                    'parts' => [
-                        ['text' => $this->prompt],
-                        [
-                            'inline_data' => [
-                                'mime_type' => $mime,
-                                'data' => $base64
+            $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key=" . urlencode($this->apiKey);
+
+            $payload = [
+                'contents' => [
+                    [
+                        'role' => 'user',
+                        'parts' => [
+                            ['text' => $this->prompt],
+                            [
+                                'inline_data' => [
+                                    'mime_type' => $mime,
+                                    'data' => $base64
+                                ]
                             ]
                         ]
                     ]
+                ],
+                'generationConfig' => [
+                    'temperature' => 0.2,
+                    'maxOutputTokens' => 2048,
+                    'topP' => 0.9
                 ]
-            ],
-            'generationConfig' => [
-                'temperature' => 0.2,
-                'maxOutputTokens' => 2048,
-                'topP' => 0.9
-            ]
-        ];
+            ];
 
-        $ch = curl_init($apiUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json'
-        ]);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+            $ch = curl_init($apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json'
+            ]);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
 
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+            $response = curl_exec($ch);
+            $err = curl_error($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
 
-        $this->lastHttpCode = $httpCode;
+            $this->lastHttpCode = $httpCode;
+            $lastHttpCode = $httpCode;
+            $lastResponse = $response;
 
-        if ($err) {
-            $this->lastError = 'Curl: ' . $err;
-            error_log('GeminiOcrService Curl Error: ' . $err);
-            return null;
-        }
+            if ($err) {
+                $this->lastError = 'Curl: ' . $err;
+                error_log('GeminiOcrService Curl Error: ' . $err);
+                return null;
+            }
 
-        if ($httpCode < 200 || $httpCode >= 300) {
+            if ($httpCode >= 200 && $httpCode < 300) {
+                $result = json_decode($response, true);
+                $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+                if (empty($text)) {
+                    $this->lastError = 'No text returned. Response: ' . json_encode($result);
+                    error_log('GeminiOcrService Error: ' . json_encode($result));
+                    return null;
+                }
+
+                return trim($text);
+            }
+
+            // Retry on 429 with backoff
+            if ($httpCode == 429 && $attempt < $maxAttempts) {
+                $gapMs = defined('OCR_GEMINI_DELAY_MS') ? (int)OCR_GEMINI_DELAY_MS : 1000;
+                $wait = $gapMs * $attempt;
+                error_log("GeminiOcrService: HTTP 429, waiting {$wait}ms before retry (attempt $attempt/$maxAttempts)");
+                usleep($wait * 1000);
+                continue;
+            }
+
             $this->lastError = 'HTTP ' . $httpCode . ': ' . $response;
             error_log('GeminiOcrService HTTP Error: ' . $httpCode . ' ' . $response);
             return null;
         }
 
-        $result = json_decode($response, true);
-        $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
-
-        if (empty($text)) {
-            $this->lastError = 'No text returned. Response: ' . json_encode($result);
-            error_log('GeminiOcrService Error: ' . json_encode($result));
-            return null;
-        }
-
-        return trim($text);
+        $this->lastError = 'HTTP ' . $lastHttpCode . ': ' . $lastResponse;
+        error_log('GeminiOcrService HTTP Error: ' . $lastHttpCode . ' ' . $lastResponse);
+        return null;
     }
 }
