@@ -7,6 +7,11 @@ class CacheServiceTest extends TestCase
     protected function tearDown(): void
     {
         CacheService::flush();
+
+        $reflection = new ReflectionClass(CacheService::class);
+        $instance = $reflection->getProperty('instance');
+        $instance->setAccessible(true);
+        $instance->setValue(null, null);
     }
 
     public function test_set_and_get_round_trip(): void
@@ -77,5 +82,20 @@ class CacheServiceTest extends TestCase
         $payload = ['foo' => 'bar', 'list' => [1, 2, 3]];
         CacheService::set('array-key', $payload, 60);
         $this->assertSame($payload, CacheService::get('array-key'));
+    }
+
+    public function test_is_available_false_with_null_driver(): void
+    {
+        $reflection = new ReflectionClass(CacheService::class);
+        $instance = $reflection->getProperty('instance');
+        $instance->setAccessible(true);
+
+        $service = $reflection->newInstanceWithoutConstructor();
+        $driver = $reflection->getProperty('driver');
+        $driver->setAccessible(true);
+        $driver->setValue($service, new NullCacheDriver());
+        $instance->setValue(null, $service);
+
+        $this->assertFalse(CacheService::isAvailable());
     }
 }
