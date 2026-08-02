@@ -112,7 +112,7 @@ class FileCacheDriver implements CacheDriver {
         if ($data === false) {
             return null;
         }
-        $value = unserialize($data);
+        $value = @unserialize($data);
         if ($value === false && $data !== serialize(false)) {
             return null;
         }
