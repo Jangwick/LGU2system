@@ -4,6 +4,7 @@ require_once __DIR__ . '/EncryptionService.php';
 require_once __DIR__ . '/OcrService.php';
 require_once __DIR__ . '/SummarizationService.php';
 require_once __DIR__ . '/DeduplicationService.php';
+require_once __DIR__ . '/DocumentTrackingService.php';
 require_once __DIR__ . '/../../search/services/EmbeddingService.php';
 
 class DocumentService {
@@ -179,6 +180,19 @@ class DocumentService {
 
             // Record initial status history
             $this->documentModel->addStatusHistory($documentId, null, $status, $userId, 'Document created');
+
+            // Record automatic tracking receipt
+            try {
+                $trackingService = new DocumentTrackingService();
+                $trackingService->recordDocumentReceipt(
+                    $documentId,
+                    $documentData['source_module'],
+                    $documentData['reference_number'],
+                    $userId
+                );
+            } catch (Exception $e) {
+                error_log("Failed to record document receipt: " . $e->getMessage());
+            }
 
             // Notify all active users about the new document
             try {

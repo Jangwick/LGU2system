@@ -127,6 +127,34 @@ class DocumentTrackingService
     }
 
     /**
+     * Record an automatic "received by LLRM" event when a document is created.
+     */
+    public function recordDocumentReceipt($documentId, $sourceModule, $referenceNumber, $userId)
+    {
+        $source = ucwords(str_replace(['_', '-'], ' ', $sourceModule ?: 'manual'));
+
+        $stmt = $this->db->prepare("
+            INSERT INTO document_tracking (
+                document_id, source_system, external_reference, event_action,
+                description, occurred_at, recorded_by
+            ) VALUES (
+                :document_id, :source_system, :external_reference, 'Received by LLRM',
+                'Document was received into the LLRM system.',
+                NOW(), :recorded_by
+            )
+        ");
+
+        $stmt->execute([
+            ':document_id' => $documentId,
+            ':source_system' => $source,
+            ':external_reference' => $referenceNumber ?: null,
+            ':recorded_by' => $userId,
+        ]);
+
+        return $this->db->lastInsertId();
+    }
+
+    /**
      * Check if a user has an admin-like role.
      */
     public function isAdmin($userRole)
