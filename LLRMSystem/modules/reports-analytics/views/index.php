@@ -521,12 +521,7 @@ function getGridColor() {
     return isDarkMode() ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 }
 
-window.addEventListener('load', function() {
-
-if (typeof Chart === 'undefined') {
-    console.error('Chart.js is not loaded');
-    return;
-}
+function initReportCharts() {
 
 // Documents by Type Chart
 const docTypeChart = new Chart(document.getElementById('documentsByTypeChart'), {
@@ -848,6 +843,36 @@ observer.observe(document.documentElement, {
     attributeFilter: ['class']
 });
 
+window.chartsInstances = window.chartsInstances || {};
+Object.assign(window.chartsInstances, {
+    documentsByTypeChart: docTypeChart,
+    documentsByStatusChart: docStatusChart,
+    timelineChart: timelineChart,
+    activityTrendChart: activityTrendChart,
+    activityChart: activityChart,
+    departmentChart: departmentChart
+});
+
+}
+
+// Ensure Chart.js is available before initializing. Falls back to the
+// self-hosted copy when the CDN is unavailable or blocked.
+function ensureChartJs(callback) {
+    if (typeof Chart !== 'undefined') {
+        callback();
+        return;
+    }
+    const script = document.createElement('script');
+    script.src = '<?php echo BASE_URL; ?>/public/assets/js/chart.umd.js';
+    script.onload = callback;
+    script.onerror = function () {
+        console.error('Chart.js could not be loaded from the CDN or the local fallback.');
+    };
+    document.head.appendChild(script);
+}
+
+window.addEventListener('load', function () {
+    ensureChartJs(initReportCharts);
 });
 
 function showExportModal() {

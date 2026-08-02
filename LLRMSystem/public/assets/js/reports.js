@@ -3,8 +3,9 @@
  * Handles interactive charts, filters, and report generation
  */
 
-// Chart instances
-let chartsInstances = {};
+// Chart instances (shared with the view, which registers each chart here)
+window.chartsInstances = window.chartsInstances || {};
+const chartsInstances = window.chartsInstances;
 
 // Date range filter
 let dateRange = {
