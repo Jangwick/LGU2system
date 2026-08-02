@@ -131,9 +131,6 @@ class DocumentService {
             // Upload file
             $fileData = $this->fileStorageService->uploadFile($file, $data['document_type']);
 
-            // Run OCR BEFORE encryption (file is still plaintext at this point)
-            $ocrResult = $this->runOcrOnFile($fileData['path'], $fileData['type'], $fileData['size']);
-
             // Encrypt the file with the master key directly (generalized key)
             $encryptionResult = $this->encryptionService->encryptFile($fileData['path']);
             if (!$encryptionResult['success']) {
@@ -167,25 +164,18 @@ class DocumentService {
                 'status_changed_at' => $timestamp,
                 'approved_by' => $status === 'approved' ? $userId : null,
                 'approved_at' => $status === 'approved' ? $timestamp : null,
-                'extracted_text' => $ocrResult['text'],
-                'ocr_status' => $ocrResult['status'],
-                'ocr_processed_at' => $ocrResult['status'] === 'completed' ? date('Y-m-d H:i:s') : null,
-                'key_points' => $ocrResult['key_points'],
-                'key_points_generated_at' => $ocrResult['key_points'] ? date('Y-m-d H:i:s') : null
+                'extracted_text' => '',
+                'ocr_status' => 'pending',
+                'ocr_processed_at' => null,
+                'key_points' => null,
+                'key_points_generated_at' => null
             ];
 
             // Create document record
             $documentId = $this->documentModel->create($documentData);
 
-            // Store hash and embedding for future duplicate detection
-            $this->deduplicationService->store($documentId, $fileData['path'], $ocrResult['text'] ?? '', $data['title'] ?? '');
-
-            // Generate semantic search embedding
-            try {
-                $this->embeddingService->embedDocument($this->db, $documentId);
-            } catch (Exception $e) {
-                error_log("DocumentService: embedding generation failed for $documentId: " . $e->getMessage());
-            }
+            // Store hash for future duplicate detection (OCR/embedding handled by worker)
+            $this->deduplicationService->store($documentId, $fileData['path'], '', $data['title'] ?? '');
 
             // Record initial status history
             $this->documentModel->addStatusHistory($documentId, null, $status, $userId, 'Document created');
@@ -689,6 +679,13 @@ class DocumentService {
         if ($ocrResult['status'] === 'completed' && !empty($ocrResult['text'])) {
             $keyPoints = $this->summarizationService->generateKeyPointsString($ocrResult['text'], 7);
             $this->documentModel->updateKeyPoints($documentId, $keyPoints);
+        }
+
+        // Generate semantic search embedding
+        try {
+            $this->embeddingService->embedDocument($this->db, $documentId);
+        } catch (Exception $e) {
+            error_log("DocumentService: embedding generation failed for $documentId: " . $e->getMessage());
         }
 
         // Clean up temp file
