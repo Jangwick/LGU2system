@@ -127,10 +127,11 @@ class DocumentTrackingService
     }
 
     /**
-     * Check if a user is an admin.
+     * Check if a user has an admin-like role.
      */
     public function isAdmin($userRole)
     {
-        return strtolower(trim($userRole)) === 'admin';
+        $role = strtolower(trim($userRole));
+        return in_array($role, ['admin', 'super_admin', 'superadmin', 'administrator'], true);
     }
 }

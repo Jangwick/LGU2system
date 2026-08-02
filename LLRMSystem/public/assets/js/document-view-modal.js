@@ -474,7 +474,7 @@ function viewDocument(id) {
                                     </div>
                                 </section>
 
-                                ${currentUserRole === 'admin' ? `
+                                ${['admin', 'super_admin', 'superadmin', 'administrator'].includes(currentUserRole) ? `
                                 <section id="document-tracking-section" class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
                                     <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
                                         <i class="bi bi-signpost-split mr-2 text-red-500"></i>

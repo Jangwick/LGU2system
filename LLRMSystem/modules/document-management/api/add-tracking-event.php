@@ -31,13 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$userRole = strtolower(trim($_SESSION['user_role'] ?? ''));
-if ($userRole !== 'admin') {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'error' => 'Access denied. Admin only.']);
-    exit;
-}
-
 $data = json_decode(file_get_contents('php://input'), true);
 $documentId = Sanitizer::int($data['document_id'] ?? 0, 0);
 
@@ -49,6 +42,13 @@ if (!$documentId) {
 
 try {
     $service = new DocumentTrackingService();
+
+    if (!$service->isAdmin($_SESSION['user_role'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Access denied. Admin only.']);
+        exit;
+    }
+
     $eventId = $service->addTrackingEvent($documentId, $data, $_SESSION['user_id']);
 
     echo json_encode([
