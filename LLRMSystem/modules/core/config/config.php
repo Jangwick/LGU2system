@@ -491,7 +491,7 @@ if (!defined('OCR_GROQ_DELAY_MS')) {
 
 // Gemini OCR (uses Gemini 2 generative vision model as primary OCR, Tesseract/Groq as fallback)
 if (!defined('OCR_GEMINI_ENABLED')) {
-    define('OCR_GEMINI_ENABLED', true); // enable Gemini as the first OCR pass
+    define('OCR_GEMINI_ENABLED', false); // enable Gemini as the first OCR pass (requires quota)
 }
 if (!defined('OCR_GEMINI_MODEL')) {
     define('OCR_GEMINI_MODEL', 'gemini-2.0-flash-001'); // generative vision model for text extraction
