@@ -61,4 +61,20 @@ class CompressionMiddlewareTest extends TestCase
         CompressionMiddleware::start();
         $this->assertSame($level, ob_get_level());
     }
+
+    public function test_end_flushes_output_when_started(): void
+    {
+        $reflection = new ReflectionClass(CompressionMiddleware::class);
+        $started = $reflection->getProperty('started');
+        $started->setAccessible(true);
+        $started->setValue(null, true);
+
+        ob_start();
+        echo 'test output';
+        $level = ob_get_level();
+
+        CompressionMiddleware::end();
+
+        $this->assertLessThan($level, ob_get_level());
+    }
 }
