@@ -44,10 +44,11 @@ function configureSecureSession() {
  * Must be called before any HTML output
  */
 function sendSecurityHeaders() {
-    // Prevent caching of dynamic pages
+    // Prevent caching of dynamic pages and clear stale browser cache
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
     header('Pragma: no-cache');
     header('Expires: 0');
+    header('Clear-Site-Data: "cache"');
 
     // Prevent MIME type sniffing
     header('X-Content-Type-Options: nosniff');
