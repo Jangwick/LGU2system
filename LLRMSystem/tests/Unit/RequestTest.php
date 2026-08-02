@@ -91,4 +91,39 @@ class RequestTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = '';
         $this->assertFalse(Request::isAjax());
     }
+
+    public function testInputSanitizesRequest()
+    {
+        $_REQUEST = ['q' => ' <b>Budget</b> '];
+        $this->assertSame('Budget', Request::input('q', '', 'plainText'));
+    }
+
+    public function testHasPostAndHasGet()
+    {
+        $_POST = ['id' => 1];
+        $_GET = ['page' => 2];
+
+        $this->assertTrue(Request::hasPost('id'));
+        $this->assertFalse(Request::hasPost('missing'));
+        $this->assertTrue(Request::hasGet('page'));
+        $this->assertFalse(Request::hasGet('missing'));
+    }
+
+    public function testGetAllBulkSanitizes()
+    {
+        $_GET = [
+            'q' => '  <b>Search</b>  ',
+            'page' => '3',
+            'unknown' => 'value'
+        ];
+
+        $result = Request::getAll([
+            'q' => 'plainText',
+            'page' => 'int',
+        ]);
+
+        $this->assertSame('Search', $result['q']);
+        $this->assertSame(3, $result['page']);
+        $this->assertSame('value', $result['unknown']);
+    }
 }
