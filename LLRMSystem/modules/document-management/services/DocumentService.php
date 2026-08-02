@@ -5,6 +5,7 @@ require_once __DIR__ . '/OcrService.php';
 require_once __DIR__ . '/SummarizationService.php';
 require_once __DIR__ . '/DeduplicationService.php';
 require_once __DIR__ . '/DocumentTrackingService.php';
+require_once __DIR__ . '/../../integration/services/IntegrationWebhookService.php';
 require_once __DIR__ . '/../../search/services/EmbeddingService.php';
 
 class DocumentService {
@@ -293,6 +294,16 @@ class DocumentService {
             $this->logger->logDocumentActivity($id, Logger::ACTION_DOCUMENT_UPDATE, $document['title'], [
                 'changes' => array_intersect_key($data, $oldValues)
             ], $oldValues);
+
+            // Queue outbound webhook for external systems
+            if (in_array(strtolower($newStatus), ['approved', 'rejected'], true) && in_array($document['source_module'] ?? '', ['orts', 'cms', 'phms', 'pcms'], true)) {
+                try {
+                    $webhookService = new IntegrationWebhookService();
+                    $webhookService->queueEvent($id, $newStatus);
+                } catch (Exception $e) {
+                    error_log("Failed to queue integration webhook: " . $e->getMessage());
+                }
+            }
 
             // When status is set to archived, send document to LAS
             if ($oldStatus !== 'archived' && $newStatus === 'archived') {

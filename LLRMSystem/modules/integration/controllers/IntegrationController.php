@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../document-management/services/OcrService.php';
 require_once __DIR__ . '/../../document-management/services/SummarizationService.php';
 require_once __DIR__ . '/../../document-management/services/DeduplicationService.php';
 require_once __DIR__ . '/../../document-management/services/DocumentTrackingService.php';
+require_once __DIR__ . '/../../integration/services/IntegrationWebhookService.php';
 require_once __DIR__ . '/../../document-management/models/DocumentVersion.php';
 
 class IntegrationController {
@@ -499,6 +500,16 @@ class IntegrationController {
                 );
             } catch (Exception $e) {
                 error_log("Failed to record integration tracking receipt: " . $e->getMessage());
+            }
+
+            // Queue revised webhook for ORTS revisions
+            if (!empty($existingDoc)) {
+                try {
+                    $webhookService = new IntegrationWebhookService($this->db);
+                    $webhookService->queueEvent($documentId, 'revised');
+                } catch (Exception $e) {
+                    error_log("Failed to queue revised webhook: " . $e->getMessage());
+                }
             }
 
             // Run compliance check for ORTS documents
