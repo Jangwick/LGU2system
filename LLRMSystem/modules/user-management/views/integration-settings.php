@@ -109,9 +109,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
             <div id="result" class="mt-4"></div>
         </div>
     </main>
-</div>
 
 <?php require_once __DIR__ . '/../../core/layouts/footer.php'; ?>
+</div>
 
 <script>
 document.getElementById('settings-form').addEventListener('submit', async function (e) {
