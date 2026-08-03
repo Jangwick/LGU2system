@@ -150,6 +150,9 @@ class DocumentTrackingService
         }
 
         $occurredAt = $data['timestamp'] ?? date('Y-m-d H:i:s');
+        if (is_string($occurredAt) && !empty($occurredAt)) {
+            $occurredAt = date('Y-m-d H:i:s', strtotime($occurredAt));
+        }
         $metadata = !empty($data['metadata']) ? json_encode($data['metadata']) : null;
 
         $stmt = $this->db->prepare("
