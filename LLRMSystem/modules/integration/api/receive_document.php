@@ -127,6 +127,8 @@ $data = [
     'description' => Sanitizer::richText($_POST['description'] ?? ''),
     'tags' => Sanitizer::plainText($_POST['tags'] ?? ''),
     'api_key_id' => $authResult['id'] ?? null,
+    'tracking_id' => Sanitizer::plainText($_POST['tracking_id'] ?? null),
+    'tracking_history' => $_POST['tracking_history'] ?? null,
 ];
 
 $fileData = [

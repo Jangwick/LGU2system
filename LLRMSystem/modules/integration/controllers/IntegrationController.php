@@ -528,6 +528,9 @@ class IntegrationController {
                 }
             }
 
+            // Process optional tracking history from the same upload request
+            $this->processTrackingHistory($documentId, $refNum, $data['tracking_history'] ?? null, $data['source_system'] ?? 'integration');
+
             // Log activity
             $this->logger->logActivity('INTEGRATION_DOCUMENT_RECEIVED', 'legislative_documents', $documentId,
                 "Received document '{$data['title']}' from {$data['source_system']} - OCR: {$ocrStatus}");
@@ -547,6 +550,8 @@ class IntegrationController {
                 'integration_id' => $integrationId,
                 'document_id' => $documentId,
                 'reference_number' => $refNum,
+                'tracking_id' => $refNum,
+                'tracking_url' => 'https://llrm.spvalenzuela.com/modules/document-tracking/api/document-events.php',
                 'ocr_status' => $ocrStatus,
                 'revision' => !empty($existingDoc),
                 'compliance_status' => $complianceStatus,
@@ -564,6 +569,34 @@ class IntegrationController {
 
             error_log("receiveDocument error: " . $e->getMessage());
             return ['success' => false, 'error' => 'Failed to process document: ' . $e->getMessage()];
+        }
+    }
+
+    private function processTrackingHistory($documentId, $refNum, $history, $sourceSystem)
+    {
+        if (empty($history)) {
+            return;
+        }
+
+        $items = is_string($history) ? json_decode($history, true) : $history;
+        if (empty($items) || !is_array($items)) {
+            return;
+        }
+
+        require_once __DIR__ . '/../../document-management/services/DocumentTrackingService.php';
+        $trackingService = new DocumentTrackingService($this->db);
+
+        foreach ($items as $item) {
+            if (empty($item['activity'])) {
+                continue;
+            }
+            $item['tracking_id'] = $refNum;
+            $item['source_system'] = $sourceSystem;
+            try {
+                $trackingService->addExternalTrackingEvent($item);
+            } catch (Exception $e) {
+                error_log("Tracking history import failed: " . $e->getMessage());
+            }
         }
     }
 }

@@ -76,6 +76,67 @@ class IntegrationWebhookService
     }
 
     /**
+     * Queue a tracking event to all connected external systems.
+     */
+    public function queueTrackingEvent($documentId, $data)
+    {
+        $document = $this->getDocument($documentId);
+        if (!$document) {
+            return ['success' => false, 'error' => 'Document not found'];
+        }
+
+        $settings = $this->getAllEnabledSettings();
+        if (empty($settings)) {
+            return ['success' => false, 'error' => 'No enabled webhook destinations'];
+        }
+
+        $queued = 0;
+        $payloadBase = [
+            'event' => 'document_tracking_update',
+            'reference_number' => $document['reference_number'] ?? null,
+            'tracking_id' => $document['reference_number'] ?? null,
+            'source_system' => $data['source_system'] ?? null,
+            'activity' => $data['activity'] ?? null,
+            'status' => $data['status'] ?? null,
+            'performed_by' => $data['performed_by'] ?? null,
+            'department' => $data['department'] ?? null,
+            'remarks' => $data['remarks'] ?? null,
+            'timestamp' => $data['timestamp'] ?? date('c'),
+            'metadata' => $data['metadata'] ?? null,
+        ];
+
+        foreach ($settings as $setting) {
+            if (empty($setting['webhook_url'])) {
+                continue;
+            }
+
+            $json = json_encode($payloadBase);
+            $secret = $setting['api_key'] ?? '';
+            $signature = hash_hmac('sha256', $json, $secret);
+
+            $payload = $payloadBase;
+            $payload['signature'] = $signature;
+
+            $stmt = $this->db->prepare("
+                INSERT INTO integration_outbound_events
+                    (document_id, source_system, event, payload, status, attempts, created_at)
+                VALUES
+                    (:document_id, :source_system, :event, :payload, 'pending', 0, NOW())
+            ");
+
+            $stmt->execute([
+                ':document_id' => $documentId,
+                ':source_system' => $setting['source_system'],
+                ':event' => 'document_tracking_update',
+                ':payload' => json_encode($payload)
+            ]);
+            $queued++;
+        }
+
+        return ['success' => true, 'queued' => $queued];
+    }
+
+    /**
      * Build the JSON payload and compute a signature.
      */
     public function buildPayload($document, $event, $integration, $settings)
@@ -96,6 +157,19 @@ class IntegrationWebhookService
         $data['signature'] = $signature;
 
         return json_encode($data);
+    }
+
+    /**
+     * Get all enabled integration settings with webhook URLs.
+     */
+    public function getAllEnabledSettings()
+    {
+        $stmt = $this->db->prepare("
+            SELECT * FROM integration_settings
+            WHERE enabled = 1 AND webhook_url IS NOT NULL AND webhook_url != ''
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     /**
