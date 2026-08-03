@@ -77,7 +77,7 @@
                 <span class="sidebar-text">Audit Logs</span>
             </a>
 
-            <a href="<?php echo INTEGRATION_URL; ?>/views/settings.php" class="nav-item <?php echo ($currentPage ?? '') === 'integration-settings' ? 'active' : ''; ?>" data-tooltip="Integration Settings">
+            <a href="<?php echo USERS_URL; ?>/views/integration-settings.php" class="nav-item <?php echo ($currentPage ?? '') === 'integration-settings' ? 'active' : ''; ?>" data-tooltip="Integration Settings">
                 <i class="bi bi-plug"></i>
                 <span class="sidebar-text">Integration Settings</span>
             </a>
