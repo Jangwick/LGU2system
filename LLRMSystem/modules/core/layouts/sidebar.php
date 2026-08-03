@@ -60,7 +60,7 @@
             
             <!-- Management Section - Admin Only -->
             <?php
-            $isAdmin = in_array($userRole, ['administrator', 'admin']);
+            $isAdmin = in_array($userRole, ['administrator', 'admin', 'super_admin', 'superadmin']);
             if ($isAdmin):
             ?>
             <div class="pt-4 pb-2 sidebar-text">

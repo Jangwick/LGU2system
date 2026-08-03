@@ -16,7 +16,7 @@ class IntegrationWebhookService
     private $client;
     private $maxAttempts;
 
-    public function __construct($db = null, WebhookClient $client = null, $maxAttempts = 3)
+    public function __construct($db = null, ?WebhookClient $client = null, $maxAttempts = 3)
     {
         $this->db = $db ?: getDatabase();
         $this->client = $client ?: new CurlWebhookClient();

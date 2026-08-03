@@ -43,6 +43,9 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Settings Form -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-fade-in-up">
+            <?php if (empty($settings)): ?>
+                <div class="mb-4 p-4 text-sm text-blue-700 bg-blue-100 rounded-lg">No saved webhook settings yet. Fill in the form below and click Save to configure each system.</div>
+            <?php endif; ?>
             <form id="settings-form">
                 <div class="overflow-x-auto rounded-lg shadow mb-6">
                     <table class="min-w-full divide-y divide-gray-200">

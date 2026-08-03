@@ -10,6 +10,7 @@ session_start();
 
 require_once __DIR__ . '/../../core/config/config.php';
 require_once __DIR__ . '/../../core/config/database.php';
+require_once __DIR__ . '/../../core/utils/Sanitizer.php';
 require_once __DIR__ . '/../services/IntegrationWebhookService.php';
 
 header('Content-Type: application/json');
