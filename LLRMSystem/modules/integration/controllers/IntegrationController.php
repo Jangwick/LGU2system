@@ -238,10 +238,12 @@ class IntegrationController {
         $this->db->beginTransaction();
 
         try {
-            // Detect existing ORTS document for revision receiving
+            // Detect existing ORTS document for revision receiving or reserved tracking_id
             $sourceSystem = $data['source_system'] ?? '';
             $externalId = $data['external_id'] ?? null;
+            $trackingId = $data['tracking_id'] ?? null;
             $existingDoc = null;
+
             if ($sourceSystem === 'orts' && !empty($externalId)) {
                 $existingStmt = $this->db->prepare("
                     SELECT ld.id, ld.file_path, ld.file_name, ld.file_size, ld.file_type, ld.is_encrypted, ld.reference_number
@@ -252,6 +254,17 @@ class IntegrationController {
                 ");
                 $existingStmt->execute([':source' => $sourceSystem, ':ext_id' => $externalId]);
                 $existingDoc = $existingStmt->fetch(PDO::FETCH_ASSOC);
+            }
+
+            if (empty($existingDoc) && !empty($trackingId)) {
+                $reservedStmt = $this->db->prepare("
+                    SELECT ld.id, ld.file_path, ld.file_name, ld.file_size, ld.file_type, ld.is_encrypted, ld.reference_number
+                    FROM legislative_documents ld
+                    WHERE ld.reference_number = :ref AND ld.deleted_at IS NULL
+                    ORDER BY ld.id DESC LIMIT 1
+                ");
+                $reservedStmt->execute([':ref' => $trackingId]);
+                $existingDoc = $reservedStmt->fetch(PDO::FETCH_ASSOC);
             }
 
             // 1. Save file to storage
@@ -379,18 +392,20 @@ class IntegrationController {
             $timestamp = date('Y-m-d H:i:s');
 
             if ($existingDoc) {
-                // Archive the current file as a version
-                $versionModel = new DocumentVersion($this->db);
-                $nextVersion = $versionModel->getLatestVersionNumber($existingDoc['id']) + 1;
-                $versionModel->create([
-                    'document_id' => $existingDoc['id'],
-                    'version_number' => $nextVersion,
-                    'file_path' => $existingDoc['file_path'],
-                    'file_name' => $existingDoc['file_name'],
-                    'file_size' => $existingDoc['file_size'],
-                    'change_description' => 'ORTS revision received',
-                    'created_by' => 1
-                ]);
+                // Archive the current file as a version, if one exists (skip reserved placeholders)
+                if (!empty($existingDoc['file_path']) && !empty($existingDoc['file_name'])) {
+                    $versionModel = new DocumentVersion($this->db);
+                    $nextVersion = $versionModel->getLatestVersionNumber($existingDoc['id']) + 1;
+                    $versionModel->create([
+                        'document_id' => $existingDoc['id'],
+                        'version_number' => $nextVersion,
+                        'file_path' => $existingDoc['file_path'],
+                        'file_name' => $existingDoc['file_name'],
+                        'file_size' => $existingDoc['file_size'],
+                        'change_description' => 'Document revision received',
+                        'created_by' => 1
+                    ]);
+                }
 
                 // Update existing document with new file and content
                 $updateStmt = $this->db->prepare("

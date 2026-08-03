@@ -749,7 +749,73 @@ function promptPasswordForDownload() {
 }
 
 function viewHistory() {
-    alert('Activity history feature coming soon');
+    const modal = document.getElementById('history-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    loadTimeline();
+}
+
+function closeHistory() {
+    const modal = document.getElementById('history-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+async function loadTimeline() {
+    const container = document.getElementById('history-timeline');
+    if (!container) return;
+    container.innerHTML = '<div class="text-center py-4 text-gray-500"><i class="bi bi-arrow-repeat animate-spin mr-2"></i>Loading...</div>';
+
+    try {
+        const response = await fetch('../../document-management/api/get-tracking.php?id=<?= $document['id'] ?>');
+        const data = await response.json();
+
+        if (!data.success) {
+            container.innerHTML = '<p class="text-red-500 text-center py-4">Failed to load history.</p>';
+            return;
+        }
+
+        if (data.events.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center py-4">No activity history yet.</p>';
+            return;
+        }
+
+        const html = data.events.map(e => {
+            const date = new Date(e.occurred_at).toLocaleString();
+            const status = e.status ? `<span class="badge badge-info text-xs">${escapeHtml(e.status)}</span>` : '';
+            const performer = e.performed_by ? `<p class="text-sm text-gray-600 dark:text-gray-300"><i class="bi bi-person mr-1"></i>${escapeHtml(e.performed_by)} ${e.department ? '(' + escapeHtml(e.department) + ')' : ''}</p>` : '';
+            const metadata = e.metadata ? `<p class="text-xs text-gray-500 mt-1">Metadata: ${escapeHtml(JSON.stringify(e.metadata))}</p>` : '';
+            const title = e.event_action || 'Event';
+            const body = e.remarks || e.description || '';
+
+            return `
+            <div class="relative pl-6 pb-4 border-l-2 border-blue-200 dark:border-blue-800 last:pb-0">
+                <div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-blue-500 dark:bg-blue-400 border-4 border-white dark:border-gray-800"></div>
+                <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-wrap items-start justify-between gap-2 mb-1">
+                        <h4 class="text-sm font-bold text-gray-800 dark:text-gray-200">${escapeHtml(title)}</h4>
+                        <span class="text-xs text-gray-500">${escapeHtml(date)}</span>
+                    </div>
+                    ${status}
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">${escapeHtml(body)}</p>
+                    ${performer}
+                    ${metadata}
+                    <p class="text-xs text-gray-400 mt-1">Source: ${escapeHtml(e.source_system || e.source)}</p>
+                </div>
+            </div>
+            `;
+        }).join('');
+
+        container.innerHTML = html;
+    } catch (error) {
+        container.innerHTML = '<p class="text-red-500 text-center py-4">Error loading history.</p>';
+    }
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 function deleteDocument(id) {
@@ -872,3 +938,25 @@ async function rejectDocument(documentId) {
     }
 }
 </script>
+
+<!-- Document Activity / Tracking History Modal -->
+<div id="history-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/80 p-4" onclick="if(event.target === this) closeHistory()">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="history-title">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 id="history-title" class="text-lg font-bold text-gray-800 dark:text-white">
+                <i class="bi bi-clock-history mr-2 text-blue-600"></i>Activity / Tracking History
+            </h3>
+            <button type="button" onclick="closeHistory()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl leading-none" aria-label="Close">&times;</button>
+        </div>
+        <div class="p-4 sm:p-6 overflow-y-auto max-h-[60vh]">
+            <div id="history-timeline" class="space-y-0">
+                <p class="text-gray-500 text-center py-4">Loading activity history...</p>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+            <button type="button" onclick="closeHistory()" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition text-sm font-medium">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
