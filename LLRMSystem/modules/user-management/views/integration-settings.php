@@ -2,7 +2,6 @@
 session_start();
 
 require_once __DIR__ . '/../../core/config/database.php';
-require_once __DIR__ . '/../../integration/services/IntegrationWebhookService.php';
 
 $userRole = strtolower(trim($_SESSION['user_role'] ?? ''));
 $adminRoles = ['admin', 'super_admin', 'superadmin', 'administrator'];
@@ -13,13 +12,37 @@ if (empty($_SESSION['user_id']) || !in_array($userRole, $adminRoles, true)) {
     exit;
 }
 
-$service = new IntegrationWebhookService();
 $systems = ['orts', 'cms', 'phms', 'pcms'];
 $settings = [];
+$dbError = null;
 
-$stmt = getDatabase()->query("SELECT * FROM integration_settings");
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $settings[$row['source_system']] = $row;
+try {
+    $db = getDatabase();
+
+    // Load existing settings
+    $stmt = $db->query("SELECT * FROM integration_settings");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $settings[$row['source_system']] = $row;
+    }
+
+    // Ensure a default row exists for every known system so the UI always has content
+    $insert = $db->prepare("
+        INSERT IGNORE INTO integration_settings (source_system, webhook_url, api_key, enabled, created_at, updated_at)
+        VALUES (:source, '', '', 0, NOW(), NOW())
+    ");
+    foreach ($systems as $system) {
+        if (!isset($settings[$system])) {
+            $insert->execute([':source' => $system]);
+            $settings[$system] = [
+                'source_system' => $system,
+                'webhook_url' => '',
+                'api_key' => '',
+                'enabled' => 0
+            ];
+        }
+    }
+} catch (PDOException $e) {
+    $dbError = 'Database error: ' . $e->getMessage();
 }
 
 $pageTitle = 'Integration Webhook Settings';
@@ -43,8 +66,8 @@ require_once __DIR__ . '/../../core/layouts/header.php';
 
         <!-- Settings Form -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-fade-in-up">
-            <?php if (empty($settings)): ?>
-                <div class="mb-4 p-4 text-sm text-blue-700 bg-blue-100 rounded-lg">No saved webhook settings yet. Fill in the form below and click Save to configure each system.</div>
+            <?php if ($dbError): ?>
+                <div class="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg"><?php echo htmlspecialchars($dbError); ?></div>
             <?php endif; ?>
             <form id="settings-form">
                 <div class="overflow-x-auto rounded-lg shadow mb-6">
