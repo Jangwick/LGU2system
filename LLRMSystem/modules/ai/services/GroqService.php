@@ -275,8 +275,9 @@ class GroqService {
                 ['role' => 'user', 'content' => $this->buildPrompt($documentText, $rules)]
             ],
             'temperature' => 0.2,
-            'max_tokens' => 8192,
-            'top_p' => 0.9
+            'max_tokens' => 10000,
+            'top_p' => 0.9,
+            'response_format' => ['type' => 'json_object']
         ];
 
         $httpResult = $this->callWithFallback($apiUrl, $payload);
@@ -489,8 +490,8 @@ class GroqService {
             "Compare the document content against the Valenzuela-specific rule and the provided legal reference text. " .
             "If the document does not align with the Valenzuela rule, mark it non_compliant and explain why. " .
             "Return only a valid JSON object, no markdown, where every key is a rule code and the value is an object with these fields: " .
-            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"reason\": \"2-3 sentences of legal/procedural reasoning explaining why the document does or does not satisfy this standard, max 360 characters\", \"evidence\": \"short quote or detail from the document that supports the verdict, max 180 characters\"}. " .
-            "The reason must be substantive, not just repeat the rule title. Keep reason and evidence within those limits so the JSON output stays valid. " .
+            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"reason\": \"3-4 sentences of legal/procedural analysis. State the specific rule requirement, what the document actually contains (or omits), and why that means compliance or non-compliance. For non-compliant, also note what content would be needed. Max 520 characters\", \"evidence\": \"Direct quote from the document that supports the verdict, or 'No relevant content found' if the required content is absent. Max 220 characters\"}. " .
+            "The reason must not be empty, generic, or just restate the rule. It must give a real analysis. Keep the JSON valid. " .
             "If a rule is not applicable to the document subject, mark it compliant with low confidence and explain why. " .
             "The document text below may contain [Visual elements] sections describing seals, signatures, stamps, or diagrams. " .
             "Treat those descriptions as evidence of the document's formal validity and completeness. " .
