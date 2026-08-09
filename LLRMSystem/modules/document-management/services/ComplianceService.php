@@ -163,10 +163,7 @@ class ComplianceService {
             $out[] = [
                 'code' => $rule['code'],
                 'title' => $rule['title'],
-                'summary' => $rule['summary'] ?? '',
-                'example_excerpt' => $rule['example_excerpt'] ?? '',
-                'reference_url' => $rule['reference_url'] ?? '',
-                'reference_text' => $rule['reference_text'] ?? '',
+                'summary' => substr($rule['summary'] ?? '', 0, 500),
                 'vector_score' => $scoreResult['score']
             ];
         }

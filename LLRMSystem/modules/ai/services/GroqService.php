@@ -8,9 +8,12 @@ class GroqService {
     private $fallbackModels;
     public $lastError = null;
     public $lastHttpCode = null;
+    private $retryWaitBudget = 20;
+    private $retryWaitUsed = 0;
 
     public function __construct() {
         $this->apiKey = defined('GROQ_API_KEY') ? GROQ_API_KEY : '';
+        $this->retryWaitBudget = defined('GROQ_MAX_RETRY_WAIT') ? (int) GROQ_MAX_RETRY_WAIT : 20;
         $this->model = (defined('GROQ_MODEL') && GROQ_MODEL) ? GROQ_MODEL : 'llama-3.3-70b-versatile';
         $this->fallbackModels = $this->loadFallbackModels();
     }
@@ -71,6 +74,15 @@ class GroqService {
                     if ($wait <= 0) {
                         $wait = min(30, 5 * ($attempt + 1)); // 5, 10, 15 ... up to 30s
                     }
+                    // Respect a global sleep budget so a rate-limited run degrades
+                    // quickly instead of blocking the request for minutes.
+                    $remaining = $this->retryWaitBudget - $this->retryWaitUsed;
+                    if ($remaining <= 0) {
+                        error_log('GroqService: retry wait budget exhausted, moving to next model');
+                        break;
+                    }
+                    $wait = min($wait, $remaining);
+                    $this->retryWaitUsed += $wait;
                     error_log('GroqService: model ' . $model . ' rate limited, waiting ' . $wait . 's');
                     sleep($wait);
                     continue;
@@ -182,6 +194,78 @@ class GroqService {
             return [];
         }
 
+        $this->retryWaitUsed = 0;
+
+        $docBudget = defined('GROQ_MAX_DOCUMENT_CHARS') ? (int) GROQ_MAX_DOCUMENT_CHARS : 6000;
+        $documentText = substr($documentText, 0, $docBudget);
+
+        $merged = [];
+        $errors = [];
+
+        foreach ($this->chunkRules($rules) as $batch) {
+            $batchResult = $this->analyzeBatch($documentText, $batch, $docBudget);
+            if (is_array($batchResult)) {
+                $merged = array_merge($merged, $batchResult);
+            } else {
+                $codes = array_map(function ($r) { return $r['code']; }, $batch);
+                $errors[] = implode(',', $codes) . ': ' . $this->lastError;
+            }
+        }
+
+        if (empty($merged)) {
+            $this->lastError = 'All Groq batches failed. ' . implode(' | ', $errors);
+            return null;
+        }
+
+        $this->lastError = empty($errors) ? null : 'Partial analysis. ' . implode(' | ', $errors);
+        return $merged;
+    }
+
+    /**
+     * Split rules into batches small enough to stay under the Groq request size limit.
+     */
+    private function chunkRules(array $rules) {
+        $budget = defined('GROQ_MAX_RULES_CHARS') ? (int) GROQ_MAX_RULES_CHARS : 3500;
+
+        $batches = [];
+        $current = [];
+        $currentSize = 0;
+
+        foreach ($rules as $rule) {
+            $size = $this->estimateRuleSize($rule);
+            if (!empty($current) && ($currentSize + $size) > $budget) {
+                $batches[] = $current;
+                $current = [];
+                $currentSize = 0;
+            }
+            $current[] = $rule;
+            $currentSize += $size;
+        }
+
+        if (!empty($current)) {
+            $batches[] = $current;
+        }
+
+        return $batches;
+    }
+
+    /**
+     * Approximate the prompt cost of a single rule.
+     */
+    private function estimateRuleSize($rule) {
+        return strlen($rule['code'] ?? '')
+            + strlen($rule['title'] ?? '')
+            + strlen($rule['summary'] ?? '')
+            + strlen(substr($rule['example_excerpt'] ?? '', 0, 1000))
+            + strlen(substr($rule['reference_text'] ?? '', 0, 1200))
+            + 120; // labels and separators
+    }
+
+    /**
+     * Analyze one batch of rules, shrinking the payload and splitting the batch
+     * when Groq rejects the request as too large.
+     */
+    private function analyzeBatch($documentText, array $rules, $docBudget) {
         $apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
         $payload = [
@@ -191,21 +275,38 @@ class GroqService {
                 ['role' => 'user', 'content' => $this->buildPrompt($documentText, $rules)]
             ],
             'temperature' => 0.2,
-            'max_tokens' => 4096,
+            'max_tokens' => 8192,
             'top_p' => 0.9
         ];
 
         $httpResult = $this->callWithFallback($apiUrl, $payload);
-        if ($httpResult === null) {
-            $this->lastError = 'All Groq models failed for compliance analysis';
+
+        if ($httpResult === null || $httpResult['httpCode'] == 413) {
+            // Too large: first try a shorter document excerpt, then split the batch.
+            if ($this->lastHttpCode == 413 && $docBudget > 1500) {
+                return $this->analyzeBatch(substr($documentText, 0, (int) ($docBudget / 2)), $rules, (int) ($docBudget / 2));
+            }
+
+            if (count($rules) > 1) {
+                $half = (int) ceil(count($rules) / 2);
+                $left = $this->analyzeBatch($documentText, array_slice($rules, 0, $half), $docBudget);
+                $right = $this->analyzeBatch($documentText, array_slice($rules, $half), $docBudget);
+                $combined = array_merge(is_array($left) ? $left : [], is_array($right) ? $right : []);
+                return empty($combined) ? null : $combined;
+            }
+
+            if ($this->lastError === null) {
+                $this->lastError = 'All Groq models failed for compliance analysis';
+            }
             return null;
         }
+
         $response = $httpResult['response'];
         $httpCode = $httpResult['httpCode'];
         $this->lastHttpCode = $httpCode;
 
         if ($httpCode < 200 || $httpCode >= 300) {
-            $this->lastError = 'HTTP ' . $httpCode . ': ' . $response;
+            $this->lastError = 'HTTP ' . $httpCode . ': ' . substr($response, 0, 300);
             error_log('GroqService HTTP Error: ' . $httpCode . ' ' . $response);
             return null;
         }
@@ -376,14 +477,9 @@ class GroqService {
 
         $rulesText = '';
         foreach ($rules as $r) {
-            $excerpt = substr($r['example_excerpt'] ?? '', 0, 1000);
-            $ref = substr($r['reference_text'] ?? '', 0, 1200);
             $score = isset($r['vector_score']) ? (float) $r['vector_score'] : 0;
             $rulesText .= "Rule: {$r['code']} - {$r['title']}\n";
             $rulesText .= "Summary: " . ($r['summary'] ?? '') . "\n";
-            $rulesText .= "Example: {$excerpt}\n";
-            $rulesText .= "Reference URL: " . ($r['reference_url'] ?? '') . "\n";
-            $rulesText .= "Reference Text: {$ref}\n";
             $rulesText .= "Vector similarity score: {$score}%\n";
             $rulesText .= "---\n";
         }
@@ -392,8 +488,9 @@ class GroqService {
             "For each listed legal standard, focus only on Valenzuela City ordinances and local regulations. " .
             "Compare the document content against the Valenzuela-specific rule and the provided legal reference text. " .
             "If the document does not align with the Valenzuela rule, mark it non_compliant and explain why. " .
-            "Return only a JSON object where every key is a rule code and the value is an object with these fields: " .
-            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"reason\": \"2-4 sentence legal reasoning\", \"evidence\": \"specific text or details from the document or reference that support the verdict\"}. " .
+            "Return only a valid JSON object, no markdown, where every key is a rule code and the value is an object with these fields: " .
+            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"reason\": \"one concise sentence, max 220 characters\", \"evidence\": \"short quote from the document, max 160 characters\"}. " .
+            "Keep reason and evidence within those limits so the JSON output stays small and valid. " .
             "If a rule is not applicable to the document subject, mark it compliant with low confidence and explain why. " .
             "The document text below may contain [Visual elements] sections describing seals, signatures, stamps, or diagrams. " .
             "Treat those descriptions as evidence of the document's formal validity and completeness. " .

@@ -379,11 +379,25 @@ if (!defined('GEMINI_EMBEDDING_DIMENSIONALITY')) {
 if (!defined('GROQ_API_KEY')) {
     define('GROQ_API_KEY', ''); // Set in config.local.php
 }
+// groq/compound and compound-mini are agentic; compound returns 403 for this
+// key. compound-mini has high token/day limits but still 30 RPM / 250 RPD.
 if (!defined('GROQ_MODEL')) {
-    define('GROQ_MODEL', 'groq/compound'); // text/compliance primary
+    define('GROQ_MODEL', 'groq/compound-mini');
 }
 if (!defined('GROQ_FALLBACK_MODELS')) {
-    define('GROQ_FALLBACK_MODELS', 'qwen/qwen3.6-27b');
+    define('GROQ_FALLBACK_MODELS', 'llama-3.3-70b-versatile');
+}
+// Character budgets for the compliance prompt. Groq free-tier endpoints have a
+// ~20 KB request-body limit; keep one document + all applicable rules under it.
+if (!defined('GROQ_MAX_DOCUMENT_CHARS')) {
+    define('GROQ_MAX_DOCUMENT_CHARS', 7000);
+}
+if (!defined('GROQ_MAX_RULES_CHARS')) {
+    define('GROQ_MAX_RULES_CHARS', 12000);
+}
+// Upper bound on total seconds spent sleeping for 429 rate-limit retries.
+if (!defined('GROQ_MAX_RETRY_WAIT')) {
+    define('GROQ_MAX_RETRY_WAIT', 20);
 }
 
 // Encryption Configuration
