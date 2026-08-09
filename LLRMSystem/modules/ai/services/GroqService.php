@@ -489,8 +489,8 @@ class GroqService {
             "Compare the document content against the Valenzuela-specific rule and the provided legal reference text. " .
             "If the document does not align with the Valenzuela rule, mark it non_compliant and explain why. " .
             "Return only a valid JSON object, no markdown, where every key is a rule code and the value is an object with these fields: " .
-            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"reason\": \"one concise sentence, max 220 characters\", \"evidence\": \"short quote from the document, max 160 characters\"}. " .
-            "Keep reason and evidence within those limits so the JSON output stays small and valid. " .
+            "{\"status\": \"compliant\" | \"non_compliant\" | \"needs_review\", \"confidence\": 0-100, \"reason\": \"2-3 sentences of legal/procedural reasoning explaining why the document does or does not satisfy this standard, max 360 characters\", \"evidence\": \"short quote or detail from the document that supports the verdict, max 180 characters\"}. " .
+            "The reason must be substantive, not just repeat the rule title. Keep reason and evidence within those limits so the JSON output stays valid. " .
             "If a rule is not applicable to the document subject, mark it compliant with low confidence and explain why. " .
             "The document text below may contain [Visual elements] sections describing seals, signatures, stamps, or diagrams. " .
             "Treat those descriptions as evidence of the document's formal validity and completeness. " .
