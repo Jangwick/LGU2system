@@ -379,13 +379,14 @@ if (!defined('GEMINI_EMBEDDING_DIMENSIONALITY')) {
 if (!defined('GROQ_API_KEY')) {
     define('GROQ_API_KEY', ''); // Set in config.local.php
 }
-// groq/compound and compound-mini are agentic; compound returns 403 for this
-// key. compound-mini has high token/day limits but still 30 RPM / 250 RPD.
+// llama-3.3-70b-versatile is the most capable available model and is not
+// rate-limited on the active API key. compound returns 403; the new key
+// provided by the user has exhausted its daily quota for other models.
 if (!defined('GROQ_MODEL')) {
-    define('GROQ_MODEL', 'groq/compound-mini');
+    define('GROQ_MODEL', 'llama-3.3-70b-versatile');
 }
 if (!defined('GROQ_FALLBACK_MODELS')) {
-    define('GROQ_FALLBACK_MODELS', 'llama-3.3-70b-versatile');
+    define('GROQ_FALLBACK_MODELS', 'qwen/qwen3.6-27b');
 }
 // Character budgets for the compliance prompt. Groq free-tier endpoints have a
 // ~20 KB request-body limit; keep one document + all applicable rules under it.
