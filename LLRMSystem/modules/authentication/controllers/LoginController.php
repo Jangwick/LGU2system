@@ -74,30 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Identity verified - Clear any failed attempts
                 $security->clearAttempts($ip, $email);
 
-                // Temporary OTP bypass for testing
-                if (defined('OTP_BYPASS') && OTP_BYPASS) {
-                    session_regenerate_id(true);
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_email'] = $user['email'];
-                    $_SESSION['user_name'] = $user['full_name'] ?? $user['name'];
-                    $_SESSION['user_role'] = $user['role'];
-                    $_SESSION['user_department'] = $user['department'] ?? '';
-                    $_SESSION['login_time'] = time();
-                    $currentSessionId = session_id();
-                    $stmt = $conn->prepare("UPDATE users SET last_session_id = ? WHERE id = ?");
-                    $stmt->execute([$currentSessionId, $user['id']]);
-                    $_SESSION['current_session_id'] = $currentSessionId;
-                    $stmt = $conn->prepare("UPDATE users SET last_seen_at = NOW() WHERE id = ? AND last_seen_at IS NULL");
-                    $stmt->execute([$user['id']]);
-                    $logger->logSession($user['id'], 'LOGIN_SUCCESS_BYPASS', ['email' => $user['email']]);
-                    echo json_encode([
-                        'success' => true,
-                        'requires_otp' => false,
-                        'redirect' => DASHBOARD_INDEX_URL
-                    ]);
-                    exit;
-                }
-
                 // Check if already logged in elsewhere
                 $alreadyLoggedIn = false;
                 if (!empty($user['last_session_id'])) {
