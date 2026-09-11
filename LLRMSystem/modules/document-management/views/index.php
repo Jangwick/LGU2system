@@ -370,12 +370,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                         <div class="inline-flex items-center px-4 py-1.5 bg-gray-100 dark:bg-gray-900/80 text-gray-600 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700/50 text-[11px] font-black uppercase tracking-[0.1em] shadow-inner" id="selected-count">
                             <span id="total-docs" class="text-gray-900 dark:text-white mr-1"><?php echo $data['pagination']['total'] ?? count($data['documents'] ?? []); ?></span> documents found
                         </div>
-                        <?php if (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer', 'staff'])): ?>
-                        <button type="button" id="bulk-delete-btn" onclick="bulkDeleteDocuments()" class="hidden px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5">
-                            <i class="bi bi-trash"></i>
-                            <span id="selected-delete-count">0</span> Selected
-                        </button>
-                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -387,9 +381,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
-                            <th class="px-3 py-2.5 text-left w-12">
-                                <input type="checkbox" id="select-all-top" class="w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded focus:ring-red-500 cursor-pointer" onchange="toggleSelectAll(this)">
-                            </th>
                             <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Document
                             </th>
@@ -416,7 +407,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <?php if (isset($data['error'])): ?>
                             <tr>
-                                <td colspan="8" class="px-6 py-12 text-center">
+                                <td colspan="7" class="px-6 py-12 text-center">
                                     <div class="text-red-600">
                                         <i class="bi bi-exclamation-circle text-4xl mb-2"></i>
                                         <p><?php echo htmlspecialchars($data['message']); ?></p>
@@ -425,7 +416,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             </tr>
                         <?php elseif (empty($data['documents'])): ?>
                             <tr>
-                                <td colspan="8" class="px-6 py-12 text-center">
+                                <td colspan="7" class="px-6 py-12 text-center">
                                     <div class="text-gray-500">
                                         <i class="bi bi-inbox text-4xl mb-2"></i>
                                         <p>No documents found</p>
@@ -436,9 +427,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <?php foreach ($data['documents'] as $doc): ?>
                                 <!-- Table Row -->
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors" data-document-id="<?php echo $doc['id']; ?>">
-                                    <td class="px-3 py-3 w-12 text-center">
-                                        <input type="checkbox" class="document-checkbox w-4 h-4 text-red-600 dark:text-red-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded focus:ring-red-500 cursor-pointer" value="<?php echo $doc['id']; ?>">
-                                    </td>
                                     <td class="px-3 py-3">
                                         <div class="flex items-center">
                                             <div class="<?php echo getFileIconClass($doc['file_type'], $doc['file_name']); ?> rounded-lg p-1.5 mr-2 flex-shrink-0">
@@ -492,10 +480,9 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                             $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
                                             $isApproved = ($doc['status'] ?? '') === 'approved';
                                             $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                                            $canDelete = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
                                             ?>
                                             <?php if ($canEdit): ?>
-                                            <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>, <?php echo $canDelete ? 'true' : 'false'; ?>)" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/60 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] md:px-3 md:py-2 md:rounded-lg md:text-xs transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
+                                            <button type="button" onclick="editDocument(<?php echo $doc['id']; ?>)" class="no-ripple inline-flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/60 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/80 px-2 py-1.5 rounded-md font-semibold text-[10px] md:px-3 md:py-2 md:rounded-lg md:text-xs transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-none">
                                                 <i class="bi bi-pencil mr-1"></i> Edit
                                             </button>
                                             <?php endif; ?>
@@ -516,7 +503,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             <!-- Top: Checkbox, Type & Date -->
                             <div class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 border-b border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
                                 <div class="flex items-center gap-2">
-                                    <input type="checkbox" class="document-checkbox w-5 h-5 text-red-600 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-red-500 cursor-pointer bg-white dark:bg-gray-800" value="<?php echo $doc['id']; ?>">
                                     <span class="badge badge-primary !text-[10px] !py-0.5">
                                         <?php echo e(ucfirst($doc['document_type'])); ?>
                                     </span>
@@ -550,7 +536,6 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                             $isDocOwner = ($doc['uploaded_by'] ?? 0) == ($_SESSION['user_id'] ?? 0);
                             $isApproved = ($doc['status'] ?? '') === 'approved';
                             $canEdit = (in_array($userRole, ['super_admin', 'superadmin', 'administrator', 'admin', 'officer']) || ($userRole === 'staff' && $isDocOwner)) && !$isApproved;
-                            $canDelete = $canEdit;
                             ?>
                             <div class="px-4 py-3 bg-white dark:bg-gray-800 flex items-center justify-between border-t border-gray-50 dark:border-gray-700/50">
                                 <div class="min-w-0 flex-1 pr-3">
@@ -572,7 +557,7 @@ include_once __DIR__ . '/../../core/layouts/header.php';
                                     </a>
                                     <?php endif; ?>
                                     <?php if ($canEdit): ?>
-                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>, <?php echo $canDelete ? 'true' : 'false'; ?>)">
+                                    <button type="button" class="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl transition-all active:scale-90" title="Edit" onclick="editDocument(<?php echo $doc['id']; ?>)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <?php endif; ?>
@@ -907,9 +892,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <!-- Sticky Footer within Scroll Area for Forms -->
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-800 mt-4">
-                    <button type="button" id="edit-modal-delete-btn" onclick="deleteDocumentFromEditModal()" class="hidden w-full sm:w-auto order-3 px-8 py-3 border border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
-                        Delete
-                    </button>
                     <button type="button" onclick="closeEditModal()" class="w-full sm:w-auto order-2 sm:order-1 px-8 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase tracking-widest text-[11px] transition-all">
                         Discard Changes
                     </button>
@@ -1307,7 +1289,7 @@ const typeSelect = document.getElementById('upload-document-type-input');
 const dateInput = document.getElementById('document-date-modal');
 const referenceInput = document.getElementById('upload-reference-number');
 
-async function editDocument(id, canDelete = false) {
+async function editDocument(id) {
     try {
         const response = await fetch(App.apiUrl('documents', `get_details.php?id=${id}`));
         const res = await response.json();
@@ -1326,9 +1308,6 @@ async function editDocument(id, canDelete = false) {
             form.querySelector('[name="description"]').value = doc.description || '';
             form.querySelector('[name="tags"]').value = doc.tags || '';
             
-            const deleteBtn = document.getElementById('edit-modal-delete-btn');
-            if (deleteBtn) deleteBtn.classList.toggle('hidden', !canDelete);
-            
             openEditModal();
         } else {
             alert(res.error || 'Failed to load document details');
@@ -1336,37 +1315,6 @@ async function editDocument(id, canDelete = false) {
     } catch (e) {
         alert('Failed to connect to server');
     }
-}
-
-async function deleteDocument(id) {
-    if (!confirm('Are you sure you want to delete this document? This will move it to trash.')) return;
-    
-    try {
-        const formData = new FormData();
-        formData.append('id', id);
-        formData.append('csrf_token', App.getCsrfToken());
-
-        const response = await fetch(App.apiUrl('documents', 'delete.php'), {
-            method: 'POST',
-            body: formData
-        });
-        
-        const res = await response.json();
-        if (res.success) {
-            alert('Document deleted successfully');
-            location.reload();
-        } else {
-            alert(res.error || 'Failed to delete document');
-        }
-    } catch (e) {
-        alert('Failed to process delete request');
-    }
-}
-
-function deleteDocumentFromEditModal() {
-    const form = document.getElementById('edit-form-modal');
-    const id = form ? form.querySelector('[name="document_id"]').value : null;
-    if (id) deleteDocument(id);
 }
 
 function openEditModal() {
@@ -1682,98 +1630,5 @@ document.addEventListener('click', function(e) {
     }
 });
 
-function getSelectedIds() {
-    return Array.from(document.querySelectorAll('.document-checkbox:checked')).map(cb => parseInt(cb.value, 10));
-}
-
-function toggleSelectAll(source) {
-    document.querySelectorAll('.document-checkbox').forEach(cb => {
-        cb.checked = source.checked;
-    });
-    updateSelectedCount();
-}
-
-// Use delegation so checkboxes still work after the table is reloaded
-function initBulkDeleteDelegation() {
-    document.body.addEventListener('change', function(e) {
-        if (e.target && e.target.classList.contains('document-checkbox')) {
-            updateSelectedCount();
-        }
-    });
-
-    const selectAllTop = document.getElementById('select-all-top');
-    if (selectAllTop) {
-        selectAllTop.addEventListener('change', function(e) {
-            toggleSelectAll(e.target);
-        });
-    }
-}
-
-function updateSelectedCount() {
-    const checked = document.querySelectorAll('.document-checkbox:checked');
-    const count = checked.length;
-    const bulkBtn = document.getElementById('bulk-delete-btn');
-    const countSpan = document.getElementById('selected-delete-count');
-    if (countSpan) countSpan.textContent = count;
-    if (bulkBtn) {
-        bulkBtn.classList.toggle('hidden', count === 0);
-        bulkBtn.disabled = count === 0;
-        if (count === 0) {
-            bulkBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            bulkBtn.classList.remove('hover:bg-red-700');
-        } else {
-            bulkBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            bulkBtn.classList.add('hover:bg-red-700');
-        }
-    }
-
-    const selectAllTop = document.getElementById('select-all-top');
-    const allCheckboxes = document.querySelectorAll('.document-checkbox');
-    if (selectAllTop && allCheckboxes.length > 0) {
-        const allChecked = count === allCheckboxes.length;
-        selectAllTop.checked = allChecked;
-        selectAllTop.indeterminate = count > 0 && !allChecked;
-    }
-}
-
-// Initialize once the DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        initBulkDeleteDelegation();
-        updateSelectedCount();
-    });
-} else {
-    initBulkDeleteDelegation();
-    updateSelectedCount();
-}
-
-async function bulkDeleteDocuments() {
-    const checked = document.querySelectorAll('.document-checkbox:checked');
-    if (checked.length === 0) return;
-
-    const ids = Array.from(checked).map(cb => parseInt(cb.value, 10));
-    if (!confirm(`Are you sure you want to delete ${ids.length} selected document(s)? This will move them to trash.`)) return;
-
-    try {
-        const response = await fetch(App.apiUrl('documents', 'bulk-delete.php'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                document_ids: ids,
-                csrf_token: App.getCsrfToken()
-            })
-        });
-
-        const res = await response.json();
-        if (res.success) {
-            alert(`Deleted ${res.deleted} document(s). ${res.errors.length ? res.errors.length + ' error(s).' : ''}`);
-            location.reload();
-        } else {
-            alert(res.error || 'Failed to delete documents');
-        }
-    } catch (e) {
-        alert('Failed to process bulk delete');
-    }
-}
 </script>
 
