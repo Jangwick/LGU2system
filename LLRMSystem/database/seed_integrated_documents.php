@@ -148,7 +148,17 @@ foreach ($seeds as $s) {
         $keyPoints = $summarizer->generateKeyPointsString($body, 7);
     } catch (Exception $e) { /* optional */ }
 
+    // Bump reference suffix until unique (prod may already hold ORD-2026-901 etc.)
+    $ref = $s['ref'];
+    $refCheck = $db->prepare("SELECT 1 FROM legislative_documents WHERE reference_number = ?");
+    $refCheck->execute([$ref]);
+    while ($refCheck->fetch()) {
+        $ref = preg_replace_callback('/\d+$/', fn($m) => $m[0] + 1, $ref);
+        $refCheck->execute([$ref]);
+    }
+
     $db->beginTransaction();
+    try {
     $insRec->execute([
         ':type' => $s['type'] . 's',
         ':ext' => $s['ext'],
@@ -160,7 +170,7 @@ foreach ($seeds as $s) {
     $recId = $db->lastInsertId();
 
     $insDoc->execute([
-        ':ref' => $s['ref'],
+        ':ref' => $ref,
         ':title' => $s['title'],
         ':type' => $s['type'],
         ':doc_date' => $s['date'],
@@ -176,6 +186,11 @@ foreach ($seeds as $s) {
     ]);
     $docId = $db->lastInsertId();
     $db->commit();
+    } catch (Exception $e) {
+        $db->rollBack();
+        echo "[error] {$s['system']}: {$e->getMessage()}\n";
+        continue;
+    }
 
     try {
         $tracking->recordDocumentReceipt($docId, $s['system'], $s['ext'], 1);
@@ -183,9 +198,9 @@ foreach ($seeds as $s) {
 
     try {
         $result = $compliance->checkDocument($docId, 1);
-        echo "[seeded] {$s['system']} doc#{$docId} {$s['ref']} -> compliance: {$result['compliance_status']} ({$result['explanation']})\n";
+        echo "[seeded] {$s['system']} doc#{$docId} {$ref} -> compliance: {$result['compliance_status']} ({$result['explanation']})\n";
     } catch (Exception $e) {
-        echo "[seeded] {$s['system']} doc#{$docId} {$s['ref']} -> compliance check failed: {$e->getMessage()}\n";
+        echo "[seeded] {$s['system']} doc#{$docId} {$ref} -> compliance check failed: {$e->getMessage()}\n";
     }
 }
 
